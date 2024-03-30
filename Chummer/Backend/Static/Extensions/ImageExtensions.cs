@@ -24,6 +24,7 @@ using System.Drawing.Imaging;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
+using Chummer.Xml;
 using Microsoft.IO;
 using NLog;
 

@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net48</TargetFramework>
+    <TargetFramework>net8.0-windows</TargetFramework>
     <OutputType>WinExe</OutputType>
     <AssemblyName>Chummer5</AssemblyName>
     <IsWebBootstrapper>false</IsWebBootstrapper>
@@ -23,7 +23,7 @@
     <UseWindowsForms>true</UseWindowsForms>
     <UseWPF>true</UseWPF>
     <ImportWindowsDesktopTargets>true</ImportWindowsDesktopTargets>
-	<Configurations>Debug;Release;Debuggable Release</Configurations>
+    <Configurations>Debug;Release;Debuggable Release</Configurations>
     <EmbeddedResourceUseDependentUponConvention>true</EmbeddedResourceUseDependentUponConvention>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
   </PropertyGroup>
@@ -786,9 +786,7 @@
     <Compile Update="Controls\Characters\SpiritControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Update="Controls\Shared\Components\SplitButton.cs">
-      <SubType>Component</SubType>
-    </Compile>
+    <Compile Update="Controls\Shared\Components\SplitButton.cs" />
     <None Include="Chummer_TemporaryKey.pfx" />
     <Content Update="data\armor.xsd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -25765,6 +25763,7 @@
     <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
     <PackageReference Include="System.Diagnostics.DiagnosticSource" Version="8.0.0" />
     <PackageReference Include="System.IO" Version="4.3.0" />
+    <PackageReference Include="System.IO.FileSystem.AccessControl" Version="5.0.0" />
     <PackageReference Include="System.Memory" Version="4.5.5" />
     <PackageReference Include="System.Numerics.Vectors" Version="4.5.0" />
     <PackageReference Include="System.Reflection.Metadata" Version="8.0.0" />
@@ -25797,6 +25796,9 @@
     <None Remove="customdata\German Data Changes\amend_martialarts.xml" />
     <None Remove="customdata\Shapeshifter Provisional Run Faster Errata\amend_shapeshifter_metatypes.xml" />
     <None Remove="customdata\Shapeshifter Provisional Run Faster Errata\manifest.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Chummer.Xml\Chummer.Xml.csproj" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Update="Properties\Resources.resx">

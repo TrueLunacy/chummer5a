@@ -35,6 +35,7 @@ using Chummer.Plugins;
 using Microsoft.VisualStudio.Threading;
 using Newtonsoft.Json;
 using NLog;
+using Chummer.Xml;
 
 namespace Chummer
 {

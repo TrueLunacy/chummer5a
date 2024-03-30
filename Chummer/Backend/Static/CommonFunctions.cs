@@ -1701,7 +1701,7 @@ namespace Chummer
                 // Read the stream.
                 objStream.Position = 0;
                 using (StreamReader objReader = new StreamReader(objStream, Encoding.UTF8, true))
-                using (XmlReader objXmlReader = XmlReader.Create(objReader, GlobalSettings.UnSafeXmlReaderSettings))
+                using (XmlReader objXmlReader = XmlReader.Create(objReader, XmlUtilities.UnSafeXmlReaderSettings))
                     objReturn.Load(objXmlReader);
             }
 

@@ -32,6 +32,7 @@ using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.XPath;
 using Chummer.Annotations;
+using Chummer.Xml;
 
 namespace Chummer.Backend.Attributes
 {

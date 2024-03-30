@@ -50,6 +50,7 @@ using Microsoft.IO;
 using Newtonsoft.Json;
 using NLog;
 using Application = System.Windows.Forms.Application;
+using Chummer.Xml;
 
 namespace Chummer
 {
@@ -4842,7 +4843,7 @@ namespace Chummer
                                 token.ThrowIfCancellationRequested();
                                 XmlDocument objDoc = new XmlDocument { XmlResolver = null };
                                 using (XmlReader objXmlReader
-                                       = XmlReader.Create(objStream, GlobalSettings.SafeXmlReaderSettings))
+                                       = XmlReader.Create(objStream, XmlUtilities.SafeXmlReaderSettings))
                                     objDoc.Load(objXmlReader);
                                 using (FileStream objFileStream
                                        = new FileStream(strFileName, FileMode.Create, FileAccess.Write, FileShare.None))
@@ -5678,7 +5679,7 @@ namespace Chummer
                     token.ThrowIfCancellationRequested();
                     XmlDocument objDoc = new XmlDocument { XmlResolver = null };
                     using (XmlReader objXmlReader
-                           = XmlReader.Create(objStream, GlobalSettings.SafeXmlReaderSettings))
+                           = XmlReader.Create(objStream, XmlUtilities.SafeXmlReaderSettings))
                         objDoc.Load(objXmlReader);
                     using (FileStream objFileStream
                            = new FileStream(strFileName, FileMode.Create, FileAccess.Write, FileShare.None))
@@ -5689,8 +5690,7 @@ namespace Chummer
                         {
                             objStream.Seek(0, SeekOrigin.Begin);
                             await objStream.CompressToLzmaFileAsync(
-                                    objFileStream, GlobalSettings.Chum5lzCompressionLevel,
-                                    token: token)
+                                    objFileStream, GlobalSettings.Chum5lzCompressionLevel)
                                 .ConfigureAwait(false);
                         }
                     }
@@ -43955,7 +43955,7 @@ namespace Chummer
                                                             token.ThrowIfCancellationRequested();
                                                             using (XmlReader objReader = XmlReader.Create(
                                                                        objStreamReader,
-                                                                       GlobalSettings.SafeXmlReaderSettings))
+                                                                       XmlUtilities.SafeXmlReaderSettings))
                                                             {
                                                                 token.ThrowIfCancellationRequested();
                                                                 XPathDocument xmlSourceDoc
@@ -44079,7 +44079,7 @@ namespace Chummer
                                                             token.ThrowIfCancellationRequested();
                                                             using (XmlReader objReader = XmlReader.Create(
                                                                        objStreamReader,
-                                                                       GlobalSettings.SafeXmlReaderSettings))
+                                                                       XmlUtilities.SafeXmlReaderSettings))
                                                             {
                                                                 token.ThrowIfCancellationRequested();
                                                                 XPathDocument xmlSourceDoc

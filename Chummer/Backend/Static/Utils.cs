@@ -341,12 +341,13 @@ namespace Chummer
         private static readonly Lazy<ConcurrentDictionary<string, XPathExpression>> s_dicCachedExpressions
             = new Lazy<ConcurrentDictionary<string, XPathExpression>>(() => new ConcurrentDictionary<string, XPathExpression>());
 
+        [Obsolete("Use XmlUtilities", true)]
         public static ConcurrentDictionary<string, XPathExpression> CachedXPathExpressions => s_dicCachedExpressions.Value;
 
+        [Obsolete("Use XmlUtilities", true)]
         public static void TryCacheExpression(string xpath, CancellationToken token = default)
         {
-            token.ThrowIfCancellationRequested();
-            CachedXPathExpressions.GetOrAdd(xpath, XPathExpression.Compile);
+            throw new NotImplementedException();
         }
 
         private static readonly Lazy<JoinableTaskFactory> s_objJoinableTaskFactory
@@ -479,7 +480,7 @@ namespace Chummer
             try
             {
                 WindowsPrincipal principal = new WindowsPrincipal(WindowsIdentity.GetCurrent());
-                DirectorySecurity security = Directory.GetAccessControl(Path.GetDirectoryName(strPath) ?? throw new ArgumentOutOfRangeException(nameof(strPath)));
+                DirectorySecurity security = new DirectorySecurity(Path.GetDirectoryName(strPath), AccessControlSections.Access | AccessControlSections.Owner | AccessControlSections.Group); ;
                 foreach (FileSystemAccessRule accessRule in security.GetAccessRules(true, true, typeof(SecurityIdentifier)))
                 {
                     if (!(accessRule.IdentityReference is SecurityIdentifier objIdentifier) || !principal.IsInRole(objIdentifier))

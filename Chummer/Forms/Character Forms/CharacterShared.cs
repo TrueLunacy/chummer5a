@@ -8559,7 +8559,7 @@ namespace Chummer
 
                                 using (StreamReader objReader = new StreamReader(objStream, Encoding.UTF8, true))
                                 using (XmlReader objXmlReader =
-                                       XmlReader.Create(objReader, GlobalSettings.SafeXmlReaderSettings))
+                                       XmlReader.Create(objReader, XmlUtilities.SafeXmlReaderSettings))
                                     // Put the stream into an XmlDocument
                                     objCharacterXml.Load(objXmlReader);
                             }
@@ -8610,7 +8610,7 @@ namespace Chummer
 
                                 using (StreamReader objReader = new StreamReader(objStream, Encoding.UTF8, true))
                                 using (XmlReader objXmlReader =
-                                       XmlReader.Create(objReader, GlobalSettings.SafeXmlReaderSettings))
+                                       XmlReader.Create(objReader, XmlUtilities.SafeXmlReaderSettings))
                                     // Put the stream into an XmlDocument
                                     objCharacterXml.Load(objXmlReader);
                             }
@@ -8678,7 +8678,7 @@ namespace Chummer
 
                                 using (StreamReader objReader = new StreamReader(objStream, Encoding.UTF8, true))
                                 using (XmlReader objXmlReader =
-                                       XmlReader.Create(objReader, GlobalSettings.SafeXmlReaderSettings))
+                                       XmlReader.Create(objReader, XmlUtilities.SafeXmlReaderSettings))
                                     // Put the stream into an XmlDocument
                                     objCharacterXml.Load(objXmlReader);
                             }
@@ -8730,7 +8730,7 @@ namespace Chummer
 
                                 using (StreamReader objReader = new StreamReader(objStream, Encoding.UTF8, true))
                                 using (XmlReader objXmlReader =
-                                       XmlReader.Create(objReader, GlobalSettings.SafeXmlReaderSettings))
+                                       XmlReader.Create(objReader, XmlUtilities.SafeXmlReaderSettings))
                                     // Put the stream into an XmlDocument
                                     objCharacterXml.Load(objXmlReader);
                             }
@@ -8764,7 +8764,7 @@ namespace Chummer
 
                                     using (StreamReader objReader = new StreamReader(objStream, Encoding.UTF8, true))
                                     using (XmlReader objXmlReader =
-                                           XmlReader.Create(objReader, GlobalSettings.SafeXmlReaderSettings))
+                                           XmlReader.Create(objReader, XmlUtilities.SafeXmlReaderSettings))
                                         // Put the stream into an XmlDocument
                                         objCharacterXml.Load(objXmlReader);
                                 }
@@ -8802,7 +8802,7 @@ namespace Chummer
 
                                 using (StreamReader objReader = new StreamReader(objStream, Encoding.UTF8, true))
                                 using (XmlReader objXmlReader =
-                                       XmlReader.Create(objReader, GlobalSettings.SafeXmlReaderSettings))
+                                       XmlReader.Create(objReader, XmlUtilities.SafeXmlReaderSettings))
                                     // Put the stream into an XmlDocument
                                     objCharacterXml.Load(objXmlReader);
                             }
@@ -8843,7 +8843,7 @@ namespace Chummer
 
                                 using (StreamReader objReader = new StreamReader(objStream, Encoding.UTF8, true))
                                 using (XmlReader objXmlReader =
-                                       XmlReader.Create(objReader, GlobalSettings.SafeXmlReaderSettings))
+                                       XmlReader.Create(objReader, XmlUtilities.SafeXmlReaderSettings))
                                     // Put the stream into an XmlDocument
                                     objCharacterXml.Load(objXmlReader);
                             }
@@ -8883,7 +8883,7 @@ namespace Chummer
 
                                 using (StreamReader objReader = new StreamReader(objStream, Encoding.UTF8, true))
                                 using (XmlReader objXmlReader =
-                                       XmlReader.Create(objReader, GlobalSettings.SafeXmlReaderSettings))
+                                       XmlReader.Create(objReader, XmlUtilities.SafeXmlReaderSettings))
                                     // Put the stream into an XmlDocument
                                     objCharacterXml.Load(objXmlReader);
                             }

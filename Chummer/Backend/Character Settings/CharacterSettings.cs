@@ -3138,7 +3138,7 @@ namespace Chummer
                 {
                     try
                     {
-                        objXmlDocument = XPathDocumentExtensions.LoadStandardFromFile(strFilePath, token: token);
+                        objXmlDocument = XPathDocumentExtensions.LoadStandardFromFile(strFilePath);
                     }
                     catch (IOException)
                     {
@@ -3577,7 +3577,7 @@ namespace Chummer
                             continue;
                         try
                         {
-                            objXmlDocument = XPathDocumentExtensions.LoadStandardFromFile(strMruCharacterFile, token: token);
+                            objXmlDocument = XPathDocumentExtensions.LoadStandardFromFile(strMruCharacterFile);
                         }
                         catch (XmlException)
                         {
@@ -3606,7 +3606,7 @@ namespace Chummer
                                 continue;
                             try
                             {
-                                objXmlDocument = XPathDocumentExtensions.LoadStandardFromFile(strMruCharacterFile, token: token);
+                                objXmlDocument = XPathDocumentExtensions.LoadStandardFromFile(strMruCharacterFile);
                             }
                             catch (XmlException)
                             {

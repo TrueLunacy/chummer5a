@@ -38,6 +38,7 @@ using Codaxy.WkHtmlToPdf;
 using Microsoft.IO;
 using Microsoft.Win32;
 using NLog;
+using Chummer.Xml;
 
 namespace Chummer
 {
