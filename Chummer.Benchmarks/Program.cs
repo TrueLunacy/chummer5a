@@ -1,136 +1,58 @@
-/*  This file is part of Chummer5a.
- *
- *  Chummer5a is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Chummer5a is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with Chummer5a.  If not, see <http://www.gnu.org/licenses/>.
- *
- *  You can obtain the full source code for Chummer5a at
- *  https://github.com/chummer5a/chummer5a
- */
-using System;
-using System.Text;
 using BenchmarkDotNet.Attributes;
-using BenchmarkDotNet.Jobs;
 using BenchmarkDotNet.Running;
+using Chummer.Api;
 
 namespace Chummer.Benchmarks
 {
-    /// <summary>
-    /// This is a dummy program meant for if/when a dev wants to quickly benchmark something
-    /// </summary>
-    public static class Program
+    internal class Program
     {
-        private static void Main()
+        static void Main(string[] args)
         {
-            // Benchmarks should not be run in a Debug configuration
-            Utils.BreakIfDebug();
-            BenchmarkRunner.Run<ForeachSplitComparison>();
+            var gs = LegacySettingsManager.LoadLegacyRegistrySettings() ?? throw new InvalidOperationException();
+            MemoryStream ms = new();
+            var gsm = new GlobalSettingsManager();
+            gsm.SerializeGlobalSettings(gs, ms);
+            ms.Seek(0, SeekOrigin.Begin);
+            using StreamReader sr = new StreamReader(ms);
+            Console.WriteLine(sr.ReadToEnd());
+            //var summary = BenchmarkRunner.Run<GlobalSettingsDeserializeBenchmark>();
         }
     }
 
-    /// <summary>
-    /// Replace with a more suitable name in practice. You can also benchmark as many methods as you like.
-    /// </summary>
-    [MemoryDiagnoser]
-    [SimpleJob(RuntimeMoniker.Net48, baseline: true)]
-    public class ForeachSplitComparison
+    // Benchmark.NET complains because the out of runner process is run as Net8.0, not Net8.0 windows
+    [InProcess]
+    public class GlobalSettingsDeserializeBenchmark
     {
-        private readonly string _strLongWord;
-
-        [Params(100, 1000, 10000)]
-        // ReSharper disable once MemberCanBePrivate.Global
-        // ReSharper disable once UnassignedField.Global
-        public int N;
-
-        public ForeachSplitComparison()
+        [GlobalSetup]
+        public void GlobalSetup()
         {
-            Random objRandom = new Random(42);
-            string[] astrWords =
-            {
-                "lorem", "ipsum", "dolor", "sit", "amet"
-            };
-            StringBuilder sbdLongWord = new StringBuilder(600000);
-            foreach (string strWord in astrWords)
-                sbdLongWord.Append(strWord).Append(' ');
-            for (int iI = astrWords.Length; iI < 100000; ++iI)
-            {
-                sbdLongWord.Append(astrWords[objRandom.Next(0, astrWords.Length)]).Append(' ');
-            }
-            sbdLongWord.Length -= 1;
-            _strLongWord = sbdLongWord.ToString();
+            using var ms = new MemoryStream();
+            var gsm = new GlobalSettingsManager();
+            gsm.SerializeGlobalSettings(Api.Models.GlobalSettings.GlobalSettings.DefaultSettings, ms);
+            byteArray = ms.ToArray();
+
+            settingsFile = new FileInfo(Path.GetTempFileName());
+            using var fs = settingsFile.OpenWrite();
+            gsm.SerializeGlobalSettings(Api.Models.GlobalSettings.GlobalSettings.DefaultSettings, fs);
         }
 
-        /// <summary>
-        /// Replace with a more suitable name in practice.
-        /// </summary>
-        /// <returns>Doesn't matter for benchmarks, but makes sure that key code isn't optimized away.</returns>
-        [Benchmark(Baseline = true)]
-        public bool ForeachSplit()
-        {
-            string strBaseWord = _strLongWord.Substring((_strLongWord.Length - N) / 2, N);
-            bool blnDummy = false;
-            foreach (string strWord in strBaseWord.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries))
-            {
-                blnDummy = strWord.Length > 3;
-            }
-            return blnDummy;
-        }
+        private byte[] byteArray = default!;
+        private FileInfo settingsFile = default!;
+        private Stream MemoryStream => new MemoryStream(byteArray, false);
 
-        /// <summary>
-        /// Replace with a more suitable name in practice.
-        /// </summary>
-        /// <returns>Doesn't matter for benchmarks, but makes sure that key code isn't optimized away.</returns>
         [Benchmark]
-        public bool ForeachSplitNoAlloc()
+        public Api.Models.GlobalSettings.GlobalSettings DeserializeDefaultFromMemoryStream()
         {
-            string strBaseWord = _strLongWord.Substring((_strLongWord.Length - N) / 2, N);
-            bool blnDummy = false;
-            foreach (string strWord in strBaseWord.SplitNoAlloc(' ', StringSplitOptions.RemoveEmptyEntries))
-            {
-                blnDummy = strWord.Length > 3;
-            }
-            return blnDummy;
+            GlobalSettingsManager manager = new();
+            return manager.LoadGlobalSettings(MemoryStream);
         }
 
-        /// <summary>
-        /// Replace with a more suitable name in practice.
-        /// </summary>
-        /// <returns>Doesn't matter for benchmarks, but makes sure that key code isn't optimized away.</returns>
         [Benchmark]
-        public bool ForeachSplitString()
+        public Api.Models.GlobalSettings.GlobalSettings DeserializeDefaultFromFile()
         {
-            string strBaseWord = _strLongWord.Substring((_strLongWord.Length - N) / 2, N);
-            bool blnDummy = false;
-            foreach (string strWord in strBaseWord.Split(new[] { "rem " }, StringSplitOptions.RemoveEmptyEntries))
-            {
-                blnDummy = strWord.Length > 3;
-            }
-            return blnDummy;
-        }
-
-        /// <summary>
-        /// Replace with a more suitable name in practice.
-        /// </summary>
-        /// <returns>Doesn't matter for benchmarks, but makes sure that key code isn't optimized away.</returns>
-        [Benchmark]
-        public bool ForeachSplitNoAllocString()
-        {
-            string strBaseWord = _strLongWord.Substring((_strLongWord.Length - N) / 2, N);
-            bool blnDummy = false;
-            foreach (string strWord in strBaseWord.SplitNoAlloc("rem ", StringSplitOptions.RemoveEmptyEntries))
-            {
-                blnDummy = strWord.Length > 3;
-            }
-            return blnDummy;
+            GlobalSettingsManager manager = new();
+            using var fs = settingsFile.OpenRead();
+            return manager.LoadGlobalSettings(fs);
         }
     }
 }

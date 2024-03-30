@@ -127,8 +127,7 @@ namespace Chummer
                     }
                 }
 
-                Action<Form> funcBegin = BeginShow;
-                frmForm.BeginInvoke(funcBegin, frmForm);
+                Task.Run(() => BeginShow(frmForm));
                 return objCompletionSource.Task;
             }
         }
@@ -176,7 +175,7 @@ namespace Chummer
             TaskCompletionSource<DialogResult> objCompletionSource = new TaskCompletionSource<DialogResult>();
             CancellationTokenRegistration objCancelRegistration
                 = token.Register(() => objCompletionSource.TrySetCanceled(token));
-            frmForm.BeginInvoke(new Action(() =>
+            Task.Run(new Action(() =>
             {
                 objCompletionSource.SetResult(frmForm.ShowDialog(owner));
                 objCancelRegistration.Dispose();
@@ -227,8 +226,7 @@ namespace Chummer
                 }
             }
 
-            Action<Form> funcBegin = BeginShow;
-            frmForm.BeginInvoke(funcBegin, frmForm);
+            Task.Run(() => BeginShow(frmForm));
             return objCompletionSource.Task;
         }
 

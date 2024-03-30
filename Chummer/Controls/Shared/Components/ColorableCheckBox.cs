@@ -104,7 +104,8 @@ namespace Chummer
             }
         }
 
-        private int _intDefaultColorScheme = ColorManager.IsLightMode.ToInt32();
+        //private int _intDefaultColorScheme = ColorManager.IsLightMode.ToInt32();
+        private int _intDefaultColorScheme;
 
         public bool DefaultColorScheme
         {

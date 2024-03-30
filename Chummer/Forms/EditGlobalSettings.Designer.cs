@@ -29,2410 +29,2450 @@ namespace Chummer
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(EditGlobalSettings));
-            this.tlpOptions = new System.Windows.Forms.TableLayoutPanel();
-            this.tabOptions = new System.Windows.Forms.TabControl();
-            this.tabGlobal = new System.Windows.Forms.TabPage();
-            this.tlpGlobal = new System.Windows.Forms.TableLayoutPanel();
-            this.cmdScanForPDFs = new Chummer.ButtonWithToolTip();
-            this.grpSelectedSourcebook = new System.Windows.Forms.GroupBox();
-            this.tlpSelectedSourcebook = new System.Windows.Forms.TableLayoutPanel();
-            this.txtPDFLocation = new System.Windows.Forms.TextBox();
-            this.lblPDFLocation = new System.Windows.Forms.Label();
-            this.cmdPDFLocation = new System.Windows.Forms.Button();
-            this.lblPDFOffset = new System.Windows.Forms.Label();
-            this.flpPDFOffset = new System.Windows.Forms.FlowLayoutPanel();
-            this.nudPDFOffset = new Chummer.NumericUpDownEx();
-            this.cmdPDFTest = new System.Windows.Forms.Button();
-            this.cmdRemovePDFLocation = new Chummer.DpiFriendlyImagedButton();
-            this.tlpGlobalOptions = new System.Windows.Forms.TableLayoutPanel();
-            this.cboDefaultMasterIndexSetting = new Chummer.ElasticComboBox();
-            this.lblDefaultMasterIndexSetting = new System.Windows.Forms.Label();
-            this.tlpDpiScalingMode = new System.Windows.Forms.TableLayoutPanel();
-            this.cboDpiScalingMethod = new Chummer.ElasticComboBox();
-            this.lblDpiScalingMode = new System.Windows.Forms.Label();
-            this.chkUseLogging = new Chummer.ColorableCheckBox();
-            this.chkAutomaticUpdate = new Chummer.ColorableCheckBox();
-            this.chkConfirmKarmaExpense = new Chummer.ColorableCheckBox();
-            this.chkConfirmDelete = new Chummer.ColorableCheckBox();
-            this.chkHideItemsOverAvail = new Chummer.ColorableCheckBox();
-            this.tlpGlobalOptionsTop = new System.Windows.Forms.TableLayoutPanel();
-            this.grpDateFormat = new System.Windows.Forms.GroupBox();
-            this.tlpDateFormat = new System.Windows.Forms.TableLayoutPanel();
-            this.txtDateFormat = new System.Windows.Forms.TextBox();
-            this.txtDateFormatView = new System.Windows.Forms.TextBox();
-            this.grpTimeFormat = new System.Windows.Forms.GroupBox();
-            this.tlpTimeFormat = new System.Windows.Forms.TableLayoutPanel();
-            this.txtTimeFormat = new System.Windows.Forms.TextBox();
-            this.txtTimeFormatView = new System.Windows.Forms.TextBox();
-            this.chkCustomDateTimeFormats = new Chummer.ColorableCheckBox();
-            this.lblXSLT = new System.Windows.Forms.Label();
-            this.lblLanguage = new System.Windows.Forms.Label();
-            this.cboSheetLanguage = new Chummer.ElasticComboBox();
-            this.cboXSLT = new Chummer.ElasticComboBox();
-            this.cboLanguage = new Chummer.ElasticComboBox();
-            this.cmdVerify = new System.Windows.Forms.Button();
-            this.cmdVerifyData = new System.Windows.Forms.Button();
-            this.imgSheetLanguageFlag = new System.Windows.Forms.PictureBox();
-            this.imgLanguageFlag = new System.Windows.Forms.PictureBox();
-            this.tlpLoggingOptions = new System.Windows.Forms.TableLayoutPanel();
-            this.cboUseLoggingApplicationInsights = new Chummer.ElasticComboBox();
-            this.cmdUseLoggingHelp = new Chummer.ButtonWithToolTip();
-            this.tlpCharacterRosterPath = new System.Windows.Forms.TableLayoutPanel();
-            this.cmdCharacterRoster = new System.Windows.Forms.Button();
-            this.txtCharacterRosterPath = new System.Windows.Forms.TextBox();
-            this.cmdRemoveCharacterRoster = new Chummer.DpiFriendlyImagedButton();
-            this.tlpPDFAppPath = new System.Windows.Forms.TableLayoutPanel();
-            this.txtPDFAppPath = new System.Windows.Forms.TextBox();
-            this.cmdPDFAppPath = new System.Windows.Forms.Button();
-            this.cmdRemovePDFAppPath = new Chummer.DpiFriendlyImagedButton();
-            this.tlpMugshotCompression = new System.Windows.Forms.TableLayoutPanel();
-            this.lblMugshotCompressionQuality = new System.Windows.Forms.Label();
-            this.nudMugshotCompressionQuality = new Chummer.NumericUpDownEx();
-            this.cboMugshotCompression = new Chummer.ElasticComboBox();
-            this.tlpColorMode = new System.Windows.Forms.TableLayoutPanel();
-            this.lblColorMode = new System.Windows.Forms.Label();
-            this.cboColorMode = new Chummer.ElasticComboBox();
-            this.chkPreferNightlyBuilds = new Chummer.ColorableCheckBox();
-            this.chkPrintSkillsWithZeroRating = new Chummer.ColorableCheckBox();
-            this.chkPrintExpenses = new Chummer.ColorableCheckBox();
-            this.chkPrintFreeExpenses = new Chummer.ColorableCheckBox();
-            this.chkDatesIncludeTime = new Chummer.ColorableCheckBox();
-            this.chkPrintNotes = new Chummer.ColorableCheckBox();
-            this.chkHideCharacterRoster = new Chummer.ColorableCheckBox();
-            this.chkHideMasterIndex = new Chummer.ColorableCheckBox();
-            this.chkSearchInCategoryOnly = new Chummer.ColorableCheckBox();
-            this.flpEnablePlugins = new System.Windows.Forms.FlowLayoutPanel();
-            this.chkEnablePlugins = new Chummer.ColorableCheckBox();
-            this.cmdPluginsHelp = new System.Windows.Forms.Button();
-            this.chkLifeModule = new Chummer.ColorableCheckBox();
-            this.lblMugshotCompression = new System.Windows.Forms.Label();
-            this.lblCharacterRosterLabel = new System.Windows.Forms.Label();
-            this.lblDefaultCharacterSetting = new System.Windows.Forms.Label();
-            this.cboDefaultCharacterSetting = new Chummer.ElasticComboBox();
-            this.chkStartupFullscreen = new Chummer.ColorableCheckBox();
-            this.chkAllowSkillDiceRolling = new Chummer.ColorableCheckBox();
-            this.chkCreateBackupOnCareer = new Chummer.ColorableCheckBox();
-            this.chkSaveCompressionLevel = new System.Windows.Forms.Label();
-            this.cboChum5lzCompressionLevel = new Chummer.ElasticComboBox();
-            this.lblPDFAppPath = new System.Windows.Forms.Label();
-            this.lblPDFParametersLabel = new System.Windows.Forms.Label();
-            this.cboPDFParameters = new Chummer.ElasticComboBox();
-            this.flpBrowserVersion = new System.Windows.Forms.FlowLayoutPanel();
-            this.lblBrowserVersion = new System.Windows.Forms.Label();
-            this.nudBrowserVersion = new Chummer.NumericUpDownEx();
-            this.chkLiveUpdateCleanCharacterFiles = new Chummer.ColorableCheckBox();
-            this.chkSingleDiceRoller = new Chummer.ColorableCheckBox();
-            this.chkAllowEasterEggs = new Chummer.ColorableCheckBox();
-            this.chkLiveCustomData = new Chummer.ColorableCheckBox();
-            this.chkPrintToFileFirst = new Chummer.ColorableCheckBox();
-            this.chkAllowHoverIncrement = new Chummer.ColorableCheckBox();
-            this.chkInsertPdfNotesIfAvailable = new Chummer.ColorableCheckBox();
-            this.gpbEditSourcebookInfo = new System.Windows.Forms.GroupBox();
-            this.lstGlobalSourcebookInfos = new System.Windows.Forms.ListBox();
-            this.tabCustomDataDirectories = new System.Windows.Forms.TabPage();
-            this.tlpOptionalRules = new System.Windows.Forms.TableLayoutPanel();
-            this.gpbDirectoryInfo = new System.Windows.Forms.GroupBox();
-            this.tlpDirectoryInfo = new System.Windows.Forms.TableLayoutPanel();
-            this.gbpDirectoryInfoDependencies = new System.Windows.Forms.GroupBox();
-            this.pnlDirectoryDependencies = new System.Windows.Forms.Panel();
-            this.lblDependencies = new System.Windows.Forms.Label();
-            this.gbpDirectoryInfoIncompatibilities = new System.Windows.Forms.GroupBox();
-            this.pnlDirectoryIncompatibilities = new System.Windows.Forms.Panel();
-            this.lblIncompatibilities = new System.Windows.Forms.Label();
-            this.txtDirectoryDescription = new System.Windows.Forms.TextBox();
-            this.tlpDirectoryInfoLeft = new System.Windows.Forms.TableLayoutPanel();
-            this.lblDirectoryPath = new System.Windows.Forms.Label();
-            this.lblDirectoryPathLabel = new System.Windows.Forms.Label();
-            this.lblDirectoryNameLabel = new System.Windows.Forms.Label();
-            this.lblDirectoryVersion = new System.Windows.Forms.Label();
-            this.lblDirectoryName = new System.Windows.Forms.Label();
-            this.lblDirectoryVersionLabel = new System.Windows.Forms.Label();
-            this.gpbDirectoryAuthors = new System.Windows.Forms.GroupBox();
-            this.pnlDirectoryAuthors = new System.Windows.Forms.Panel();
-            this.lblDirectoryAuthors = new System.Windows.Forms.Label();
-            this.lblCustomDataDirectoriesLabel = new System.Windows.Forms.Label();
-            this.lsbCustomDataDirectories = new System.Windows.Forms.ListBox();
-            this.tlpOptionalRulesButtons = new System.Windows.Forms.TableLayoutPanel();
-            this.cmdAddCustomDirectory = new System.Windows.Forms.Button();
-            this.cmdRemoveCustomDirectory = new System.Windows.Forms.Button();
-            this.cmdRenameCustomDataDirectory = new System.Windows.Forms.Button();
-            this.tabGitHubIssues = new System.Windows.Forms.TabPage();
-            this.cmdUploadPastebin = new System.Windows.Forms.Button();
-            this.tabPlugins = new System.Windows.Forms.TabPage();
-            this.tlpPlugins = new System.Windows.Forms.TableLayoutPanel();
-            this.grpAvailablePlugins = new System.Windows.Forms.GroupBox();
-            this.clbPlugins = new System.Windows.Forms.CheckedListBox();
-            this.pnlPluginOption = new System.Windows.Forms.Panel();
-            this.tlpButtons = new System.Windows.Forms.TableLayoutPanel();
-            this.cmdCancel = new System.Windows.Forms.Button();
-            this.cmdOK = new System.Windows.Forms.Button();
-            this.tlpOptions.SuspendLayout();
-            this.tabOptions.SuspendLayout();
-            this.tabGlobal.SuspendLayout();
-            this.tlpGlobal.SuspendLayout();
-            this.grpSelectedSourcebook.SuspendLayout();
-            this.tlpSelectedSourcebook.SuspendLayout();
-            this.flpPDFOffset.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.nudPDFOffset)).BeginInit();
-            this.tlpGlobalOptions.SuspendLayout();
-            this.tlpDpiScalingMode.SuspendLayout();
-            this.tlpGlobalOptionsTop.SuspendLayout();
-            this.grpDateFormat.SuspendLayout();
-            this.tlpDateFormat.SuspendLayout();
-            this.grpTimeFormat.SuspendLayout();
-            this.tlpTimeFormat.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.imgSheetLanguageFlag)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.imgLanguageFlag)).BeginInit();
-            this.tlpLoggingOptions.SuspendLayout();
-            this.tlpCharacterRosterPath.SuspendLayout();
-            this.tlpPDFAppPath.SuspendLayout();
-            this.tlpMugshotCompression.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.nudMugshotCompressionQuality)).BeginInit();
-            this.tlpColorMode.SuspendLayout();
-            this.flpEnablePlugins.SuspendLayout();
-            this.flpBrowserVersion.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.nudBrowserVersion)).BeginInit();
-            this.gpbEditSourcebookInfo.SuspendLayout();
-            this.tabCustomDataDirectories.SuspendLayout();
-            this.tlpOptionalRules.SuspendLayout();
-            this.gpbDirectoryInfo.SuspendLayout();
-            this.tlpDirectoryInfo.SuspendLayout();
-            this.gbpDirectoryInfoDependencies.SuspendLayout();
-            this.pnlDirectoryDependencies.SuspendLayout();
-            this.gbpDirectoryInfoIncompatibilities.SuspendLayout();
-            this.pnlDirectoryIncompatibilities.SuspendLayout();
-            this.tlpDirectoryInfoLeft.SuspendLayout();
-            this.gpbDirectoryAuthors.SuspendLayout();
-            this.pnlDirectoryAuthors.SuspendLayout();
-            this.tlpOptionalRulesButtons.SuspendLayout();
-            this.tabGitHubIssues.SuspendLayout();
-            this.tabPlugins.SuspendLayout();
-            this.tlpPlugins.SuspendLayout();
-            this.grpAvailablePlugins.SuspendLayout();
-            this.tlpButtons.SuspendLayout();
-            this.SuspendLayout();
+            tlpOptions = new System.Windows.Forms.TableLayoutPanel();
+            tabOptions = new System.Windows.Forms.TabControl();
+            tabGlobal = new System.Windows.Forms.TabPage();
+            tlpGlobal = new System.Windows.Forms.TableLayoutPanel();
+            cmdScanForPDFs = new ButtonWithToolTip();
+            grpSelectedSourcebook = new System.Windows.Forms.GroupBox();
+            tlpSelectedSourcebook = new System.Windows.Forms.TableLayoutPanel();
+            txtPDFLocation = new System.Windows.Forms.TextBox();
+            lblPDFLocation = new System.Windows.Forms.Label();
+            cmdPDFLocation = new System.Windows.Forms.Button();
+            lblPDFOffset = new System.Windows.Forms.Label();
+            flpPDFOffset = new System.Windows.Forms.FlowLayoutPanel();
+            nudPDFOffset = new NumericUpDownEx();
+            cmdPDFTest = new System.Windows.Forms.Button();
+            cmdRemovePDFLocation = new DpiFriendlyImagedButton();
+            tlpGlobalOptions = new System.Windows.Forms.TableLayoutPanel();
+            cboDefaultMasterIndexSetting = new ElasticComboBox();
+            lblDefaultMasterIndexSetting = new System.Windows.Forms.Label();
+            tlpDpiScalingMode = new System.Windows.Forms.TableLayoutPanel();
+            cboDpiScalingMethod = new ElasticComboBox();
+            lblDpiScalingMode = new System.Windows.Forms.Label();
+            chkUseLogging = new ColorableCheckBox();
+            chkAutomaticUpdate = new ColorableCheckBox();
+            chkConfirmKarmaExpense = new ColorableCheckBox();
+            chkConfirmDelete = new ColorableCheckBox();
+            chkHideItemsOverAvail = new ColorableCheckBox();
+            tlpGlobalOptionsTop = new System.Windows.Forms.TableLayoutPanel();
+            grpDateFormat = new System.Windows.Forms.GroupBox();
+            tlpDateFormat = new System.Windows.Forms.TableLayoutPanel();
+            txtDateFormat = new System.Windows.Forms.TextBox();
+            txtDateFormatView = new System.Windows.Forms.TextBox();
+            grpTimeFormat = new System.Windows.Forms.GroupBox();
+            tlpTimeFormat = new System.Windows.Forms.TableLayoutPanel();
+            txtTimeFormat = new System.Windows.Forms.TextBox();
+            txtTimeFormatView = new System.Windows.Forms.TextBox();
+            chkCustomDateTimeFormats = new ColorableCheckBox();
+            lblXSLT = new System.Windows.Forms.Label();
+            lblLanguage = new System.Windows.Forms.Label();
+            cboSheetLanguage = new ElasticComboBox();
+            cboXSLT = new ElasticComboBox();
+            cboLanguage = new ElasticComboBox();
+            cmdVerify = new System.Windows.Forms.Button();
+            cmdVerifyData = new System.Windows.Forms.Button();
+            imgSheetLanguageFlag = new System.Windows.Forms.PictureBox();
+            imgLanguageFlag = new System.Windows.Forms.PictureBox();
+            tlpLoggingOptions = new System.Windows.Forms.TableLayoutPanel();
+            cboUseLoggingApplicationInsights = new ElasticComboBox();
+            cmdUseLoggingHelp = new ButtonWithToolTip();
+            tlpCharacterRosterPath = new System.Windows.Forms.TableLayoutPanel();
+            cmdCharacterRoster = new System.Windows.Forms.Button();
+            txtCharacterRosterPath = new System.Windows.Forms.TextBox();
+            cmdRemoveCharacterRoster = new DpiFriendlyImagedButton();
+            tlpPDFAppPath = new System.Windows.Forms.TableLayoutPanel();
+            txtPDFAppPath = new System.Windows.Forms.TextBox();
+            cmdPDFAppPath = new System.Windows.Forms.Button();
+            cmdRemovePDFAppPath = new DpiFriendlyImagedButton();
+            tlpMugshotCompression = new System.Windows.Forms.TableLayoutPanel();
+            cboMugshotCompression = new ElasticComboBox();
+            tlpColorMode = new System.Windows.Forms.TableLayoutPanel();
+            lblColorMode = new System.Windows.Forms.Label();
+            cboColorMode = new ElasticComboBox();
+            chkPreferNightlyBuilds = new ColorableCheckBox();
+            chkPrintSkillsWithZeroRating = new ColorableCheckBox();
+            chkPrintExpenses = new ColorableCheckBox();
+            chkPrintFreeExpenses = new ColorableCheckBox();
+            chkDatesIncludeTime = new ColorableCheckBox();
+            chkPrintNotes = new ColorableCheckBox();
+            chkHideCharacterRoster = new ColorableCheckBox();
+            chkHideMasterIndex = new ColorableCheckBox();
+            chkSearchInCategoryOnly = new ColorableCheckBox();
+            flpEnablePlugins = new System.Windows.Forms.FlowLayoutPanel();
+            chkEnablePlugins = new ColorableCheckBox();
+            cmdPluginsHelp = new System.Windows.Forms.Button();
+            chkLifeModule = new ColorableCheckBox();
+            lblMugshotCompression = new System.Windows.Forms.Label();
+            lblCharacterRosterLabel = new System.Windows.Forms.Label();
+            lblDefaultCharacterSetting = new System.Windows.Forms.Label();
+            cboDefaultCharacterSetting = new ElasticComboBox();
+            chkStartupFullscreen = new ColorableCheckBox();
+            chkAllowSkillDiceRolling = new ColorableCheckBox();
+            chkCreateBackupOnCareer = new ColorableCheckBox();
+            chkSaveCompressionLevel = new System.Windows.Forms.Label();
+            cboChum5lzCompressionLevel = new ElasticComboBox();
+            lblPDFAppPath = new System.Windows.Forms.Label();
+            lblPDFParametersLabel = new System.Windows.Forms.Label();
+            cboPDFParameters = new ElasticComboBox();
+            flpBrowserVersion = new System.Windows.Forms.FlowLayoutPanel();
+            lblBrowserVersion = new System.Windows.Forms.Label();
+            nudBrowserVersion = new NumericUpDownEx();
+            chkLiveUpdateCleanCharacterFiles = new ColorableCheckBox();
+            chkSingleDiceRoller = new ColorableCheckBox();
+            chkAllowEasterEggs = new ColorableCheckBox();
+            chkLiveCustomData = new ColorableCheckBox();
+            chkPrintToFileFirst = new ColorableCheckBox();
+            chkAllowHoverIncrement = new ColorableCheckBox();
+            chkInsertPdfNotesIfAvailable = new ColorableCheckBox();
+            gpbEditSourcebookInfo = new System.Windows.Forms.GroupBox();
+            lstGlobalSourcebookInfos = new System.Windows.Forms.ListBox();
+            tabCustomDataDirectories = new System.Windows.Forms.TabPage();
+            tlpOptionalRules = new System.Windows.Forms.TableLayoutPanel();
+            gpbDirectoryInfo = new System.Windows.Forms.GroupBox();
+            tlpDirectoryInfo = new System.Windows.Forms.TableLayoutPanel();
+            gbpDirectoryInfoDependencies = new System.Windows.Forms.GroupBox();
+            pnlDirectoryDependencies = new System.Windows.Forms.Panel();
+            lblDependencies = new System.Windows.Forms.Label();
+            gbpDirectoryInfoIncompatibilities = new System.Windows.Forms.GroupBox();
+            pnlDirectoryIncompatibilities = new System.Windows.Forms.Panel();
+            lblIncompatibilities = new System.Windows.Forms.Label();
+            txtDirectoryDescription = new System.Windows.Forms.TextBox();
+            tlpDirectoryInfoLeft = new System.Windows.Forms.TableLayoutPanel();
+            lblDirectoryPath = new System.Windows.Forms.Label();
+            lblDirectoryPathLabel = new System.Windows.Forms.Label();
+            lblDirectoryNameLabel = new System.Windows.Forms.Label();
+            lblDirectoryVersion = new System.Windows.Forms.Label();
+            lblDirectoryName = new System.Windows.Forms.Label();
+            lblDirectoryVersionLabel = new System.Windows.Forms.Label();
+            gpbDirectoryAuthors = new System.Windows.Forms.GroupBox();
+            pnlDirectoryAuthors = new System.Windows.Forms.Panel();
+            lblDirectoryAuthors = new System.Windows.Forms.Label();
+            lblCustomDataDirectoriesLabel = new System.Windows.Forms.Label();
+            lsbCustomDataDirectories = new System.Windows.Forms.ListBox();
+            tlpOptionalRulesButtons = new System.Windows.Forms.TableLayoutPanel();
+            cmdAddCustomDirectory = new System.Windows.Forms.Button();
+            cmdRemoveCustomDirectory = new System.Windows.Forms.Button();
+            cmdRenameCustomDataDirectory = new System.Windows.Forms.Button();
+            tabGitHubIssues = new System.Windows.Forms.TabPage();
+            cmdUploadPastebin = new System.Windows.Forms.Button();
+            tabPlugins = new System.Windows.Forms.TabPage();
+            tlpPlugins = new System.Windows.Forms.TableLayoutPanel();
+            grpAvailablePlugins = new System.Windows.Forms.GroupBox();
+            clbPlugins = new System.Windows.Forms.CheckedListBox();
+            pnlPluginOption = new System.Windows.Forms.Panel();
+            tlpButtons = new System.Windows.Forms.TableLayoutPanel();
+            cmdCancel = new System.Windows.Forms.Button();
+            cmdOK = new System.Windows.Forms.Button();
+            tlpOptions.SuspendLayout();
+            tabOptions.SuspendLayout();
+            tabGlobal.SuspendLayout();
+            tlpGlobal.SuspendLayout();
+            grpSelectedSourcebook.SuspendLayout();
+            tlpSelectedSourcebook.SuspendLayout();
+            flpPDFOffset.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)nudPDFOffset).BeginInit();
+            tlpGlobalOptions.SuspendLayout();
+            tlpDpiScalingMode.SuspendLayout();
+            tlpGlobalOptionsTop.SuspendLayout();
+            grpDateFormat.SuspendLayout();
+            tlpDateFormat.SuspendLayout();
+            grpTimeFormat.SuspendLayout();
+            tlpTimeFormat.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)imgSheetLanguageFlag).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)imgLanguageFlag).BeginInit();
+            tlpLoggingOptions.SuspendLayout();
+            tlpCharacterRosterPath.SuspendLayout();
+            tlpPDFAppPath.SuspendLayout();
+            tlpMugshotCompression.SuspendLayout();
+            tlpColorMode.SuspendLayout();
+            flpEnablePlugins.SuspendLayout();
+            flpBrowserVersion.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)nudBrowserVersion).BeginInit();
+            gpbEditSourcebookInfo.SuspendLayout();
+            tabCustomDataDirectories.SuspendLayout();
+            tlpOptionalRules.SuspendLayout();
+            gpbDirectoryInfo.SuspendLayout();
+            tlpDirectoryInfo.SuspendLayout();
+            gbpDirectoryInfoDependencies.SuspendLayout();
+            pnlDirectoryDependencies.SuspendLayout();
+            gbpDirectoryInfoIncompatibilities.SuspendLayout();
+            pnlDirectoryIncompatibilities.SuspendLayout();
+            tlpDirectoryInfoLeft.SuspendLayout();
+            gpbDirectoryAuthors.SuspendLayout();
+            pnlDirectoryAuthors.SuspendLayout();
+            tlpOptionalRulesButtons.SuspendLayout();
+            tabGitHubIssues.SuspendLayout();
+            tabPlugins.SuspendLayout();
+            tlpPlugins.SuspendLayout();
+            grpAvailablePlugins.SuspendLayout();
+            tlpButtons.SuspendLayout();
+            SuspendLayout();
             // 
             // tlpOptions
             // 
-            this.tlpOptions.AutoSize = true;
-            this.tlpOptions.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.tlpOptions.ColumnCount = 1;
-            this.tlpOptions.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tlpOptions.Controls.Add(this.tabOptions, 0, 0);
-            this.tlpOptions.Controls.Add(this.tlpButtons, 0, 1);
-            this.tlpOptions.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tlpOptions.Location = new System.Drawing.Point(9, 9);
-            this.tlpOptions.Name = "tlpOptions";
-            this.tlpOptions.RowCount = 2;
-            this.tlpOptions.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tlpOptions.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tlpOptions.Size = new System.Drawing.Size(1246, 663);
-            this.tlpOptions.TabIndex = 7;
+            tlpOptions.AutoSize = true;
+            tlpOptions.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            tlpOptions.ColumnCount = 1;
+            tlpOptions.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            tlpOptions.Controls.Add(tabOptions, 0, 0);
+            tlpOptions.Controls.Add(tlpButtons, 0, 1);
+            tlpOptions.Dock = System.Windows.Forms.DockStyle.Fill;
+            tlpOptions.Location = new System.Drawing.Point(10, 10);
+            tlpOptions.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            tlpOptions.Name = "tlpOptions";
+            tlpOptions.RowCount = 2;
+            tlpOptions.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            tlpOptions.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            tlpOptions.Size = new System.Drawing.Size(1455, 766);
+            tlpOptions.TabIndex = 7;
             // 
             // tabOptions
             // 
-            this.tabOptions.Controls.Add(this.tabGlobal);
-            this.tabOptions.Controls.Add(this.tabCustomDataDirectories);
-            this.tabOptions.Controls.Add(this.tabGitHubIssues);
-            this.tabOptions.Controls.Add(this.tabPlugins);
-            this.tabOptions.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tabOptions.Location = new System.Drawing.Point(3, 3);
-            this.tabOptions.Name = "tabOptions";
-            this.tabOptions.SelectedIndex = 0;
-            this.tabOptions.Size = new System.Drawing.Size(1240, 628);
-            this.tabOptions.TabIndex = 4;
+            tabOptions.Controls.Add(tabGlobal);
+            tabOptions.Controls.Add(tabCustomDataDirectories);
+            tabOptions.Controls.Add(tabGitHubIssues);
+            tabOptions.Controls.Add(tabPlugins);
+            tabOptions.Dock = System.Windows.Forms.DockStyle.Fill;
+            tabOptions.Location = new System.Drawing.Point(4, 3);
+            tabOptions.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            tabOptions.Name = "tabOptions";
+            tabOptions.SelectedIndex = 0;
+            tabOptions.Size = new System.Drawing.Size(1447, 729);
+            tabOptions.TabIndex = 4;
             // 
             // tabGlobal
             // 
-            this.tabGlobal.BackColor = System.Drawing.SystemColors.Control;
-            this.tabGlobal.Controls.Add(this.tlpGlobal);
-            this.tabGlobal.Location = new System.Drawing.Point(4, 22);
-            this.tabGlobal.Name = "tabGlobal";
-            this.tabGlobal.Padding = new System.Windows.Forms.Padding(9);
-            this.tabGlobal.Size = new System.Drawing.Size(1232, 602);
-            this.tabGlobal.TabIndex = 5;
-            this.tabGlobal.Tag = "Tab_Options_Global";
-            this.tabGlobal.Text = "Global Options";
+            tabGlobal.BackColor = System.Drawing.SystemColors.Control;
+            tabGlobal.Controls.Add(tlpGlobal);
+            tabGlobal.Location = new System.Drawing.Point(4, 24);
+            tabGlobal.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            tabGlobal.Name = "tabGlobal";
+            tabGlobal.Padding = new System.Windows.Forms.Padding(10);
+            tabGlobal.Size = new System.Drawing.Size(1439, 701);
+            tabGlobal.TabIndex = 5;
+            tabGlobal.Tag = "Tab_Options_Global";
+            tabGlobal.Text = "Global Options";
             // 
             // tlpGlobal
             // 
-            this.tlpGlobal.AutoSize = true;
-            this.tlpGlobal.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.tlpGlobal.ColumnCount = 2;
-            this.tlpGlobal.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
-            this.tlpGlobal.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 75F));
-            this.tlpGlobal.Controls.Add(this.cmdScanForPDFs, 0, 2);
-            this.tlpGlobal.Controls.Add(this.grpSelectedSourcebook, 1, 1);
-            this.tlpGlobal.Controls.Add(this.tlpGlobalOptions, 1, 0);
-            this.tlpGlobal.Controls.Add(this.gpbEditSourcebookInfo, 0, 0);
-            this.tlpGlobal.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tlpGlobal.Location = new System.Drawing.Point(9, 9);
-            this.tlpGlobal.Name = "tlpGlobal";
-            this.tlpGlobal.RowCount = 3;
-            this.tlpGlobal.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tlpGlobal.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tlpGlobal.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tlpGlobal.Size = new System.Drawing.Size(1214, 584);
-            this.tlpGlobal.TabIndex = 39;
+            tlpGlobal.AutoSize = true;
+            tlpGlobal.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            tlpGlobal.ColumnCount = 2;
+            tlpGlobal.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
+            tlpGlobal.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 75F));
+            tlpGlobal.Controls.Add(cmdScanForPDFs, 0, 2);
+            tlpGlobal.Controls.Add(grpSelectedSourcebook, 1, 1);
+            tlpGlobal.Controls.Add(tlpGlobalOptions, 1, 0);
+            tlpGlobal.Controls.Add(gpbEditSourcebookInfo, 0, 0);
+            tlpGlobal.Dock = System.Windows.Forms.DockStyle.Fill;
+            tlpGlobal.Location = new System.Drawing.Point(10, 10);
+            tlpGlobal.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            tlpGlobal.Name = "tlpGlobal";
+            tlpGlobal.RowCount = 3;
+            tlpGlobal.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            tlpGlobal.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            tlpGlobal.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            tlpGlobal.Size = new System.Drawing.Size(1419, 681);
+            tlpGlobal.TabIndex = 39;
             // 
             // cmdScanForPDFs
             // 
-            this.cmdScanForPDFs.AutoSize = true;
-            this.cmdScanForPDFs.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.cmdScanForPDFs.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.cmdScanForPDFs.Image = null;
-            this.cmdScanForPDFs.ImageDpi120 = null;
-            this.cmdScanForPDFs.ImageDpi144 = null;
-            this.cmdScanForPDFs.ImageDpi192 = null;
-            this.cmdScanForPDFs.ImageDpi288 = null;
-            this.cmdScanForPDFs.ImageDpi384 = null;
-            this.cmdScanForPDFs.ImageDpi96 = null;
-            this.cmdScanForPDFs.Location = new System.Drawing.Point(3, 558);
-            this.cmdScanForPDFs.MinimumSize = new System.Drawing.Size(80, 0);
-            this.cmdScanForPDFs.Name = "cmdScanForPDFs";
-            this.cmdScanForPDFs.Size = new System.Drawing.Size(297, 23);
-            this.cmdScanForPDFs.TabIndex = 68;
-            this.cmdScanForPDFs.Tag = "Button_Options_PDFFolderScan";
-            this.cmdScanForPDFs.Text = "Scan Folder for PDF Files";
-            this.cmdScanForPDFs.ToolTipText = "";
-            this.cmdScanForPDFs.UseVisualStyleBackColor = true;
-            this.cmdScanForPDFs.Click += new System.EventHandler(this.bScanForPDFs_Click);
+            cmdScanForPDFs.AutoSize = true;
+            cmdScanForPDFs.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            cmdScanForPDFs.Dock = System.Windows.Forms.DockStyle.Fill;
+            cmdScanForPDFs.Image = null;
+            cmdScanForPDFs.ImageDpi120 = null;
+            cmdScanForPDFs.ImageDpi144 = null;
+            cmdScanForPDFs.ImageDpi192 = null;
+            cmdScanForPDFs.ImageDpi288 = null;
+            cmdScanForPDFs.ImageDpi384 = null;
+            cmdScanForPDFs.ImageDpi96 = null;
+            cmdScanForPDFs.Location = new System.Drawing.Point(4, 653);
+            cmdScanForPDFs.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            cmdScanForPDFs.MinimumSize = new System.Drawing.Size(93, 0);
+            cmdScanForPDFs.Name = "cmdScanForPDFs";
+            cmdScanForPDFs.Size = new System.Drawing.Size(346, 25);
+            cmdScanForPDFs.TabIndex = 68;
+            cmdScanForPDFs.Tag = "Button_Options_PDFFolderScan";
+            cmdScanForPDFs.Text = "Scan Folder for PDF Files";
+            cmdScanForPDFs.ToolTipText = "";
+            cmdScanForPDFs.UseVisualStyleBackColor = true;
+            cmdScanForPDFs.Click += bScanForPDFs_Click;
             // 
             // grpSelectedSourcebook
             // 
-            this.grpSelectedSourcebook.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.grpSelectedSourcebook.AutoSize = true;
-            this.grpSelectedSourcebook.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.grpSelectedSourcebook.Controls.Add(this.tlpSelectedSourcebook);
-            this.grpSelectedSourcebook.Enabled = false;
-            this.grpSelectedSourcebook.Location = new System.Drawing.Point(306, 503);
-            this.grpSelectedSourcebook.Name = "grpSelectedSourcebook";
-            this.tlpGlobal.SetRowSpan(this.grpSelectedSourcebook, 2);
-            this.grpSelectedSourcebook.Size = new System.Drawing.Size(475, 78);
-            this.grpSelectedSourcebook.TabIndex = 27;
-            this.grpSelectedSourcebook.TabStop = false;
-            this.grpSelectedSourcebook.Tag = "Label_Options_SelectedSourcebook";
-            this.grpSelectedSourcebook.Text = "Selected Sourcebook:";
+            grpSelectedSourcebook.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left;
+            grpSelectedSourcebook.AutoSize = true;
+            grpSelectedSourcebook.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            grpSelectedSourcebook.Controls.Add(tlpSelectedSourcebook);
+            grpSelectedSourcebook.Enabled = false;
+            grpSelectedSourcebook.Location = new System.Drawing.Point(358, 594);
+            grpSelectedSourcebook.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            grpSelectedSourcebook.Name = "grpSelectedSourcebook";
+            grpSelectedSourcebook.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            tlpGlobal.SetRowSpan(grpSelectedSourcebook, 2);
+            grpSelectedSourcebook.Size = new System.Drawing.Size(543, 84);
+            grpSelectedSourcebook.TabIndex = 27;
+            grpSelectedSourcebook.TabStop = false;
+            grpSelectedSourcebook.Tag = "Label_Options_SelectedSourcebook";
+            grpSelectedSourcebook.Text = "Selected Sourcebook:";
             // 
             // tlpSelectedSourcebook
             // 
-            this.tlpSelectedSourcebook.AutoSize = true;
-            this.tlpSelectedSourcebook.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.tlpSelectedSourcebook.ColumnCount = 4;
-            this.tlpSelectedSourcebook.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tlpSelectedSourcebook.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tlpSelectedSourcebook.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tlpSelectedSourcebook.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tlpSelectedSourcebook.Controls.Add(this.txtPDFLocation, 1, 0);
-            this.tlpSelectedSourcebook.Controls.Add(this.lblPDFLocation, 0, 0);
-            this.tlpSelectedSourcebook.Controls.Add(this.cmdPDFLocation, 2, 0);
-            this.tlpSelectedSourcebook.Controls.Add(this.lblPDFOffset, 0, 1);
-            this.tlpSelectedSourcebook.Controls.Add(this.flpPDFOffset, 1, 1);
-            this.tlpSelectedSourcebook.Controls.Add(this.cmdRemovePDFLocation, 3, 0);
-            this.tlpSelectedSourcebook.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tlpSelectedSourcebook.Location = new System.Drawing.Point(3, 16);
-            this.tlpSelectedSourcebook.Name = "tlpSelectedSourcebook";
-            this.tlpSelectedSourcebook.RowCount = 2;
-            this.tlpSelectedSourcebook.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tlpSelectedSourcebook.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tlpSelectedSourcebook.Size = new System.Drawing.Size(469, 59);
-            this.tlpSelectedSourcebook.TabIndex = 18;
+            tlpSelectedSourcebook.AutoSize = true;
+            tlpSelectedSourcebook.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            tlpSelectedSourcebook.ColumnCount = 4;
+            tlpSelectedSourcebook.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            tlpSelectedSourcebook.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            tlpSelectedSourcebook.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            tlpSelectedSourcebook.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            tlpSelectedSourcebook.Controls.Add(txtPDFLocation, 1, 0);
+            tlpSelectedSourcebook.Controls.Add(lblPDFLocation, 0, 0);
+            tlpSelectedSourcebook.Controls.Add(cmdPDFLocation, 2, 0);
+            tlpSelectedSourcebook.Controls.Add(lblPDFOffset, 0, 1);
+            tlpSelectedSourcebook.Controls.Add(flpPDFOffset, 1, 1);
+            tlpSelectedSourcebook.Controls.Add(cmdRemovePDFLocation, 3, 0);
+            tlpSelectedSourcebook.Dock = System.Windows.Forms.DockStyle.Fill;
+            tlpSelectedSourcebook.Location = new System.Drawing.Point(4, 19);
+            tlpSelectedSourcebook.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            tlpSelectedSourcebook.Name = "tlpSelectedSourcebook";
+            tlpSelectedSourcebook.RowCount = 2;
+            tlpSelectedSourcebook.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            tlpSelectedSourcebook.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            tlpSelectedSourcebook.Size = new System.Drawing.Size(535, 62);
+            tlpSelectedSourcebook.TabIndex = 18;
             // 
             // txtPDFLocation
             // 
-            this.txtPDFLocation.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtPDFLocation.Location = new System.Drawing.Point(84, 5);
-            this.txtPDFLocation.Name = "txtPDFLocation";
-            this.txtPDFLocation.ReadOnly = true;
-            this.txtPDFLocation.Size = new System.Drawing.Size(320, 20);
-            this.txtPDFLocation.TabIndex = 13;
-            this.txtPDFLocation.TextChanged += new System.EventHandler(this.txtPDFLocation_TextChanged);
+            txtPDFLocation.Anchor = System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
+            txtPDFLocation.Location = new System.Drawing.Point(92, 4);
+            txtPDFLocation.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            txtPDFLocation.Name = "txtPDFLocation";
+            txtPDFLocation.ReadOnly = true;
+            txtPDFLocation.Size = new System.Drawing.Size(373, 23);
+            txtPDFLocation.TabIndex = 13;
+            txtPDFLocation.TextChanged += txtPDFLocation_TextChanged;
             // 
             // lblPDFLocation
             // 
-            this.lblPDFLocation.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.lblPDFLocation.AutoSize = true;
-            this.lblPDFLocation.Location = new System.Drawing.Point(3, 8);
-            this.lblPDFLocation.Margin = new System.Windows.Forms.Padding(3, 6, 3, 6);
-            this.lblPDFLocation.Name = "lblPDFLocation";
-            this.lblPDFLocation.Size = new System.Drawing.Size(75, 13);
-            this.lblPDFLocation.TabIndex = 12;
-            this.lblPDFLocation.Tag = "Label_Options_PDFLocation";
-            this.lblPDFLocation.Text = "PDF Location:";
-            this.lblPDFLocation.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            lblPDFLocation.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            lblPDFLocation.AutoSize = true;
+            lblPDFLocation.Location = new System.Drawing.Point(4, 8);
+            lblPDFLocation.Margin = new System.Windows.Forms.Padding(4, 7, 4, 7);
+            lblPDFLocation.Name = "lblPDFLocation";
+            lblPDFLocation.Size = new System.Drawing.Size(80, 15);
+            lblPDFLocation.TabIndex = 12;
+            lblPDFLocation.Tag = "Label_Options_PDFLocation";
+            lblPDFLocation.Text = "PDF Location:";
+            lblPDFLocation.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // cmdPDFLocation
             // 
-            this.cmdPDFLocation.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.cmdPDFLocation.AutoSize = true;
-            this.cmdPDFLocation.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.cmdPDFLocation.Location = new System.Drawing.Point(410, 3);
-            this.cmdPDFLocation.Name = "cmdPDFLocation";
-            this.cmdPDFLocation.Size = new System.Drawing.Size(26, 23);
-            this.cmdPDFLocation.TabIndex = 14;
-            this.cmdPDFLocation.Text = "...";
-            this.cmdPDFLocation.UseVisualStyleBackColor = true;
-            this.cmdPDFLocation.Click += new System.EventHandler(this.cmdPDFLocation_Click);
+            cmdPDFLocation.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            cmdPDFLocation.AutoSize = true;
+            cmdPDFLocation.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            cmdPDFLocation.Location = new System.Drawing.Point(473, 3);
+            cmdPDFLocation.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            cmdPDFLocation.Name = "cmdPDFLocation";
+            cmdPDFLocation.Size = new System.Drawing.Size(26, 25);
+            cmdPDFLocation.TabIndex = 14;
+            cmdPDFLocation.Text = "...";
+            cmdPDFLocation.UseVisualStyleBackColor = true;
+            cmdPDFLocation.Click += cmdPDFLocation_Click;
             // 
             // lblPDFOffset
             // 
-            this.lblPDFOffset.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.lblPDFOffset.AutoSize = true;
-            this.lblPDFOffset.Location = new System.Drawing.Point(12, 38);
-            this.lblPDFOffset.Margin = new System.Windows.Forms.Padding(3, 6, 3, 6);
-            this.lblPDFOffset.Name = "lblPDFOffset";
-            this.lblPDFOffset.Size = new System.Drawing.Size(66, 13);
-            this.lblPDFOffset.TabIndex = 15;
-            this.lblPDFOffset.Tag = "Label_Options_PDFOffset";
-            this.lblPDFOffset.Text = "Page Offset:";
-            this.lblPDFOffset.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            lblPDFOffset.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            lblPDFOffset.AutoSize = true;
+            lblPDFOffset.Location = new System.Drawing.Point(13, 39);
+            lblPDFOffset.Margin = new System.Windows.Forms.Padding(4, 7, 4, 7);
+            lblPDFOffset.Name = "lblPDFOffset";
+            lblPDFOffset.Size = new System.Drawing.Size(71, 15);
+            lblPDFOffset.TabIndex = 15;
+            lblPDFOffset.Tag = "Label_Options_PDFOffset";
+            lblPDFOffset.Text = "Page Offset:";
+            lblPDFOffset.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // flpPDFOffset
             // 
-            this.flpPDFOffset.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.flpPDFOffset.AutoSize = true;
-            this.flpPDFOffset.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.tlpSelectedSourcebook.SetColumnSpan(this.flpPDFOffset, 3);
-            this.flpPDFOffset.Controls.Add(this.nudPDFOffset);
-            this.flpPDFOffset.Controls.Add(this.cmdPDFTest);
-            this.flpPDFOffset.Location = new System.Drawing.Point(81, 30);
-            this.flpPDFOffset.Margin = new System.Windows.Forms.Padding(0);
-            this.flpPDFOffset.Name = "flpPDFOffset";
-            this.flpPDFOffset.Size = new System.Drawing.Size(175, 29);
-            this.flpPDFOffset.TabIndex = 16;
-            this.flpPDFOffset.WrapContents = false;
+            flpPDFOffset.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            flpPDFOffset.AutoSize = true;
+            flpPDFOffset.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            tlpSelectedSourcebook.SetColumnSpan(flpPDFOffset, 3);
+            flpPDFOffset.Controls.Add(nudPDFOffset);
+            flpPDFOffset.Controls.Add(cmdPDFTest);
+            flpPDFOffset.Location = new System.Drawing.Point(88, 31);
+            flpPDFOffset.Margin = new System.Windows.Forms.Padding(0);
+            flpPDFOffset.Name = "flpPDFOffset";
+            flpPDFOffset.Size = new System.Drawing.Size(184, 31);
+            flpPDFOffset.TabIndex = 16;
+            flpPDFOffset.WrapContents = false;
             // 
             // nudPDFOffset
             // 
-            this.nudPDFOffset.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.nudPDFOffset.AutoSize = true;
-            this.nudPDFOffset.Location = new System.Drawing.Point(3, 4);
-            this.nudPDFOffset.Maximum = new decimal(new int[] {
-            1000,
-            0,
-            0,
-            0});
-            this.nudPDFOffset.Minimum = new decimal(new int[] {
-            1000,
-            0,
-            0,
-            -2147483648});
-            this.nudPDFOffset.Name = "nudPDFOffset";
-            this.nudPDFOffset.Size = new System.Drawing.Size(41, 20);
-            this.nudPDFOffset.TabIndex = 16;
-            this.nudPDFOffset.ValueChanged += new System.EventHandler(this.nudPDFOffset_ValueChanged);
+            nudPDFOffset.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            nudPDFOffset.AutoSize = true;
+            nudPDFOffset.Location = new System.Drawing.Point(3, 4);
+            nudPDFOffset.Maximum = new decimal(new int[] { 1000, 0, 0, 0 });
+            nudPDFOffset.Minimum = new decimal(new int[] { 1000, 0, 0, int.MinValue });
+            nudPDFOffset.Name = "nudPDFOffset";
+            nudPDFOffset.Size = new System.Drawing.Size(41, 23);
+            nudPDFOffset.TabIndex = 16;
+            nudPDFOffset.ValueChanged += nudPDFOffset_ValueChanged;
             // 
             // cmdPDFTest
             // 
-            this.cmdPDFTest.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.cmdPDFTest.AutoSize = true;
-            this.cmdPDFTest.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.cmdPDFTest.Enabled = false;
-            this.cmdPDFTest.Location = new System.Drawing.Point(50, 3);
-            this.cmdPDFTest.MinimumSize = new System.Drawing.Size(80, 0);
-            this.cmdPDFTest.Name = "cmdPDFTest";
-            this.cmdPDFTest.Size = new System.Drawing.Size(122, 23);
-            this.cmdPDFTest.TabIndex = 17;
-            this.cmdPDFTest.Tag = "Button_Options_PDFTest";
-            this.cmdPDFTest.Text = "Test - Open to Page 3";
-            this.cmdPDFTest.UseVisualStyleBackColor = true;
-            this.cmdPDFTest.Click += new System.EventHandler(this.cmdPDFTest_Click);
+            cmdPDFTest.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            cmdPDFTest.AutoSize = true;
+            cmdPDFTest.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            cmdPDFTest.Enabled = false;
+            cmdPDFTest.Location = new System.Drawing.Point(51, 3);
+            cmdPDFTest.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            cmdPDFTest.MinimumSize = new System.Drawing.Size(93, 0);
+            cmdPDFTest.Name = "cmdPDFTest";
+            cmdPDFTest.Size = new System.Drawing.Size(129, 25);
+            cmdPDFTest.TabIndex = 17;
+            cmdPDFTest.Tag = "Button_Options_PDFTest";
+            cmdPDFTest.Text = "Test - Open to Page 3";
+            cmdPDFTest.UseVisualStyleBackColor = true;
+            cmdPDFTest.Click += cmdPDFTest_Click;
             // 
             // cmdRemovePDFLocation
             // 
-            this.cmdRemovePDFLocation.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.cmdRemovePDFLocation.AutoSize = true;
-            this.cmdRemovePDFLocation.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.cmdRemovePDFLocation.Enabled = false;
-            this.cmdRemovePDFLocation.Image = global::Chummer.Properties.Resources.delete_16;
-            this.cmdRemovePDFLocation.ImageDpi120 = global::Chummer.Properties.Resources.delete_20;
-            this.cmdRemovePDFLocation.ImageDpi144 = global::Chummer.Properties.Resources.delete_24;
-            this.cmdRemovePDFLocation.ImageDpi192 = global::Chummer.Properties.Resources.delete_32;
-            this.cmdRemovePDFLocation.ImageDpi288 = global::Chummer.Properties.Resources.delete_48;
-            this.cmdRemovePDFLocation.ImageDpi384 = global::Chummer.Properties.Resources.delete_64;
-            this.cmdRemovePDFLocation.ImageDpi96 = global::Chummer.Properties.Resources.delete_16;
-            this.cmdRemovePDFLocation.Location = new System.Drawing.Point(442, 3);
-            this.cmdRemovePDFLocation.Name = "cmdRemovePDFLocation";
-            this.cmdRemovePDFLocation.Padding = new System.Windows.Forms.Padding(1);
-            this.cmdRemovePDFLocation.Size = new System.Drawing.Size(24, 24);
-            this.cmdRemovePDFLocation.TabIndex = 17;
-            this.cmdRemovePDFLocation.UseVisualStyleBackColor = true;
-            this.cmdRemovePDFLocation.Click += new System.EventHandler(this.cmdRemovePDFLocation_Click);
+            cmdRemovePDFLocation.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            cmdRemovePDFLocation.AutoSize = true;
+            cmdRemovePDFLocation.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            cmdRemovePDFLocation.Enabled = false;
+            cmdRemovePDFLocation.Image = Properties.Resources.delete_16;
+            cmdRemovePDFLocation.ImageDpi120 = Properties.Resources.delete_20;
+            cmdRemovePDFLocation.ImageDpi144 = Properties.Resources.delete_24;
+            cmdRemovePDFLocation.ImageDpi192 = Properties.Resources.delete_32;
+            cmdRemovePDFLocation.ImageDpi288 = Properties.Resources.delete_48;
+            cmdRemovePDFLocation.ImageDpi384 = Properties.Resources.delete_64;
+            cmdRemovePDFLocation.ImageDpi96 = Properties.Resources.delete_16;
+            cmdRemovePDFLocation.Location = new System.Drawing.Point(507, 3);
+            cmdRemovePDFLocation.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            cmdRemovePDFLocation.Name = "cmdRemovePDFLocation";
+            cmdRemovePDFLocation.Padding = new System.Windows.Forms.Padding(1);
+            cmdRemovePDFLocation.Size = new System.Drawing.Size(24, 24);
+            cmdRemovePDFLocation.TabIndex = 17;
+            cmdRemovePDFLocation.UseVisualStyleBackColor = true;
+            cmdRemovePDFLocation.Click += cmdRemovePDFLocation_Click;
             // 
             // tlpGlobalOptions
             // 
-            this.tlpGlobalOptions.AutoScroll = true;
-            this.tlpGlobalOptions.AutoSize = true;
-            this.tlpGlobalOptions.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.tlpGlobalOptions.ColumnCount = 4;
-            this.tlpGlobalOptions.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20F));
-            this.tlpGlobalOptions.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 30F));
-            this.tlpGlobalOptions.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
-            this.tlpGlobalOptions.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
-            this.tlpGlobalOptions.Controls.Add(this.cboDefaultMasterIndexSetting, 3, 7);
-            this.tlpGlobalOptions.Controls.Add(this.lblDefaultMasterIndexSetting, 2, 7);
-            this.tlpGlobalOptions.Controls.Add(this.tlpDpiScalingMode, 0, 1);
-            this.tlpGlobalOptions.Controls.Add(this.chkUseLogging, 0, 3);
-            this.tlpGlobalOptions.Controls.Add(this.chkAutomaticUpdate, 0, 4);
-            this.tlpGlobalOptions.Controls.Add(this.chkConfirmKarmaExpense, 2, 3);
-            this.tlpGlobalOptions.Controls.Add(this.chkConfirmDelete, 2, 2);
-            this.tlpGlobalOptions.Controls.Add(this.chkHideItemsOverAvail, 2, 4);
-            this.tlpGlobalOptions.Controls.Add(this.tlpGlobalOptionsTop, 0, 0);
-            this.tlpGlobalOptions.Controls.Add(this.tlpLoggingOptions, 1, 3);
-            this.tlpGlobalOptions.Controls.Add(this.tlpCharacterRosterPath, 3, 11);
-            this.tlpGlobalOptions.Controls.Add(this.tlpPDFAppPath, 3, 13);
-            this.tlpGlobalOptions.Controls.Add(this.tlpMugshotCompression, 3, 12);
-            this.tlpGlobalOptions.Controls.Add(this.tlpColorMode, 0, 2);
-            this.tlpGlobalOptions.Controls.Add(this.chkPreferNightlyBuilds, 0, 5);
-            this.tlpGlobalOptions.Controls.Add(this.chkPrintSkillsWithZeroRating, 0, 6);
-            this.tlpGlobalOptions.Controls.Add(this.chkPrintExpenses, 0, 7);
-            this.tlpGlobalOptions.Controls.Add(this.chkPrintFreeExpenses, 0, 8);
-            this.tlpGlobalOptions.Controls.Add(this.chkDatesIncludeTime, 0, 10);
-            this.tlpGlobalOptions.Controls.Add(this.chkPrintNotes, 0, 9);
-            this.tlpGlobalOptions.Controls.Add(this.chkHideCharacterRoster, 2, 5);
-            this.tlpGlobalOptions.Controls.Add(this.chkHideMasterIndex, 2, 6);
-            this.tlpGlobalOptions.Controls.Add(this.chkSearchInCategoryOnly, 2, 1);
-            this.tlpGlobalOptions.Controls.Add(this.flpEnablePlugins, 2, 17);
-            this.tlpGlobalOptions.Controls.Add(this.chkLifeModule, 2, 16);
-            this.tlpGlobalOptions.Controls.Add(this.lblMugshotCompression, 2, 12);
-            this.tlpGlobalOptions.Controls.Add(this.lblCharacterRosterLabel, 2, 11);
-            this.tlpGlobalOptions.Controls.Add(this.lblDefaultCharacterSetting, 2, 10);
-            this.tlpGlobalOptions.Controls.Add(this.cboDefaultCharacterSetting, 3, 10);
-            this.tlpGlobalOptions.Controls.Add(this.chkStartupFullscreen, 2, 9);
-            this.tlpGlobalOptions.Controls.Add(this.chkAllowSkillDiceRolling, 2, 8);
-            this.tlpGlobalOptions.Controls.Add(this.chkCreateBackupOnCareer, 0, 11);
-            this.tlpGlobalOptions.Controls.Add(this.chkSaveCompressionLevel, 0, 12);
-            this.tlpGlobalOptions.Controls.Add(this.cboChum5lzCompressionLevel, 1, 12);
-            this.tlpGlobalOptions.Controls.Add(this.lblPDFAppPath, 2, 13);
-            this.tlpGlobalOptions.Controls.Add(this.lblPDFParametersLabel, 2, 14);
-            this.tlpGlobalOptions.Controls.Add(this.cboPDFParameters, 3, 14);
-            this.tlpGlobalOptions.Controls.Add(this.flpBrowserVersion, 2, 15);
-            this.tlpGlobalOptions.Controls.Add(this.chkLiveUpdateCleanCharacterFiles, 2, 18);
-            this.tlpGlobalOptions.Controls.Add(this.chkSingleDiceRoller, 0, 18);
-            this.tlpGlobalOptions.Controls.Add(this.chkAllowEasterEggs, 0, 17);
-            this.tlpGlobalOptions.Controls.Add(this.chkLiveCustomData, 0, 15);
-            this.tlpGlobalOptions.Controls.Add(this.chkPrintToFileFirst, 0, 16);
-            this.tlpGlobalOptions.Controls.Add(this.chkAllowHoverIncrement, 0, 14);
-            this.tlpGlobalOptions.Controls.Add(this.chkInsertPdfNotesIfAvailable, 0, 13);
-            this.tlpGlobalOptions.Dock = System.Windows.Forms.DockStyle.Top;
-            this.tlpGlobalOptions.Location = new System.Drawing.Point(303, 0);
-            this.tlpGlobalOptions.Margin = new System.Windows.Forms.Padding(0);
-            this.tlpGlobalOptions.Name = "tlpGlobalOptions";
-            this.tlpGlobalOptions.Padding = new System.Windows.Forms.Padding(0, 0, 10, 0);
-            this.tlpGlobalOptions.RowCount = 20;
-            this.tlpGlobalOptions.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tlpGlobalOptions.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tlpGlobalOptions.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tlpGlobalOptions.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tlpGlobalOptions.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tlpGlobalOptions.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tlpGlobalOptions.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tlpGlobalOptions.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tlpGlobalOptions.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tlpGlobalOptions.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tlpGlobalOptions.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tlpGlobalOptions.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tlpGlobalOptions.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tlpGlobalOptions.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tlpGlobalOptions.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tlpGlobalOptions.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tlpGlobalOptions.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tlpGlobalOptions.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tlpGlobalOptions.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tlpGlobalOptions.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tlpGlobalOptions.Size = new System.Drawing.Size(911, 500);
-            this.tlpGlobalOptions.TabIndex = 67;
+            tlpGlobalOptions.AutoScroll = true;
+            tlpGlobalOptions.AutoSize = true;
+            tlpGlobalOptions.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            tlpGlobalOptions.ColumnCount = 4;
+            tlpGlobalOptions.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20F));
+            tlpGlobalOptions.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 30F));
+            tlpGlobalOptions.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
+            tlpGlobalOptions.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
+            tlpGlobalOptions.Controls.Add(cboDefaultMasterIndexSetting, 3, 7);
+            tlpGlobalOptions.Controls.Add(lblDefaultMasterIndexSetting, 2, 7);
+            tlpGlobalOptions.Controls.Add(tlpDpiScalingMode, 0, 1);
+            tlpGlobalOptions.Controls.Add(chkUseLogging, 0, 3);
+            tlpGlobalOptions.Controls.Add(chkAutomaticUpdate, 0, 4);
+            tlpGlobalOptions.Controls.Add(chkConfirmKarmaExpense, 2, 3);
+            tlpGlobalOptions.Controls.Add(chkConfirmDelete, 2, 2);
+            tlpGlobalOptions.Controls.Add(chkHideItemsOverAvail, 2, 4);
+            tlpGlobalOptions.Controls.Add(tlpGlobalOptionsTop, 0, 0);
+            tlpGlobalOptions.Controls.Add(tlpLoggingOptions, 1, 3);
+            tlpGlobalOptions.Controls.Add(tlpCharacterRosterPath, 3, 11);
+            tlpGlobalOptions.Controls.Add(tlpPDFAppPath, 3, 13);
+            tlpGlobalOptions.Controls.Add(tlpMugshotCompression, 3, 12);
+            tlpGlobalOptions.Controls.Add(tlpColorMode, 0, 2);
+            tlpGlobalOptions.Controls.Add(chkPreferNightlyBuilds, 0, 5);
+            tlpGlobalOptions.Controls.Add(chkPrintSkillsWithZeroRating, 0, 6);
+            tlpGlobalOptions.Controls.Add(chkPrintExpenses, 0, 7);
+            tlpGlobalOptions.Controls.Add(chkPrintFreeExpenses, 0, 8);
+            tlpGlobalOptions.Controls.Add(chkDatesIncludeTime, 0, 10);
+            tlpGlobalOptions.Controls.Add(chkPrintNotes, 0, 9);
+            tlpGlobalOptions.Controls.Add(chkHideCharacterRoster, 2, 5);
+            tlpGlobalOptions.Controls.Add(chkHideMasterIndex, 2, 6);
+            tlpGlobalOptions.Controls.Add(chkSearchInCategoryOnly, 2, 1);
+            tlpGlobalOptions.Controls.Add(flpEnablePlugins, 2, 17);
+            tlpGlobalOptions.Controls.Add(chkLifeModule, 2, 16);
+            tlpGlobalOptions.Controls.Add(lblMugshotCompression, 2, 12);
+            tlpGlobalOptions.Controls.Add(lblCharacterRosterLabel, 2, 11);
+            tlpGlobalOptions.Controls.Add(lblDefaultCharacterSetting, 2, 10);
+            tlpGlobalOptions.Controls.Add(cboDefaultCharacterSetting, 3, 10);
+            tlpGlobalOptions.Controls.Add(chkStartupFullscreen, 2, 9);
+            tlpGlobalOptions.Controls.Add(chkAllowSkillDiceRolling, 2, 8);
+            tlpGlobalOptions.Controls.Add(chkCreateBackupOnCareer, 0, 11);
+            tlpGlobalOptions.Controls.Add(chkSaveCompressionLevel, 0, 12);
+            tlpGlobalOptions.Controls.Add(cboChum5lzCompressionLevel, 1, 12);
+            tlpGlobalOptions.Controls.Add(lblPDFAppPath, 2, 13);
+            tlpGlobalOptions.Controls.Add(lblPDFParametersLabel, 2, 14);
+            tlpGlobalOptions.Controls.Add(cboPDFParameters, 3, 14);
+            tlpGlobalOptions.Controls.Add(flpBrowserVersion, 2, 15);
+            tlpGlobalOptions.Controls.Add(chkLiveUpdateCleanCharacterFiles, 2, 18);
+            tlpGlobalOptions.Controls.Add(chkSingleDiceRoller, 0, 18);
+            tlpGlobalOptions.Controls.Add(chkAllowEasterEggs, 0, 17);
+            tlpGlobalOptions.Controls.Add(chkLiveCustomData, 0, 15);
+            tlpGlobalOptions.Controls.Add(chkPrintToFileFirst, 0, 16);
+            tlpGlobalOptions.Controls.Add(chkAllowHoverIncrement, 0, 14);
+            tlpGlobalOptions.Controls.Add(chkInsertPdfNotesIfAvailable, 0, 13);
+            tlpGlobalOptions.Dock = System.Windows.Forms.DockStyle.Top;
+            tlpGlobalOptions.Location = new System.Drawing.Point(354, 0);
+            tlpGlobalOptions.Margin = new System.Windows.Forms.Padding(0);
+            tlpGlobalOptions.Name = "tlpGlobalOptions";
+            tlpGlobalOptions.Padding = new System.Windows.Forms.Padding(0, 0, 12, 0);
+            tlpGlobalOptions.RowCount = 20;
+            tlpGlobalOptions.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            tlpGlobalOptions.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            tlpGlobalOptions.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            tlpGlobalOptions.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            tlpGlobalOptions.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            tlpGlobalOptions.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            tlpGlobalOptions.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            tlpGlobalOptions.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            tlpGlobalOptions.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            tlpGlobalOptions.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            tlpGlobalOptions.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            tlpGlobalOptions.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            tlpGlobalOptions.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            tlpGlobalOptions.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            tlpGlobalOptions.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            tlpGlobalOptions.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            tlpGlobalOptions.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            tlpGlobalOptions.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            tlpGlobalOptions.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            tlpGlobalOptions.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 23F));
+            tlpGlobalOptions.Size = new System.Drawing.Size(1065, 591);
+            tlpGlobalOptions.TabIndex = 67;
             // 
             // cboDefaultMasterIndexSetting
             // 
-            this.cboDefaultMasterIndexSetting.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.cboDefaultMasterIndexSetting.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cboDefaultMasterIndexSetting.FormattingEnabled = true;
-            this.cboDefaultMasterIndexSetting.Location = new System.Drawing.Point(665, 292);
-            this.cboDefaultMasterIndexSetting.Name = "cboDefaultMasterIndexSetting";
-            this.cboDefaultMasterIndexSetting.Size = new System.Drawing.Size(216, 21);
-            this.cboDefaultMasterIndexSetting.TabIndex = 85;
-            this.cboDefaultMasterIndexSetting.TooltipText = "";
-            this.cboDefaultMasterIndexSetting.SelectedIndexChanged += new System.EventHandler(this.OptionsChanged);
+            cboDefaultMasterIndexSetting.Anchor = System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
+            cboDefaultMasterIndexSetting.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            cboDefaultMasterIndexSetting.FormattingEnabled = true;
+            cboDefaultMasterIndexSetting.Location = new System.Drawing.Point(780, 331);
+            cboDefaultMasterIndexSetting.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            cboDefaultMasterIndexSetting.Name = "cboDefaultMasterIndexSetting";
+            cboDefaultMasterIndexSetting.Size = new System.Drawing.Size(252, 23);
+            cboDefaultMasterIndexSetting.TabIndex = 85;
+            cboDefaultMasterIndexSetting.TooltipText = "";
+            cboDefaultMasterIndexSetting.SelectedIndexChanged += OptionsChanged;
             // 
             // lblDefaultMasterIndexSetting
             // 
-            this.lblDefaultMasterIndexSetting.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.lblDefaultMasterIndexSetting.AutoSize = true;
-            this.lblDefaultMasterIndexSetting.Location = new System.Drawing.Point(500, 296);
-            this.lblDefaultMasterIndexSetting.Margin = new System.Windows.Forms.Padding(3, 6, 3, 6);
-            this.lblDefaultMasterIndexSetting.Name = "lblDefaultMasterIndexSetting";
-            this.lblDefaultMasterIndexSetting.Size = new System.Drawing.Size(159, 13);
-            this.lblDefaultMasterIndexSetting.TabIndex = 84;
-            this.lblDefaultMasterIndexSetting.Tag = "Label_Options_DefaultMasterIndexSetting";
-            this.lblDefaultMasterIndexSetting.Text = "Default Setting for Master Index:";
-            this.lblDefaultMasterIndexSetting.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            lblDefaultMasterIndexSetting.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            lblDefaultMasterIndexSetting.AutoSize = true;
+            lblDefaultMasterIndexSetting.Location = new System.Drawing.Point(595, 335);
+            lblDefaultMasterIndexSetting.Margin = new System.Windows.Forms.Padding(4, 7, 4, 7);
+            lblDefaultMasterIndexSetting.Name = "lblDefaultMasterIndexSetting";
+            lblDefaultMasterIndexSetting.Size = new System.Drawing.Size(177, 15);
+            lblDefaultMasterIndexSetting.TabIndex = 84;
+            lblDefaultMasterIndexSetting.Tag = "Label_Options_DefaultMasterIndexSetting";
+            lblDefaultMasterIndexSetting.Text = "Default Setting for Master Index:";
+            lblDefaultMasterIndexSetting.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // tlpDpiScalingMode
             // 
-            this.tlpDpiScalingMode.AutoSize = true;
-            this.tlpDpiScalingMode.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.tlpDpiScalingMode.ColumnCount = 2;
-            this.tlpGlobalOptions.SetColumnSpan(this.tlpDpiScalingMode, 2);
-            this.tlpDpiScalingMode.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tlpDpiScalingMode.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tlpDpiScalingMode.Controls.Add(this.cboDpiScalingMethod, 1, 0);
-            this.tlpDpiScalingMode.Controls.Add(this.lblDpiScalingMode, 0, 0);
-            this.tlpDpiScalingMode.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tlpDpiScalingMode.Location = new System.Drawing.Point(0, 131);
-            this.tlpDpiScalingMode.Margin = new System.Windows.Forms.Padding(0);
-            this.tlpDpiScalingMode.Name = "tlpDpiScalingMode";
-            this.tlpDpiScalingMode.RowCount = 1;
-            this.tlpDpiScalingMode.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tlpDpiScalingMode.Size = new System.Drawing.Size(441, 27);
-            this.tlpDpiScalingMode.TabIndex = 83;
+            tlpDpiScalingMode.AutoSize = true;
+            tlpDpiScalingMode.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            tlpDpiScalingMode.ColumnCount = 2;
+            tlpGlobalOptions.SetColumnSpan(tlpDpiScalingMode, 2);
+            tlpDpiScalingMode.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            tlpDpiScalingMode.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            tlpDpiScalingMode.Controls.Add(cboDpiScalingMethod, 1, 0);
+            tlpDpiScalingMode.Controls.Add(lblDpiScalingMode, 0, 0);
+            tlpDpiScalingMode.Dock = System.Windows.Forms.DockStyle.Fill;
+            tlpDpiScalingMode.Location = new System.Drawing.Point(0, 150);
+            tlpDpiScalingMode.Margin = new System.Windows.Forms.Padding(0);
+            tlpDpiScalingMode.Name = "tlpDpiScalingMode";
+            tlpDpiScalingMode.RowCount = 1;
+            tlpDpiScalingMode.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            tlpDpiScalingMode.Size = new System.Drawing.Size(517, 29);
+            tlpDpiScalingMode.TabIndex = 83;
             // 
             // cboDpiScalingMethod
             // 
-            this.cboDpiScalingMethod.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.cboDpiScalingMethod.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cboDpiScalingMethod.FormattingEnabled = true;
-            this.cboDpiScalingMethod.Location = new System.Drawing.Point(121, 3);
-            this.cboDpiScalingMethod.Name = "cboDpiScalingMethod";
-            this.cboDpiScalingMethod.Size = new System.Drawing.Size(317, 21);
-            this.cboDpiScalingMethod.TabIndex = 1;
-            this.cboDpiScalingMethod.TooltipText = "";
-            this.cboDpiScalingMethod.SelectedIndexChanged += new System.EventHandler(this.OptionsChanged);
+            cboDpiScalingMethod.Anchor = System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
+            cboDpiScalingMethod.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            cboDpiScalingMethod.FormattingEnabled = true;
+            cboDpiScalingMethod.Location = new System.Drawing.Point(135, 3);
+            cboDpiScalingMethod.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            cboDpiScalingMethod.Name = "cboDpiScalingMethod";
+            cboDpiScalingMethod.Size = new System.Drawing.Size(378, 23);
+            cboDpiScalingMethod.TabIndex = 1;
+            cboDpiScalingMethod.TooltipText = "";
+            cboDpiScalingMethod.SelectedIndexChanged += OptionsChanged;
             // 
             // lblDpiScalingMode
             // 
-            this.lblDpiScalingMode.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.lblDpiScalingMode.AutoSize = true;
-            this.lblDpiScalingMode.Location = new System.Drawing.Point(3, 7);
-            this.lblDpiScalingMode.Margin = new System.Windows.Forms.Padding(3, 6, 3, 6);
-            this.lblDpiScalingMode.Name = "lblDpiScalingMode";
-            this.lblDpiScalingMode.Size = new System.Drawing.Size(112, 13);
-            this.lblDpiScalingMode.TabIndex = 0;
-            this.lblDpiScalingMode.Tag = "Label_Options_DpiScalingMode";
-            this.lblDpiScalingMode.Text = "Display Scaling Mode:";
+            lblDpiScalingMode.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            lblDpiScalingMode.AutoSize = true;
+            lblDpiScalingMode.Location = new System.Drawing.Point(4, 7);
+            lblDpiScalingMode.Margin = new System.Windows.Forms.Padding(4, 7, 4, 7);
+            lblDpiScalingMode.Name = "lblDpiScalingMode";
+            lblDpiScalingMode.Size = new System.Drawing.Size(123, 15);
+            lblDpiScalingMode.TabIndex = 0;
+            lblDpiScalingMode.Tag = "Label_Options_DpiScalingMode";
+            lblDpiScalingMode.Text = "Display Scaling Mode:";
             // 
             // chkUseLogging
             // 
-            this.chkUseLogging.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.chkUseLogging.AutoSize = true;
-            this.chkUseLogging.DefaultColorScheme = true;
-            this.chkUseLogging.Location = new System.Drawing.Point(3, 191);
-            this.chkUseLogging.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.chkUseLogging.Name = "chkUseLogging";
-            this.chkUseLogging.Size = new System.Drawing.Size(86, 17);
-            this.chkUseLogging.TabIndex = 4;
-            this.chkUseLogging.Tag = "Checkbox_Options_UseLogging";
-            this.chkUseLogging.Text = "Use Logging";
-            this.chkUseLogging.UseVisualStyleBackColor = true;
-            this.chkUseLogging.CheckedChanged += new System.EventHandler(this.chkUseLogging_CheckedChanged);
+            chkUseLogging.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            chkUseLogging.AutoSize = true;
+            chkUseLogging.DefaultColorScheme = true;
+            chkUseLogging.ForeColor = System.Drawing.SystemColors.ControlText;
+            chkUseLogging.Location = new System.Drawing.Point(4, 215);
+            chkUseLogging.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            chkUseLogging.Name = "chkUseLogging";
+            chkUseLogging.Size = new System.Drawing.Size(92, 19);
+            chkUseLogging.TabIndex = 4;
+            chkUseLogging.Tag = "Checkbox_Options_UseLogging";
+            chkUseLogging.Text = "Use Logging";
+            chkUseLogging.UseVisualStyleBackColor = true;
+            chkUseLogging.CheckedChanged += chkUseLogging_CheckedChanged;
             // 
             // chkAutomaticUpdate
             // 
-            this.chkAutomaticUpdate.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.chkAutomaticUpdate.AutoSize = true;
-            this.tlpGlobalOptions.SetColumnSpan(this.chkAutomaticUpdate, 2);
-            this.chkAutomaticUpdate.DefaultColorScheme = true;
-            this.chkAutomaticUpdate.Location = new System.Drawing.Point(3, 218);
-            this.chkAutomaticUpdate.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.chkAutomaticUpdate.Name = "chkAutomaticUpdate";
-            this.chkAutomaticUpdate.Size = new System.Drawing.Size(178, 17);
-            this.chkAutomaticUpdate.TabIndex = 5;
-            this.chkAutomaticUpdate.Tag = "Checkbox_Options_AutomaticUpdates";
-            this.chkAutomaticUpdate.Text = "Automatically download updates";
-            this.chkAutomaticUpdate.UseVisualStyleBackColor = true;
-            this.chkAutomaticUpdate.CheckedChanged += new System.EventHandler(this.OptionsChanged);
+            chkAutomaticUpdate.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            chkAutomaticUpdate.AutoSize = true;
+            tlpGlobalOptions.SetColumnSpan(chkAutomaticUpdate, 2);
+            chkAutomaticUpdate.DefaultColorScheme = true;
+            chkAutomaticUpdate.ForeColor = System.Drawing.SystemColors.ControlText;
+            chkAutomaticUpdate.Location = new System.Drawing.Point(4, 246);
+            chkAutomaticUpdate.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            chkAutomaticUpdate.Name = "chkAutomaticUpdate";
+            chkAutomaticUpdate.Size = new System.Drawing.Size(201, 19);
+            chkAutomaticUpdate.TabIndex = 5;
+            chkAutomaticUpdate.Tag = "Checkbox_Options_AutomaticUpdates";
+            chkAutomaticUpdate.Text = "Automatically download updates";
+            chkAutomaticUpdate.UseVisualStyleBackColor = true;
+            chkAutomaticUpdate.CheckedChanged += OptionsChanged;
             // 
             // chkConfirmKarmaExpense
             // 
-            this.chkConfirmKarmaExpense.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.chkConfirmKarmaExpense.AutoSize = true;
-            this.tlpGlobalOptions.SetColumnSpan(this.chkConfirmKarmaExpense, 2);
-            this.chkConfirmKarmaExpense.DefaultColorScheme = true;
-            this.chkConfirmKarmaExpense.Location = new System.Drawing.Point(444, 191);
-            this.chkConfirmKarmaExpense.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.chkConfirmKarmaExpense.Name = "chkConfirmKarmaExpense";
-            this.chkConfirmKarmaExpense.Size = new System.Drawing.Size(215, 17);
-            this.chkConfirmKarmaExpense.TabIndex = 39;
-            this.chkConfirmKarmaExpense.Tag = "Checkbox_Options_ConfirmKarmaExpense";
-            this.chkConfirmKarmaExpense.Text = "Ask for confirmation for Karma expenses";
-            this.chkConfirmKarmaExpense.UseVisualStyleBackColor = true;
-            this.chkConfirmKarmaExpense.CheckedChanged += new System.EventHandler(this.OptionsChanged);
+            chkConfirmKarmaExpense.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            chkConfirmKarmaExpense.AutoSize = true;
+            tlpGlobalOptions.SetColumnSpan(chkConfirmKarmaExpense, 2);
+            chkConfirmKarmaExpense.DefaultColorScheme = true;
+            chkConfirmKarmaExpense.ForeColor = System.Drawing.SystemColors.ControlText;
+            chkConfirmKarmaExpense.Location = new System.Drawing.Point(521, 215);
+            chkConfirmKarmaExpense.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            chkConfirmKarmaExpense.Name = "chkConfirmKarmaExpense";
+            chkConfirmKarmaExpense.Size = new System.Drawing.Size(241, 19);
+            chkConfirmKarmaExpense.TabIndex = 39;
+            chkConfirmKarmaExpense.Tag = "Checkbox_Options_ConfirmKarmaExpense";
+            chkConfirmKarmaExpense.Text = "Ask for confirmation for Karma expenses";
+            chkConfirmKarmaExpense.UseVisualStyleBackColor = true;
+            chkConfirmKarmaExpense.CheckedChanged += OptionsChanged;
             // 
             // chkConfirmDelete
             // 
-            this.chkConfirmDelete.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.chkConfirmDelete.AutoSize = true;
-            this.tlpGlobalOptions.SetColumnSpan(this.chkConfirmDelete, 2);
-            this.chkConfirmDelete.DefaultColorScheme = true;
-            this.chkConfirmDelete.Location = new System.Drawing.Point(444, 163);
-            this.chkConfirmDelete.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.chkConfirmDelete.Name = "chkConfirmDelete";
-            this.chkConfirmDelete.Size = new System.Drawing.Size(215, 17);
-            this.chkConfirmDelete.TabIndex = 38;
-            this.chkConfirmDelete.Tag = "Checkbox_Options_ConfirmDelete";
-            this.chkConfirmDelete.Text = "Ask for confirmation when deleting items";
-            this.chkConfirmDelete.UseVisualStyleBackColor = true;
-            this.chkConfirmDelete.CheckedChanged += new System.EventHandler(this.OptionsChanged);
+            chkConfirmDelete.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            chkConfirmDelete.AutoSize = true;
+            tlpGlobalOptions.SetColumnSpan(chkConfirmDelete, 2);
+            chkConfirmDelete.DefaultColorScheme = true;
+            chkConfirmDelete.ForeColor = System.Drawing.SystemColors.ControlText;
+            chkConfirmDelete.Location = new System.Drawing.Point(521, 184);
+            chkConfirmDelete.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            chkConfirmDelete.Name = "chkConfirmDelete";
+            chkConfirmDelete.Size = new System.Drawing.Size(245, 19);
+            chkConfirmDelete.TabIndex = 38;
+            chkConfirmDelete.Tag = "Checkbox_Options_ConfirmDelete";
+            chkConfirmDelete.Text = "Ask for confirmation when deleting items";
+            chkConfirmDelete.UseVisualStyleBackColor = true;
+            chkConfirmDelete.CheckedChanged += OptionsChanged;
             // 
             // chkHideItemsOverAvail
             // 
-            this.chkHideItemsOverAvail.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.chkHideItemsOverAvail.AutoSize = true;
-            this.chkHideItemsOverAvail.CheckAlign = System.Drawing.ContentAlignment.TopLeft;
-            this.chkHideItemsOverAvail.Checked = true;
-            this.chkHideItemsOverAvail.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.tlpGlobalOptions.SetColumnSpan(this.chkHideItemsOverAvail, 2);
-            this.chkHideItemsOverAvail.DefaultColorScheme = true;
-            this.chkHideItemsOverAvail.Location = new System.Drawing.Point(444, 218);
-            this.chkHideItemsOverAvail.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.chkHideItemsOverAvail.Name = "chkHideItemsOverAvail";
-            this.chkHideItemsOverAvail.Size = new System.Drawing.Size(353, 17);
-            this.chkHideItemsOverAvail.TabIndex = 40;
-            this.chkHideItemsOverAvail.Tag = "Checkbox_Option_HideItemsOverAvailLimit";
-            this.chkHideItemsOverAvail.Text = "Hide items that are over the Availability Limit during character creation";
-            this.chkHideItemsOverAvail.UseVisualStyleBackColor = true;
+            chkHideItemsOverAvail.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            chkHideItemsOverAvail.AutoSize = true;
+            chkHideItemsOverAvail.CheckAlign = System.Drawing.ContentAlignment.TopLeft;
+            chkHideItemsOverAvail.Checked = true;
+            chkHideItemsOverAvail.CheckState = System.Windows.Forms.CheckState.Checked;
+            tlpGlobalOptions.SetColumnSpan(chkHideItemsOverAvail, 2);
+            chkHideItemsOverAvail.DefaultColorScheme = true;
+            chkHideItemsOverAvail.ForeColor = System.Drawing.SystemColors.ControlText;
+            chkHideItemsOverAvail.Location = new System.Drawing.Point(521, 246);
+            chkHideItemsOverAvail.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            chkHideItemsOverAvail.Name = "chkHideItemsOverAvail";
+            chkHideItemsOverAvail.Size = new System.Drawing.Size(399, 19);
+            chkHideItemsOverAvail.TabIndex = 40;
+            chkHideItemsOverAvail.Tag = "Checkbox_Option_HideItemsOverAvailLimit";
+            chkHideItemsOverAvail.Text = "Hide items that are over the Availability Limit during character creation";
+            chkHideItemsOverAvail.UseVisualStyleBackColor = true;
             // 
             // tlpGlobalOptionsTop
             // 
-            this.tlpGlobalOptionsTop.AutoSize = true;
-            this.tlpGlobalOptionsTop.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.tlpGlobalOptionsTop.ColumnCount = 5;
-            this.tlpGlobalOptions.SetColumnSpan(this.tlpGlobalOptionsTop, 4);
-            this.tlpGlobalOptionsTop.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tlpGlobalOptionsTop.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tlpGlobalOptionsTop.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tlpGlobalOptionsTop.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
-            this.tlpGlobalOptionsTop.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
-            this.tlpGlobalOptionsTop.Controls.Add(this.grpDateFormat, 2, 2);
-            this.tlpGlobalOptionsTop.Controls.Add(this.grpTimeFormat, 3, 2);
-            this.tlpGlobalOptionsTop.Controls.Add(this.chkCustomDateTimeFormats, 0, 2);
-            this.tlpGlobalOptionsTop.Controls.Add(this.lblXSLT, 0, 1);
-            this.tlpGlobalOptionsTop.Controls.Add(this.lblLanguage, 0, 0);
-            this.tlpGlobalOptionsTop.Controls.Add(this.cboSheetLanguage, 2, 1);
-            this.tlpGlobalOptionsTop.Controls.Add(this.cboXSLT, 3, 1);
-            this.tlpGlobalOptionsTop.Controls.Add(this.cboLanguage, 2, 0);
-            this.tlpGlobalOptionsTop.Controls.Add(this.cmdVerify, 3, 0);
-            this.tlpGlobalOptionsTop.Controls.Add(this.cmdVerifyData, 4, 0);
-            this.tlpGlobalOptionsTop.Controls.Add(this.imgSheetLanguageFlag, 1, 1);
-            this.tlpGlobalOptionsTop.Controls.Add(this.imgLanguageFlag, 1, 0);
-            this.tlpGlobalOptionsTop.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tlpGlobalOptionsTop.Location = new System.Drawing.Point(0, 0);
-            this.tlpGlobalOptionsTop.Margin = new System.Windows.Forms.Padding(0);
-            this.tlpGlobalOptionsTop.Name = "tlpGlobalOptionsTop";
-            this.tlpGlobalOptionsTop.RowCount = 3;
-            this.tlpGlobalOptionsTop.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
-            this.tlpGlobalOptionsTop.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
-            this.tlpGlobalOptionsTop.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tlpGlobalOptionsTop.Size = new System.Drawing.Size(884, 131);
-            this.tlpGlobalOptionsTop.TabIndex = 73;
+            tlpGlobalOptionsTop.AutoSize = true;
+            tlpGlobalOptionsTop.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            tlpGlobalOptionsTop.ColumnCount = 5;
+            tlpGlobalOptions.SetColumnSpan(tlpGlobalOptionsTop, 4);
+            tlpGlobalOptionsTop.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            tlpGlobalOptionsTop.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            tlpGlobalOptionsTop.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            tlpGlobalOptionsTop.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
+            tlpGlobalOptionsTop.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
+            tlpGlobalOptionsTop.Controls.Add(grpDateFormat, 2, 2);
+            tlpGlobalOptionsTop.Controls.Add(grpTimeFormat, 3, 2);
+            tlpGlobalOptionsTop.Controls.Add(chkCustomDateTimeFormats, 0, 2);
+            tlpGlobalOptionsTop.Controls.Add(lblXSLT, 0, 1);
+            tlpGlobalOptionsTop.Controls.Add(lblLanguage, 0, 0);
+            tlpGlobalOptionsTop.Controls.Add(cboSheetLanguage, 2, 1);
+            tlpGlobalOptionsTop.Controls.Add(cboXSLT, 3, 1);
+            tlpGlobalOptionsTop.Controls.Add(cboLanguage, 2, 0);
+            tlpGlobalOptionsTop.Controls.Add(cmdVerify, 3, 0);
+            tlpGlobalOptionsTop.Controls.Add(cmdVerifyData, 4, 0);
+            tlpGlobalOptionsTop.Controls.Add(imgSheetLanguageFlag, 1, 1);
+            tlpGlobalOptionsTop.Controls.Add(imgLanguageFlag, 1, 0);
+            tlpGlobalOptionsTop.Dock = System.Windows.Forms.DockStyle.Fill;
+            tlpGlobalOptionsTop.Location = new System.Drawing.Point(0, 0);
+            tlpGlobalOptionsTop.Margin = new System.Windows.Forms.Padding(0);
+            tlpGlobalOptionsTop.Name = "tlpGlobalOptionsTop";
+            tlpGlobalOptionsTop.RowCount = 3;
+            tlpGlobalOptionsTop.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 35F));
+            tlpGlobalOptionsTop.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 35F));
+            tlpGlobalOptionsTop.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            tlpGlobalOptionsTop.Size = new System.Drawing.Size(1036, 150);
+            tlpGlobalOptionsTop.TabIndex = 73;
             // 
             // grpDateFormat
             // 
-            this.grpDateFormat.AutoSize = true;
-            this.grpDateFormat.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.grpDateFormat.Controls.Add(this.tlpDateFormat);
-            this.grpDateFormat.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.grpDateFormat.Enabled = false;
-            this.grpDateFormat.Location = new System.Drawing.Point(155, 60);
-            this.grpDateFormat.Margin = new System.Windows.Forms.Padding(3, 0, 3, 0);
-            this.grpDateFormat.Name = "grpDateFormat";
-            this.grpDateFormat.Size = new System.Drawing.Size(360, 71);
-            this.grpDateFormat.TabIndex = 59;
-            this.grpDateFormat.TabStop = false;
-            this.grpDateFormat.Tag = "Label_Options_DateFormat";
-            this.grpDateFormat.Text = "Date Format";
+            grpDateFormat.AutoSize = true;
+            grpDateFormat.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            grpDateFormat.Controls.Add(tlpDateFormat);
+            grpDateFormat.Dock = System.Windows.Forms.DockStyle.Fill;
+            grpDateFormat.Enabled = false;
+            grpDateFormat.Location = new System.Drawing.Point(173, 70);
+            grpDateFormat.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            grpDateFormat.Name = "grpDateFormat";
+            grpDateFormat.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            grpDateFormat.Size = new System.Drawing.Size(425, 80);
+            grpDateFormat.TabIndex = 59;
+            grpDateFormat.TabStop = false;
+            grpDateFormat.Tag = "Label_Options_DateFormat";
+            grpDateFormat.Text = "Date Format";
             // 
             // tlpDateFormat
             // 
-            this.tlpDateFormat.AutoSize = true;
-            this.tlpDateFormat.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.tlpDateFormat.ColumnCount = 1;
-            this.tlpDateFormat.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tlpDateFormat.Controls.Add(this.txtDateFormat, 0, 1);
-            this.tlpDateFormat.Controls.Add(this.txtDateFormatView, 0, 0);
-            this.tlpDateFormat.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tlpDateFormat.Location = new System.Drawing.Point(3, 16);
-            this.tlpDateFormat.Name = "tlpDateFormat";
-            this.tlpDateFormat.RowCount = 2;
-            this.tlpDateFormat.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tlpDateFormat.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tlpDateFormat.Size = new System.Drawing.Size(354, 52);
-            this.tlpDateFormat.TabIndex = 0;
+            tlpDateFormat.AutoSize = true;
+            tlpDateFormat.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            tlpDateFormat.ColumnCount = 1;
+            tlpDateFormat.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            tlpDateFormat.Controls.Add(txtDateFormat, 0, 1);
+            tlpDateFormat.Controls.Add(txtDateFormatView, 0, 0);
+            tlpDateFormat.Dock = System.Windows.Forms.DockStyle.Fill;
+            tlpDateFormat.Location = new System.Drawing.Point(4, 19);
+            tlpDateFormat.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            tlpDateFormat.Name = "tlpDateFormat";
+            tlpDateFormat.RowCount = 2;
+            tlpDateFormat.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            tlpDateFormat.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            tlpDateFormat.Size = new System.Drawing.Size(417, 58);
+            tlpDateFormat.TabIndex = 0;
             // 
             // txtDateFormat
             // 
-            this.txtDateFormat.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.txtDateFormat.Location = new System.Drawing.Point(3, 29);
-            this.txtDateFormat.Name = "txtDateFormat";
-            this.txtDateFormat.Size = new System.Drawing.Size(349, 20);
-            this.txtDateFormat.TabIndex = 48;
-            this.txtDateFormat.TextChanged += new System.EventHandler(this.txtDateFormat_TextChanged);
+            txtDateFormat.Dock = System.Windows.Forms.DockStyle.Fill;
+            txtDateFormat.Location = new System.Drawing.Point(4, 32);
+            txtDateFormat.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            txtDateFormat.Name = "txtDateFormat";
+            txtDateFormat.Size = new System.Drawing.Size(409, 23);
+            txtDateFormat.TabIndex = 48;
+            txtDateFormat.TextChanged += txtDateFormat_TextChanged;
             // 
             // txtDateFormatView
             // 
-            this.txtDateFormatView.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.txtDateFormatView.Location = new System.Drawing.Point(3, 3);
-            this.txtDateFormatView.Name = "txtDateFormatView";
-            this.txtDateFormatView.ReadOnly = true;
-            this.txtDateFormatView.Size = new System.Drawing.Size(349, 20);
-            this.txtDateFormatView.TabIndex = 47;
+            txtDateFormatView.Dock = System.Windows.Forms.DockStyle.Fill;
+            txtDateFormatView.Location = new System.Drawing.Point(4, 3);
+            txtDateFormatView.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            txtDateFormatView.Name = "txtDateFormatView";
+            txtDateFormatView.ReadOnly = true;
+            txtDateFormatView.Size = new System.Drawing.Size(409, 23);
+            txtDateFormatView.TabIndex = 47;
             // 
             // grpTimeFormat
             // 
-            this.grpTimeFormat.AutoSize = true;
-            this.grpTimeFormat.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.tlpGlobalOptionsTop.SetColumnSpan(this.grpTimeFormat, 2);
-            this.grpTimeFormat.Controls.Add(this.tlpTimeFormat);
-            this.grpTimeFormat.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.grpTimeFormat.Enabled = false;
-            this.grpTimeFormat.Location = new System.Drawing.Point(521, 60);
-            this.grpTimeFormat.Margin = new System.Windows.Forms.Padding(3, 0, 3, 0);
-            this.grpTimeFormat.Name = "grpTimeFormat";
-            this.grpTimeFormat.Size = new System.Drawing.Size(360, 71);
-            this.grpTimeFormat.TabIndex = 61;
-            this.grpTimeFormat.TabStop = false;
-            this.grpTimeFormat.Tag = "Label_Options_TimeFormat";
-            this.grpTimeFormat.Text = "Time Format";
+            grpTimeFormat.AutoSize = true;
+            grpTimeFormat.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            tlpGlobalOptionsTop.SetColumnSpan(grpTimeFormat, 2);
+            grpTimeFormat.Controls.Add(tlpTimeFormat);
+            grpTimeFormat.Dock = System.Windows.Forms.DockStyle.Fill;
+            grpTimeFormat.Enabled = false;
+            grpTimeFormat.Location = new System.Drawing.Point(606, 70);
+            grpTimeFormat.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            grpTimeFormat.Name = "grpTimeFormat";
+            grpTimeFormat.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            grpTimeFormat.Size = new System.Drawing.Size(426, 80);
+            grpTimeFormat.TabIndex = 61;
+            grpTimeFormat.TabStop = false;
+            grpTimeFormat.Tag = "Label_Options_TimeFormat";
+            grpTimeFormat.Text = "Time Format";
             // 
             // tlpTimeFormat
             // 
-            this.tlpTimeFormat.AutoSize = true;
-            this.tlpTimeFormat.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.tlpTimeFormat.ColumnCount = 1;
-            this.tlpTimeFormat.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tlpTimeFormat.Controls.Add(this.txtTimeFormat, 0, 1);
-            this.tlpTimeFormat.Controls.Add(this.txtTimeFormatView, 0, 0);
-            this.tlpTimeFormat.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tlpTimeFormat.Location = new System.Drawing.Point(3, 16);
-            this.tlpTimeFormat.Name = "tlpTimeFormat";
-            this.tlpTimeFormat.RowCount = 2;
-            this.tlpTimeFormat.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tlpTimeFormat.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tlpTimeFormat.Size = new System.Drawing.Size(354, 52);
-            this.tlpTimeFormat.TabIndex = 0;
+            tlpTimeFormat.AutoSize = true;
+            tlpTimeFormat.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            tlpTimeFormat.ColumnCount = 1;
+            tlpTimeFormat.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            tlpTimeFormat.Controls.Add(txtTimeFormat, 0, 1);
+            tlpTimeFormat.Controls.Add(txtTimeFormatView, 0, 0);
+            tlpTimeFormat.Dock = System.Windows.Forms.DockStyle.Fill;
+            tlpTimeFormat.Location = new System.Drawing.Point(4, 19);
+            tlpTimeFormat.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            tlpTimeFormat.Name = "tlpTimeFormat";
+            tlpTimeFormat.RowCount = 2;
+            tlpTimeFormat.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            tlpTimeFormat.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            tlpTimeFormat.Size = new System.Drawing.Size(418, 58);
+            tlpTimeFormat.TabIndex = 0;
             // 
             // txtTimeFormat
             // 
-            this.txtTimeFormat.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.txtTimeFormat.Location = new System.Drawing.Point(3, 29);
-            this.txtTimeFormat.Name = "txtTimeFormat";
-            this.txtTimeFormat.Size = new System.Drawing.Size(349, 20);
-            this.txtTimeFormat.TabIndex = 48;
-            this.txtTimeFormat.TextChanged += new System.EventHandler(this.txtTimeFormat_TextChanged);
+            txtTimeFormat.Dock = System.Windows.Forms.DockStyle.Fill;
+            txtTimeFormat.Location = new System.Drawing.Point(4, 32);
+            txtTimeFormat.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            txtTimeFormat.Name = "txtTimeFormat";
+            txtTimeFormat.Size = new System.Drawing.Size(410, 23);
+            txtTimeFormat.TabIndex = 48;
+            txtTimeFormat.TextChanged += txtTimeFormat_TextChanged;
             // 
             // txtTimeFormatView
             // 
-            this.txtTimeFormatView.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.txtTimeFormatView.Location = new System.Drawing.Point(3, 3);
-            this.txtTimeFormatView.Name = "txtTimeFormatView";
-            this.txtTimeFormatView.ReadOnly = true;
-            this.txtTimeFormatView.Size = new System.Drawing.Size(349, 20);
-            this.txtTimeFormatView.TabIndex = 47;
+            txtTimeFormatView.Dock = System.Windows.Forms.DockStyle.Fill;
+            txtTimeFormatView.Location = new System.Drawing.Point(4, 3);
+            txtTimeFormatView.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            txtTimeFormatView.Name = "txtTimeFormatView";
+            txtTimeFormatView.ReadOnly = true;
+            txtTimeFormatView.Size = new System.Drawing.Size(410, 23);
+            txtTimeFormatView.TabIndex = 47;
             // 
             // chkCustomDateTimeFormats
             // 
-            this.chkCustomDateTimeFormats.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.chkCustomDateTimeFormats.AutoSize = true;
-            this.tlpGlobalOptionsTop.SetColumnSpan(this.chkCustomDateTimeFormats, 2);
-            this.chkCustomDateTimeFormats.DefaultColorScheme = true;
-            this.chkCustomDateTimeFormats.Location = new System.Drawing.Point(3, 87);
-            this.chkCustomDateTimeFormats.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.chkCustomDateTimeFormats.Name = "chkCustomDateTimeFormats";
-            this.chkCustomDateTimeFormats.Size = new System.Drawing.Size(122, 17);
-            this.chkCustomDateTimeFormats.TabIndex = 60;
-            this.chkCustomDateTimeFormats.Tag = "Checkbox_Options_CustomTimeFormat";
-            this.chkCustomDateTimeFormats.Text = "Custom Time Format";
-            this.chkCustomDateTimeFormats.UseVisualStyleBackColor = true;
-            this.chkCustomDateTimeFormats.CheckedChanged += new System.EventHandler(this.chkCustomDateTimeFormats_CheckedChanged);
+            chkCustomDateTimeFormats.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            chkCustomDateTimeFormats.AutoSize = true;
+            tlpGlobalOptionsTop.SetColumnSpan(chkCustomDateTimeFormats, 2);
+            chkCustomDateTimeFormats.DefaultColorScheme = true;
+            chkCustomDateTimeFormats.ForeColor = System.Drawing.SystemColors.ControlText;
+            chkCustomDateTimeFormats.Location = new System.Drawing.Point(4, 100);
+            chkCustomDateTimeFormats.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            chkCustomDateTimeFormats.Name = "chkCustomDateTimeFormats";
+            chkCustomDateTimeFormats.Size = new System.Drawing.Size(138, 19);
+            chkCustomDateTimeFormats.TabIndex = 60;
+            chkCustomDateTimeFormats.Tag = "Checkbox_Options_CustomTimeFormat";
+            chkCustomDateTimeFormats.Text = "Custom Time Format";
+            chkCustomDateTimeFormats.UseVisualStyleBackColor = true;
+            chkCustomDateTimeFormats.CheckedChanged += chkCustomDateTimeFormats_CheckedChanged;
             // 
             // lblXSLT
             // 
-            this.lblXSLT.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.lblXSLT.AutoSize = true;
-            this.lblXSLT.Location = new System.Drawing.Point(3, 38);
-            this.lblXSLT.Margin = new System.Windows.Forms.Padding(3, 6, 3, 6);
-            this.lblXSLT.Name = "lblXSLT";
-            this.lblXSLT.Size = new System.Drawing.Size(124, 13);
-            this.lblXSLT.TabIndex = 7;
-            this.lblXSLT.Tag = "Label_Options_DefaultCharacterSheet";
-            this.lblXSLT.Text = "Default Character Sheet:";
-            this.lblXSLT.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            lblXSLT.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            lblXSLT.AutoSize = true;
+            lblXSLT.Location = new System.Drawing.Point(4, 45);
+            lblXSLT.Margin = new System.Windows.Forms.Padding(4, 7, 4, 7);
+            lblXSLT.Name = "lblXSLT";
+            lblXSLT.Size = new System.Drawing.Size(134, 15);
+            lblXSLT.TabIndex = 7;
+            lblXSLT.Tag = "Label_Options_DefaultCharacterSheet";
+            lblXSLT.Text = "Default Character Sheet:";
+            lblXSLT.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // lblLanguage
             // 
-            this.lblLanguage.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.lblLanguage.AutoSize = true;
-            this.lblLanguage.Location = new System.Drawing.Point(69, 8);
-            this.lblLanguage.Margin = new System.Windows.Forms.Padding(3, 6, 3, 6);
-            this.lblLanguage.Name = "lblLanguage";
-            this.lblLanguage.Size = new System.Drawing.Size(58, 13);
-            this.lblLanguage.TabIndex = 0;
-            this.lblLanguage.Tag = "Label_Options_Language";
-            this.lblLanguage.Text = "Language:";
-            this.lblLanguage.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            lblLanguage.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            lblLanguage.AutoSize = true;
+            lblLanguage.Location = new System.Drawing.Point(76, 10);
+            lblLanguage.Margin = new System.Windows.Forms.Padding(4, 7, 4, 7);
+            lblLanguage.Name = "lblLanguage";
+            lblLanguage.Size = new System.Drawing.Size(62, 15);
+            lblLanguage.TabIndex = 0;
+            lblLanguage.Tag = "Label_Options_Language";
+            lblLanguage.Text = "Language:";
+            lblLanguage.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // cboSheetLanguage
             // 
-            this.cboSheetLanguage.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.cboSheetLanguage.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cboSheetLanguage.FormattingEnabled = true;
-            this.cboSheetLanguage.Location = new System.Drawing.Point(155, 34);
-            this.cboSheetLanguage.Name = "cboSheetLanguage";
-            this.cboSheetLanguage.Size = new System.Drawing.Size(360, 21);
-            this.cboSheetLanguage.TabIndex = 34;
-            this.cboSheetLanguage.TooltipText = "";
-            this.cboSheetLanguage.SelectedIndexChanged += new System.EventHandler(this.cboSheetLanguage_SelectedIndexChanged);
+            cboSheetLanguage.Anchor = System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
+            cboSheetLanguage.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            cboSheetLanguage.FormattingEnabled = true;
+            cboSheetLanguage.Location = new System.Drawing.Point(173, 41);
+            cboSheetLanguage.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            cboSheetLanguage.Name = "cboSheetLanguage";
+            cboSheetLanguage.Size = new System.Drawing.Size(425, 23);
+            cboSheetLanguage.TabIndex = 34;
+            cboSheetLanguage.TooltipText = "";
+            cboSheetLanguage.SelectedIndexChanged += cboSheetLanguage_SelectedIndexChanged;
             // 
             // cboXSLT
             // 
-            this.cboXSLT.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.tlpGlobalOptionsTop.SetColumnSpan(this.cboXSLT, 2);
-            this.cboXSLT.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cboXSLT.FormattingEnabled = true;
-            this.cboXSLT.Location = new System.Drawing.Point(521, 34);
-            this.cboXSLT.Name = "cboXSLT";
-            this.cboXSLT.Size = new System.Drawing.Size(360, 21);
-            this.cboXSLT.TabIndex = 8;
-            this.cboXSLT.TooltipText = "";
-            this.cboXSLT.SelectedIndexChanged += new System.EventHandler(this.OptionsChanged);
+            cboXSLT.Anchor = System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
+            tlpGlobalOptionsTop.SetColumnSpan(cboXSLT, 2);
+            cboXSLT.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            cboXSLT.FormattingEnabled = true;
+            cboXSLT.Location = new System.Drawing.Point(606, 41);
+            cboXSLT.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            cboXSLT.Name = "cboXSLT";
+            cboXSLT.Size = new System.Drawing.Size(426, 23);
+            cboXSLT.TabIndex = 8;
+            cboXSLT.TooltipText = "";
+            cboXSLT.SelectedIndexChanged += OptionsChanged;
             // 
             // cboLanguage
             // 
-            this.cboLanguage.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.cboLanguage.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cboLanguage.FormattingEnabled = true;
-            this.cboLanguage.Location = new System.Drawing.Point(155, 4);
-            this.cboLanguage.Name = "cboLanguage";
-            this.cboLanguage.Size = new System.Drawing.Size(360, 21);
-            this.cboLanguage.TabIndex = 1;
-            this.cboLanguage.TooltipText = "";
-            this.cboLanguage.SelectedIndexChanged += new System.EventHandler(this.cboLanguage_SelectedIndexChanged);
+            cboLanguage.Anchor = System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
+            cboLanguage.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            cboLanguage.FormattingEnabled = true;
+            cboLanguage.Location = new System.Drawing.Point(173, 6);
+            cboLanguage.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            cboLanguage.Name = "cboLanguage";
+            cboLanguage.Size = new System.Drawing.Size(425, 23);
+            cboLanguage.TabIndex = 1;
+            cboLanguage.TooltipText = "";
+            cboLanguage.SelectedIndexChanged += cboLanguage_SelectedIndexChanged;
             // 
             // cmdVerify
             // 
-            this.cmdVerify.AutoSize = true;
-            this.cmdVerify.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.cmdVerify.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.cmdVerify.Enabled = false;
-            this.cmdVerify.Location = new System.Drawing.Point(521, 3);
-            this.cmdVerify.MinimumSize = new System.Drawing.Size(80, 0);
-            this.cmdVerify.Name = "cmdVerify";
-            this.cmdVerify.Size = new System.Drawing.Size(177, 24);
-            this.cmdVerify.TabIndex = 2;
-            this.cmdVerify.Text = "Verify";
-            this.cmdVerify.UseVisualStyleBackColor = true;
-            this.cmdVerify.Click += new System.EventHandler(this.cmdVerify_Click);
+            cmdVerify.AutoSize = true;
+            cmdVerify.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            cmdVerify.Dock = System.Windows.Forms.DockStyle.Fill;
+            cmdVerify.Enabled = false;
+            cmdVerify.Location = new System.Drawing.Point(606, 3);
+            cmdVerify.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            cmdVerify.MinimumSize = new System.Drawing.Size(93, 0);
+            cmdVerify.Name = "cmdVerify";
+            cmdVerify.Size = new System.Drawing.Size(208, 29);
+            cmdVerify.TabIndex = 2;
+            cmdVerify.Text = "Verify";
+            cmdVerify.UseVisualStyleBackColor = true;
+            cmdVerify.Click += cmdVerify_Click;
             // 
             // cmdVerifyData
             // 
-            this.cmdVerifyData.AutoSize = true;
-            this.cmdVerifyData.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.cmdVerifyData.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.cmdVerifyData.Enabled = false;
-            this.cmdVerifyData.Location = new System.Drawing.Point(704, 3);
-            this.cmdVerifyData.MinimumSize = new System.Drawing.Size(80, 0);
-            this.cmdVerifyData.Name = "cmdVerifyData";
-            this.cmdVerifyData.Size = new System.Drawing.Size(177, 24);
-            this.cmdVerifyData.TabIndex = 3;
-            this.cmdVerifyData.Text = "Verify Data File";
-            this.cmdVerifyData.UseVisualStyleBackColor = true;
-            this.cmdVerifyData.Click += new System.EventHandler(this.cmdVerifyData_Click);
+            cmdVerifyData.AutoSize = true;
+            cmdVerifyData.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            cmdVerifyData.Dock = System.Windows.Forms.DockStyle.Fill;
+            cmdVerifyData.Enabled = false;
+            cmdVerifyData.Location = new System.Drawing.Point(822, 3);
+            cmdVerifyData.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            cmdVerifyData.MinimumSize = new System.Drawing.Size(93, 0);
+            cmdVerifyData.Name = "cmdVerifyData";
+            cmdVerifyData.Size = new System.Drawing.Size(210, 29);
+            cmdVerifyData.TabIndex = 3;
+            cmdVerifyData.Text = "Verify Data File";
+            cmdVerifyData.UseVisualStyleBackColor = true;
+            cmdVerifyData.Click += cmdVerifyData_Click;
             // 
             // imgSheetLanguageFlag
             // 
-            this.imgSheetLanguageFlag.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.imgSheetLanguageFlag.Location = new System.Drawing.Point(133, 33);
-            this.imgSheetLanguageFlag.Name = "imgSheetLanguageFlag";
-            this.imgSheetLanguageFlag.Size = new System.Drawing.Size(16, 24);
-            this.imgSheetLanguageFlag.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
-            this.imgSheetLanguageFlag.TabIndex = 50;
-            this.imgSheetLanguageFlag.TabStop = false;
+            imgSheetLanguageFlag.Dock = System.Windows.Forms.DockStyle.Fill;
+            imgSheetLanguageFlag.Location = new System.Drawing.Point(146, 38);
+            imgSheetLanguageFlag.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            imgSheetLanguageFlag.Name = "imgSheetLanguageFlag";
+            imgSheetLanguageFlag.Size = new System.Drawing.Size(19, 29);
+            imgSheetLanguageFlag.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
+            imgSheetLanguageFlag.TabIndex = 50;
+            imgSheetLanguageFlag.TabStop = false;
             // 
             // imgLanguageFlag
             // 
-            this.imgLanguageFlag.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.imgLanguageFlag.Location = new System.Drawing.Point(133, 3);
-            this.imgLanguageFlag.Name = "imgLanguageFlag";
-            this.imgLanguageFlag.Size = new System.Drawing.Size(16, 24);
-            this.imgLanguageFlag.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
-            this.imgLanguageFlag.TabIndex = 49;
-            this.imgLanguageFlag.TabStop = false;
+            imgLanguageFlag.Dock = System.Windows.Forms.DockStyle.Fill;
+            imgLanguageFlag.Location = new System.Drawing.Point(146, 3);
+            imgLanguageFlag.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            imgLanguageFlag.Name = "imgLanguageFlag";
+            imgLanguageFlag.Size = new System.Drawing.Size(19, 29);
+            imgLanguageFlag.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
+            imgLanguageFlag.TabIndex = 49;
+            imgLanguageFlag.TabStop = false;
             // 
             // tlpLoggingOptions
             // 
-            this.tlpLoggingOptions.AutoSize = true;
-            this.tlpLoggingOptions.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.tlpLoggingOptions.ColumnCount = 2;
-            this.tlpLoggingOptions.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tlpLoggingOptions.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tlpLoggingOptions.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tlpLoggingOptions.Controls.Add(this.cboUseLoggingApplicationInsights, 0, 0);
-            this.tlpLoggingOptions.Controls.Add(this.cmdUseLoggingHelp, 1, 0);
-            this.tlpLoggingOptions.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tlpLoggingOptions.Location = new System.Drawing.Point(176, 185);
-            this.tlpLoggingOptions.Margin = new System.Windows.Forms.Padding(0);
-            this.tlpLoggingOptions.Name = "tlpLoggingOptions";
-            this.tlpLoggingOptions.RowCount = 1;
-            this.tlpLoggingOptions.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tlpLoggingOptions.Size = new System.Drawing.Size(265, 29);
-            this.tlpLoggingOptions.TabIndex = 75;
+            tlpLoggingOptions.AutoSize = true;
+            tlpLoggingOptions.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            tlpLoggingOptions.ColumnCount = 2;
+            tlpLoggingOptions.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            tlpLoggingOptions.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            tlpLoggingOptions.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 23F));
+            tlpLoggingOptions.Controls.Add(cboUseLoggingApplicationInsights, 0, 0);
+            tlpLoggingOptions.Controls.Add(cmdUseLoggingHelp, 1, 0);
+            tlpLoggingOptions.Dock = System.Windows.Forms.DockStyle.Fill;
+            tlpLoggingOptions.Location = new System.Drawing.Point(207, 208);
+            tlpLoggingOptions.Margin = new System.Windows.Forms.Padding(0);
+            tlpLoggingOptions.Name = "tlpLoggingOptions";
+            tlpLoggingOptions.RowCount = 1;
+            tlpLoggingOptions.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            tlpLoggingOptions.Size = new System.Drawing.Size(310, 33);
+            tlpLoggingOptions.TabIndex = 75;
             // 
             // cboUseLoggingApplicationInsights
             // 
-            this.cboUseLoggingApplicationInsights.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.cboUseLoggingApplicationInsights.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cboUseLoggingApplicationInsights.Location = new System.Drawing.Point(3, 4);
-            this.cboUseLoggingApplicationInsights.Name = "cboUseLoggingApplicationInsights";
-            this.cboUseLoggingApplicationInsights.Size = new System.Drawing.Size(230, 21);
-            this.cboUseLoggingApplicationInsights.TabIndex = 55;
-            this.cboUseLoggingApplicationInsights.TooltipText = "";
-            this.cboUseLoggingApplicationInsights.SelectedIndexChanged += new System.EventHandler(this.cboUseLoggingApplicationInsights_SelectedIndexChanged);
+            cboUseLoggingApplicationInsights.Anchor = System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
+            cboUseLoggingApplicationInsights.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            cboUseLoggingApplicationInsights.Location = new System.Drawing.Point(4, 5);
+            cboUseLoggingApplicationInsights.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            cboUseLoggingApplicationInsights.Name = "cboUseLoggingApplicationInsights";
+            cboUseLoggingApplicationInsights.Size = new System.Drawing.Size(267, 23);
+            cboUseLoggingApplicationInsights.TabIndex = 55;
+            cboUseLoggingApplicationInsights.TooltipText = "";
+            cboUseLoggingApplicationInsights.SelectedIndexChanged += cboUseLoggingApplicationInsights_SelectedIndexChanged;
             // 
             // cmdUseLoggingHelp
             // 
-            this.cmdUseLoggingHelp.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.cmdUseLoggingHelp.AutoSize = true;
-            this.cmdUseLoggingHelp.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.cmdUseLoggingHelp.Image = global::Chummer.Properties.Resources.help_16;
-            this.cmdUseLoggingHelp.ImageDpi120 = global::Chummer.Properties.Resources.help_20;
-            this.cmdUseLoggingHelp.ImageDpi144 = global::Chummer.Properties.Resources.help_24;
-            this.cmdUseLoggingHelp.ImageDpi192 = global::Chummer.Properties.Resources.help_32;
-            this.cmdUseLoggingHelp.ImageDpi288 = global::Chummer.Properties.Resources.help_48;
-            this.cmdUseLoggingHelp.ImageDpi384 = global::Chummer.Properties.Resources.help_64;
-            this.cmdUseLoggingHelp.ImageDpi96 = global::Chummer.Properties.Resources.help_16;
-            this.cmdUseLoggingHelp.Location = new System.Drawing.Point(239, 3);
-            this.cmdUseLoggingHelp.MinimumSize = new System.Drawing.Size(23, 23);
-            this.cmdUseLoggingHelp.Name = "cmdUseLoggingHelp";
-            this.cmdUseLoggingHelp.Size = new System.Drawing.Size(23, 23);
-            this.cmdUseLoggingHelp.TabIndex = 56;
-            this.cmdUseLoggingHelp.Tag = "";
-            this.cmdUseLoggingHelp.ToolTipText = "";
-            this.cmdUseLoggingHelp.UseVisualStyleBackColor = true;
-            this.cmdUseLoggingHelp.Click += new System.EventHandler(this.cboUseLoggingHelp_Click);
+            cmdUseLoggingHelp.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            cmdUseLoggingHelp.AutoSize = true;
+            cmdUseLoggingHelp.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            cmdUseLoggingHelp.Image = Properties.Resources.help_16;
+            cmdUseLoggingHelp.ImageDpi120 = Properties.Resources.help_20;
+            cmdUseLoggingHelp.ImageDpi144 = Properties.Resources.help_24;
+            cmdUseLoggingHelp.ImageDpi192 = Properties.Resources.help_32;
+            cmdUseLoggingHelp.ImageDpi288 = Properties.Resources.help_48;
+            cmdUseLoggingHelp.ImageDpi384 = Properties.Resources.help_64;
+            cmdUseLoggingHelp.ImageDpi96 = Properties.Resources.help_16;
+            cmdUseLoggingHelp.Location = new System.Drawing.Point(279, 3);
+            cmdUseLoggingHelp.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            cmdUseLoggingHelp.MinimumSize = new System.Drawing.Size(27, 27);
+            cmdUseLoggingHelp.Name = "cmdUseLoggingHelp";
+            cmdUseLoggingHelp.Size = new System.Drawing.Size(27, 27);
+            cmdUseLoggingHelp.TabIndex = 56;
+            cmdUseLoggingHelp.Tag = "";
+            cmdUseLoggingHelp.ToolTipText = "";
+            cmdUseLoggingHelp.UseVisualStyleBackColor = true;
+            cmdUseLoggingHelp.Click += cboUseLoggingHelp_Click;
             // 
             // tlpCharacterRosterPath
             // 
-            this.tlpCharacterRosterPath.AutoSize = true;
-            this.tlpCharacterRosterPath.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.tlpCharacterRosterPath.ColumnCount = 3;
-            this.tlpCharacterRosterPath.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tlpCharacterRosterPath.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tlpCharacterRosterPath.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tlpCharacterRosterPath.Controls.Add(this.cmdCharacterRoster, 1, 0);
-            this.tlpCharacterRosterPath.Controls.Add(this.txtCharacterRosterPath, 0, 0);
-            this.tlpCharacterRosterPath.Controls.Add(this.cmdRemoveCharacterRoster, 2, 0);
-            this.tlpCharacterRosterPath.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tlpCharacterRosterPath.Location = new System.Drawing.Point(662, 393);
-            this.tlpCharacterRosterPath.Margin = new System.Windows.Forms.Padding(0);
-            this.tlpCharacterRosterPath.Name = "tlpCharacterRosterPath";
-            this.tlpCharacterRosterPath.RowCount = 1;
-            this.tlpCharacterRosterPath.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tlpCharacterRosterPath.Size = new System.Drawing.Size(222, 30);
-            this.tlpCharacterRosterPath.TabIndex = 71;
+            tlpCharacterRosterPath.AutoSize = true;
+            tlpCharacterRosterPath.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            tlpCharacterRosterPath.ColumnCount = 3;
+            tlpCharacterRosterPath.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            tlpCharacterRosterPath.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            tlpCharacterRosterPath.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            tlpCharacterRosterPath.Controls.Add(cmdCharacterRoster, 1, 0);
+            tlpCharacterRosterPath.Controls.Add(txtCharacterRosterPath, 0, 0);
+            tlpCharacterRosterPath.Controls.Add(cmdRemoveCharacterRoster, 2, 0);
+            tlpCharacterRosterPath.Dock = System.Windows.Forms.DockStyle.Fill;
+            tlpCharacterRosterPath.Location = new System.Drawing.Point(776, 444);
+            tlpCharacterRosterPath.Margin = new System.Windows.Forms.Padding(0);
+            tlpCharacterRosterPath.Name = "tlpCharacterRosterPath";
+            tlpCharacterRosterPath.RowCount = 1;
+            tlpCharacterRosterPath.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            tlpCharacterRosterPath.Size = new System.Drawing.Size(260, 31);
+            tlpCharacterRosterPath.TabIndex = 71;
             // 
             // cmdCharacterRoster
             // 
-            this.cmdCharacterRoster.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.cmdCharacterRoster.AutoSize = true;
-            this.cmdCharacterRoster.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.cmdCharacterRoster.Location = new System.Drawing.Point(163, 3);
-            this.cmdCharacterRoster.Name = "cmdCharacterRoster";
-            this.cmdCharacterRoster.Size = new System.Drawing.Size(26, 23);
-            this.cmdCharacterRoster.TabIndex = 47;
-            this.cmdCharacterRoster.Text = "...";
-            this.cmdCharacterRoster.UseVisualStyleBackColor = true;
-            this.cmdCharacterRoster.Click += new System.EventHandler(this.cmdCharacterRoster_Click);
+            cmdCharacterRoster.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            cmdCharacterRoster.AutoSize = true;
+            cmdCharacterRoster.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            cmdCharacterRoster.Location = new System.Drawing.Point(198, 3);
+            cmdCharacterRoster.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            cmdCharacterRoster.Name = "cmdCharacterRoster";
+            cmdCharacterRoster.Size = new System.Drawing.Size(26, 25);
+            cmdCharacterRoster.TabIndex = 47;
+            cmdCharacterRoster.Text = "...";
+            cmdCharacterRoster.UseVisualStyleBackColor = true;
+            cmdCharacterRoster.Click += cmdCharacterRoster_Click;
             // 
             // txtCharacterRosterPath
             // 
-            this.txtCharacterRosterPath.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtCharacterRosterPath.Location = new System.Drawing.Point(3, 5);
-            this.txtCharacterRosterPath.Name = "txtCharacterRosterPath";
-            this.txtCharacterRosterPath.ReadOnly = true;
-            this.txtCharacterRosterPath.Size = new System.Drawing.Size(154, 20);
-            this.txtCharacterRosterPath.TabIndex = 45;
-            this.txtCharacterRosterPath.TextChanged += new System.EventHandler(this.OptionsChanged);
+            txtCharacterRosterPath.Anchor = System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
+            txtCharacterRosterPath.Location = new System.Drawing.Point(4, 4);
+            txtCharacterRosterPath.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            txtCharacterRosterPath.Name = "txtCharacterRosterPath";
+            txtCharacterRosterPath.ReadOnly = true;
+            txtCharacterRosterPath.Size = new System.Drawing.Size(186, 23);
+            txtCharacterRosterPath.TabIndex = 45;
+            txtCharacterRosterPath.TextChanged += OptionsChanged;
             // 
             // cmdRemoveCharacterRoster
             // 
-            this.cmdRemoveCharacterRoster.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.cmdRemoveCharacterRoster.AutoSize = true;
-            this.cmdRemoveCharacterRoster.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.cmdRemoveCharacterRoster.Enabled = false;
-            this.cmdRemoveCharacterRoster.Image = global::Chummer.Properties.Resources.delete_16;
-            this.cmdRemoveCharacterRoster.ImageDpi120 = global::Chummer.Properties.Resources.delete_20;
-            this.cmdRemoveCharacterRoster.ImageDpi144 = global::Chummer.Properties.Resources.delete_24;
-            this.cmdRemoveCharacterRoster.ImageDpi192 = global::Chummer.Properties.Resources.delete_32;
-            this.cmdRemoveCharacterRoster.ImageDpi288 = global::Chummer.Properties.Resources.delete_48;
-            this.cmdRemoveCharacterRoster.ImageDpi384 = global::Chummer.Properties.Resources.delete_64;
-            this.cmdRemoveCharacterRoster.ImageDpi96 = global::Chummer.Properties.Resources.delete_16;
-            this.cmdRemoveCharacterRoster.Location = new System.Drawing.Point(195, 3);
-            this.cmdRemoveCharacterRoster.Name = "cmdRemoveCharacterRoster";
-            this.cmdRemoveCharacterRoster.Padding = new System.Windows.Forms.Padding(1);
-            this.cmdRemoveCharacterRoster.Size = new System.Drawing.Size(24, 24);
-            this.cmdRemoveCharacterRoster.TabIndex = 48;
-            this.cmdRemoveCharacterRoster.UseVisualStyleBackColor = true;
-            this.cmdRemoveCharacterRoster.Click += new System.EventHandler(this.cmdRemoveCharacterRoster_Click);
+            cmdRemoveCharacterRoster.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            cmdRemoveCharacterRoster.AutoSize = true;
+            cmdRemoveCharacterRoster.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            cmdRemoveCharacterRoster.Enabled = false;
+            cmdRemoveCharacterRoster.Image = Properties.Resources.delete_16;
+            cmdRemoveCharacterRoster.ImageDpi120 = Properties.Resources.delete_20;
+            cmdRemoveCharacterRoster.ImageDpi144 = Properties.Resources.delete_24;
+            cmdRemoveCharacterRoster.ImageDpi192 = Properties.Resources.delete_32;
+            cmdRemoveCharacterRoster.ImageDpi288 = Properties.Resources.delete_48;
+            cmdRemoveCharacterRoster.ImageDpi384 = Properties.Resources.delete_64;
+            cmdRemoveCharacterRoster.ImageDpi96 = Properties.Resources.delete_16;
+            cmdRemoveCharacterRoster.Location = new System.Drawing.Point(232, 3);
+            cmdRemoveCharacterRoster.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            cmdRemoveCharacterRoster.Name = "cmdRemoveCharacterRoster";
+            cmdRemoveCharacterRoster.Padding = new System.Windows.Forms.Padding(1);
+            cmdRemoveCharacterRoster.Size = new System.Drawing.Size(24, 24);
+            cmdRemoveCharacterRoster.TabIndex = 48;
+            cmdRemoveCharacterRoster.UseVisualStyleBackColor = true;
+            cmdRemoveCharacterRoster.Click += cmdRemoveCharacterRoster_Click;
             // 
             // tlpPDFAppPath
             // 
-            this.tlpPDFAppPath.AutoSize = true;
-            this.tlpPDFAppPath.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.tlpPDFAppPath.ColumnCount = 3;
-            this.tlpPDFAppPath.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tlpPDFAppPath.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tlpPDFAppPath.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tlpPDFAppPath.Controls.Add(this.txtPDFAppPath, 0, 0);
-            this.tlpPDFAppPath.Controls.Add(this.cmdPDFAppPath, 1, 0);
-            this.tlpPDFAppPath.Controls.Add(this.cmdRemovePDFAppPath, 2, 0);
-            this.tlpPDFAppPath.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tlpPDFAppPath.Location = new System.Drawing.Point(662, 450);
-            this.tlpPDFAppPath.Margin = new System.Windows.Forms.Padding(0);
-            this.tlpPDFAppPath.Name = "tlpPDFAppPath";
-            this.tlpPDFAppPath.RowCount = 1;
-            this.tlpPDFAppPath.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tlpPDFAppPath.Size = new System.Drawing.Size(222, 30);
-            this.tlpPDFAppPath.TabIndex = 76;
+            tlpPDFAppPath.AutoSize = true;
+            tlpPDFAppPath.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            tlpPDFAppPath.ColumnCount = 3;
+            tlpPDFAppPath.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            tlpPDFAppPath.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            tlpPDFAppPath.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            tlpPDFAppPath.Controls.Add(txtPDFAppPath, 0, 0);
+            tlpPDFAppPath.Controls.Add(cmdPDFAppPath, 1, 0);
+            tlpPDFAppPath.Controls.Add(cmdRemovePDFAppPath, 2, 0);
+            tlpPDFAppPath.Dock = System.Windows.Forms.DockStyle.Fill;
+            tlpPDFAppPath.Location = new System.Drawing.Point(776, 504);
+            tlpPDFAppPath.Margin = new System.Windows.Forms.Padding(0);
+            tlpPDFAppPath.Name = "tlpPDFAppPath";
+            tlpPDFAppPath.RowCount = 1;
+            tlpPDFAppPath.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            tlpPDFAppPath.Size = new System.Drawing.Size(260, 31);
+            tlpPDFAppPath.TabIndex = 76;
             // 
             // txtPDFAppPath
             // 
-            this.txtPDFAppPath.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtPDFAppPath.Location = new System.Drawing.Point(3, 5);
-            this.txtPDFAppPath.Name = "txtPDFAppPath";
-            this.txtPDFAppPath.ReadOnly = true;
-            this.txtPDFAppPath.Size = new System.Drawing.Size(154, 20);
-            this.txtPDFAppPath.TabIndex = 10;
-            this.txtPDFAppPath.TextChanged += new System.EventHandler(this.txtPDFAppPath_TextChanged);
+            txtPDFAppPath.Anchor = System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
+            txtPDFAppPath.Location = new System.Drawing.Point(4, 4);
+            txtPDFAppPath.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            txtPDFAppPath.Name = "txtPDFAppPath";
+            txtPDFAppPath.ReadOnly = true;
+            txtPDFAppPath.Size = new System.Drawing.Size(186, 23);
+            txtPDFAppPath.TabIndex = 10;
+            txtPDFAppPath.TextChanged += txtPDFAppPath_TextChanged;
             // 
             // cmdPDFAppPath
             // 
-            this.cmdPDFAppPath.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.cmdPDFAppPath.AutoSize = true;
-            this.cmdPDFAppPath.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.cmdPDFAppPath.Location = new System.Drawing.Point(163, 3);
-            this.cmdPDFAppPath.Name = "cmdPDFAppPath";
-            this.cmdPDFAppPath.Size = new System.Drawing.Size(26, 23);
-            this.cmdPDFAppPath.TabIndex = 11;
-            this.cmdPDFAppPath.Text = "...";
-            this.cmdPDFAppPath.UseVisualStyleBackColor = true;
-            this.cmdPDFAppPath.Click += new System.EventHandler(this.cmdPDFAppPath_Click);
+            cmdPDFAppPath.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            cmdPDFAppPath.AutoSize = true;
+            cmdPDFAppPath.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            cmdPDFAppPath.Location = new System.Drawing.Point(198, 3);
+            cmdPDFAppPath.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            cmdPDFAppPath.Name = "cmdPDFAppPath";
+            cmdPDFAppPath.Size = new System.Drawing.Size(26, 25);
+            cmdPDFAppPath.TabIndex = 11;
+            cmdPDFAppPath.Text = "...";
+            cmdPDFAppPath.UseVisualStyleBackColor = true;
+            cmdPDFAppPath.Click += cmdPDFAppPath_Click;
             // 
             // cmdRemovePDFAppPath
             // 
-            this.cmdRemovePDFAppPath.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.cmdRemovePDFAppPath.AutoSize = true;
-            this.cmdRemovePDFAppPath.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.cmdRemovePDFAppPath.Enabled = false;
-            this.cmdRemovePDFAppPath.Image = global::Chummer.Properties.Resources.delete_16;
-            this.cmdRemovePDFAppPath.ImageDpi120 = global::Chummer.Properties.Resources.delete_20;
-            this.cmdRemovePDFAppPath.ImageDpi144 = global::Chummer.Properties.Resources.delete_24;
-            this.cmdRemovePDFAppPath.ImageDpi192 = global::Chummer.Properties.Resources.delete_32;
-            this.cmdRemovePDFAppPath.ImageDpi288 = global::Chummer.Properties.Resources.delete_48;
-            this.cmdRemovePDFAppPath.ImageDpi384 = global::Chummer.Properties.Resources.delete_64;
-            this.cmdRemovePDFAppPath.ImageDpi96 = global::Chummer.Properties.Resources.delete_16;
-            this.cmdRemovePDFAppPath.Location = new System.Drawing.Point(195, 3);
-            this.cmdRemovePDFAppPath.Name = "cmdRemovePDFAppPath";
-            this.cmdRemovePDFAppPath.Padding = new System.Windows.Forms.Padding(1);
-            this.cmdRemovePDFAppPath.Size = new System.Drawing.Size(24, 24);
-            this.cmdRemovePDFAppPath.TabIndex = 12;
-            this.cmdRemovePDFAppPath.UseVisualStyleBackColor = true;
-            this.cmdRemovePDFAppPath.Click += new System.EventHandler(this.cmdRemovePDFAppPath_Click);
+            cmdRemovePDFAppPath.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            cmdRemovePDFAppPath.AutoSize = true;
+            cmdRemovePDFAppPath.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            cmdRemovePDFAppPath.Enabled = false;
+            cmdRemovePDFAppPath.Image = Properties.Resources.delete_16;
+            cmdRemovePDFAppPath.ImageDpi120 = Properties.Resources.delete_20;
+            cmdRemovePDFAppPath.ImageDpi144 = Properties.Resources.delete_24;
+            cmdRemovePDFAppPath.ImageDpi192 = Properties.Resources.delete_32;
+            cmdRemovePDFAppPath.ImageDpi288 = Properties.Resources.delete_48;
+            cmdRemovePDFAppPath.ImageDpi384 = Properties.Resources.delete_64;
+            cmdRemovePDFAppPath.ImageDpi96 = Properties.Resources.delete_16;
+            cmdRemovePDFAppPath.Location = new System.Drawing.Point(232, 3);
+            cmdRemovePDFAppPath.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            cmdRemovePDFAppPath.Name = "cmdRemovePDFAppPath";
+            cmdRemovePDFAppPath.Padding = new System.Windows.Forms.Padding(1);
+            cmdRemovePDFAppPath.Size = new System.Drawing.Size(24, 24);
+            cmdRemovePDFAppPath.TabIndex = 12;
+            cmdRemovePDFAppPath.UseVisualStyleBackColor = true;
+            cmdRemovePDFAppPath.Click += cmdRemovePDFAppPath_Click;
             // 
             // tlpMugshotCompression
             // 
-            this.tlpMugshotCompression.AutoSize = true;
-            this.tlpMugshotCompression.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.tlpMugshotCompression.ColumnCount = 3;
-            this.tlpMugshotCompression.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tlpMugshotCompression.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tlpMugshotCompression.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tlpMugshotCompression.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tlpMugshotCompression.Controls.Add(this.lblMugshotCompressionQuality, 1, 0);
-            this.tlpMugshotCompression.Controls.Add(this.nudMugshotCompressionQuality, 2, 0);
-            this.tlpMugshotCompression.Controls.Add(this.cboMugshotCompression, 0, 0);
-            this.tlpMugshotCompression.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tlpMugshotCompression.Location = new System.Drawing.Point(662, 423);
-            this.tlpMugshotCompression.Margin = new System.Windows.Forms.Padding(0);
-            this.tlpMugshotCompression.Name = "tlpMugshotCompression";
-            this.tlpMugshotCompression.RowCount = 1;
-            this.tlpMugshotCompression.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tlpMugshotCompression.Size = new System.Drawing.Size(222, 27);
-            this.tlpMugshotCompression.TabIndex = 72;
-            // 
-            // lblMugshotCompressionQuality
-            // 
-            this.lblMugshotCompressionQuality.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.lblMugshotCompressionQuality.AutoSize = true;
-            this.lblMugshotCompressionQuality.Location = new System.Drawing.Point(98, 7);
-            this.lblMugshotCompressionQuality.Margin = new System.Windows.Forms.Padding(3, 6, 3, 6);
-            this.lblMugshotCompressionQuality.Name = "lblMugshotCompressionQuality";
-            this.lblMugshotCompressionQuality.Size = new System.Drawing.Size(74, 13);
-            this.lblMugshotCompressionQuality.TabIndex = 67;
-            this.lblMugshotCompressionQuality.Tag = "Label_Options_ImageQuality";
-            this.lblMugshotCompressionQuality.Text = "Image Quality:";
-            // 
-            // nudMugshotCompressionQuality
-            // 
-            this.nudMugshotCompressionQuality.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.nudMugshotCompressionQuality.AutoSize = true;
-            this.nudMugshotCompressionQuality.Location = new System.Drawing.Point(178, 3);
-            this.nudMugshotCompressionQuality.Maximum = new decimal(new int[] {
-            100,
-            0,
-            0,
-            0});
-            this.nudMugshotCompressionQuality.Minimum = new decimal(new int[] {
-            0,
-            0,
-            0,
-            0});
-            this.nudMugshotCompressionQuality.Name = "nudMugshotCompressionQuality";
-            this.nudMugshotCompressionQuality.Size = new System.Drawing.Size(41, 20);
-            this.nudMugshotCompressionQuality.TabIndex = 68;
-            this.nudMugshotCompressionQuality.Value = new decimal(new int[] {
-            90,
-            0,
-            0,
-            0});
-            this.nudMugshotCompressionQuality.ValueChanged += new System.EventHandler(this.OptionsChanged);
+            tlpMugshotCompression.AutoSize = true;
+            tlpMugshotCompression.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            tlpMugshotCompression.ColumnCount = 3;
+            tlpMugshotCompression.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            tlpMugshotCompression.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            tlpMugshotCompression.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            tlpMugshotCompression.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 23F));
+            tlpMugshotCompression.Controls.Add(cboMugshotCompression, 0, 0);
+            tlpMugshotCompression.Dock = System.Windows.Forms.DockStyle.Fill;
+            tlpMugshotCompression.Location = new System.Drawing.Point(776, 475);
+            tlpMugshotCompression.Margin = new System.Windows.Forms.Padding(0);
+            tlpMugshotCompression.Name = "tlpMugshotCompression";
+            tlpMugshotCompression.RowCount = 1;
+            tlpMugshotCompression.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            tlpMugshotCompression.Size = new System.Drawing.Size(260, 29);
+            tlpMugshotCompression.TabIndex = 72;
             // 
             // cboMugshotCompression
             // 
-            this.cboMugshotCompression.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.cboMugshotCompression.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cboMugshotCompression.FormattingEnabled = true;
-            this.cboMugshotCompression.Location = new System.Drawing.Point(3, 3);
-            this.cboMugshotCompression.Name = "cboMugshotCompression";
-            this.cboMugshotCompression.Size = new System.Drawing.Size(89, 21);
-            this.cboMugshotCompression.TabIndex = 66;
-            this.cboMugshotCompression.TooltipText = "";
-            this.cboMugshotCompression.SelectedIndexChanged += new System.EventHandler(this.cboMugshotCompression_SelectedIndexChanged);
+            cboMugshotCompression.Anchor = System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
+            cboMugshotCompression.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            cboMugshotCompression.FormattingEnabled = true;
+            cboMugshotCompression.Location = new System.Drawing.Point(4, 3);
+            cboMugshotCompression.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            cboMugshotCompression.Name = "cboMugshotCompression";
+            cboMugshotCompression.Size = new System.Drawing.Size(252, 23);
+            cboMugshotCompression.TabIndex = 66;
+            cboMugshotCompression.TooltipText = "";
+            cboMugshotCompression.SelectedIndexChanged += cboMugshotCompression_SelectedIndexChanged;
             // 
             // tlpColorMode
             // 
-            this.tlpColorMode.AutoSize = true;
-            this.tlpColorMode.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.tlpColorMode.ColumnCount = 2;
-            this.tlpGlobalOptions.SetColumnSpan(this.tlpColorMode, 2);
-            this.tlpColorMode.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tlpColorMode.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tlpColorMode.Controls.Add(this.lblColorMode, 0, 0);
-            this.tlpColorMode.Controls.Add(this.cboColorMode, 1, 0);
-            this.tlpColorMode.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tlpColorMode.Location = new System.Drawing.Point(0, 158);
-            this.tlpColorMode.Margin = new System.Windows.Forms.Padding(0);
-            this.tlpColorMode.Name = "tlpColorMode";
-            this.tlpColorMode.RowCount = 1;
-            this.tlpColorMode.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tlpColorMode.Size = new System.Drawing.Size(441, 27);
-            this.tlpColorMode.TabIndex = 78;
+            tlpColorMode.AutoSize = true;
+            tlpColorMode.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            tlpColorMode.ColumnCount = 2;
+            tlpGlobalOptions.SetColumnSpan(tlpColorMode, 2);
+            tlpColorMode.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            tlpColorMode.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            tlpColorMode.Controls.Add(lblColorMode, 0, 0);
+            tlpColorMode.Controls.Add(cboColorMode, 1, 0);
+            tlpColorMode.Dock = System.Windows.Forms.DockStyle.Fill;
+            tlpColorMode.Location = new System.Drawing.Point(0, 179);
+            tlpColorMode.Margin = new System.Windows.Forms.Padding(0);
+            tlpColorMode.Name = "tlpColorMode";
+            tlpColorMode.RowCount = 1;
+            tlpColorMode.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            tlpColorMode.Size = new System.Drawing.Size(517, 29);
+            tlpColorMode.TabIndex = 78;
             // 
             // lblColorMode
             // 
-            this.lblColorMode.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.lblColorMode.AutoSize = true;
-            this.lblColorMode.Location = new System.Drawing.Point(3, 7);
-            this.lblColorMode.Margin = new System.Windows.Forms.Padding(3, 6, 3, 6);
-            this.lblColorMode.Name = "lblColorMode";
-            this.lblColorMode.Size = new System.Drawing.Size(64, 13);
-            this.lblColorMode.TabIndex = 0;
-            this.lblColorMode.Text = "Color Mode:";
+            lblColorMode.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            lblColorMode.AutoSize = true;
+            lblColorMode.Location = new System.Drawing.Point(4, 7);
+            lblColorMode.Margin = new System.Windows.Forms.Padding(4, 7, 4, 7);
+            lblColorMode.Name = "lblColorMode";
+            lblColorMode.Size = new System.Drawing.Size(73, 15);
+            lblColorMode.TabIndex = 0;
+            lblColorMode.Text = "Color Mode:";
             // 
             // cboColorMode
             // 
-            this.cboColorMode.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.cboColorMode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cboColorMode.FormattingEnabled = true;
-            this.cboColorMode.Location = new System.Drawing.Point(73, 3);
-            this.cboColorMode.Name = "cboColorMode";
-            this.cboColorMode.Size = new System.Drawing.Size(365, 21);
-            this.cboColorMode.TabIndex = 1;
-            this.cboColorMode.TooltipText = "";
-            this.cboColorMode.SelectedIndexChanged += new System.EventHandler(this.cboColorMode_SelectedIndexChanged);
+            cboColorMode.Anchor = System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
+            cboColorMode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            cboColorMode.FormattingEnabled = true;
+            cboColorMode.Location = new System.Drawing.Point(85, 3);
+            cboColorMode.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            cboColorMode.Name = "cboColorMode";
+            cboColorMode.Size = new System.Drawing.Size(428, 23);
+            cboColorMode.TabIndex = 1;
+            cboColorMode.TooltipText = "";
+            cboColorMode.SelectedIndexChanged += cboColorMode_SelectedIndexChanged;
             // 
             // chkPreferNightlyBuilds
             // 
-            this.chkPreferNightlyBuilds.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.chkPreferNightlyBuilds.AutoSize = true;
-            this.tlpGlobalOptions.SetColumnSpan(this.chkPreferNightlyBuilds, 2);
-            this.chkPreferNightlyBuilds.DefaultColorScheme = true;
-            this.chkPreferNightlyBuilds.Location = new System.Drawing.Point(3, 243);
-            this.chkPreferNightlyBuilds.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.chkPreferNightlyBuilds.Name = "chkPreferNightlyBuilds";
-            this.chkPreferNightlyBuilds.Size = new System.Drawing.Size(192, 17);
-            this.chkPreferNightlyBuilds.TabIndex = 25;
-            this.chkPreferNightlyBuilds.Tag = "Checkbox_Options_PreferNightlyBuilds";
-            this.chkPreferNightlyBuilds.Text = "Prefer Nightly builds when updating";
-            this.chkPreferNightlyBuilds.UseVisualStyleBackColor = true;
-            this.chkPreferNightlyBuilds.CheckedChanged += new System.EventHandler(this.OptionsChanged);
+            chkPreferNightlyBuilds.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            chkPreferNightlyBuilds.AutoSize = true;
+            tlpGlobalOptions.SetColumnSpan(chkPreferNightlyBuilds, 2);
+            chkPreferNightlyBuilds.DefaultColorScheme = true;
+            chkPreferNightlyBuilds.ForeColor = System.Drawing.SystemColors.ControlText;
+            chkPreferNightlyBuilds.Location = new System.Drawing.Point(4, 275);
+            chkPreferNightlyBuilds.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            chkPreferNightlyBuilds.Name = "chkPreferNightlyBuilds";
+            chkPreferNightlyBuilds.Size = new System.Drawing.Size(217, 19);
+            chkPreferNightlyBuilds.TabIndex = 25;
+            chkPreferNightlyBuilds.Tag = "Checkbox_Options_PreferNightlyBuilds";
+            chkPreferNightlyBuilds.Text = "Prefer Nightly builds when updating";
+            chkPreferNightlyBuilds.UseVisualStyleBackColor = true;
+            chkPreferNightlyBuilds.CheckedChanged += OptionsChanged;
             // 
             // chkPrintSkillsWithZeroRating
             // 
-            this.chkPrintSkillsWithZeroRating.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.chkPrintSkillsWithZeroRating.AutoSize = true;
-            this.tlpGlobalOptions.SetColumnSpan(this.chkPrintSkillsWithZeroRating, 2);
-            this.chkPrintSkillsWithZeroRating.DefaultColorScheme = true;
-            this.chkPrintSkillsWithZeroRating.Location = new System.Drawing.Point(3, 268);
-            this.chkPrintSkillsWithZeroRating.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.chkPrintSkillsWithZeroRating.Name = "chkPrintSkillsWithZeroRating";
-            this.chkPrintSkillsWithZeroRating.Size = new System.Drawing.Size(229, 17);
-            this.chkPrintSkillsWithZeroRating.TabIndex = 79;
-            this.chkPrintSkillsWithZeroRating.Tag = "Checkbox_Options_PrintAllSkills";
-            this.chkPrintSkillsWithZeroRating.Text = "Print all Active Skills with Rating 0 or higher";
-            this.chkPrintSkillsWithZeroRating.UseVisualStyleBackColor = true;
-            this.chkPrintSkillsWithZeroRating.CheckedChanged += new System.EventHandler(this.OptionsChanged);
+            chkPrintSkillsWithZeroRating.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            chkPrintSkillsWithZeroRating.AutoSize = true;
+            tlpGlobalOptions.SetColumnSpan(chkPrintSkillsWithZeroRating, 2);
+            chkPrintSkillsWithZeroRating.DefaultColorScheme = true;
+            chkPrintSkillsWithZeroRating.ForeColor = System.Drawing.SystemColors.ControlText;
+            chkPrintSkillsWithZeroRating.Location = new System.Drawing.Point(4, 304);
+            chkPrintSkillsWithZeroRating.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            chkPrintSkillsWithZeroRating.Name = "chkPrintSkillsWithZeroRating";
+            chkPrintSkillsWithZeroRating.Size = new System.Drawing.Size(254, 19);
+            chkPrintSkillsWithZeroRating.TabIndex = 79;
+            chkPrintSkillsWithZeroRating.Tag = "Checkbox_Options_PrintAllSkills";
+            chkPrintSkillsWithZeroRating.Text = "Print all Active Skills with Rating 0 or higher";
+            chkPrintSkillsWithZeroRating.UseVisualStyleBackColor = true;
+            chkPrintSkillsWithZeroRating.CheckedChanged += OptionsChanged;
             // 
             // chkPrintExpenses
             // 
-            this.chkPrintExpenses.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.chkPrintExpenses.AutoSize = true;
-            this.tlpGlobalOptions.SetColumnSpan(this.chkPrintExpenses, 2);
-            this.chkPrintExpenses.DefaultColorScheme = true;
-            this.chkPrintExpenses.Location = new System.Drawing.Point(3, 294);
-            this.chkPrintExpenses.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.chkPrintExpenses.Name = "chkPrintExpenses";
-            this.chkPrintExpenses.Size = new System.Drawing.Size(184, 17);
-            this.chkPrintExpenses.TabIndex = 80;
-            this.chkPrintExpenses.Tag = "Checkbox_Options_PrintExpenses";
-            this.chkPrintExpenses.Text = "Print Karma and Nuyen Expenses";
-            this.chkPrintExpenses.UseVisualStyleBackColor = true;
-            this.chkPrintExpenses.CheckedChanged += new System.EventHandler(this.chkPrintExpenses_CheckedChanged);
+            chkPrintExpenses.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            chkPrintExpenses.AutoSize = true;
+            tlpGlobalOptions.SetColumnSpan(chkPrintExpenses, 2);
+            chkPrintExpenses.DefaultColorScheme = true;
+            chkPrintExpenses.ForeColor = System.Drawing.SystemColors.ControlText;
+            chkPrintExpenses.Location = new System.Drawing.Point(4, 333);
+            chkPrintExpenses.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            chkPrintExpenses.Name = "chkPrintExpenses";
+            chkPrintExpenses.Size = new System.Drawing.Size(200, 19);
+            chkPrintExpenses.TabIndex = 80;
+            chkPrintExpenses.Tag = "Checkbox_Options_PrintExpenses";
+            chkPrintExpenses.Text = "Print Karma and Nuyen Expenses";
+            chkPrintExpenses.UseVisualStyleBackColor = true;
+            chkPrintExpenses.CheckedChanged += chkPrintExpenses_CheckedChanged;
             // 
             // chkPrintFreeExpenses
             // 
-            this.chkPrintFreeExpenses.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.chkPrintFreeExpenses.AutoSize = true;
-            this.tlpGlobalOptions.SetColumnSpan(this.chkPrintFreeExpenses, 2);
-            this.chkPrintFreeExpenses.DefaultColorScheme = true;
-            this.chkPrintFreeExpenses.Location = new System.Drawing.Point(23, 320);
-            this.chkPrintFreeExpenses.Margin = new System.Windows.Forms.Padding(23, 4, 3, 4);
-            this.chkPrintFreeExpenses.Name = "chkPrintFreeExpenses";
-            this.chkPrintFreeExpenses.Size = new System.Drawing.Size(208, 17);
-            this.chkPrintFreeExpenses.TabIndex = 81;
-            this.chkPrintFreeExpenses.Tag = "Checkbox_Options_PrintFreeExpenses";
-            this.chkPrintFreeExpenses.Text = "Print Free Karma and Nuyen Expenses";
-            this.chkPrintFreeExpenses.UseVisualStyleBackColor = true;
-            this.chkPrintFreeExpenses.CheckedChanged += new System.EventHandler(this.OptionsChanged);
+            chkPrintFreeExpenses.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            chkPrintFreeExpenses.AutoSize = true;
+            tlpGlobalOptions.SetColumnSpan(chkPrintFreeExpenses, 2);
+            chkPrintFreeExpenses.DefaultColorScheme = true;
+            chkPrintFreeExpenses.ForeColor = System.Drawing.SystemColors.ControlText;
+            chkPrintFreeExpenses.Location = new System.Drawing.Point(27, 362);
+            chkPrintFreeExpenses.Margin = new System.Windows.Forms.Padding(27, 5, 4, 5);
+            chkPrintFreeExpenses.Name = "chkPrintFreeExpenses";
+            chkPrintFreeExpenses.Size = new System.Drawing.Size(225, 19);
+            chkPrintFreeExpenses.TabIndex = 81;
+            chkPrintFreeExpenses.Tag = "Checkbox_Options_PrintFreeExpenses";
+            chkPrintFreeExpenses.Text = "Print Free Karma and Nuyen Expenses";
+            chkPrintFreeExpenses.UseVisualStyleBackColor = true;
+            chkPrintFreeExpenses.CheckedChanged += OptionsChanged;
             // 
             // chkDatesIncludeTime
             // 
-            this.chkDatesIncludeTime.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.chkDatesIncludeTime.AutoSize = true;
-            this.tlpGlobalOptions.SetColumnSpan(this.chkDatesIncludeTime, 2);
-            this.chkDatesIncludeTime.DefaultColorScheme = true;
-            this.chkDatesIncludeTime.Location = new System.Drawing.Point(3, 371);
-            this.chkDatesIncludeTime.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.chkDatesIncludeTime.Name = "chkDatesIncludeTime";
-            this.chkDatesIncludeTime.Size = new System.Drawing.Size(189, 17);
-            this.chkDatesIncludeTime.TabIndex = 9;
-            this.chkDatesIncludeTime.Tag = "Checkbox_Options_DatesIncludeTime";
-            this.chkDatesIncludeTime.Text = "Expense dates should include time";
-            this.chkDatesIncludeTime.UseVisualStyleBackColor = true;
-            this.chkDatesIncludeTime.CheckedChanged += new System.EventHandler(this.OptionsChanged);
+            chkDatesIncludeTime.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            chkDatesIncludeTime.AutoSize = true;
+            tlpGlobalOptions.SetColumnSpan(chkDatesIncludeTime, 2);
+            chkDatesIncludeTime.DefaultColorScheme = true;
+            chkDatesIncludeTime.ForeColor = System.Drawing.SystemColors.ControlText;
+            chkDatesIncludeTime.Location = new System.Drawing.Point(4, 420);
+            chkDatesIncludeTime.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            chkDatesIncludeTime.Name = "chkDatesIncludeTime";
+            chkDatesIncludeTime.Size = new System.Drawing.Size(208, 19);
+            chkDatesIncludeTime.TabIndex = 9;
+            chkDatesIncludeTime.Tag = "Checkbox_Options_DatesIncludeTime";
+            chkDatesIncludeTime.Text = "Expense dates should include time";
+            chkDatesIncludeTime.UseVisualStyleBackColor = true;
+            chkDatesIncludeTime.CheckedChanged += OptionsChanged;
             // 
             // chkPrintNotes
             // 
-            this.chkPrintNotes.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.chkPrintNotes.AutoSize = true;
-            this.chkPrintNotes.CheckAlign = System.Drawing.ContentAlignment.TopLeft;
-            this.tlpGlobalOptions.SetColumnSpan(this.chkPrintNotes, 2);
-            this.chkPrintNotes.DefaultColorScheme = true;
-            this.chkPrintNotes.Location = new System.Drawing.Point(3, 345);
-            this.chkPrintNotes.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.chkPrintNotes.Name = "chkPrintNotes";
-            this.chkPrintNotes.Size = new System.Drawing.Size(78, 17);
-            this.chkPrintNotes.TabIndex = 82;
-            this.chkPrintNotes.Tag = "Checkbox_Option_PrintNotes";
-            this.chkPrintNotes.Text = "Print Notes";
-            this.chkPrintNotes.UseVisualStyleBackColor = true;
-            this.chkPrintNotes.CheckedChanged += new System.EventHandler(this.OptionsChanged);
+            chkPrintNotes.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            chkPrintNotes.AutoSize = true;
+            chkPrintNotes.CheckAlign = System.Drawing.ContentAlignment.TopLeft;
+            tlpGlobalOptions.SetColumnSpan(chkPrintNotes, 2);
+            chkPrintNotes.DefaultColorScheme = true;
+            chkPrintNotes.ForeColor = System.Drawing.SystemColors.ControlText;
+            chkPrintNotes.Location = new System.Drawing.Point(4, 391);
+            chkPrintNotes.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            chkPrintNotes.Name = "chkPrintNotes";
+            chkPrintNotes.Size = new System.Drawing.Size(85, 19);
+            chkPrintNotes.TabIndex = 82;
+            chkPrintNotes.Tag = "Checkbox_Option_PrintNotes";
+            chkPrintNotes.Text = "Print Notes";
+            chkPrintNotes.UseVisualStyleBackColor = true;
+            chkPrintNotes.CheckedChanged += OptionsChanged;
             // 
             // chkHideCharacterRoster
             // 
-            this.chkHideCharacterRoster.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.chkHideCharacterRoster.AutoSize = true;
-            this.chkHideCharacterRoster.DefaultColorScheme = true;
-            this.chkHideCharacterRoster.Location = new System.Drawing.Point(444, 243);
-            this.chkHideCharacterRoster.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.chkHideCharacterRoster.Name = "chkHideCharacterRoster";
-            this.chkHideCharacterRoster.Size = new System.Drawing.Size(149, 17);
-            this.chkHideCharacterRoster.TabIndex = 35;
-            this.chkHideCharacterRoster.Tag = "Checkbox_Options_HideCharacterRoster";
-            this.chkHideCharacterRoster.Text = "Hide the Character Roster";
-            this.chkHideCharacterRoster.UseVisualStyleBackColor = true;
-            this.chkHideCharacterRoster.CheckedChanged += new System.EventHandler(this.OptionsChanged);
+            chkHideCharacterRoster.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            chkHideCharacterRoster.AutoSize = true;
+            chkHideCharacterRoster.DefaultColorScheme = true;
+            chkHideCharacterRoster.ForeColor = System.Drawing.SystemColors.ControlText;
+            chkHideCharacterRoster.Location = new System.Drawing.Point(521, 275);
+            chkHideCharacterRoster.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            chkHideCharacterRoster.Name = "chkHideCharacterRoster";
+            chkHideCharacterRoster.Size = new System.Drawing.Size(161, 19);
+            chkHideCharacterRoster.TabIndex = 35;
+            chkHideCharacterRoster.Tag = "Checkbox_Options_HideCharacterRoster";
+            chkHideCharacterRoster.Text = "Hide the Character Roster";
+            chkHideCharacterRoster.UseVisualStyleBackColor = true;
+            chkHideCharacterRoster.CheckedChanged += OptionsChanged;
             // 
             // chkHideMasterIndex
             // 
-            this.chkHideMasterIndex.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.chkHideMasterIndex.AutoSize = true;
-            this.chkHideMasterIndex.DefaultColorScheme = true;
-            this.chkHideMasterIndex.Location = new System.Drawing.Point(444, 268);
-            this.chkHideMasterIndex.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.chkHideMasterIndex.Name = "chkHideMasterIndex";
-            this.chkHideMasterIndex.Size = new System.Drawing.Size(130, 17);
-            this.chkHideMasterIndex.TabIndex = 69;
-            this.chkHideMasterIndex.Tag = "Checkbox_Options_HideMasterIndex";
-            this.chkHideMasterIndex.Text = "Hide the Master Index";
-            this.chkHideMasterIndex.UseVisualStyleBackColor = true;
+            chkHideMasterIndex.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            chkHideMasterIndex.AutoSize = true;
+            chkHideMasterIndex.DefaultColorScheme = true;
+            chkHideMasterIndex.ForeColor = System.Drawing.SystemColors.ControlText;
+            chkHideMasterIndex.Location = new System.Drawing.Point(521, 304);
+            chkHideMasterIndex.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            chkHideMasterIndex.Name = "chkHideMasterIndex";
+            chkHideMasterIndex.Size = new System.Drawing.Size(142, 19);
+            chkHideMasterIndex.TabIndex = 69;
+            chkHideMasterIndex.Tag = "Checkbox_Options_HideMasterIndex";
+            chkHideMasterIndex.Text = "Hide the Master Index";
+            chkHideMasterIndex.UseVisualStyleBackColor = true;
             // 
             // chkSearchInCategoryOnly
             // 
-            this.chkSearchInCategoryOnly.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.chkSearchInCategoryOnly.AutoSize = true;
-            this.chkSearchInCategoryOnly.CheckAlign = System.Drawing.ContentAlignment.TopLeft;
-            this.chkSearchInCategoryOnly.Checked = true;
-            this.chkSearchInCategoryOnly.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.tlpGlobalOptions.SetColumnSpan(this.chkSearchInCategoryOnly, 2);
-            this.chkSearchInCategoryOnly.DefaultColorScheme = true;
-            this.chkSearchInCategoryOnly.Location = new System.Drawing.Point(444, 136);
-            this.chkSearchInCategoryOnly.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.chkSearchInCategoryOnly.Name = "chkSearchInCategoryOnly";
-            this.chkSearchInCategoryOnly.Size = new System.Drawing.Size(325, 17);
-            this.chkSearchInCategoryOnly.TabIndex = 21;
-            this.chkSearchInCategoryOnly.Tag = "Checkbox_Options_SearchInCategoryOnly";
-            this.chkSearchInCategoryOnly.Text = "Searching in selection forms is restricted to the current Category";
-            this.chkSearchInCategoryOnly.UseVisualStyleBackColor = true;
-            this.chkSearchInCategoryOnly.CheckedChanged += new System.EventHandler(this.OptionsChanged);
+            chkSearchInCategoryOnly.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            chkSearchInCategoryOnly.AutoSize = true;
+            chkSearchInCategoryOnly.CheckAlign = System.Drawing.ContentAlignment.TopLeft;
+            chkSearchInCategoryOnly.Checked = true;
+            chkSearchInCategoryOnly.CheckState = System.Windows.Forms.CheckState.Checked;
+            tlpGlobalOptions.SetColumnSpan(chkSearchInCategoryOnly, 2);
+            chkSearchInCategoryOnly.DefaultColorScheme = true;
+            chkSearchInCategoryOnly.ForeColor = System.Drawing.SystemColors.ControlText;
+            chkSearchInCategoryOnly.Location = new System.Drawing.Point(521, 155);
+            chkSearchInCategoryOnly.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            chkSearchInCategoryOnly.Name = "chkSearchInCategoryOnly";
+            chkSearchInCategoryOnly.Size = new System.Drawing.Size(364, 19);
+            chkSearchInCategoryOnly.TabIndex = 21;
+            chkSearchInCategoryOnly.Tag = "Checkbox_Options_SearchInCategoryOnly";
+            chkSearchInCategoryOnly.Text = "Searching in selection forms is restricted to the current Category";
+            chkSearchInCategoryOnly.UseVisualStyleBackColor = true;
+            chkSearchInCategoryOnly.CheckedChanged += OptionsChanged;
             // 
             // flpEnablePlugins
             // 
-            this.flpEnablePlugins.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.flpEnablePlugins.AutoSize = true;
-            this.flpEnablePlugins.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.tlpGlobalOptions.SetColumnSpan(this.flpEnablePlugins, 2);
-            this.flpEnablePlugins.Controls.Add(this.chkEnablePlugins);
-            this.flpEnablePlugins.Controls.Add(this.cmdPluginsHelp);
-            this.flpEnablePlugins.Location = new System.Drawing.Point(441, 558);
-            this.flpEnablePlugins.Margin = new System.Windows.Forms.Padding(0);
-            this.flpEnablePlugins.Name = "flpEnablePlugins";
-            this.flpEnablePlugins.Size = new System.Drawing.Size(199, 29);
-            this.flpEnablePlugins.TabIndex = 62;
+            flpEnablePlugins.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            flpEnablePlugins.AutoSize = true;
+            flpEnablePlugins.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            tlpGlobalOptions.SetColumnSpan(flpEnablePlugins, 2);
+            flpEnablePlugins.Controls.Add(chkEnablePlugins);
+            flpEnablePlugins.Controls.Add(cmdPluginsHelp);
+            flpEnablePlugins.Location = new System.Drawing.Point(517, 622);
+            flpEnablePlugins.Margin = new System.Windows.Forms.Padding(0);
+            flpEnablePlugins.Name = "flpEnablePlugins";
+            flpEnablePlugins.Size = new System.Drawing.Size(226, 33);
+            flpEnablePlugins.TabIndex = 62;
             // 
             // chkEnablePlugins
             // 
-            this.chkEnablePlugins.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.chkEnablePlugins.AutoSize = true;
-            this.chkEnablePlugins.DefaultColorScheme = true;
-            this.chkEnablePlugins.Location = new System.Drawing.Point(3, 6);
-            this.chkEnablePlugins.Name = "chkEnablePlugins";
-            this.chkEnablePlugins.Size = new System.Drawing.Size(164, 17);
-            this.chkEnablePlugins.TabIndex = 51;
-            this.chkEnablePlugins.Tag = "Checkbox_Options_EnablePlugins";
-            this.chkEnablePlugins.Text = "Enable Plugins (experimental)";
-            this.chkEnablePlugins.UseVisualStyleBackColor = true;
-            this.chkEnablePlugins.CheckedChanged += new System.EventHandler(this.chkEnablePlugins_CheckedChanged);
+            chkEnablePlugins.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            chkEnablePlugins.AutoSize = true;
+            chkEnablePlugins.DefaultColorScheme = true;
+            chkEnablePlugins.ForeColor = System.Drawing.SystemColors.ControlText;
+            chkEnablePlugins.Location = new System.Drawing.Point(4, 7);
+            chkEnablePlugins.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            chkEnablePlugins.Name = "chkEnablePlugins";
+            chkEnablePlugins.Size = new System.Drawing.Size(183, 19);
+            chkEnablePlugins.TabIndex = 51;
+            chkEnablePlugins.Tag = "Checkbox_Options_EnablePlugins";
+            chkEnablePlugins.Text = "Enable Plugins (experimental)";
+            chkEnablePlugins.UseVisualStyleBackColor = true;
+            chkEnablePlugins.CheckedChanged += chkEnablePlugins_CheckedChanged;
             // 
             // cmdPluginsHelp
             // 
-            this.cmdPluginsHelp.AutoSize = true;
-            this.cmdPluginsHelp.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.cmdPluginsHelp.Location = new System.Drawing.Point(173, 3);
-            this.cmdPluginsHelp.MaximumSize = new System.Drawing.Size(23, 23);
-            this.cmdPluginsHelp.MinimumSize = new System.Drawing.Size(23, 23);
-            this.cmdPluginsHelp.Name = "cmdPluginsHelp";
-            this.cmdPluginsHelp.Size = new System.Drawing.Size(23, 23);
-            this.cmdPluginsHelp.TabIndex = 57;
-            this.cmdPluginsHelp.Text = "?";
-            this.cmdPluginsHelp.UseVisualStyleBackColor = true;
-            this.cmdPluginsHelp.Click += new System.EventHandler(this.cmdPluginsHelp_Click);
+            cmdPluginsHelp.AutoSize = true;
+            cmdPluginsHelp.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            cmdPluginsHelp.Location = new System.Drawing.Point(195, 3);
+            cmdPluginsHelp.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            cmdPluginsHelp.MaximumSize = new System.Drawing.Size(27, 27);
+            cmdPluginsHelp.MinimumSize = new System.Drawing.Size(27, 27);
+            cmdPluginsHelp.Name = "cmdPluginsHelp";
+            cmdPluginsHelp.Size = new System.Drawing.Size(27, 27);
+            cmdPluginsHelp.TabIndex = 57;
+            cmdPluginsHelp.Text = "?";
+            cmdPluginsHelp.UseVisualStyleBackColor = true;
+            cmdPluginsHelp.Click += cmdPluginsHelp_Click;
             // 
             // chkLifeModule
             // 
-            this.chkLifeModule.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.chkLifeModule.AutoSize = true;
-            this.tlpGlobalOptions.SetColumnSpan(this.chkLifeModule, 2);
-            this.chkLifeModule.DefaultColorScheme = true;
-            this.chkLifeModule.Location = new System.Drawing.Point(444, 537);
-            this.chkLifeModule.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.chkLifeModule.Name = "chkLifeModule";
-            this.chkLifeModule.Size = new System.Drawing.Size(117, 17);
-            this.chkLifeModule.TabIndex = 22;
-            this.chkLifeModule.Tag = "Checkbox_Options_UseLifeModule";
-            this.chkLifeModule.Text = "Life modules visible";
-            this.chkLifeModule.UseVisualStyleBackColor = true;
-            this.chkLifeModule.CheckedChanged += new System.EventHandler(this.chkLifeModules_CheckedChanged);
+            chkLifeModule.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            chkLifeModule.AutoSize = true;
+            tlpGlobalOptions.SetColumnSpan(chkLifeModule, 2);
+            chkLifeModule.DefaultColorScheme = true;
+            chkLifeModule.ForeColor = System.Drawing.SystemColors.ControlText;
+            chkLifeModule.Location = new System.Drawing.Point(521, 598);
+            chkLifeModule.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            chkLifeModule.Name = "chkLifeModule";
+            chkLifeModule.Size = new System.Drawing.Size(130, 19);
+            chkLifeModule.TabIndex = 22;
+            chkLifeModule.Tag = "Checkbox_Options_UseLifeModule";
+            chkLifeModule.Text = "Life modules visible";
+            chkLifeModule.UseVisualStyleBackColor = true;
+            chkLifeModule.CheckedChanged += chkLifeModules_CheckedChanged;
             // 
             // lblMugshotCompression
             // 
-            this.lblMugshotCompression.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.lblMugshotCompression.AutoSize = true;
-            this.lblMugshotCompression.Location = new System.Drawing.Point(533, 430);
-            this.lblMugshotCompression.Name = "lblMugshotCompression";
-            this.lblMugshotCompression.Size = new System.Drawing.Size(126, 13);
-            this.lblMugshotCompression.TabIndex = 65;
-            this.lblMugshotCompression.Tag = "Label_Options_MugshotCompression";
-            this.lblMugshotCompression.Text = "Mugshot Storage Format:";
-            this.lblMugshotCompression.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            lblMugshotCompression.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            lblMugshotCompression.AutoSize = true;
+            lblMugshotCompression.Location = new System.Drawing.Point(630, 482);
+            lblMugshotCompression.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            lblMugshotCompression.Name = "lblMugshotCompression";
+            lblMugshotCompression.Size = new System.Drawing.Size(142, 15);
+            lblMugshotCompression.TabIndex = 65;
+            lblMugshotCompression.Tag = "Label_Options_MugshotCompression";
+            lblMugshotCompression.Text = "Mugshot Storage Format:";
+            lblMugshotCompression.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // lblCharacterRosterLabel
             // 
-            this.lblCharacterRosterLabel.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.lblCharacterRosterLabel.AutoSize = true;
-            this.lblCharacterRosterLabel.Location = new System.Drawing.Point(502, 401);
-            this.lblCharacterRosterLabel.Margin = new System.Windows.Forms.Padding(3, 6, 3, 6);
-            this.lblCharacterRosterLabel.Name = "lblCharacterRosterLabel";
-            this.lblCharacterRosterLabel.Size = new System.Drawing.Size(157, 13);
-            this.lblCharacterRosterLabel.TabIndex = 44;
-            this.lblCharacterRosterLabel.Tag = "Label_Options_CharacterRoster";
-            this.lblCharacterRosterLabel.Text = "Character Roster Watch Folder:";
-            this.lblCharacterRosterLabel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            lblCharacterRosterLabel.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            lblCharacterRosterLabel.AutoSize = true;
+            lblCharacterRosterLabel.Location = new System.Drawing.Point(602, 452);
+            lblCharacterRosterLabel.Margin = new System.Windows.Forms.Padding(4, 7, 4, 7);
+            lblCharacterRosterLabel.Name = "lblCharacterRosterLabel";
+            lblCharacterRosterLabel.Size = new System.Drawing.Size(170, 15);
+            lblCharacterRosterLabel.TabIndex = 44;
+            lblCharacterRosterLabel.Tag = "Label_Options_CharacterRoster";
+            lblCharacterRosterLabel.Text = "Character Roster Watch Folder:";
+            lblCharacterRosterLabel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // lblDefaultCharacterSetting
             // 
-            this.lblDefaultCharacterSetting.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.lblDefaultCharacterSetting.AutoSize = true;
-            this.lblDefaultCharacterSetting.Location = new System.Drawing.Point(485, 373);
-            this.lblDefaultCharacterSetting.Margin = new System.Windows.Forms.Padding(3, 6, 3, 6);
-            this.lblDefaultCharacterSetting.Name = "lblDefaultCharacterSetting";
-            this.lblDefaultCharacterSetting.Size = new System.Drawing.Size(174, 13);
-            this.lblDefaultCharacterSetting.TabIndex = 70;
-            this.lblDefaultCharacterSetting.Tag = "Label_Options_DefaultCharacterOption";
-            this.lblDefaultCharacterSetting.Text = "Default Setting for New Characters:";
-            this.lblDefaultCharacterSetting.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            lblDefaultCharacterSetting.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            lblDefaultCharacterSetting.AutoSize = true;
+            lblDefaultCharacterSetting.Location = new System.Drawing.Point(580, 422);
+            lblDefaultCharacterSetting.Margin = new System.Windows.Forms.Padding(4, 7, 4, 7);
+            lblDefaultCharacterSetting.Name = "lblDefaultCharacterSetting";
+            lblDefaultCharacterSetting.Size = new System.Drawing.Size(192, 15);
+            lblDefaultCharacterSetting.TabIndex = 70;
+            lblDefaultCharacterSetting.Tag = "Label_Options_DefaultCharacterOption";
+            lblDefaultCharacterSetting.Text = "Default Setting for New Characters:";
+            lblDefaultCharacterSetting.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // cboDefaultCharacterSetting
             // 
-            this.cboDefaultCharacterSetting.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.cboDefaultCharacterSetting.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cboDefaultCharacterSetting.FormattingEnabled = true;
-            this.cboDefaultCharacterSetting.Location = new System.Drawing.Point(665, 369);
-            this.cboDefaultCharacterSetting.Name = "cboDefaultCharacterSetting";
-            this.cboDefaultCharacterSetting.Size = new System.Drawing.Size(216, 21);
-            this.cboDefaultCharacterSetting.TabIndex = 7;
-            this.cboDefaultCharacterSetting.TooltipText = "";
-            this.cboDefaultCharacterSetting.SelectedIndexChanged += new System.EventHandler(this.OptionsChanged);
+            cboDefaultCharacterSetting.Anchor = System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
+            cboDefaultCharacterSetting.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            cboDefaultCharacterSetting.FormattingEnabled = true;
+            cboDefaultCharacterSetting.Location = new System.Drawing.Point(780, 418);
+            cboDefaultCharacterSetting.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            cboDefaultCharacterSetting.Name = "cboDefaultCharacterSetting";
+            cboDefaultCharacterSetting.Size = new System.Drawing.Size(252, 23);
+            cboDefaultCharacterSetting.TabIndex = 7;
+            cboDefaultCharacterSetting.TooltipText = "";
+            cboDefaultCharacterSetting.SelectedIndexChanged += OptionsChanged;
             // 
             // chkStartupFullscreen
             // 
-            this.chkStartupFullscreen.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.chkStartupFullscreen.AutoSize = true;
-            this.tlpGlobalOptions.SetColumnSpan(this.chkStartupFullscreen, 2);
-            this.chkStartupFullscreen.DefaultColorScheme = true;
-            this.chkStartupFullscreen.Location = new System.Drawing.Point(444, 345);
-            this.chkStartupFullscreen.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.chkStartupFullscreen.Name = "chkStartupFullscreen";
-            this.chkStartupFullscreen.Size = new System.Drawing.Size(154, 17);
-            this.chkStartupFullscreen.TabIndex = 7;
-            this.chkStartupFullscreen.Tag = "Checkbox_Options_StartupFullscreen";
-            this.chkStartupFullscreen.Text = "Start Chummer in fullscreen";
-            this.chkStartupFullscreen.UseVisualStyleBackColor = true;
-            this.chkStartupFullscreen.CheckedChanged += new System.EventHandler(this.OptionsChanged);
+            chkStartupFullscreen.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            chkStartupFullscreen.AutoSize = true;
+            tlpGlobalOptions.SetColumnSpan(chkStartupFullscreen, 2);
+            chkStartupFullscreen.DefaultColorScheme = true;
+            chkStartupFullscreen.ForeColor = System.Drawing.SystemColors.ControlText;
+            chkStartupFullscreen.Location = new System.Drawing.Point(521, 391);
+            chkStartupFullscreen.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            chkStartupFullscreen.Name = "chkStartupFullscreen";
+            chkStartupFullscreen.Size = new System.Drawing.Size(174, 19);
+            chkStartupFullscreen.TabIndex = 7;
+            chkStartupFullscreen.Tag = "Checkbox_Options_StartupFullscreen";
+            chkStartupFullscreen.Text = "Start Chummer in fullscreen";
+            chkStartupFullscreen.UseVisualStyleBackColor = true;
+            chkStartupFullscreen.CheckedChanged += OptionsChanged;
             // 
             // chkAllowSkillDiceRolling
             // 
-            this.chkAllowSkillDiceRolling.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.chkAllowSkillDiceRolling.AutoSize = true;
-            this.tlpGlobalOptions.SetColumnSpan(this.chkAllowSkillDiceRolling, 2);
-            this.chkAllowSkillDiceRolling.DefaultColorScheme = true;
-            this.chkAllowSkillDiceRolling.Location = new System.Drawing.Point(444, 320);
-            this.chkAllowSkillDiceRolling.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.chkAllowSkillDiceRolling.Name = "chkAllowSkillDiceRolling";
-            this.chkAllowSkillDiceRolling.Size = new System.Drawing.Size(170, 17);
-            this.chkAllowSkillDiceRolling.TabIndex = 69;
-            this.chkAllowSkillDiceRolling.Tag = "Checkbox_Option_AllowSkillDiceRolling";
-            this.chkAllowSkillDiceRolling.Text = "Allow dice rolling for dice pools";
-            this.chkAllowSkillDiceRolling.UseVisualStyleBackColor = true;
-            this.chkAllowSkillDiceRolling.CheckedChanged += new System.EventHandler(this.OptionsChanged);
+            chkAllowSkillDiceRolling.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            chkAllowSkillDiceRolling.AutoSize = true;
+            tlpGlobalOptions.SetColumnSpan(chkAllowSkillDiceRolling, 2);
+            chkAllowSkillDiceRolling.DefaultColorScheme = true;
+            chkAllowSkillDiceRolling.ForeColor = System.Drawing.SystemColors.ControlText;
+            chkAllowSkillDiceRolling.Location = new System.Drawing.Point(521, 362);
+            chkAllowSkillDiceRolling.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            chkAllowSkillDiceRolling.Name = "chkAllowSkillDiceRolling";
+            chkAllowSkillDiceRolling.Size = new System.Drawing.Size(193, 19);
+            chkAllowSkillDiceRolling.TabIndex = 69;
+            chkAllowSkillDiceRolling.Tag = "Checkbox_Option_AllowSkillDiceRolling";
+            chkAllowSkillDiceRolling.Text = "Allow dice rolling for dice pools";
+            chkAllowSkillDiceRolling.UseVisualStyleBackColor = true;
+            chkAllowSkillDiceRolling.CheckedChanged += OptionsChanged;
             // 
             // chkCreateBackupOnCareer
             // 
-            this.chkCreateBackupOnCareer.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.chkCreateBackupOnCareer.AutoSize = true;
-            this.chkCreateBackupOnCareer.CheckAlign = System.Drawing.ContentAlignment.TopLeft;
-            this.tlpGlobalOptions.SetColumnSpan(this.chkCreateBackupOnCareer, 2);
-            this.chkCreateBackupOnCareer.DefaultColorScheme = true;
-            this.chkCreateBackupOnCareer.Location = new System.Drawing.Point(3, 399);
-            this.chkCreateBackupOnCareer.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.chkCreateBackupOnCareer.Name = "chkCreateBackupOnCareer";
-            this.chkCreateBackupOnCareer.Size = new System.Drawing.Size(333, 17);
-            this.chkCreateBackupOnCareer.TabIndex = 24;
-            this.chkCreateBackupOnCareer.Tag = "Checkbox_Option_CreateBackupOnCareer";
-            this.chkCreateBackupOnCareer.Text = "Create backup of characters before moving them to Career Mode";
-            this.chkCreateBackupOnCareer.TextAlign = System.Drawing.ContentAlignment.TopLeft;
-            this.chkCreateBackupOnCareer.UseVisualStyleBackColor = true;
-            this.chkCreateBackupOnCareer.CheckedChanged += new System.EventHandler(this.OptionsChanged);
+            chkCreateBackupOnCareer.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            chkCreateBackupOnCareer.AutoSize = true;
+            chkCreateBackupOnCareer.CheckAlign = System.Drawing.ContentAlignment.TopLeft;
+            tlpGlobalOptions.SetColumnSpan(chkCreateBackupOnCareer, 2);
+            chkCreateBackupOnCareer.DefaultColorScheme = true;
+            chkCreateBackupOnCareer.ForeColor = System.Drawing.SystemColors.ControlText;
+            chkCreateBackupOnCareer.Location = new System.Drawing.Point(4, 450);
+            chkCreateBackupOnCareer.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            chkCreateBackupOnCareer.Name = "chkCreateBackupOnCareer";
+            chkCreateBackupOnCareer.Size = new System.Drawing.Size(370, 19);
+            chkCreateBackupOnCareer.TabIndex = 24;
+            chkCreateBackupOnCareer.Tag = "Checkbox_Option_CreateBackupOnCareer";
+            chkCreateBackupOnCareer.Text = "Create backup of characters before moving them to Career Mode";
+            chkCreateBackupOnCareer.TextAlign = System.Drawing.ContentAlignment.TopLeft;
+            chkCreateBackupOnCareer.UseVisualStyleBackColor = true;
+            chkCreateBackupOnCareer.CheckedChanged += OptionsChanged;
             // 
             // chkSaveCompressionLevel
             // 
-            this.chkSaveCompressionLevel.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.chkSaveCompressionLevel.AutoSize = true;
-            this.chkSaveCompressionLevel.Location = new System.Drawing.Point(31, 430);
-            this.chkSaveCompressionLevel.Name = "chkSaveCompressionLevel";
-            this.chkSaveCompressionLevel.Size = new System.Drawing.Size(142, 13);
-            this.chkSaveCompressionLevel.TabIndex = 86;
-            this.chkSaveCompressionLevel.Tag = "Label_Options_Chum5lzCompressionLevel";
-            this.chkSaveCompressionLevel.Text = "Chum5lz Compression Level:";
-            this.chkSaveCompressionLevel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            chkSaveCompressionLevel.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            chkSaveCompressionLevel.AutoSize = true;
+            chkSaveCompressionLevel.Location = new System.Drawing.Point(43, 482);
+            chkSaveCompressionLevel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            chkSaveCompressionLevel.Name = "chkSaveCompressionLevel";
+            chkSaveCompressionLevel.Size = new System.Drawing.Size(160, 15);
+            chkSaveCompressionLevel.TabIndex = 86;
+            chkSaveCompressionLevel.Tag = "Label_Options_Chum5lzCompressionLevel";
+            chkSaveCompressionLevel.Text = "Chum5lz Compression Level:";
+            chkSaveCompressionLevel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // cboChum5lzCompressionLevel
             // 
-            this.cboChum5lzCompressionLevel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.cboChum5lzCompressionLevel.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cboChum5lzCompressionLevel.FormattingEnabled = true;
-            this.cboChum5lzCompressionLevel.Location = new System.Drawing.Point(179, 426);
-            this.cboChum5lzCompressionLevel.Name = "cboChum5lzCompressionLevel";
-            this.cboChum5lzCompressionLevel.Size = new System.Drawing.Size(259, 21);
-            this.cboChum5lzCompressionLevel.TabIndex = 87;
-            this.cboChum5lzCompressionLevel.TooltipText = "";
-            this.cboChum5lzCompressionLevel.SelectedIndexChanged += new System.EventHandler(this.OptionsChanged);
+            cboChum5lzCompressionLevel.Anchor = System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
+            cboChum5lzCompressionLevel.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            cboChum5lzCompressionLevel.FormattingEnabled = true;
+            cboChum5lzCompressionLevel.Location = new System.Drawing.Point(211, 478);
+            cboChum5lzCompressionLevel.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            cboChum5lzCompressionLevel.Name = "cboChum5lzCompressionLevel";
+            cboChum5lzCompressionLevel.Size = new System.Drawing.Size(302, 23);
+            cboChum5lzCompressionLevel.TabIndex = 87;
+            cboChum5lzCompressionLevel.TooltipText = "";
+            cboChum5lzCompressionLevel.SelectedIndexChanged += OptionsChanged;
             // 
             // lblPDFAppPath
             // 
-            this.lblPDFAppPath.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.lblPDFAppPath.AutoSize = true;
-            this.lblPDFAppPath.Location = new System.Drawing.Point(518, 458);
-            this.lblPDFAppPath.Margin = new System.Windows.Forms.Padding(3, 6, 3, 6);
-            this.lblPDFAppPath.Name = "lblPDFAppPath";
-            this.lblPDFAppPath.Size = new System.Drawing.Size(141, 13);
-            this.lblPDFAppPath.TabIndex = 9;
-            this.lblPDFAppPath.Tag = "Label_Options_PDFApplicationPath";
-            this.lblPDFAppPath.Text = "Location of PDF application:";
-            this.lblPDFAppPath.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            lblPDFAppPath.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            lblPDFAppPath.AutoSize = true;
+            lblPDFAppPath.Location = new System.Drawing.Point(616, 512);
+            lblPDFAppPath.Margin = new System.Windows.Forms.Padding(4, 7, 4, 7);
+            lblPDFAppPath.Name = "lblPDFAppPath";
+            lblPDFAppPath.Size = new System.Drawing.Size(156, 15);
+            lblPDFAppPath.TabIndex = 9;
+            lblPDFAppPath.Tag = "Label_Options_PDFApplicationPath";
+            lblPDFAppPath.Text = "Location of PDF application:";
+            lblPDFAppPath.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // lblPDFParametersLabel
             // 
-            this.lblPDFParametersLabel.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.lblPDFParametersLabel.AutoSize = true;
-            this.lblPDFParametersLabel.Location = new System.Drawing.Point(572, 487);
-            this.lblPDFParametersLabel.Margin = new System.Windows.Forms.Padding(3, 6, 3, 6);
-            this.lblPDFParametersLabel.Name = "lblPDFParametersLabel";
-            this.lblPDFParametersLabel.Size = new System.Drawing.Size(87, 13);
-            this.lblPDFParametersLabel.TabIndex = 19;
-            this.lblPDFParametersLabel.Tag = "Label_Options_PDFParameters";
-            this.lblPDFParametersLabel.Text = "PDF Parameters:";
-            this.lblPDFParametersLabel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            lblPDFParametersLabel.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            lblPDFParametersLabel.AutoSize = true;
+            lblPDFParametersLabel.Location = new System.Drawing.Point(679, 542);
+            lblPDFParametersLabel.Margin = new System.Windows.Forms.Padding(4, 7, 4, 7);
+            lblPDFParametersLabel.Name = "lblPDFParametersLabel";
+            lblPDFParametersLabel.Size = new System.Drawing.Size(93, 15);
+            lblPDFParametersLabel.TabIndex = 19;
+            lblPDFParametersLabel.Tag = "Label_Options_PDFParameters";
+            lblPDFParametersLabel.Text = "PDF Parameters:";
+            lblPDFParametersLabel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // cboPDFParameters
             // 
-            this.cboPDFParameters.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.cboPDFParameters.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cboPDFParameters.FormattingEnabled = true;
-            this.cboPDFParameters.Location = new System.Drawing.Point(665, 483);
-            this.cboPDFParameters.Name = "cboPDFParameters";
-            this.cboPDFParameters.Size = new System.Drawing.Size(216, 21);
-            this.cboPDFParameters.TabIndex = 26;
-            this.cboPDFParameters.TooltipText = "";
-            this.cboPDFParameters.SelectedIndexChanged += new System.EventHandler(this.OptionsChanged);
+            cboPDFParameters.Anchor = System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
+            cboPDFParameters.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            cboPDFParameters.FormattingEnabled = true;
+            cboPDFParameters.Location = new System.Drawing.Point(780, 538);
+            cboPDFParameters.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            cboPDFParameters.Name = "cboPDFParameters";
+            cboPDFParameters.Size = new System.Drawing.Size(252, 23);
+            cboPDFParameters.TabIndex = 26;
+            cboPDFParameters.TooltipText = "";
+            cboPDFParameters.SelectedIndexChanged += OptionsChanged;
             // 
             // flpBrowserVersion
             // 
-            this.flpBrowserVersion.AutoSize = true;
-            this.flpBrowserVersion.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.tlpGlobalOptions.SetColumnSpan(this.flpBrowserVersion, 2);
-            this.flpBrowserVersion.Controls.Add(this.lblBrowserVersion);
-            this.flpBrowserVersion.Controls.Add(this.nudBrowserVersion);
-            this.flpBrowserVersion.Location = new System.Drawing.Point(441, 507);
-            this.flpBrowserVersion.Margin = new System.Windows.Forms.Padding(0);
-            this.flpBrowserVersion.Name = "flpBrowserVersion";
-            this.flpBrowserVersion.Size = new System.Drawing.Size(237, 26);
-            this.flpBrowserVersion.TabIndex = 77;
+            flpBrowserVersion.AutoSize = true;
+            flpBrowserVersion.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            tlpGlobalOptions.SetColumnSpan(flpBrowserVersion, 2);
+            flpBrowserVersion.Controls.Add(lblBrowserVersion);
+            flpBrowserVersion.Controls.Add(nudBrowserVersion);
+            flpBrowserVersion.Location = new System.Drawing.Point(517, 564);
+            flpBrowserVersion.Margin = new System.Windows.Forms.Padding(0);
+            flpBrowserVersion.Name = "flpBrowserVersion";
+            flpBrowserVersion.Size = new System.Drawing.Size(257, 29);
+            flpBrowserVersion.TabIndex = 77;
             // 
             // lblBrowserVersion
             // 
-            this.lblBrowserVersion.AutoSize = true;
-            this.lblBrowserVersion.Dock = System.Windows.Forms.DockStyle.Right;
-            this.lblBrowserVersion.Location = new System.Drawing.Point(3, 6);
-            this.lblBrowserVersion.Margin = new System.Windows.Forms.Padding(3, 6, 3, 6);
-            this.lblBrowserVersion.Name = "lblBrowserVersion";
-            this.lblBrowserVersion.Size = new System.Drawing.Size(190, 14);
-            this.lblBrowserVersion.TabIndex = 53;
-            this.lblBrowserVersion.Tag = "Label_Options_BrowserVersion";
-            this.lblBrowserVersion.Text = "Preview uses Internet Explorer version:";
-            this.lblBrowserVersion.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            lblBrowserVersion.AutoSize = true;
+            lblBrowserVersion.Dock = System.Windows.Forms.DockStyle.Right;
+            lblBrowserVersion.Location = new System.Drawing.Point(4, 7);
+            lblBrowserVersion.Margin = new System.Windows.Forms.Padding(4, 7, 4, 7);
+            lblBrowserVersion.Name = "lblBrowserVersion";
+            lblBrowserVersion.Size = new System.Drawing.Size(208, 15);
+            lblBrowserVersion.TabIndex = 53;
+            lblBrowserVersion.Tag = "Label_Options_BrowserVersion";
+            lblBrowserVersion.Text = "Preview uses Internet Explorer version:";
+            lblBrowserVersion.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // nudBrowserVersion
             // 
-            this.nudBrowserVersion.AutoSize = true;
-            this.nudBrowserVersion.Location = new System.Drawing.Point(199, 3);
-            this.nudBrowserVersion.Maximum = new decimal(new int[] {
-            11,
-            0,
-            0,
-            0});
-            this.nudBrowserVersion.Minimum = new decimal(new int[] {
-            8,
-            0,
-            0,
-            0});
-            this.nudBrowserVersion.Name = "nudBrowserVersion";
-            this.nudBrowserVersion.Size = new System.Drawing.Size(35, 20);
-            this.nudBrowserVersion.TabIndex = 54;
-            this.nudBrowserVersion.Value = new decimal(new int[] {
-            8,
-            0,
-            0,
-            0});
-            this.nudBrowserVersion.ValueChanged += new System.EventHandler(this.OptionsChanged);
+            nudBrowserVersion.AutoSize = true;
+            nudBrowserVersion.Location = new System.Drawing.Point(219, 3);
+            nudBrowserVersion.Maximum = new decimal(new int[] { 11, 0, 0, 0 });
+            nudBrowserVersion.Minimum = new decimal(new int[] { 8, 0, 0, 0 });
+            nudBrowserVersion.Name = "nudBrowserVersion";
+            nudBrowserVersion.Size = new System.Drawing.Size(35, 23);
+            nudBrowserVersion.TabIndex = 54;
+            nudBrowserVersion.Value = new decimal(new int[] { 8, 0, 0, 0 });
+            nudBrowserVersion.ValueChanged += OptionsChanged;
             // 
             // chkLiveUpdateCleanCharacterFiles
             // 
-            this.chkLiveUpdateCleanCharacterFiles.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.chkLiveUpdateCleanCharacterFiles.AutoSize = true;
-            this.tlpGlobalOptions.SetColumnSpan(this.chkLiveUpdateCleanCharacterFiles, 2);
-            this.chkLiveUpdateCleanCharacterFiles.DefaultColorScheme = true;
-            this.chkLiveUpdateCleanCharacterFiles.Location = new System.Drawing.Point(444, 591);
-            this.chkLiveUpdateCleanCharacterFiles.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.chkLiveUpdateCleanCharacterFiles.Name = "chkLiveUpdateCleanCharacterFiles";
-            this.chkLiveUpdateCleanCharacterFiles.Size = new System.Drawing.Size(286, 30);
-            this.chkLiveUpdateCleanCharacterFiles.TabIndex = 33;
-            this.chkLiveUpdateCleanCharacterFiles.Tag = "Checkbox_Options_LiveUpdateCleanCharacterFiles";
-            this.chkLiveUpdateCleanCharacterFiles.Text = "Automatically load changes from open characters\' save\r\nfiles if there are no pend" +
-    "ing changes to be saved";
-            this.chkLiveUpdateCleanCharacterFiles.UseVisualStyleBackColor = true;
-            this.chkLiveUpdateCleanCharacterFiles.CheckedChanged += new System.EventHandler(this.OptionsChanged);
+            chkLiveUpdateCleanCharacterFiles.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            chkLiveUpdateCleanCharacterFiles.AutoSize = true;
+            tlpGlobalOptions.SetColumnSpan(chkLiveUpdateCleanCharacterFiles, 2);
+            chkLiveUpdateCleanCharacterFiles.DefaultColorScheme = true;
+            chkLiveUpdateCleanCharacterFiles.ForeColor = System.Drawing.SystemColors.ControlText;
+            chkLiveUpdateCleanCharacterFiles.Location = new System.Drawing.Point(521, 660);
+            chkLiveUpdateCleanCharacterFiles.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            chkLiveUpdateCleanCharacterFiles.Name = "chkLiveUpdateCleanCharacterFiles";
+            chkLiveUpdateCleanCharacterFiles.Size = new System.Drawing.Size(318, 34);
+            chkLiveUpdateCleanCharacterFiles.TabIndex = 33;
+            chkLiveUpdateCleanCharacterFiles.Tag = "Checkbox_Options_LiveUpdateCleanCharacterFiles";
+            chkLiveUpdateCleanCharacterFiles.Text = "Automatically load changes from open characters' save\r\nfiles if there are no pending changes to be saved";
+            chkLiveUpdateCleanCharacterFiles.UseVisualStyleBackColor = true;
+            chkLiveUpdateCleanCharacterFiles.CheckedChanged += OptionsChanged;
             // 
             // chkSingleDiceRoller
             // 
-            this.chkSingleDiceRoller.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.chkSingleDiceRoller.AutoSize = true;
-            this.tlpGlobalOptions.SetColumnSpan(this.chkSingleDiceRoller, 2);
-            this.chkSingleDiceRoller.DefaultColorScheme = true;
-            this.chkSingleDiceRoller.Location = new System.Drawing.Point(3, 597);
-            this.chkSingleDiceRoller.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.chkSingleDiceRoller.Name = "chkSingleDiceRoller";
-            this.chkSingleDiceRoller.Size = new System.Drawing.Size(251, 17);
-            this.chkSingleDiceRoller.TabIndex = 8;
-            this.chkSingleDiceRoller.Tag = "Checkbox_Options_SingleDiceRoller";
-            this.chkSingleDiceRoller.Text = "Use a single instance of the Dice Roller window";
-            this.chkSingleDiceRoller.UseVisualStyleBackColor = true;
-            this.chkSingleDiceRoller.CheckedChanged += new System.EventHandler(this.OptionsChanged);
+            chkSingleDiceRoller.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            chkSingleDiceRoller.AutoSize = true;
+            tlpGlobalOptions.SetColumnSpan(chkSingleDiceRoller, 2);
+            chkSingleDiceRoller.DefaultColorScheme = true;
+            chkSingleDiceRoller.ForeColor = System.Drawing.SystemColors.ControlText;
+            chkSingleDiceRoller.Location = new System.Drawing.Point(4, 667);
+            chkSingleDiceRoller.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            chkSingleDiceRoller.Name = "chkSingleDiceRoller";
+            chkSingleDiceRoller.Size = new System.Drawing.Size(273, 19);
+            chkSingleDiceRoller.TabIndex = 8;
+            chkSingleDiceRoller.Tag = "Checkbox_Options_SingleDiceRoller";
+            chkSingleDiceRoller.Text = "Use a single instance of the Dice Roller window";
+            chkSingleDiceRoller.UseVisualStyleBackColor = true;
+            chkSingleDiceRoller.CheckedChanged += OptionsChanged;
             // 
             // chkAllowEasterEggs
             // 
-            this.chkAllowEasterEggs.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.chkAllowEasterEggs.AutoSize = true;
-            this.tlpGlobalOptions.SetColumnSpan(this.chkAllowEasterEggs, 2);
-            this.chkAllowEasterEggs.DefaultColorScheme = true;
-            this.chkAllowEasterEggs.Location = new System.Drawing.Point(3, 564);
-            this.chkAllowEasterEggs.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.chkAllowEasterEggs.Name = "chkAllowEasterEggs";
-            this.chkAllowEasterEggs.Size = new System.Drawing.Size(111, 17);
-            this.chkAllowEasterEggs.TabIndex = 52;
-            this.chkAllowEasterEggs.Tag = "Checkbox_Options_AllowEasterEggs";
-            this.chkAllowEasterEggs.Text = "Allow Easter Eggs";
-            this.chkAllowEasterEggs.UseVisualStyleBackColor = true;
-            this.chkAllowEasterEggs.CheckedChanged += new System.EventHandler(this.OptionsChanged);
+            chkAllowEasterEggs.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            chkAllowEasterEggs.AutoSize = true;
+            tlpGlobalOptions.SetColumnSpan(chkAllowEasterEggs, 2);
+            chkAllowEasterEggs.DefaultColorScheme = true;
+            chkAllowEasterEggs.ForeColor = System.Drawing.SystemColors.ControlText;
+            chkAllowEasterEggs.Location = new System.Drawing.Point(4, 629);
+            chkAllowEasterEggs.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            chkAllowEasterEggs.Name = "chkAllowEasterEggs";
+            chkAllowEasterEggs.Size = new System.Drawing.Size(118, 19);
+            chkAllowEasterEggs.TabIndex = 52;
+            chkAllowEasterEggs.Tag = "Checkbox_Options_AllowEasterEggs";
+            chkAllowEasterEggs.Text = "Allow Easter Eggs";
+            chkAllowEasterEggs.UseVisualStyleBackColor = true;
+            chkAllowEasterEggs.CheckedChanged += OptionsChanged;
             // 
             // chkLiveCustomData
             // 
-            this.chkLiveCustomData.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.chkLiveCustomData.AutoSize = true;
-            this.tlpGlobalOptions.SetColumnSpan(this.chkLiveCustomData, 2);
-            this.chkLiveCustomData.DefaultColorScheme = true;
-            this.chkLiveCustomData.Location = new System.Drawing.Point(3, 511);
-            this.chkLiveCustomData.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.chkLiveCustomData.Name = "chkLiveCustomData";
-            this.chkLiveCustomData.Size = new System.Drawing.Size(307, 17);
-            this.chkLiveCustomData.TabIndex = 28;
-            this.chkLiveCustomData.Tag = "Checkbox_Options_Live_CustomData";
-            this.chkLiveCustomData.Text = "Allow Live Custom Data Updates from customdata Directory";
-            this.chkLiveCustomData.UseVisualStyleBackColor = true;
-            this.chkLiveCustomData.CheckedChanged += new System.EventHandler(this.OptionsChanged);
+            chkLiveCustomData.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            chkLiveCustomData.AutoSize = true;
+            tlpGlobalOptions.SetColumnSpan(chkLiveCustomData, 2);
+            chkLiveCustomData.DefaultColorScheme = true;
+            chkLiveCustomData.ForeColor = System.Drawing.SystemColors.ControlText;
+            chkLiveCustomData.Location = new System.Drawing.Point(4, 569);
+            chkLiveCustomData.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            chkLiveCustomData.Name = "chkLiveCustomData";
+            chkLiveCustomData.Size = new System.Drawing.Size(344, 19);
+            chkLiveCustomData.TabIndex = 28;
+            chkLiveCustomData.Tag = "Checkbox_Options_Live_CustomData";
+            chkLiveCustomData.Text = "Allow Live Custom Data Updates from customdata Directory";
+            chkLiveCustomData.UseVisualStyleBackColor = true;
+            chkLiveCustomData.CheckedChanged += OptionsChanged;
             // 
             // chkPrintToFileFirst
             // 
-            this.chkPrintToFileFirst.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.chkPrintToFileFirst.AutoSize = true;
-            this.chkPrintToFileFirst.DefaultColorScheme = true;
-            this.chkPrintToFileFirst.Location = new System.Drawing.Point(3, 537);
-            this.chkPrintToFileFirst.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.chkPrintToFileFirst.Name = "chkPrintToFileFirst";
-            this.chkPrintToFileFirst.Size = new System.Drawing.Size(130, 17);
-            this.chkPrintToFileFirst.TabIndex = 43;
-            this.chkPrintToFileFirst.Tag = "Checkbox_Option_PrintToFileFirst";
-            this.chkPrintToFileFirst.Text = "Apply Linux printing fix";
-            this.chkPrintToFileFirst.UseVisualStyleBackColor = true;
-            this.chkPrintToFileFirst.CheckedChanged += new System.EventHandler(this.OptionsChanged);
+            chkPrintToFileFirst.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            chkPrintToFileFirst.AutoSize = true;
+            chkPrintToFileFirst.DefaultColorScheme = true;
+            chkPrintToFileFirst.ForeColor = System.Drawing.SystemColors.ControlText;
+            chkPrintToFileFirst.Location = new System.Drawing.Point(4, 598);
+            chkPrintToFileFirst.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            chkPrintToFileFirst.Name = "chkPrintToFileFirst";
+            chkPrintToFileFirst.Size = new System.Drawing.Size(150, 19);
+            chkPrintToFileFirst.TabIndex = 43;
+            chkPrintToFileFirst.Tag = "Checkbox_Option_PrintToFileFirst";
+            chkPrintToFileFirst.Text = "Apply Linux printing fix";
+            chkPrintToFileFirst.UseVisualStyleBackColor = true;
+            chkPrintToFileFirst.CheckedChanged += OptionsChanged;
             // 
             // chkAllowHoverIncrement
             // 
-            this.chkAllowHoverIncrement.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.chkAllowHoverIncrement.AutoSize = true;
-            this.chkAllowHoverIncrement.CheckAlign = System.Drawing.ContentAlignment.TopLeft;
-            this.chkAllowHoverIncrement.Checked = true;
-            this.chkAllowHoverIncrement.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.tlpGlobalOptions.SetColumnSpan(this.chkAllowHoverIncrement, 2);
-            this.chkAllowHoverIncrement.DefaultColorScheme = true;
-            this.chkAllowHoverIncrement.Location = new System.Drawing.Point(3, 485);
-            this.chkAllowHoverIncrement.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.chkAllowHoverIncrement.Name = "chkAllowHoverIncrement";
-            this.chkAllowHoverIncrement.Size = new System.Drawing.Size(407, 17);
-            this.chkAllowHoverIncrement.TabIndex = 41;
-            this.chkAllowHoverIncrement.Tag = "Checkbox_Options_AllowHoverIncrement";
-            this.chkAllowHoverIncrement.Text = "Scrolling the mouse while hovering it over a spinner changes the spinner\'s values" +
-    "";
-            this.chkAllowHoverIncrement.UseVisualStyleBackColor = true;
-            this.chkAllowHoverIncrement.CheckedChanged += new System.EventHandler(this.OptionsChanged);
+            chkAllowHoverIncrement.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            chkAllowHoverIncrement.AutoSize = true;
+            chkAllowHoverIncrement.CheckAlign = System.Drawing.ContentAlignment.TopLeft;
+            chkAllowHoverIncrement.Checked = true;
+            chkAllowHoverIncrement.CheckState = System.Windows.Forms.CheckState.Checked;
+            tlpGlobalOptions.SetColumnSpan(chkAllowHoverIncrement, 2);
+            chkAllowHoverIncrement.DefaultColorScheme = true;
+            chkAllowHoverIncrement.ForeColor = System.Drawing.SystemColors.ControlText;
+            chkAllowHoverIncrement.Location = new System.Drawing.Point(4, 540);
+            chkAllowHoverIncrement.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            chkAllowHoverIncrement.Name = "chkAllowHoverIncrement";
+            chkAllowHoverIncrement.Size = new System.Drawing.Size(452, 19);
+            chkAllowHoverIncrement.TabIndex = 41;
+            chkAllowHoverIncrement.Tag = "Checkbox_Options_AllowHoverIncrement";
+            chkAllowHoverIncrement.Text = "Scrolling the mouse while hovering it over a spinner changes the spinner's values";
+            chkAllowHoverIncrement.UseVisualStyleBackColor = true;
+            chkAllowHoverIncrement.CheckedChanged += OptionsChanged;
             // 
             // chkInsertPdfNotesIfAvailable
             // 
-            this.chkInsertPdfNotesIfAvailable.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.chkInsertPdfNotesIfAvailable.AutoSize = true;
-            this.chkInsertPdfNotesIfAvailable.CheckAlign = System.Drawing.ContentAlignment.TopLeft;
-            this.chkInsertPdfNotesIfAvailable.Checked = true;
-            this.chkInsertPdfNotesIfAvailable.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.tlpGlobalOptions.SetColumnSpan(this.chkInsertPdfNotesIfAvailable, 2);
-            this.chkInsertPdfNotesIfAvailable.DefaultColorScheme = true;
-            this.chkInsertPdfNotesIfAvailable.Location = new System.Drawing.Point(3, 456);
-            this.chkInsertPdfNotesIfAvailable.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.chkInsertPdfNotesIfAvailable.Name = "chkInsertPdfNotesIfAvailable";
-            this.chkInsertPdfNotesIfAvailable.Size = new System.Drawing.Size(356, 17);
-            this.chkInsertPdfNotesIfAvailable.TabIndex = 88;
-            this.chkInsertPdfNotesIfAvailable.Tag = "Checkbox_Options_InsertPdfNotesIfAvailable";
-            this.chkInsertPdfNotesIfAvailable.Text = "Add scraped text from available PDFs as Notes for newly added items ";
-            this.chkInsertPdfNotesIfAvailable.UseVisualStyleBackColor = true;
-            this.chkInsertPdfNotesIfAvailable.CheckedChanged += new System.EventHandler(this.OptionsChanged);
+            chkInsertPdfNotesIfAvailable.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            chkInsertPdfNotesIfAvailable.AutoSize = true;
+            chkInsertPdfNotesIfAvailable.CheckAlign = System.Drawing.ContentAlignment.TopLeft;
+            chkInsertPdfNotesIfAvailable.Checked = true;
+            chkInsertPdfNotesIfAvailable.CheckState = System.Windows.Forms.CheckState.Checked;
+            tlpGlobalOptions.SetColumnSpan(chkInsertPdfNotesIfAvailable, 2);
+            chkInsertPdfNotesIfAvailable.DefaultColorScheme = true;
+            chkInsertPdfNotesIfAvailable.ForeColor = System.Drawing.SystemColors.ControlText;
+            chkInsertPdfNotesIfAvailable.Location = new System.Drawing.Point(4, 510);
+            chkInsertPdfNotesIfAvailable.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            chkInsertPdfNotesIfAvailable.Name = "chkInsertPdfNotesIfAvailable";
+            chkInsertPdfNotesIfAvailable.Size = new System.Drawing.Size(393, 19);
+            chkInsertPdfNotesIfAvailable.TabIndex = 88;
+            chkInsertPdfNotesIfAvailable.Tag = "Checkbox_Options_InsertPdfNotesIfAvailable";
+            chkInsertPdfNotesIfAvailable.Text = "Add scraped text from available PDFs as Notes for newly added items ";
+            chkInsertPdfNotesIfAvailable.UseVisualStyleBackColor = true;
+            chkInsertPdfNotesIfAvailable.CheckedChanged += OptionsChanged;
             // 
             // gpbEditSourcebookInfo
             // 
-            this.gpbEditSourcebookInfo.AutoSize = true;
-            this.gpbEditSourcebookInfo.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.gpbEditSourcebookInfo.Controls.Add(this.lstGlobalSourcebookInfos);
-            this.gpbEditSourcebookInfo.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.gpbEditSourcebookInfo.Location = new System.Drawing.Point(3, 3);
-            this.gpbEditSourcebookInfo.Name = "gpbEditSourcebookInfo";
-            this.tlpGlobal.SetRowSpan(this.gpbEditSourcebookInfo, 2);
-            this.gpbEditSourcebookInfo.Size = new System.Drawing.Size(297, 549);
-            this.gpbEditSourcebookInfo.TabIndex = 65;
-            this.gpbEditSourcebookInfo.TabStop = false;
-            this.gpbEditSourcebookInfo.Tag = "Label_Options_EditSourcebookInfo";
-            this.gpbEditSourcebookInfo.Text = "Edit Sourcebook Info";
+            gpbEditSourcebookInfo.AutoSize = true;
+            gpbEditSourcebookInfo.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            gpbEditSourcebookInfo.Controls.Add(lstGlobalSourcebookInfos);
+            gpbEditSourcebookInfo.Dock = System.Windows.Forms.DockStyle.Fill;
+            gpbEditSourcebookInfo.Location = new System.Drawing.Point(4, 3);
+            gpbEditSourcebookInfo.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            gpbEditSourcebookInfo.Name = "gpbEditSourcebookInfo";
+            gpbEditSourcebookInfo.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            tlpGlobal.SetRowSpan(gpbEditSourcebookInfo, 2);
+            gpbEditSourcebookInfo.Size = new System.Drawing.Size(346, 644);
+            gpbEditSourcebookInfo.TabIndex = 65;
+            gpbEditSourcebookInfo.TabStop = false;
+            gpbEditSourcebookInfo.Tag = "Label_Options_EditSourcebookInfo";
+            gpbEditSourcebookInfo.Text = "Edit Sourcebook Info";
             // 
             // lstGlobalSourcebookInfos
             // 
-            this.lstGlobalSourcebookInfos.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lstGlobalSourcebookInfos.FormattingEnabled = true;
-            this.lstGlobalSourcebookInfos.Location = new System.Drawing.Point(3, 16);
-            this.lstGlobalSourcebookInfos.Name = "lstGlobalSourcebookInfos";
-            this.lstGlobalSourcebookInfos.Size = new System.Drawing.Size(291, 530);
-            this.lstGlobalSourcebookInfos.TabIndex = 48;
-            this.lstGlobalSourcebookInfos.SelectedIndexChanged += new System.EventHandler(this.lstGlobalSourcebookInfos_SelectedIndexChanged);
+            lstGlobalSourcebookInfos.Dock = System.Windows.Forms.DockStyle.Fill;
+            lstGlobalSourcebookInfos.FormattingEnabled = true;
+            lstGlobalSourcebookInfos.ItemHeight = 15;
+            lstGlobalSourcebookInfos.Location = new System.Drawing.Point(4, 19);
+            lstGlobalSourcebookInfos.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            lstGlobalSourcebookInfos.Name = "lstGlobalSourcebookInfos";
+            lstGlobalSourcebookInfos.Size = new System.Drawing.Size(338, 622);
+            lstGlobalSourcebookInfos.TabIndex = 48;
+            lstGlobalSourcebookInfos.SelectedIndexChanged += lstGlobalSourcebookInfos_SelectedIndexChanged;
             // 
             // tabCustomDataDirectories
             // 
-            this.tabCustomDataDirectories.BackColor = System.Drawing.SystemColors.Control;
-            this.tabCustomDataDirectories.Controls.Add(this.tlpOptionalRules);
-            this.tabCustomDataDirectories.Location = new System.Drawing.Point(4, 22);
-            this.tabCustomDataDirectories.Name = "tabCustomDataDirectories";
-            this.tabCustomDataDirectories.Padding = new System.Windows.Forms.Padding(9);
-            this.tabCustomDataDirectories.Size = new System.Drawing.Size(1232, 602);
-            this.tabCustomDataDirectories.TabIndex = 2;
-            this.tabCustomDataDirectories.Tag = "Tab_Options_CustomDataDirectories";
-            this.tabCustomDataDirectories.Text = "Custom Data Directories";
+            tabCustomDataDirectories.BackColor = System.Drawing.SystemColors.Control;
+            tabCustomDataDirectories.Controls.Add(tlpOptionalRules);
+            tabCustomDataDirectories.Location = new System.Drawing.Point(4, 24);
+            tabCustomDataDirectories.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            tabCustomDataDirectories.Name = "tabCustomDataDirectories";
+            tabCustomDataDirectories.Padding = new System.Windows.Forms.Padding(10);
+            tabCustomDataDirectories.Size = new System.Drawing.Size(1439, 701);
+            tabCustomDataDirectories.TabIndex = 2;
+            tabCustomDataDirectories.Tag = "Tab_Options_CustomDataDirectories";
+            tabCustomDataDirectories.Text = "Custom Data Directories";
             // 
             // tlpOptionalRules
             // 
-            this.tlpOptionalRules.AutoSize = true;
-            this.tlpOptionalRules.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.tlpOptionalRules.ColumnCount = 2;
-            this.tlpOptionalRules.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 60F));
-            this.tlpOptionalRules.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 40F));
-            this.tlpOptionalRules.Controls.Add(this.gpbDirectoryInfo, 1, 0);
-            this.tlpOptionalRules.Controls.Add(this.lblCustomDataDirectoriesLabel, 0, 0);
-            this.tlpOptionalRules.Controls.Add(this.lsbCustomDataDirectories, 0, 1);
-            this.tlpOptionalRules.Controls.Add(this.tlpOptionalRulesButtons, 0, 2);
-            this.tlpOptionalRules.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tlpOptionalRules.Location = new System.Drawing.Point(9, 9);
-            this.tlpOptionalRules.Name = "tlpOptionalRules";
-            this.tlpOptionalRules.RowCount = 3;
-            this.tlpOptionalRules.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tlpOptionalRules.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tlpOptionalRules.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tlpOptionalRules.Size = new System.Drawing.Size(1214, 584);
-            this.tlpOptionalRules.TabIndex = 44;
+            tlpOptionalRules.AutoSize = true;
+            tlpOptionalRules.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            tlpOptionalRules.ColumnCount = 2;
+            tlpOptionalRules.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 60F));
+            tlpOptionalRules.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 40F));
+            tlpOptionalRules.Controls.Add(gpbDirectoryInfo, 1, 0);
+            tlpOptionalRules.Controls.Add(lblCustomDataDirectoriesLabel, 0, 0);
+            tlpOptionalRules.Controls.Add(lsbCustomDataDirectories, 0, 1);
+            tlpOptionalRules.Controls.Add(tlpOptionalRulesButtons, 0, 2);
+            tlpOptionalRules.Dock = System.Windows.Forms.DockStyle.Fill;
+            tlpOptionalRules.Location = new System.Drawing.Point(10, 10);
+            tlpOptionalRules.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            tlpOptionalRules.Name = "tlpOptionalRules";
+            tlpOptionalRules.RowCount = 3;
+            tlpOptionalRules.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            tlpOptionalRules.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            tlpOptionalRules.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            tlpOptionalRules.Size = new System.Drawing.Size(1419, 681);
+            tlpOptionalRules.TabIndex = 44;
             // 
             // gpbDirectoryInfo
             // 
-            this.gpbDirectoryInfo.AutoSize = true;
-            this.gpbDirectoryInfo.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.gpbDirectoryInfo.Controls.Add(this.tlpDirectoryInfo);
-            this.gpbDirectoryInfo.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.gpbDirectoryInfo.Location = new System.Drawing.Point(731, 3);
-            this.gpbDirectoryInfo.Name = "gpbDirectoryInfo";
-            this.tlpOptionalRules.SetRowSpan(this.gpbDirectoryInfo, 3);
-            this.gpbDirectoryInfo.Size = new System.Drawing.Size(480, 578);
-            this.gpbDirectoryInfo.TabIndex = 46;
-            this.gpbDirectoryInfo.TabStop = false;
-            this.gpbDirectoryInfo.Tag = "Title_CustomDataDirectoryInfo";
-            this.gpbDirectoryInfo.Text = "Custom Data Directory Info";
-            this.gpbDirectoryInfo.Visible = false;
+            gpbDirectoryInfo.AutoSize = true;
+            gpbDirectoryInfo.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            gpbDirectoryInfo.Controls.Add(tlpDirectoryInfo);
+            gpbDirectoryInfo.Dock = System.Windows.Forms.DockStyle.Fill;
+            gpbDirectoryInfo.Location = new System.Drawing.Point(855, 3);
+            gpbDirectoryInfo.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            gpbDirectoryInfo.Name = "gpbDirectoryInfo";
+            gpbDirectoryInfo.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            tlpOptionalRules.SetRowSpan(gpbDirectoryInfo, 3);
+            gpbDirectoryInfo.Size = new System.Drawing.Size(560, 675);
+            gpbDirectoryInfo.TabIndex = 46;
+            gpbDirectoryInfo.TabStop = false;
+            gpbDirectoryInfo.Tag = "Title_CustomDataDirectoryInfo";
+            gpbDirectoryInfo.Text = "Custom Data Directory Info";
+            gpbDirectoryInfo.Visible = false;
             // 
             // tlpDirectoryInfo
             // 
-            this.tlpDirectoryInfo.AutoSize = true;
-            this.tlpDirectoryInfo.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.tlpDirectoryInfo.ColumnCount = 2;
-            this.tlpDirectoryInfo.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tlpDirectoryInfo.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tlpDirectoryInfo.Controls.Add(this.gbpDirectoryInfoDependencies, 0, 2);
-            this.tlpDirectoryInfo.Controls.Add(this.gbpDirectoryInfoIncompatibilities, 1, 2);
-            this.tlpDirectoryInfo.Controls.Add(this.txtDirectoryDescription, 0, 1);
-            this.tlpDirectoryInfo.Controls.Add(this.tlpDirectoryInfoLeft, 0, 0);
-            this.tlpDirectoryInfo.Controls.Add(this.gpbDirectoryAuthors, 1, 0);
-            this.tlpDirectoryInfo.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tlpDirectoryInfo.Location = new System.Drawing.Point(3, 16);
-            this.tlpDirectoryInfo.Name = "tlpDirectoryInfo";
-            this.tlpDirectoryInfo.RowCount = 3;
-            this.tlpDirectoryInfo.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
-            this.tlpDirectoryInfo.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tlpDirectoryInfo.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
-            this.tlpDirectoryInfo.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tlpDirectoryInfo.Size = new System.Drawing.Size(474, 559);
-            this.tlpDirectoryInfo.TabIndex = 0;
+            tlpDirectoryInfo.AutoSize = true;
+            tlpDirectoryInfo.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            tlpDirectoryInfo.ColumnCount = 2;
+            tlpDirectoryInfo.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            tlpDirectoryInfo.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            tlpDirectoryInfo.Controls.Add(gbpDirectoryInfoDependencies, 0, 2);
+            tlpDirectoryInfo.Controls.Add(gbpDirectoryInfoIncompatibilities, 1, 2);
+            tlpDirectoryInfo.Controls.Add(txtDirectoryDescription, 0, 1);
+            tlpDirectoryInfo.Controls.Add(tlpDirectoryInfoLeft, 0, 0);
+            tlpDirectoryInfo.Controls.Add(gpbDirectoryAuthors, 1, 0);
+            tlpDirectoryInfo.Dock = System.Windows.Forms.DockStyle.Fill;
+            tlpDirectoryInfo.Location = new System.Drawing.Point(4, 19);
+            tlpDirectoryInfo.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            tlpDirectoryInfo.Name = "tlpDirectoryInfo";
+            tlpDirectoryInfo.RowCount = 3;
+            tlpDirectoryInfo.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
+            tlpDirectoryInfo.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            tlpDirectoryInfo.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
+            tlpDirectoryInfo.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 23F));
+            tlpDirectoryInfo.Size = new System.Drawing.Size(552, 653);
+            tlpDirectoryInfo.TabIndex = 0;
             // 
             // gbpDirectoryInfoDependencies
             // 
-            this.gbpDirectoryInfoDependencies.AutoSize = true;
-            this.gbpDirectoryInfoDependencies.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.gbpDirectoryInfoDependencies.Controls.Add(this.pnlDirectoryDependencies);
-            this.gbpDirectoryInfoDependencies.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.gbpDirectoryInfoDependencies.Location = new System.Drawing.Point(3, 421);
-            this.gbpDirectoryInfoDependencies.Name = "gbpDirectoryInfoDependencies";
-            this.gbpDirectoryInfoDependencies.Size = new System.Drawing.Size(231, 135);
-            this.gbpDirectoryInfoDependencies.TabIndex = 8;
-            this.gbpDirectoryInfoDependencies.TabStop = false;
-            this.gbpDirectoryInfoDependencies.Tag = "Title_DirectoryDependencies";
-            this.gbpDirectoryInfoDependencies.Text = "Dependencies";
+            gbpDirectoryInfoDependencies.AutoSize = true;
+            gbpDirectoryInfoDependencies.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            gbpDirectoryInfoDependencies.Controls.Add(pnlDirectoryDependencies);
+            gbpDirectoryInfoDependencies.Dock = System.Windows.Forms.DockStyle.Fill;
+            gbpDirectoryInfoDependencies.Location = new System.Drawing.Point(4, 492);
+            gbpDirectoryInfoDependencies.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            gbpDirectoryInfoDependencies.Name = "gbpDirectoryInfoDependencies";
+            gbpDirectoryInfoDependencies.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            gbpDirectoryInfoDependencies.Size = new System.Drawing.Size(268, 158);
+            gbpDirectoryInfoDependencies.TabIndex = 8;
+            gbpDirectoryInfoDependencies.TabStop = false;
+            gbpDirectoryInfoDependencies.Tag = "Title_DirectoryDependencies";
+            gbpDirectoryInfoDependencies.Text = "Dependencies";
             // 
             // pnlDirectoryDependencies
             // 
-            this.pnlDirectoryDependencies.AutoScroll = true;
-            this.pnlDirectoryDependencies.Controls.Add(this.lblDependencies);
-            this.pnlDirectoryDependencies.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pnlDirectoryDependencies.Location = new System.Drawing.Point(3, 16);
-            this.pnlDirectoryDependencies.Name = "pnlDirectoryDependencies";
-            this.pnlDirectoryDependencies.Padding = new System.Windows.Forms.Padding(3, 6, 13, 6);
-            this.pnlDirectoryDependencies.Size = new System.Drawing.Size(225, 116);
-            this.pnlDirectoryDependencies.TabIndex = 1;
+            pnlDirectoryDependencies.AutoScroll = true;
+            pnlDirectoryDependencies.Controls.Add(lblDependencies);
+            pnlDirectoryDependencies.Dock = System.Windows.Forms.DockStyle.Fill;
+            pnlDirectoryDependencies.Location = new System.Drawing.Point(4, 19);
+            pnlDirectoryDependencies.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            pnlDirectoryDependencies.Name = "pnlDirectoryDependencies";
+            pnlDirectoryDependencies.Padding = new System.Windows.Forms.Padding(4, 7, 15, 7);
+            pnlDirectoryDependencies.Size = new System.Drawing.Size(260, 136);
+            pnlDirectoryDependencies.TabIndex = 1;
             // 
             // lblDependencies
             // 
-            this.lblDependencies.AutoSize = true;
-            this.lblDependencies.Dock = System.Windows.Forms.DockStyle.Top;
-            this.lblDependencies.Location = new System.Drawing.Point(3, 6);
-            this.lblDependencies.Margin = new System.Windows.Forms.Padding(3, 6, 3, 6);
-            this.lblDependencies.Name = "lblDependencies";
-            this.lblDependencies.Size = new System.Drawing.Size(82, 13);
-            this.lblDependencies.TabIndex = 0;
-            this.lblDependencies.Text = "[Dependencies]";
+            lblDependencies.AutoSize = true;
+            lblDependencies.Dock = System.Windows.Forms.DockStyle.Top;
+            lblDependencies.Location = new System.Drawing.Point(4, 7);
+            lblDependencies.Margin = new System.Windows.Forms.Padding(4, 7, 4, 7);
+            lblDependencies.Name = "lblDependencies";
+            lblDependencies.Size = new System.Drawing.Size(89, 15);
+            lblDependencies.TabIndex = 0;
+            lblDependencies.Text = "[Dependencies]";
             // 
             // gbpDirectoryInfoIncompatibilities
             // 
-            this.gbpDirectoryInfoIncompatibilities.AutoSize = true;
-            this.gbpDirectoryInfoIncompatibilities.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.gbpDirectoryInfoIncompatibilities.Controls.Add(this.pnlDirectoryIncompatibilities);
-            this.gbpDirectoryInfoIncompatibilities.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.gbpDirectoryInfoIncompatibilities.Location = new System.Drawing.Point(240, 421);
-            this.gbpDirectoryInfoIncompatibilities.Name = "gbpDirectoryInfoIncompatibilities";
-            this.gbpDirectoryInfoIncompatibilities.Size = new System.Drawing.Size(231, 135);
-            this.gbpDirectoryInfoIncompatibilities.TabIndex = 9;
-            this.gbpDirectoryInfoIncompatibilities.TabStop = false;
-            this.gbpDirectoryInfoIncompatibilities.Tag = "Title_DirectoryIncompatibilities";
-            this.gbpDirectoryInfoIncompatibilities.Text = "Incompatibilities";
+            gbpDirectoryInfoIncompatibilities.AutoSize = true;
+            gbpDirectoryInfoIncompatibilities.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            gbpDirectoryInfoIncompatibilities.Controls.Add(pnlDirectoryIncompatibilities);
+            gbpDirectoryInfoIncompatibilities.Dock = System.Windows.Forms.DockStyle.Fill;
+            gbpDirectoryInfoIncompatibilities.Location = new System.Drawing.Point(280, 492);
+            gbpDirectoryInfoIncompatibilities.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            gbpDirectoryInfoIncompatibilities.Name = "gbpDirectoryInfoIncompatibilities";
+            gbpDirectoryInfoIncompatibilities.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            gbpDirectoryInfoIncompatibilities.Size = new System.Drawing.Size(268, 158);
+            gbpDirectoryInfoIncompatibilities.TabIndex = 9;
+            gbpDirectoryInfoIncompatibilities.TabStop = false;
+            gbpDirectoryInfoIncompatibilities.Tag = "Title_DirectoryIncompatibilities";
+            gbpDirectoryInfoIncompatibilities.Text = "Incompatibilities";
             // 
             // pnlDirectoryIncompatibilities
             // 
-            this.pnlDirectoryIncompatibilities.AutoScroll = true;
-            this.pnlDirectoryIncompatibilities.Controls.Add(this.lblIncompatibilities);
-            this.pnlDirectoryIncompatibilities.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pnlDirectoryIncompatibilities.Location = new System.Drawing.Point(3, 16);
-            this.pnlDirectoryIncompatibilities.Name = "pnlDirectoryIncompatibilities";
-            this.pnlDirectoryIncompatibilities.Padding = new System.Windows.Forms.Padding(3, 6, 13, 6);
-            this.pnlDirectoryIncompatibilities.Size = new System.Drawing.Size(225, 116);
-            this.pnlDirectoryIncompatibilities.TabIndex = 2;
+            pnlDirectoryIncompatibilities.AutoScroll = true;
+            pnlDirectoryIncompatibilities.Controls.Add(lblIncompatibilities);
+            pnlDirectoryIncompatibilities.Dock = System.Windows.Forms.DockStyle.Fill;
+            pnlDirectoryIncompatibilities.Location = new System.Drawing.Point(4, 19);
+            pnlDirectoryIncompatibilities.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            pnlDirectoryIncompatibilities.Name = "pnlDirectoryIncompatibilities";
+            pnlDirectoryIncompatibilities.Padding = new System.Windows.Forms.Padding(4, 7, 15, 7);
+            pnlDirectoryIncompatibilities.Size = new System.Drawing.Size(260, 136);
+            pnlDirectoryIncompatibilities.TabIndex = 2;
             // 
             // lblIncompatibilities
             // 
-            this.lblIncompatibilities.AutoSize = true;
-            this.lblIncompatibilities.Dock = System.Windows.Forms.DockStyle.Top;
-            this.lblIncompatibilities.Location = new System.Drawing.Point(3, 6);
-            this.lblIncompatibilities.Margin = new System.Windows.Forms.Padding(3, 6, 3, 6);
-            this.lblIncompatibilities.Name = "lblIncompatibilities";
-            this.lblIncompatibilities.Size = new System.Drawing.Size(87, 13);
-            this.lblIncompatibilities.TabIndex = 0;
-            this.lblIncompatibilities.Text = "[Incompatibilities]";
+            lblIncompatibilities.AutoSize = true;
+            lblIncompatibilities.Dock = System.Windows.Forms.DockStyle.Top;
+            lblIncompatibilities.Location = new System.Drawing.Point(4, 7);
+            lblIncompatibilities.Margin = new System.Windows.Forms.Padding(4, 7, 4, 7);
+            lblIncompatibilities.Name = "lblIncompatibilities";
+            lblIncompatibilities.Size = new System.Drawing.Size(103, 15);
+            lblIncompatibilities.TabIndex = 0;
+            lblIncompatibilities.Text = "[Incompatibilities]";
             // 
             // txtDirectoryDescription
             // 
-            this.txtDirectoryDescription.BackColor = System.Drawing.SystemColors.Control;
-            this.tlpDirectoryInfo.SetColumnSpan(this.txtDirectoryDescription, 2);
-            this.txtDirectoryDescription.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.txtDirectoryDescription.Location = new System.Drawing.Point(3, 142);
-            this.txtDirectoryDescription.Multiline = true;
-            this.txtDirectoryDescription.Name = "txtDirectoryDescription";
-            this.txtDirectoryDescription.ReadOnly = true;
-            this.txtDirectoryDescription.Size = new System.Drawing.Size(468, 273);
-            this.txtDirectoryDescription.TabIndex = 13;
+            txtDirectoryDescription.BackColor = System.Drawing.SystemColors.Control;
+            tlpDirectoryInfo.SetColumnSpan(txtDirectoryDescription, 2);
+            txtDirectoryDescription.Dock = System.Windows.Forms.DockStyle.Fill;
+            txtDirectoryDescription.Location = new System.Drawing.Point(4, 166);
+            txtDirectoryDescription.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            txtDirectoryDescription.Multiline = true;
+            txtDirectoryDescription.Name = "txtDirectoryDescription";
+            txtDirectoryDescription.ReadOnly = true;
+            txtDirectoryDescription.Size = new System.Drawing.Size(544, 320);
+            txtDirectoryDescription.TabIndex = 13;
             // 
             // tlpDirectoryInfoLeft
             // 
-            this.tlpDirectoryInfoLeft.AutoSize = true;
-            this.tlpDirectoryInfoLeft.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.tlpDirectoryInfoLeft.ColumnCount = 2;
-            this.tlpDirectoryInfoLeft.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tlpDirectoryInfoLeft.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tlpDirectoryInfoLeft.Controls.Add(this.lblDirectoryPath, 1, 1);
-            this.tlpDirectoryInfoLeft.Controls.Add(this.lblDirectoryPathLabel, 0, 1);
-            this.tlpDirectoryInfoLeft.Controls.Add(this.lblDirectoryNameLabel, 0, 0);
-            this.tlpDirectoryInfoLeft.Controls.Add(this.lblDirectoryVersion, 1, 2);
-            this.tlpDirectoryInfoLeft.Controls.Add(this.lblDirectoryName, 1, 0);
-            this.tlpDirectoryInfoLeft.Controls.Add(this.lblDirectoryVersionLabel, 0, 2);
-            this.tlpDirectoryInfoLeft.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tlpDirectoryInfoLeft.Location = new System.Drawing.Point(0, 0);
-            this.tlpDirectoryInfoLeft.Margin = new System.Windows.Forms.Padding(0);
-            this.tlpDirectoryInfoLeft.Name = "tlpDirectoryInfoLeft";
-            this.tlpDirectoryInfoLeft.RowCount = 3;
-            this.tlpDirectoryInfoLeft.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tlpDirectoryInfoLeft.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tlpDirectoryInfoLeft.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tlpDirectoryInfoLeft.Size = new System.Drawing.Size(237, 139);
-            this.tlpDirectoryInfoLeft.TabIndex = 14;
+            tlpDirectoryInfoLeft.AutoSize = true;
+            tlpDirectoryInfoLeft.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            tlpDirectoryInfoLeft.ColumnCount = 2;
+            tlpDirectoryInfoLeft.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            tlpDirectoryInfoLeft.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            tlpDirectoryInfoLeft.Controls.Add(lblDirectoryPath, 1, 1);
+            tlpDirectoryInfoLeft.Controls.Add(lblDirectoryPathLabel, 0, 1);
+            tlpDirectoryInfoLeft.Controls.Add(lblDirectoryNameLabel, 0, 0);
+            tlpDirectoryInfoLeft.Controls.Add(lblDirectoryVersion, 1, 2);
+            tlpDirectoryInfoLeft.Controls.Add(lblDirectoryName, 1, 0);
+            tlpDirectoryInfoLeft.Controls.Add(lblDirectoryVersionLabel, 0, 2);
+            tlpDirectoryInfoLeft.Dock = System.Windows.Forms.DockStyle.Fill;
+            tlpDirectoryInfoLeft.Location = new System.Drawing.Point(0, 0);
+            tlpDirectoryInfoLeft.Margin = new System.Windows.Forms.Padding(0);
+            tlpDirectoryInfoLeft.Name = "tlpDirectoryInfoLeft";
+            tlpDirectoryInfoLeft.RowCount = 3;
+            tlpDirectoryInfoLeft.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            tlpDirectoryInfoLeft.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            tlpDirectoryInfoLeft.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            tlpDirectoryInfoLeft.Size = new System.Drawing.Size(276, 163);
+            tlpDirectoryInfoLeft.TabIndex = 14;
             // 
             // lblDirectoryPath
             // 
-            this.lblDirectoryPath.AutoSize = true;
-            this.lblDirectoryPath.Location = new System.Drawing.Point(54, 95);
-            this.lblDirectoryPath.Margin = new System.Windows.Forms.Padding(3, 6, 3, 6);
-            this.lblDirectoryPath.Name = "lblDirectoryPath";
-            this.lblDirectoryPath.Size = new System.Drawing.Size(80, 13);
-            this.lblDirectoryPath.TabIndex = 7;
-            this.lblDirectoryPath.Tag = "";
-            this.lblDirectoryPath.Text = "[Directory Path]";
-            this.lblDirectoryPath.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            lblDirectoryPath.AutoSize = true;
+            lblDirectoryPath.Location = new System.Drawing.Point(60, 112);
+            lblDirectoryPath.Margin = new System.Windows.Forms.Padding(4, 7, 4, 7);
+            lblDirectoryPath.Name = "lblDirectoryPath";
+            lblDirectoryPath.Size = new System.Drawing.Size(90, 15);
+            lblDirectoryPath.TabIndex = 7;
+            lblDirectoryPath.Tag = "";
+            lblDirectoryPath.Text = "[Directory Path]";
+            lblDirectoryPath.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // lblDirectoryPathLabel
             // 
-            this.lblDirectoryPathLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.lblDirectoryPathLabel.AutoSize = true;
-            this.lblDirectoryPathLabel.Location = new System.Drawing.Point(16, 95);
-            this.lblDirectoryPathLabel.Margin = new System.Windows.Forms.Padding(3, 6, 3, 6);
-            this.lblDirectoryPathLabel.Name = "lblDirectoryPathLabel";
-            this.lblDirectoryPathLabel.Size = new System.Drawing.Size(32, 13);
-            this.lblDirectoryPathLabel.TabIndex = 6;
-            this.lblDirectoryPathLabel.Tag = "Label_DirectoryPath";
-            this.lblDirectoryPathLabel.Text = "Path:";
-            this.lblDirectoryPathLabel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            lblDirectoryPathLabel.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
+            lblDirectoryPathLabel.AutoSize = true;
+            lblDirectoryPathLabel.Location = new System.Drawing.Point(18, 112);
+            lblDirectoryPathLabel.Margin = new System.Windows.Forms.Padding(4, 7, 4, 7);
+            lblDirectoryPathLabel.Name = "lblDirectoryPathLabel";
+            lblDirectoryPathLabel.Size = new System.Drawing.Size(34, 15);
+            lblDirectoryPathLabel.TabIndex = 6;
+            lblDirectoryPathLabel.Tag = "Label_DirectoryPath";
+            lblDirectoryPathLabel.Text = "Path:";
+            lblDirectoryPathLabel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // lblDirectoryNameLabel
             // 
-            this.lblDirectoryNameLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.lblDirectoryNameLabel.AutoSize = true;
-            this.lblDirectoryNameLabel.Location = new System.Drawing.Point(10, 6);
-            this.lblDirectoryNameLabel.Margin = new System.Windows.Forms.Padding(3, 6, 3, 6);
-            this.lblDirectoryNameLabel.Name = "lblDirectoryNameLabel";
-            this.lblDirectoryNameLabel.Size = new System.Drawing.Size(38, 13);
-            this.lblDirectoryNameLabel.TabIndex = 0;
-            this.lblDirectoryNameLabel.Tag = "Label_DirectoryName";
-            this.lblDirectoryNameLabel.Text = "Name:";
-            this.lblDirectoryNameLabel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            lblDirectoryNameLabel.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
+            lblDirectoryNameLabel.AutoSize = true;
+            lblDirectoryNameLabel.Location = new System.Drawing.Point(10, 7);
+            lblDirectoryNameLabel.Margin = new System.Windows.Forms.Padding(4, 7, 4, 7);
+            lblDirectoryNameLabel.Name = "lblDirectoryNameLabel";
+            lblDirectoryNameLabel.Size = new System.Drawing.Size(42, 15);
+            lblDirectoryNameLabel.TabIndex = 0;
+            lblDirectoryNameLabel.Tag = "Label_DirectoryName";
+            lblDirectoryNameLabel.Text = "Name:";
+            lblDirectoryNameLabel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // lblDirectoryVersion
             // 
-            this.lblDirectoryVersion.AutoSize = true;
-            this.lblDirectoryVersion.Location = new System.Drawing.Point(54, 120);
-            this.lblDirectoryVersion.Margin = new System.Windows.Forms.Padding(3, 6, 3, 6);
-            this.lblDirectoryVersion.Name = "lblDirectoryVersion";
-            this.lblDirectoryVersion.Size = new System.Drawing.Size(93, 13);
-            this.lblDirectoryVersion.TabIndex = 5;
-            this.lblDirectoryVersion.Tag = "";
-            this.lblDirectoryVersion.Text = "[Directory Version]";
-            this.lblDirectoryVersion.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            lblDirectoryVersion.AutoSize = true;
+            lblDirectoryVersion.Location = new System.Drawing.Point(60, 141);
+            lblDirectoryVersion.Margin = new System.Windows.Forms.Padding(4, 7, 4, 7);
+            lblDirectoryVersion.Name = "lblDirectoryVersion";
+            lblDirectoryVersion.Size = new System.Drawing.Size(104, 15);
+            lblDirectoryVersion.TabIndex = 5;
+            lblDirectoryVersion.Tag = "";
+            lblDirectoryVersion.Text = "[Directory Version]";
+            lblDirectoryVersion.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // lblDirectoryName
             // 
-            this.lblDirectoryName.AutoSize = true;
-            this.lblDirectoryName.Location = new System.Drawing.Point(54, 6);
-            this.lblDirectoryName.Margin = new System.Windows.Forms.Padding(3, 6, 3, 6);
-            this.lblDirectoryName.Name = "lblDirectoryName";
-            this.lblDirectoryName.Size = new System.Drawing.Size(86, 13);
-            this.lblDirectoryName.TabIndex = 4;
-            this.lblDirectoryName.Tag = "";
-            this.lblDirectoryName.Text = "[Directory Name]";
-            this.lblDirectoryName.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            lblDirectoryName.AutoSize = true;
+            lblDirectoryName.Location = new System.Drawing.Point(60, 7);
+            lblDirectoryName.Margin = new System.Windows.Forms.Padding(4, 7, 4, 7);
+            lblDirectoryName.Name = "lblDirectoryName";
+            lblDirectoryName.Size = new System.Drawing.Size(98, 15);
+            lblDirectoryName.TabIndex = 4;
+            lblDirectoryName.Tag = "";
+            lblDirectoryName.Text = "[Directory Name]";
+            lblDirectoryName.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // lblDirectoryVersionLabel
             // 
-            this.lblDirectoryVersionLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.lblDirectoryVersionLabel.AutoSize = true;
-            this.lblDirectoryVersionLabel.Location = new System.Drawing.Point(3, 120);
-            this.lblDirectoryVersionLabel.Margin = new System.Windows.Forms.Padding(3, 6, 3, 6);
-            this.lblDirectoryVersionLabel.Name = "lblDirectoryVersionLabel";
-            this.lblDirectoryVersionLabel.Size = new System.Drawing.Size(45, 13);
-            this.lblDirectoryVersionLabel.TabIndex = 2;
-            this.lblDirectoryVersionLabel.Tag = "Label_DirectoryVersion";
-            this.lblDirectoryVersionLabel.Text = "Version:";
-            this.lblDirectoryVersionLabel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            lblDirectoryVersionLabel.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
+            lblDirectoryVersionLabel.AutoSize = true;
+            lblDirectoryVersionLabel.Location = new System.Drawing.Point(4, 141);
+            lblDirectoryVersionLabel.Margin = new System.Windows.Forms.Padding(4, 7, 4, 7);
+            lblDirectoryVersionLabel.Name = "lblDirectoryVersionLabel";
+            lblDirectoryVersionLabel.Size = new System.Drawing.Size(48, 15);
+            lblDirectoryVersionLabel.TabIndex = 2;
+            lblDirectoryVersionLabel.Tag = "Label_DirectoryVersion";
+            lblDirectoryVersionLabel.Text = "Version:";
+            lblDirectoryVersionLabel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // gpbDirectoryAuthors
             // 
-            this.gpbDirectoryAuthors.AutoSize = true;
-            this.gpbDirectoryAuthors.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.gpbDirectoryAuthors.Controls.Add(this.pnlDirectoryAuthors);
-            this.gpbDirectoryAuthors.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.gpbDirectoryAuthors.Location = new System.Drawing.Point(240, 3);
-            this.gpbDirectoryAuthors.Name = "gpbDirectoryAuthors";
-            this.gpbDirectoryAuthors.Size = new System.Drawing.Size(231, 133);
-            this.gpbDirectoryAuthors.TabIndex = 16;
-            this.gpbDirectoryAuthors.TabStop = false;
-            this.gpbDirectoryAuthors.Tag = "Label_DirectoryAuthors";
-            this.gpbDirectoryAuthors.Text = "Authors";
+            gpbDirectoryAuthors.AutoSize = true;
+            gpbDirectoryAuthors.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            gpbDirectoryAuthors.Controls.Add(pnlDirectoryAuthors);
+            gpbDirectoryAuthors.Dock = System.Windows.Forms.DockStyle.Fill;
+            gpbDirectoryAuthors.Location = new System.Drawing.Point(280, 3);
+            gpbDirectoryAuthors.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            gpbDirectoryAuthors.Name = "gpbDirectoryAuthors";
+            gpbDirectoryAuthors.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            gpbDirectoryAuthors.Size = new System.Drawing.Size(268, 157);
+            gpbDirectoryAuthors.TabIndex = 16;
+            gpbDirectoryAuthors.TabStop = false;
+            gpbDirectoryAuthors.Tag = "Label_DirectoryAuthors";
+            gpbDirectoryAuthors.Text = "Authors";
             // 
             // pnlDirectoryAuthors
             // 
-            this.pnlDirectoryAuthors.AutoScroll = true;
-            this.pnlDirectoryAuthors.Controls.Add(this.lblDirectoryAuthors);
-            this.pnlDirectoryAuthors.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pnlDirectoryAuthors.Location = new System.Drawing.Point(3, 16);
-            this.pnlDirectoryAuthors.Name = "pnlDirectoryAuthors";
-            this.pnlDirectoryAuthors.Padding = new System.Windows.Forms.Padding(3, 6, 13, 6);
-            this.pnlDirectoryAuthors.Size = new System.Drawing.Size(225, 114);
-            this.pnlDirectoryAuthors.TabIndex = 0;
+            pnlDirectoryAuthors.AutoScroll = true;
+            pnlDirectoryAuthors.Controls.Add(lblDirectoryAuthors);
+            pnlDirectoryAuthors.Dock = System.Windows.Forms.DockStyle.Fill;
+            pnlDirectoryAuthors.Location = new System.Drawing.Point(4, 19);
+            pnlDirectoryAuthors.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            pnlDirectoryAuthors.Name = "pnlDirectoryAuthors";
+            pnlDirectoryAuthors.Padding = new System.Windows.Forms.Padding(4, 7, 15, 7);
+            pnlDirectoryAuthors.Size = new System.Drawing.Size(260, 135);
+            pnlDirectoryAuthors.TabIndex = 0;
             // 
             // lblDirectoryAuthors
             // 
-            this.lblDirectoryAuthors.AutoSize = true;
-            this.lblDirectoryAuthors.Dock = System.Windows.Forms.DockStyle.Top;
-            this.lblDirectoryAuthors.Location = new System.Drawing.Point(3, 6);
-            this.lblDirectoryAuthors.Margin = new System.Windows.Forms.Padding(3, 6, 3, 6);
-            this.lblDirectoryAuthors.Name = "lblDirectoryAuthors";
-            this.lblDirectoryAuthors.Size = new System.Drawing.Size(94, 13);
-            this.lblDirectoryAuthors.TabIndex = 6;
-            this.lblDirectoryAuthors.Tag = "";
-            this.lblDirectoryAuthors.Text = "[Directory Authors]";
-            this.lblDirectoryAuthors.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            lblDirectoryAuthors.AutoSize = true;
+            lblDirectoryAuthors.Dock = System.Windows.Forms.DockStyle.Top;
+            lblDirectoryAuthors.Location = new System.Drawing.Point(4, 7);
+            lblDirectoryAuthors.Margin = new System.Windows.Forms.Padding(4, 7, 4, 7);
+            lblDirectoryAuthors.Name = "lblDirectoryAuthors";
+            lblDirectoryAuthors.Size = new System.Drawing.Size(108, 15);
+            lblDirectoryAuthors.TabIndex = 6;
+            lblDirectoryAuthors.Tag = "";
+            lblDirectoryAuthors.Text = "[Directory Authors]";
+            lblDirectoryAuthors.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // lblCustomDataDirectoriesLabel
             // 
-            this.lblCustomDataDirectoriesLabel.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.lblCustomDataDirectoriesLabel.AutoSize = true;
-            this.lblCustomDataDirectoriesLabel.Location = new System.Drawing.Point(3, 6);
-            this.lblCustomDataDirectoriesLabel.Margin = new System.Windows.Forms.Padding(3, 6, 3, 6);
-            this.lblCustomDataDirectoriesLabel.Name = "lblCustomDataDirectoriesLabel";
-            this.lblCustomDataDirectoriesLabel.Size = new System.Drawing.Size(351, 13);
-            this.lblCustomDataDirectoriesLabel.TabIndex = 36;
-            this.lblCustomDataDirectoriesLabel.Tag = "Label_Options_CustomDataDirectories";
-            this.lblCustomDataDirectoriesLabel.Text = "Custom Data Directory Entries (Changes Are Only Applied After a Restart)";
-            this.lblCustomDataDirectoriesLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            lblCustomDataDirectoriesLabel.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            lblCustomDataDirectoriesLabel.AutoSize = true;
+            lblCustomDataDirectoriesLabel.Location = new System.Drawing.Point(4, 7);
+            lblCustomDataDirectoriesLabel.Margin = new System.Windows.Forms.Padding(4, 7, 4, 7);
+            lblCustomDataDirectoriesLabel.Name = "lblCustomDataDirectoriesLabel";
+            lblCustomDataDirectoriesLabel.Size = new System.Drawing.Size(392, 15);
+            lblCustomDataDirectoriesLabel.TabIndex = 36;
+            lblCustomDataDirectoriesLabel.Tag = "Label_Options_CustomDataDirectories";
+            lblCustomDataDirectoriesLabel.Text = "Custom Data Directory Entries (Changes Are Only Applied After a Restart)";
+            lblCustomDataDirectoriesLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // lsbCustomDataDirectories
             // 
-            this.lsbCustomDataDirectories.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lsbCustomDataDirectories.FormattingEnabled = true;
-            this.lsbCustomDataDirectories.Location = new System.Drawing.Point(3, 28);
-            this.lsbCustomDataDirectories.Name = "lsbCustomDataDirectories";
-            this.lsbCustomDataDirectories.Size = new System.Drawing.Size(722, 524);
-            this.lsbCustomDataDirectories.TabIndex = 42;
-            this.lsbCustomDataDirectories.SelectedIndexChanged += new System.EventHandler(this.lsbCustomDataDirectories_SelectedIndexChanged);
+            lsbCustomDataDirectories.Dock = System.Windows.Forms.DockStyle.Fill;
+            lsbCustomDataDirectories.FormattingEnabled = true;
+            lsbCustomDataDirectories.ItemHeight = 15;
+            lsbCustomDataDirectories.Location = new System.Drawing.Point(4, 32);
+            lsbCustomDataDirectories.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            lsbCustomDataDirectories.Name = "lsbCustomDataDirectories";
+            lsbCustomDataDirectories.Size = new System.Drawing.Size(843, 615);
+            lsbCustomDataDirectories.TabIndex = 42;
+            lsbCustomDataDirectories.SelectedIndexChanged += lsbCustomDataDirectories_SelectedIndexChanged;
             // 
             // tlpOptionalRulesButtons
             // 
-            this.tlpOptionalRulesButtons.AutoSize = true;
-            this.tlpOptionalRulesButtons.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.tlpOptionalRulesButtons.ColumnCount = 3;
-            this.tlpOptionalRulesButtons.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
-            this.tlpOptionalRulesButtons.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
-            this.tlpOptionalRulesButtons.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
-            this.tlpOptionalRulesButtons.Controls.Add(this.cmdAddCustomDirectory, 0, 0);
-            this.tlpOptionalRulesButtons.Controls.Add(this.cmdRemoveCustomDirectory, 2, 0);
-            this.tlpOptionalRulesButtons.Controls.Add(this.cmdRenameCustomDataDirectory, 1, 0);
-            this.tlpOptionalRulesButtons.Location = new System.Drawing.Point(0, 555);
-            this.tlpOptionalRulesButtons.Margin = new System.Windows.Forms.Padding(0);
-            this.tlpOptionalRulesButtons.Name = "tlpOptionalRulesButtons";
-            this.tlpOptionalRulesButtons.RowCount = 1;
-            this.tlpOptionalRulesButtons.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tlpOptionalRulesButtons.Size = new System.Drawing.Size(324, 29);
-            this.tlpOptionalRulesButtons.TabIndex = 43;
+            tlpOptionalRulesButtons.AutoSize = true;
+            tlpOptionalRulesButtons.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            tlpOptionalRulesButtons.ColumnCount = 3;
+            tlpOptionalRulesButtons.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
+            tlpOptionalRulesButtons.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
+            tlpOptionalRulesButtons.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
+            tlpOptionalRulesButtons.Controls.Add(cmdAddCustomDirectory, 0, 0);
+            tlpOptionalRulesButtons.Controls.Add(cmdRemoveCustomDirectory, 2, 0);
+            tlpOptionalRulesButtons.Controls.Add(cmdRenameCustomDataDirectory, 1, 0);
+            tlpOptionalRulesButtons.Location = new System.Drawing.Point(0, 650);
+            tlpOptionalRulesButtons.Margin = new System.Windows.Forms.Padding(0);
+            tlpOptionalRulesButtons.Name = "tlpOptionalRulesButtons";
+            tlpOptionalRulesButtons.RowCount = 1;
+            tlpOptionalRulesButtons.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            tlpOptionalRulesButtons.Size = new System.Drawing.Size(357, 31);
+            tlpOptionalRulesButtons.TabIndex = 43;
             // 
             // cmdAddCustomDirectory
             // 
-            this.cmdAddCustomDirectory.AutoSize = true;
-            this.cmdAddCustomDirectory.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.cmdAddCustomDirectory.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.cmdAddCustomDirectory.Location = new System.Drawing.Point(3, 3);
-            this.cmdAddCustomDirectory.MinimumSize = new System.Drawing.Size(80, 0);
-            this.cmdAddCustomDirectory.Name = "cmdAddCustomDirectory";
-            this.cmdAddCustomDirectory.Size = new System.Drawing.Size(102, 23);
-            this.cmdAddCustomDirectory.TabIndex = 38;
-            this.cmdAddCustomDirectory.Tag = "Button_AddCustomDirectory";
-            this.cmdAddCustomDirectory.Text = "Add Directory";
-            this.cmdAddCustomDirectory.UseVisualStyleBackColor = true;
-            this.cmdAddCustomDirectory.Click += new System.EventHandler(this.cmdAddCustomDirectory_Click);
+            cmdAddCustomDirectory.AutoSize = true;
+            cmdAddCustomDirectory.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            cmdAddCustomDirectory.Dock = System.Windows.Forms.DockStyle.Fill;
+            cmdAddCustomDirectory.Location = new System.Drawing.Point(4, 3);
+            cmdAddCustomDirectory.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            cmdAddCustomDirectory.MinimumSize = new System.Drawing.Size(93, 0);
+            cmdAddCustomDirectory.Name = "cmdAddCustomDirectory";
+            cmdAddCustomDirectory.Size = new System.Drawing.Size(111, 25);
+            cmdAddCustomDirectory.TabIndex = 38;
+            cmdAddCustomDirectory.Tag = "Button_AddCustomDirectory";
+            cmdAddCustomDirectory.Text = "Add Directory";
+            cmdAddCustomDirectory.UseVisualStyleBackColor = true;
+            cmdAddCustomDirectory.Click += cmdAddCustomDirectory_Click;
             // 
             // cmdRemoveCustomDirectory
             // 
-            this.cmdRemoveCustomDirectory.AutoSize = true;
-            this.cmdRemoveCustomDirectory.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.cmdRemoveCustomDirectory.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.cmdRemoveCustomDirectory.Location = new System.Drawing.Point(219, 3);
-            this.cmdRemoveCustomDirectory.MinimumSize = new System.Drawing.Size(80, 0);
-            this.cmdRemoveCustomDirectory.Name = "cmdRemoveCustomDirectory";
-            this.cmdRemoveCustomDirectory.Size = new System.Drawing.Size(102, 23);
-            this.cmdRemoveCustomDirectory.TabIndex = 39;
-            this.cmdRemoveCustomDirectory.Tag = "Button_RemoveCustomDirectory";
-            this.cmdRemoveCustomDirectory.Text = "Remove Directory";
-            this.cmdRemoveCustomDirectory.UseVisualStyleBackColor = true;
-            this.cmdRemoveCustomDirectory.Click += new System.EventHandler(this.cmdRemoveCustomDirectory_Click);
+            cmdRemoveCustomDirectory.AutoSize = true;
+            cmdRemoveCustomDirectory.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            cmdRemoveCustomDirectory.Dock = System.Windows.Forms.DockStyle.Fill;
+            cmdRemoveCustomDirectory.Location = new System.Drawing.Point(242, 3);
+            cmdRemoveCustomDirectory.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            cmdRemoveCustomDirectory.MinimumSize = new System.Drawing.Size(93, 0);
+            cmdRemoveCustomDirectory.Name = "cmdRemoveCustomDirectory";
+            cmdRemoveCustomDirectory.Size = new System.Drawing.Size(111, 25);
+            cmdRemoveCustomDirectory.TabIndex = 39;
+            cmdRemoveCustomDirectory.Tag = "Button_RemoveCustomDirectory";
+            cmdRemoveCustomDirectory.Text = "Remove Directory";
+            cmdRemoveCustomDirectory.UseVisualStyleBackColor = true;
+            cmdRemoveCustomDirectory.Click += cmdRemoveCustomDirectory_Click;
             // 
             // cmdRenameCustomDataDirectory
             // 
-            this.cmdRenameCustomDataDirectory.AutoSize = true;
-            this.cmdRenameCustomDataDirectory.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.cmdRenameCustomDataDirectory.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.cmdRenameCustomDataDirectory.Location = new System.Drawing.Point(111, 3);
-            this.cmdRenameCustomDataDirectory.MinimumSize = new System.Drawing.Size(80, 0);
-            this.cmdRenameCustomDataDirectory.Name = "cmdRenameCustomDataDirectory";
-            this.cmdRenameCustomDataDirectory.Size = new System.Drawing.Size(102, 23);
-            this.cmdRenameCustomDataDirectory.TabIndex = 41;
-            this.cmdRenameCustomDataDirectory.Tag = "Button_RenameCustomDataDirectory";
-            this.cmdRenameCustomDataDirectory.Text = "Rename Entry";
-            this.cmdRenameCustomDataDirectory.UseVisualStyleBackColor = true;
-            this.cmdRenameCustomDataDirectory.Click += new System.EventHandler(this.cmdRenameCustomDataDirectory_Click);
+            cmdRenameCustomDataDirectory.AutoSize = true;
+            cmdRenameCustomDataDirectory.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            cmdRenameCustomDataDirectory.Dock = System.Windows.Forms.DockStyle.Fill;
+            cmdRenameCustomDataDirectory.Location = new System.Drawing.Point(123, 3);
+            cmdRenameCustomDataDirectory.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            cmdRenameCustomDataDirectory.MinimumSize = new System.Drawing.Size(93, 0);
+            cmdRenameCustomDataDirectory.Name = "cmdRenameCustomDataDirectory";
+            cmdRenameCustomDataDirectory.Size = new System.Drawing.Size(111, 25);
+            cmdRenameCustomDataDirectory.TabIndex = 41;
+            cmdRenameCustomDataDirectory.Tag = "Button_RenameCustomDataDirectory";
+            cmdRenameCustomDataDirectory.Text = "Rename Entry";
+            cmdRenameCustomDataDirectory.UseVisualStyleBackColor = true;
+            cmdRenameCustomDataDirectory.Click += cmdRenameCustomDataDirectory_Click;
             // 
             // tabGitHubIssues
             // 
-            this.tabGitHubIssues.BackColor = System.Drawing.SystemColors.Control;
-            this.tabGitHubIssues.Controls.Add(this.cmdUploadPastebin);
-            this.tabGitHubIssues.Location = new System.Drawing.Point(4, 22);
-            this.tabGitHubIssues.Name = "tabGitHubIssues";
-            this.tabGitHubIssues.Padding = new System.Windows.Forms.Padding(3);
-            this.tabGitHubIssues.Size = new System.Drawing.Size(1232, 602);
-            this.tabGitHubIssues.TabIndex = 4;
-            this.tabGitHubIssues.Tag = "Tab_Options_GitHubIssues";
-            this.tabGitHubIssues.Text = "GitHub Issues";
+            tabGitHubIssues.BackColor = System.Drawing.SystemColors.Control;
+            tabGitHubIssues.Controls.Add(cmdUploadPastebin);
+            tabGitHubIssues.Location = new System.Drawing.Point(4, 24);
+            tabGitHubIssues.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            tabGitHubIssues.Name = "tabGitHubIssues";
+            tabGitHubIssues.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            tabGitHubIssues.Size = new System.Drawing.Size(1439, 701);
+            tabGitHubIssues.TabIndex = 4;
+            tabGitHubIssues.Tag = "Tab_Options_GitHubIssues";
+            tabGitHubIssues.Text = "GitHub Issues";
             // 
             // cmdUploadPastebin
             // 
-            this.cmdUploadPastebin.AutoSize = true;
-            this.cmdUploadPastebin.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.cmdUploadPastebin.Enabled = false;
-            this.cmdUploadPastebin.Location = new System.Drawing.Point(6, 6);
-            this.cmdUploadPastebin.MinimumSize = new System.Drawing.Size(80, 0);
-            this.cmdUploadPastebin.Name = "cmdUploadPastebin";
-            this.cmdUploadPastebin.Size = new System.Drawing.Size(123, 23);
-            this.cmdUploadPastebin.TabIndex = 1;
-            this.cmdUploadPastebin.Tag = "Button_Options_UploadPastebin";
-            this.cmdUploadPastebin.Text = "Upload file to Pastebin";
-            this.cmdUploadPastebin.UseVisualStyleBackColor = true;
-            this.cmdUploadPastebin.Click += new System.EventHandler(this.cmdUploadPastebin_Click);
+            cmdUploadPastebin.AutoSize = true;
+            cmdUploadPastebin.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            cmdUploadPastebin.Enabled = false;
+            cmdUploadPastebin.Location = new System.Drawing.Point(7, 7);
+            cmdUploadPastebin.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            cmdUploadPastebin.MinimumSize = new System.Drawing.Size(93, 0);
+            cmdUploadPastebin.Name = "cmdUploadPastebin";
+            cmdUploadPastebin.Size = new System.Drawing.Size(136, 25);
+            cmdUploadPastebin.TabIndex = 1;
+            cmdUploadPastebin.Tag = "Button_Options_UploadPastebin";
+            cmdUploadPastebin.Text = "Upload file to Pastebin";
+            cmdUploadPastebin.UseVisualStyleBackColor = true;
+            cmdUploadPastebin.Click += cmdUploadPastebin_Click;
             // 
             // tabPlugins
             // 
-            this.tabPlugins.BackColor = System.Drawing.SystemColors.Control;
-            this.tabPlugins.Controls.Add(this.tlpPlugins);
-            this.tabPlugins.Location = new System.Drawing.Point(4, 22);
-            this.tabPlugins.Name = "tabPlugins";
-            this.tabPlugins.Padding = new System.Windows.Forms.Padding(9);
-            this.tabPlugins.Size = new System.Drawing.Size(1232, 602);
-            this.tabPlugins.TabIndex = 6;
-            this.tabPlugins.Tag = "Tab_Options_Plugins";
-            this.tabPlugins.Text = "Plugins";
+            tabPlugins.BackColor = System.Drawing.SystemColors.Control;
+            tabPlugins.Controls.Add(tlpPlugins);
+            tabPlugins.Location = new System.Drawing.Point(4, 24);
+            tabPlugins.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            tabPlugins.Name = "tabPlugins";
+            tabPlugins.Padding = new System.Windows.Forms.Padding(10);
+            tabPlugins.Size = new System.Drawing.Size(1439, 701);
+            tabPlugins.TabIndex = 6;
+            tabPlugins.Tag = "Tab_Options_Plugins";
+            tabPlugins.Text = "Plugins";
             // 
             // tlpPlugins
             // 
-            this.tlpPlugins.AutoSize = true;
-            this.tlpPlugins.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.tlpPlugins.ColumnCount = 2;
-            this.tlpPlugins.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
-            this.tlpPlugins.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 75F));
-            this.tlpPlugins.Controls.Add(this.grpAvailablePlugins, 0, 0);
-            this.tlpPlugins.Controls.Add(this.pnlPluginOption, 1, 0);
-            this.tlpPlugins.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tlpPlugins.Location = new System.Drawing.Point(9, 9);
-            this.tlpPlugins.MinimumSize = new System.Drawing.Size(823, 516);
-            this.tlpPlugins.Name = "tlpPlugins";
-            this.tlpPlugins.RowCount = 1;
-            this.tlpPlugins.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tlpPlugins.Size = new System.Drawing.Size(1214, 584);
-            this.tlpPlugins.TabIndex = 0;
+            tlpPlugins.AutoSize = true;
+            tlpPlugins.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            tlpPlugins.ColumnCount = 2;
+            tlpPlugins.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
+            tlpPlugins.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 75F));
+            tlpPlugins.Controls.Add(grpAvailablePlugins, 0, 0);
+            tlpPlugins.Controls.Add(pnlPluginOption, 1, 0);
+            tlpPlugins.Dock = System.Windows.Forms.DockStyle.Fill;
+            tlpPlugins.Location = new System.Drawing.Point(10, 10);
+            tlpPlugins.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            tlpPlugins.MinimumSize = new System.Drawing.Size(960, 595);
+            tlpPlugins.Name = "tlpPlugins";
+            tlpPlugins.RowCount = 1;
+            tlpPlugins.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            tlpPlugins.Size = new System.Drawing.Size(1419, 681);
+            tlpPlugins.TabIndex = 0;
             // 
             // grpAvailablePlugins
             // 
-            this.grpAvailablePlugins.AutoSize = true;
-            this.grpAvailablePlugins.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.grpAvailablePlugins.Controls.Add(this.clbPlugins);
-            this.grpAvailablePlugins.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.grpAvailablePlugins.Location = new System.Drawing.Point(3, 3);
-            this.grpAvailablePlugins.Name = "grpAvailablePlugins";
-            this.grpAvailablePlugins.Size = new System.Drawing.Size(297, 578);
-            this.grpAvailablePlugins.TabIndex = 0;
-            this.grpAvailablePlugins.TabStop = false;
-            this.grpAvailablePlugins.Tag = "String_AvailablePlugins";
-            this.grpAvailablePlugins.Text = "Available Plugins";
+            grpAvailablePlugins.AutoSize = true;
+            grpAvailablePlugins.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            grpAvailablePlugins.Controls.Add(clbPlugins);
+            grpAvailablePlugins.Dock = System.Windows.Forms.DockStyle.Fill;
+            grpAvailablePlugins.Location = new System.Drawing.Point(4, 3);
+            grpAvailablePlugins.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            grpAvailablePlugins.Name = "grpAvailablePlugins";
+            grpAvailablePlugins.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            grpAvailablePlugins.Size = new System.Drawing.Size(346, 675);
+            grpAvailablePlugins.TabIndex = 0;
+            grpAvailablePlugins.TabStop = false;
+            grpAvailablePlugins.Tag = "String_AvailablePlugins";
+            grpAvailablePlugins.Text = "Available Plugins";
             // 
             // clbPlugins
             // 
-            this.clbPlugins.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.clbPlugins.FormattingEnabled = true;
-            this.clbPlugins.Location = new System.Drawing.Point(3, 16);
-            this.clbPlugins.Name = "clbPlugins";
-            this.clbPlugins.Size = new System.Drawing.Size(291, 559);
-            this.clbPlugins.TabIndex = 0;
-            this.clbPlugins.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.clbPlugins_ItemCheck);
-            this.clbPlugins.SelectedValueChanged += new System.EventHandler(this.clbPlugins_SelectedValueChanged);
-            this.clbPlugins.VisibleChanged += new System.EventHandler(this.clbPlugins_VisibleChanged);
+            clbPlugins.Dock = System.Windows.Forms.DockStyle.Fill;
+            clbPlugins.FormattingEnabled = true;
+            clbPlugins.Location = new System.Drawing.Point(4, 19);
+            clbPlugins.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            clbPlugins.Name = "clbPlugins";
+            clbPlugins.Size = new System.Drawing.Size(338, 653);
+            clbPlugins.TabIndex = 0;
+            clbPlugins.ItemCheck += clbPlugins_ItemCheck;
+            clbPlugins.SelectedValueChanged += clbPlugins_SelectedValueChanged;
+            clbPlugins.VisibleChanged += clbPlugins_VisibleChanged;
             // 
             // pnlPluginOption
             // 
-            this.pnlPluginOption.AutoScroll = true;
-            this.pnlPluginOption.AutoSize = true;
-            this.pnlPluginOption.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.pnlPluginOption.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pnlPluginOption.Location = new System.Drawing.Point(303, 0);
-            this.pnlPluginOption.Margin = new System.Windows.Forms.Padding(0);
-            this.pnlPluginOption.Name = "pnlPluginOption";
-            this.pnlPluginOption.Size = new System.Drawing.Size(911, 584);
-            this.pnlPluginOption.TabIndex = 1;
+            pnlPluginOption.AutoScroll = true;
+            pnlPluginOption.AutoSize = true;
+            pnlPluginOption.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            pnlPluginOption.Dock = System.Windows.Forms.DockStyle.Fill;
+            pnlPluginOption.Location = new System.Drawing.Point(354, 0);
+            pnlPluginOption.Margin = new System.Windows.Forms.Padding(0);
+            pnlPluginOption.Name = "pnlPluginOption";
+            pnlPluginOption.Size = new System.Drawing.Size(1065, 681);
+            pnlPluginOption.TabIndex = 1;
             // 
             // tlpButtons
             // 
-            this.tlpButtons.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.tlpButtons.AutoSize = true;
-            this.tlpButtons.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.tlpButtons.ColumnCount = 2;
-            this.tlpButtons.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tlpButtons.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tlpButtons.Controls.Add(this.cmdCancel, 0, 0);
-            this.tlpButtons.Controls.Add(this.cmdOK, 1, 0);
-            this.tlpButtons.Location = new System.Drawing.Point(1074, 634);
-            this.tlpButtons.Margin = new System.Windows.Forms.Padding(0);
-            this.tlpButtons.Name = "tlpButtons";
-            this.tlpButtons.RowCount = 1;
-            this.tlpButtons.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tlpButtons.Size = new System.Drawing.Size(172, 29);
-            this.tlpButtons.TabIndex = 5;
+            tlpButtons.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right;
+            tlpButtons.AutoSize = true;
+            tlpButtons.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            tlpButtons.ColumnCount = 2;
+            tlpButtons.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            tlpButtons.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            tlpButtons.Controls.Add(cmdCancel, 0, 0);
+            tlpButtons.Controls.Add(cmdOK, 1, 0);
+            tlpButtons.Location = new System.Drawing.Point(1253, 735);
+            tlpButtons.Margin = new System.Windows.Forms.Padding(0);
+            tlpButtons.Name = "tlpButtons";
+            tlpButtons.RowCount = 1;
+            tlpButtons.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            tlpButtons.Size = new System.Drawing.Size(202, 31);
+            tlpButtons.TabIndex = 5;
             // 
             // cmdCancel
             // 
-            this.cmdCancel.AutoSize = true;
-            this.cmdCancel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.cmdCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.cmdCancel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.cmdCancel.Location = new System.Drawing.Point(3, 3);
-            this.cmdCancel.MinimumSize = new System.Drawing.Size(80, 0);
-            this.cmdCancel.Name = "cmdCancel";
-            this.cmdCancel.Size = new System.Drawing.Size(80, 23);
-            this.cmdCancel.TabIndex = 6;
-            this.cmdCancel.Tag = "String_Cancel";
-            this.cmdCancel.Text = "Cancel";
-            this.cmdCancel.UseVisualStyleBackColor = true;
-            this.cmdCancel.Click += new System.EventHandler(this.cmdCancel_Click);
+            cmdCancel.AutoSize = true;
+            cmdCancel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            cmdCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            cmdCancel.Dock = System.Windows.Forms.DockStyle.Fill;
+            cmdCancel.Location = new System.Drawing.Point(4, 3);
+            cmdCancel.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            cmdCancel.MinimumSize = new System.Drawing.Size(93, 0);
+            cmdCancel.Name = "cmdCancel";
+            cmdCancel.Size = new System.Drawing.Size(93, 25);
+            cmdCancel.TabIndex = 6;
+            cmdCancel.Tag = "String_Cancel";
+            cmdCancel.Text = "Cancel";
+            cmdCancel.UseVisualStyleBackColor = true;
+            cmdCancel.Click += cmdCancel_Click;
             // 
             // cmdOK
             // 
-            this.cmdOK.AutoSize = true;
-            this.cmdOK.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.cmdOK.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.cmdOK.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.cmdOK.Location = new System.Drawing.Point(89, 3);
-            this.cmdOK.MinimumSize = new System.Drawing.Size(80, 0);
-            this.cmdOK.Name = "cmdOK";
-            this.cmdOK.Size = new System.Drawing.Size(80, 23);
-            this.cmdOK.TabIndex = 5;
-            this.cmdOK.Tag = "String_OK";
-            this.cmdOK.Text = "OK";
-            this.cmdOK.UseVisualStyleBackColor = true;
-            this.cmdOK.Click += new System.EventHandler(this.cmdOK_Click);
+            cmdOK.AutoSize = true;
+            cmdOK.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            cmdOK.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            cmdOK.Dock = System.Windows.Forms.DockStyle.Fill;
+            cmdOK.Location = new System.Drawing.Point(105, 3);
+            cmdOK.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            cmdOK.MinimumSize = new System.Drawing.Size(93, 0);
+            cmdOK.Name = "cmdOK";
+            cmdOK.Size = new System.Drawing.Size(93, 25);
+            cmdOK.TabIndex = 5;
+            cmdOK.Tag = "String_OK";
+            cmdOK.Text = "OK";
+            cmdOK.UseVisualStyleBackColor = true;
+            cmdOK.Click += cmdOK_Click;
             // 
             // EditGlobalSettings
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.AutoScroll = true;
-            this.AutoSize = true;
-            this.ClientSize = new System.Drawing.Size(1264, 681);
-            this.Controls.Add(this.tlpOptions);
-            this.DoubleBuffered = true;
-            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.MinimizeBox = false;
-            this.MinimumSize = new System.Drawing.Size(48, 50);
-            this.Name = "EditGlobalSettings";
-            this.Padding = new System.Windows.Forms.Padding(9);
-            this.ShowInTaskbar = false;
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Tag = "Title_Options";
-            this.Text = "Global Settings";
-            this.Load += new System.EventHandler(this.EditGlobalSettings_Load);
-            this.tlpOptions.ResumeLayout(false);
-            this.tlpOptions.PerformLayout();
-            this.tabOptions.ResumeLayout(false);
-            this.tabGlobal.ResumeLayout(false);
-            this.tabGlobal.PerformLayout();
-            this.tlpGlobal.ResumeLayout(false);
-            this.tlpGlobal.PerformLayout();
-            this.grpSelectedSourcebook.ResumeLayout(false);
-            this.grpSelectedSourcebook.PerformLayout();
-            this.tlpSelectedSourcebook.ResumeLayout(false);
-            this.tlpSelectedSourcebook.PerformLayout();
-            this.flpPDFOffset.ResumeLayout(false);
-            this.flpPDFOffset.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.nudPDFOffset)).EndInit();
-            this.tlpGlobalOptions.ResumeLayout(false);
-            this.tlpGlobalOptions.PerformLayout();
-            this.tlpDpiScalingMode.ResumeLayout(false);
-            this.tlpDpiScalingMode.PerformLayout();
-            this.tlpGlobalOptionsTop.ResumeLayout(false);
-            this.tlpGlobalOptionsTop.PerformLayout();
-            this.grpDateFormat.ResumeLayout(false);
-            this.grpDateFormat.PerformLayout();
-            this.tlpDateFormat.ResumeLayout(false);
-            this.tlpDateFormat.PerformLayout();
-            this.grpTimeFormat.ResumeLayout(false);
-            this.grpTimeFormat.PerformLayout();
-            this.tlpTimeFormat.ResumeLayout(false);
-            this.tlpTimeFormat.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.imgSheetLanguageFlag)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.imgLanguageFlag)).EndInit();
-            this.tlpLoggingOptions.ResumeLayout(false);
-            this.tlpLoggingOptions.PerformLayout();
-            this.tlpCharacterRosterPath.ResumeLayout(false);
-            this.tlpCharacterRosterPath.PerformLayout();
-            this.tlpPDFAppPath.ResumeLayout(false);
-            this.tlpPDFAppPath.PerformLayout();
-            this.tlpMugshotCompression.ResumeLayout(false);
-            this.tlpMugshotCompression.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.nudMugshotCompressionQuality)).EndInit();
-            this.tlpColorMode.ResumeLayout(false);
-            this.tlpColorMode.PerformLayout();
-            this.flpEnablePlugins.ResumeLayout(false);
-            this.flpEnablePlugins.PerformLayout();
-            this.flpBrowserVersion.ResumeLayout(false);
-            this.flpBrowserVersion.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.nudBrowserVersion)).EndInit();
-            this.gpbEditSourcebookInfo.ResumeLayout(false);
-            this.tabCustomDataDirectories.ResumeLayout(false);
-            this.tabCustomDataDirectories.PerformLayout();
-            this.tlpOptionalRules.ResumeLayout(false);
-            this.tlpOptionalRules.PerformLayout();
-            this.gpbDirectoryInfo.ResumeLayout(false);
-            this.gpbDirectoryInfo.PerformLayout();
-            this.tlpDirectoryInfo.ResumeLayout(false);
-            this.tlpDirectoryInfo.PerformLayout();
-            this.gbpDirectoryInfoDependencies.ResumeLayout(false);
-            this.pnlDirectoryDependencies.ResumeLayout(false);
-            this.pnlDirectoryDependencies.PerformLayout();
-            this.gbpDirectoryInfoIncompatibilities.ResumeLayout(false);
-            this.pnlDirectoryIncompatibilities.ResumeLayout(false);
-            this.pnlDirectoryIncompatibilities.PerformLayout();
-            this.tlpDirectoryInfoLeft.ResumeLayout(false);
-            this.tlpDirectoryInfoLeft.PerformLayout();
-            this.gpbDirectoryAuthors.ResumeLayout(false);
-            this.pnlDirectoryAuthors.ResumeLayout(false);
-            this.pnlDirectoryAuthors.PerformLayout();
-            this.tlpOptionalRulesButtons.ResumeLayout(false);
-            this.tlpOptionalRulesButtons.PerformLayout();
-            this.tabGitHubIssues.ResumeLayout(false);
-            this.tabGitHubIssues.PerformLayout();
-            this.tabPlugins.ResumeLayout(false);
-            this.tabPlugins.PerformLayout();
-            this.tlpPlugins.ResumeLayout(false);
-            this.tlpPlugins.PerformLayout();
-            this.grpAvailablePlugins.ResumeLayout(false);
-            this.tlpButtons.ResumeLayout(false);
-            this.tlpButtons.PerformLayout();
-            this.ResumeLayout(false);
-            this.PerformLayout();
-
+            AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
+            AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            AutoScroll = true;
+            AutoSize = true;
+            ClientSize = new System.Drawing.Size(1475, 786);
+            Controls.Add(tlpOptions);
+            DoubleBuffered = true;
+            Icon = (System.Drawing.Icon)resources.GetObject("$this.Icon");
+            Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            MinimizeBox = false;
+            MinimumSize = new System.Drawing.Size(53, 52);
+            Name = "EditGlobalSettings";
+            Padding = new System.Windows.Forms.Padding(10);
+            ShowInTaskbar = false;
+            StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
+            Tag = "Title_Options";
+            Text = "Global Settings";
+            Load += EditGlobalSettings_Load;
+            tlpOptions.ResumeLayout(false);
+            tlpOptions.PerformLayout();
+            tabOptions.ResumeLayout(false);
+            tabGlobal.ResumeLayout(false);
+            tabGlobal.PerformLayout();
+            tlpGlobal.ResumeLayout(false);
+            tlpGlobal.PerformLayout();
+            grpSelectedSourcebook.ResumeLayout(false);
+            grpSelectedSourcebook.PerformLayout();
+            tlpSelectedSourcebook.ResumeLayout(false);
+            tlpSelectedSourcebook.PerformLayout();
+            flpPDFOffset.ResumeLayout(false);
+            flpPDFOffset.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)nudPDFOffset).EndInit();
+            tlpGlobalOptions.ResumeLayout(false);
+            tlpGlobalOptions.PerformLayout();
+            tlpDpiScalingMode.ResumeLayout(false);
+            tlpDpiScalingMode.PerformLayout();
+            tlpGlobalOptionsTop.ResumeLayout(false);
+            tlpGlobalOptionsTop.PerformLayout();
+            grpDateFormat.ResumeLayout(false);
+            grpDateFormat.PerformLayout();
+            tlpDateFormat.ResumeLayout(false);
+            tlpDateFormat.PerformLayout();
+            grpTimeFormat.ResumeLayout(false);
+            grpTimeFormat.PerformLayout();
+            tlpTimeFormat.ResumeLayout(false);
+            tlpTimeFormat.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)imgSheetLanguageFlag).EndInit();
+            ((System.ComponentModel.ISupportInitialize)imgLanguageFlag).EndInit();
+            tlpLoggingOptions.ResumeLayout(false);
+            tlpLoggingOptions.PerformLayout();
+            tlpCharacterRosterPath.ResumeLayout(false);
+            tlpCharacterRosterPath.PerformLayout();
+            tlpPDFAppPath.ResumeLayout(false);
+            tlpPDFAppPath.PerformLayout();
+            tlpMugshotCompression.ResumeLayout(false);
+            tlpColorMode.ResumeLayout(false);
+            tlpColorMode.PerformLayout();
+            flpEnablePlugins.ResumeLayout(false);
+            flpEnablePlugins.PerformLayout();
+            flpBrowserVersion.ResumeLayout(false);
+            flpBrowserVersion.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)nudBrowserVersion).EndInit();
+            gpbEditSourcebookInfo.ResumeLayout(false);
+            tabCustomDataDirectories.ResumeLayout(false);
+            tabCustomDataDirectories.PerformLayout();
+            tlpOptionalRules.ResumeLayout(false);
+            tlpOptionalRules.PerformLayout();
+            gpbDirectoryInfo.ResumeLayout(false);
+            gpbDirectoryInfo.PerformLayout();
+            tlpDirectoryInfo.ResumeLayout(false);
+            tlpDirectoryInfo.PerformLayout();
+            gbpDirectoryInfoDependencies.ResumeLayout(false);
+            pnlDirectoryDependencies.ResumeLayout(false);
+            pnlDirectoryDependencies.PerformLayout();
+            gbpDirectoryInfoIncompatibilities.ResumeLayout(false);
+            pnlDirectoryIncompatibilities.ResumeLayout(false);
+            pnlDirectoryIncompatibilities.PerformLayout();
+            tlpDirectoryInfoLeft.ResumeLayout(false);
+            tlpDirectoryInfoLeft.PerformLayout();
+            gpbDirectoryAuthors.ResumeLayout(false);
+            pnlDirectoryAuthors.ResumeLayout(false);
+            pnlDirectoryAuthors.PerformLayout();
+            tlpOptionalRulesButtons.ResumeLayout(false);
+            tlpOptionalRulesButtons.PerformLayout();
+            tabGitHubIssues.ResumeLayout(false);
+            tabGitHubIssues.PerformLayout();
+            tabPlugins.ResumeLayout(false);
+            tabPlugins.PerformLayout();
+            tlpPlugins.ResumeLayout(false);
+            tlpPlugins.PerformLayout();
+            grpAvailablePlugins.ResumeLayout(false);
+            tlpButtons.ResumeLayout(false);
+            tlpButtons.PerformLayout();
+            ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion
@@ -2519,8 +2559,6 @@ namespace Chummer
         private System.Windows.Forms.TableLayoutPanel tlpCharacterRosterPath;
         private ColorableCheckBox chkPrintToFileFirst;
         private System.Windows.Forms.TableLayoutPanel tlpMugshotCompression;
-        private System.Windows.Forms.Label lblMugshotCompressionQuality;
-        private NumericUpDownEx nudMugshotCompressionQuality;
         private ElasticComboBox cboMugshotCompression;
         private System.Windows.Forms.Label lblPDFAppPath;
         private System.Windows.Forms.TableLayoutPanel tlpGlobalOptionsTop;
