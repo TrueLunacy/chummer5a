@@ -136,27 +136,6 @@ namespace Chummer.Xml
             return false;
         }
 
-
-        /// <summary>
-        /// Like TryGetField for guids, but taking advantage of guid.TryParse. Allows for returning false if the guid is Empty.
-        /// </summary>
-        /// <param name="node">XPathNavigator node of the object.</param>
-        /// <param name="field">Field name of the InnerXML element we're looking for.</param>
-        /// <param name="read">Guid that will be returned.</param>
-        /// <param name="falseIfEmpty">Defaults to true. If false, will return an empty Guid if the returned Guid field is empty.</param>
-        public static bool TryGetFieldUninitialized(this XmlNode node, string field, ref Guid read, bool falseIfEmpty = true)
-        {
-            XmlNode objField = node.SelectSingleNode(field);
-            if (objField == null)
-                return false;
-            if (!Guid.TryParse(objField.InnerText, out Guid guidTmp))
-                return false;
-            if (guidTmp == Guid.Empty && falseIfEmpty)
-                return false;
-            read = guidTmp;
-            return true;
-        }
-
         /// <summary>
         /// Query the XmlNode for a given node with an id or name element. Includes ToUpperInvariant processing to handle uppercase ids.
         /// </summary>

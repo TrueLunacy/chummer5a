@@ -520,7 +520,8 @@ namespace Chummer.Xml
         /// </summary>
         /// <param name="strInput">String to check.</param>
         /// <param name="achrToCheck">Chars to check.</param>
-        /// <returns>True if string has a non-zero length and begins with any of the specified chars, false otherwise.</returns>        public static bool StartsWith(this string strInput, params char[] achrToCheck)
+        /// <returns>True if string has a non-zero length and begins with any of the specified chars, false otherwise.</returns>
+        public static bool StartsWith(this string strInput, params char[] achrToCheck)
         {
             if (string.IsNullOrEmpty(strInput) || achrToCheck == null)
                 return false;
@@ -564,7 +565,8 @@ namespace Chummer.Xml
         /// </summary>
         /// <param name="strInput">String to check.</param>
         /// <param name="astrToCheck">Strings to check.</param>
-        /// <returns>True if string has a non-zero length and ends with any of the specified chars, false otherwise.</returns>        public static bool EndsWith(this string strInput, params string[] astrToCheck)
+        /// <returns>True if string has a non-zero length and ends with any of the specified chars, false otherwise.</returns>
+        public static bool EndsWith(this string strInput, params string[] astrToCheck)
         {
             if (!string.IsNullOrEmpty(strInput) && astrToCheck != null)
             {
@@ -589,21 +591,35 @@ namespace Chummer.Xml
         /// <param name="strOldValue">Pattern for which to check and which to replace.</param>
         /// <param name="funcNewValueFactory">Function to generate the string that replaces the pattern in the base string.</param>
         /// <param name="eStringComparison">The StringComparison to use for finding and replacing items.</param>
-        /// <returns>The result of a string::Replace() method if a replacement is made, the original string otherwise.</returns>        public static string CheapReplace(this string strInput, string strOldValue, Func<string> funcNewValueFactory,
-                                          StringComparison eStringComparison = StringComparison.Ordinal)
+        /// <returns>The result of a string::Replace() method if a replacement is made, the original string otherwise.</returns>
+        public static string CheapReplace(this string strInput, string strOldValue, Func<string> funcNewValueFactory)
         {
             if (!string.IsNullOrEmpty(strInput) && funcNewValueFactory != null)
             {
-                if (eStringComparison == StringComparison.Ordinal)
+                if (true /*eStringComparison == StringComparison.Ordinal*/)
                 {
                     if (strInput.Contains(strOldValue))
                         return strInput.Replace(strOldValue, funcNewValueFactory.Invoke());
                 }
-                else if (strInput.IndexOf(strOldValue, eStringComparison) != -1)
-                    return strInput.Replace(strOldValue, funcNewValueFactory.Invoke(), eStringComparison);
+                /*else if (strInput.IndexOf(strOldValue, eStringComparison) != -1)
+                    return strInput.Replace(strOldValue, funcNewValueFactory.Invoke(), eStringComparison);*/
             }
 
             return strInput;
+        }
+
+        /// <summary>
+        /// Shim method
+        /// </summary>
+        /// <param name="strInput">Base string in which the replacing takes place.</param>
+        /// <param name="strOldValue">Pattern for which to check and which to replace.</param>
+        /// <param name="funcNewValueFactory">Function to generate the string that replaces the pattern in the base string.</param>
+        /// <param name="eStringComparison">The StringComparison to use for finding and replacing items.</param>
+        /// <returns>The result of a string::Replace() method if a replacement is made, the original string otherwise.</returns>
+        [Obsolete]
+        public static string CheapReplace(this string strInput, string strOldValue, Func<string> funcNewValueFactory, StringComparison comparision)
+        {
+            return strInput.Replace(strOldValue, funcNewValueFactory(), comparision);
         }
 
         /// <summary>
@@ -616,14 +632,13 @@ namespace Chummer.Xml
         /// <param name="funcNewValueFactory">Function to generate the string that replaces the pattern in the base string.</param>
         /// <param name="eStringComparison">The StringComparison to use for finding and replacing items.</param>
         /// <param name="token">Cancellation token to listen to.</param>
-        /// <returns>The result of a string::Replace() method if a replacement is made, the original string otherwise.</returns>        public static async Task<string> CheapReplaceAsync(this string strInput, string strOldValue,
+        /// <returns>The result of a string::Replace() method if a replacement is made, the original string otherwise.</returns>
+        public static async Task<string> CheapReplaceAsync(this string strInput, string strOldValue,
                                                            Func<string> funcNewValueFactory,
-                                                           StringComparison eStringComparison
-                                                               = StringComparison.Ordinal,
                                                            CancellationToken token = default)
         {
             var newvalue = funcNewValueFactory();
-            return strInput.Replace(strOldValue, newvalue, eStringComparison);
+            return strInput.Replace(strOldValue, newvalue);
         }
 
         /// <summary>
@@ -636,15 +651,13 @@ namespace Chummer.Xml
         /// <param name="funcNewValueFactory">Function to generate the string that replaces the pattern in the base string.</param>
         /// <param name="eStringComparison">The StringComparison to use for finding and replacing items.</param>
         /// <param name="token">Cancellation token to listen to.</param>
-        /// <returns>The result of a string::Replace() method if a replacement is made, the original string otherwise.</returns>        public static async Task<string> CheapReplaceAsync(this Task<string> strInputTask, string strOldValue,
+        /// <returns>The result of a string::Replace() method if a replacement is made, the original string otherwise.</returns>
+        public static async Task<string> CheapReplaceAsync(this Task<string> strInputTask, string strOldValue,
                                                            Func<string> funcNewValueFactory,
-                                                           StringComparison eStringComparison
-                                                               = StringComparison.Ordinal,
                                                            CancellationToken token = default)
         {
             token.ThrowIfCancellationRequested();
-            return await CheapReplaceAsync(await strInputTask.ConfigureAwait(false), strOldValue, funcNewValueFactory,
-                                           eStringComparison, token).ConfigureAwait(false);
+            return await CheapReplaceAsync(await strInputTask.ConfigureAwait(false), strOldValue, funcNewValueFactory).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -657,7 +670,8 @@ namespace Chummer.Xml
         /// <param name="funcNewValueFactory">Function to generate the string that replaces the pattern in the base string.</param>
         /// <param name="eStringComparison">The StringComparison to use for finding and replacing items.</param>
         /// <param name="token">Cancellation token to listen to.</param>
-        /// <returns>The result of a string::Replace() method if a replacement is made, the original string otherwise.</returns>        public static async Task<string> CheapReplaceAsync(this string strInput, string strOldValue,
+        /// <returns>The result of a string::Replace() method if a replacement is made, the original string otherwise.</returns>
+        public static async Task<string> CheapReplaceAsync(this string strInput, string strOldValue,
                                                            Func<Task<string>> funcNewValueFactory,
                                                            StringComparison eStringComparison
                                                                = StringComparison.Ordinal,
@@ -698,7 +712,8 @@ namespace Chummer.Xml
         /// <param name="funcNewValueFactory">Function to generate the string that replaces the pattern in the base string.</param>
         /// <param name="eStringComparison">The StringComparison to use for finding and replacing items.</param>
         /// <param name="token">Cancellation token to listen to.</param>
-        /// <returns>The result of a string::Replace() method if a replacement is made, the original string otherwise.</returns>        public static async Task<string> CheapReplaceAsync(this Task<string> strInputTask, string strOldValue,
+        /// <returns>The result of a string::Replace() method if a replacement is made, the original string otherwise.</returns>
+        public static async Task<string> CheapReplaceAsync(this Task<string> strInputTask, string strOldValue,
                                                            Func<Task<string>> funcNewValueFactory,
                                                            StringComparison eStringComparison
                                                                = StringComparison.Ordinal,
@@ -713,7 +728,8 @@ namespace Chummer.Xml
         /// Tests whether a given string is a Guid. Returns false if not.
         /// </summary>
         /// <param name="strGuid">String to test.</param>
-        /// <returns>True if string is a Guid, false if not.</returns>        public static bool IsGuid(this string strGuid)
+        /// <returns>True if string is a Guid, false if not.</returns>
+        public static bool IsGuid(this string strGuid)
         {
             return Guid.TryParse(strGuid, out Guid _);
         }

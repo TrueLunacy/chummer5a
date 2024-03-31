@@ -1538,9 +1538,10 @@ namespace Chummer.Backend.Equipment
                                          () => Rating.ToString(GlobalSettings.InvariantCultureInfo));
                     sbdCost.CheapReplace(strCostExpr, "Weapon Cost",
                                          () => (Parent?.OwnCost ?? 0.0m).ToString(GlobalSettings.InvariantCultureInfo));
-                    sbdCost.CheapReplace(strCostExpr, "Weapon Total Cost",
+#warning todo: commented out until Weapon Total Cost is fixed in mainline
+                    /*sbdCost.CheapReplace(strCostExpr, "Weapon Total Cost",
                                          () => (Parent?.MultipliableCost(this) ?? 0.0m).ToString(
-                                             GlobalSettings.InvariantCultureInfo));
+                                             GlobalSettings.InvariantCultureInfo));*/
 
                     _objCharacter.AttributeSection.ProcessAttributesInXPath(sbdCost, strCostExpr);
 
@@ -1596,11 +1597,12 @@ namespace Chummer.Backend.Equipment
                                                     ? await Parent.GetOwnCostAsync(token).ConfigureAwait(false)
                                                     : 0.0m).ToString(GlobalSettings.InvariantCultureInfo),
                                                 token: token).ConfigureAwait(false);
-                await sbdCost.CheapReplaceAsync(strCostExpr, "Weapon Total Cost",
+#warning todo: commented out until Weapon Total Cost is fixed in mainline
+                /*await sbdCost.CheapReplaceAsync(strCostExpr, "Weapon Total Cost",
                                                 async () => (Parent != null
                                                     ? await Parent.MultipliableCostAsync(this, token).ConfigureAwait(false)
                                                     : 0.0m).ToString(
-                                                    GlobalSettings.InvariantCultureInfo), token: token).ConfigureAwait(false);
+                                                    GlobalSettings.InvariantCultureInfo), token: token).ConfigureAwait(false);*/
 
                 await _objCharacter.AttributeSection.ProcessAttributesInXPathAsync(sbdCost, strCostExpr, token: token).ConfigureAwait(false);
 

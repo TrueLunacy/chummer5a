@@ -19,15 +19,15 @@
 
 using System;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
+using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Chummer.Annotations;
 
-namespace Chummer
+namespace Chummer.Xml
 {
-    internal static class StringBuilderExtensions
+    public static class StringBuilderExtensions
     {
         /// <summary>
         /// Syntactic sugar for appending a character followed by a new line.
@@ -47,12 +47,10 @@ namespace Chummer
         /// <param name="sbdInput">Base StringBuilder in which the replacing takes place. Note that ToString() will be applied to this as part of the method, so it may not be as cheap.</param>
         /// <param name="strOldValue">Pattern for which to check and which to replace.</param>
         /// <param name="funcNewValueFactory">Function to generate the string that replaces the pattern in the base string.</param>
-        /// <param name="eStringComparison">The StringComparison to use for finding and replacing items.</param>
         /// <returns>The result of a StringBuilder::Replace() method if a replacement is made, the original string otherwise.</returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static StringBuilder CheapReplace([NotNull] this StringBuilder sbdInput, string strOldValue, Func<string> funcNewValueFactory, StringComparison eStringComparison = StringComparison.Ordinal)
+        public static StringBuilder CheapReplace([NotNull] this StringBuilder sbdInput, string strOldValue, Func<string> funcNewValueFactory)
         {
-            return sbdInput.CheapReplace(sbdInput.ToString(), strOldValue, funcNewValueFactory, eStringComparison);
+            return sbdInput.CheapReplace(sbdInput.ToString(), strOldValue, funcNewValueFactory);
         }
 
         /// <summary>
@@ -60,30 +58,13 @@ namespace Chummer
         /// If the string does not contain any instances of the pattern to replace, then the expensive method to generate a replacement is not run.
         /// </summary>
         /// <param name="sbdInput">Base StringBuilder in which the replacing takes place.</param>
-        /// <param name="strOriginal">Original string around which StringBuilder was created. Set this so that StringBuilder::ToString() doesn't need to be called.</param>
+        /// <param name="strOriginal">No longer used.</param>
         /// <param name="strOldValue">Pattern for which to check and which to replace.</param>
         /// <param name="funcNewValueFactory">Function to generate the string that replaces the pattern in the base string.</param>
-        /// <param name="eStringComparison">The StringComparison to use for finding and replacing items.</param>
         /// <returns>The result of a StringBuilder::Replace() method if a replacement is made, the original string otherwise.</returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static StringBuilder CheapReplace([NotNull] this StringBuilder sbdInput, string strOriginal, string strOldValue, Func<string> funcNewValueFactory, StringComparison eStringComparison = StringComparison.Ordinal)
+        public static StringBuilder CheapReplace([NotNull] this StringBuilder sbdInput, string strOriginal, string strOldValue, Func<string> funcNewValueFactory)
         {
-            if (sbdInput.Length > 0 && !string.IsNullOrEmpty(strOriginal) && funcNewValueFactory != null)
-            {
-                if (eStringComparison == StringComparison.Ordinal)
-                {
-                    if (strOriginal.Contains(strOldValue))
-                        sbdInput.Replace(strOldValue, funcNewValueFactory.Invoke());
-                }
-                else if (strOriginal.IndexOf(strOldValue, eStringComparison) != -1)
-                {
-                    string strOldStringBuilderValue = sbdInput.ToString();
-                    sbdInput.Clear();
-                    sbdInput.Append(strOldStringBuilderValue.Replace(strOldValue, funcNewValueFactory.Invoke(), eStringComparison));
-                }
-            }
-
-            return sbdInput;
+            return sbdInput.Replace(strOldValue, funcNewValueFactory());
         }
 
         /// <summary>
@@ -94,13 +75,11 @@ namespace Chummer
         /// <param name="sbdInput">Base StringBuilder in which the replacing takes place. Note that ToString() will be applied to this as part of the method, so it may not be as cheap.</param>
         /// <param name="strOldValue">Pattern for which to check and which to replace.</param>
         /// <param name="funcNewValueFactory">Function to generate the string that replaces the pattern in the base string.</param>
-        /// <param name="eStringComparison">The StringComparison to use for finding and replacing items.</param>
         /// <param name="token">Cancellation token to listen to.</param>
         /// <returns>The result of a StringBuilder::Replace() method if a replacement is made, the original string otherwise.</returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Task<StringBuilder> CheapReplaceAsync([NotNull] this StringBuilder sbdInput, string strOldValue, Func<string> funcNewValueFactory, StringComparison eStringComparison = StringComparison.Ordinal, CancellationToken token = default)
+        public static Task<StringBuilder> CheapReplaceAsync([NotNull] this StringBuilder sbdInput, string strOldValue, Func<string> funcNewValueFactory, CancellationToken token = default)
         {
-            return sbdInput.CheapReplaceAsync(sbdInput.ToString(), strOldValue, funcNewValueFactory, eStringComparison, token: token);
+            return sbdInput.CheapReplaceAsync(sbdInput.ToString(), strOldValue, funcNewValueFactory, token: token);
         }
 
         /// <summary>
@@ -108,59 +87,16 @@ namespace Chummer
         /// If the string does not contain any instances of the pattern to replace, then the expensive method to generate a replacement is not run.
         /// </summary>
         /// <param name="sbdInput">Base StringBuilder in which the replacing takes place.</param>
-        /// <param name="strOriginal">Original string around which StringBuilder was created. Set this so that StringBuilder::ToString() doesn't need to be called.</param>
+        /// <param name="strOriginal">No longer used.</param>
         /// <param name="strOldValue">Pattern for which to check and which to replace.</param>
         /// <param name="funcNewValueFactory">Function to generate the string that replaces the pattern in the base string.</param>
         /// <param name="eStringComparison">The StringComparison to use for finding and replacing items.</param>
         /// <param name="token">Cancellation token to listen to.</param>
         /// <returns>The result of a StringBuilder::Replace() method if a replacement is made, the original string otherwise.</returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static async Task<StringBuilder> CheapReplaceAsync([NotNull] this StringBuilder sbdInput, string strOriginal, string strOldValue, Func<string> funcNewValueFactory, StringComparison eStringComparison = StringComparison.Ordinal, CancellationToken token = default)
+        public static async Task<StringBuilder> CheapReplaceAsync([NotNull] this StringBuilder sbdInput, string strOriginal, string strOldValue,
+            Func<string> funcNewValueFactory, CancellationToken token = default)
         {
-            token.ThrowIfCancellationRequested();
-            if (sbdInput.Length > 0 && !string.IsNullOrEmpty(strOriginal) && funcNewValueFactory != null)
-            {
-                token.ThrowIfCancellationRequested();
-                if (eStringComparison == StringComparison.Ordinal)
-                {
-                    if (strOriginal.Contains(strOldValue))
-                    {
-                        token.ThrowIfCancellationRequested();
-                        string strFactoryResult = string.Empty;
-                        using (CancellationTokenTaskSource<string> objCancellationTokenTaskSource
-                               = new CancellationTokenTaskSource<string>(token))
-                        {
-                            await Task.WhenAny(Task.Factory.FromAsync(funcNewValueFactory.BeginInvoke,
-                                                                      x => strFactoryResult
-                                                                          = funcNewValueFactory.EndInvoke(x),
-                                                                      null), objCancellationTokenTaskSource.Task).ConfigureAwait(false);
-                        }
-                        token.ThrowIfCancellationRequested();
-                        sbdInput.Replace(strOldValue, strFactoryResult);
-                    }
-                }
-                else if (strOriginal.IndexOf(strOldValue, eStringComparison) != -1)
-                {
-                    token.ThrowIfCancellationRequested();
-                    string strFactoryResult = string.Empty;
-                    string strOldStringBuilderValue;
-                    using (CancellationTokenTaskSource<string> objCancellationTokenTaskSource
-                           = new CancellationTokenTaskSource<string>(token))
-                    {
-                        Task<string> tskGetValue = Task.Factory.FromAsync(funcNewValueFactory.BeginInvoke,
-                                                                          x => strFactoryResult
-                                                                              = funcNewValueFactory.EndInvoke(x), null);
-                        strOldStringBuilderValue = sbdInput.ToString();
-                        sbdInput.Clear();
-                        await Task.WhenAny(tskGetValue, objCancellationTokenTaskSource.Task).ConfigureAwait(false);
-                    }
-                    token.ThrowIfCancellationRequested();
-                    sbdInput.Append(
-                            strOldStringBuilderValue.Replace(strOldValue, strFactoryResult, eStringComparison));
-                }
-            }
-
-            return sbdInput;
+            return sbdInput.Replace(strOldValue, funcNewValueFactory());
         }
 
         /// <summary>
@@ -168,52 +104,16 @@ namespace Chummer
         /// If the string does not contain any instances of the pattern to replace, then the expensive method to generate a replacement is not run.
         /// </summary>
         /// <param name="sbdInput">Base StringBuilder in which the replacing takes place.</param>
-        /// <param name="strOriginal">Original string around which StringBuilder was created. Set this so that StringBuilder::ToString() doesn't need to be called.</param>
+        /// <param name="strOriginal">No longer used.</param>
         /// <param name="strOldValue">Pattern for which to check and which to replace.</param>
         /// <param name="funcNewValueFactory">Function to generate the string that replaces the pattern in the base string.</param>
         /// <param name="eStringComparison">The StringComparison to use for finding and replacing items.</param>
         /// <param name="token">Cancellation token to listen to.</param>
         /// <returns>The result of a StringBuilder::Replace() method if a replacement is made, the original string otherwise.</returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static async Task<StringBuilder> CheapReplaceAsync([NotNull] this StringBuilder sbdInput, string strOriginal, string strOldValue, Func<Task<string>> funcNewValueFactory, StringComparison eStringComparison = StringComparison.Ordinal, CancellationToken token = default)
+        public static async Task<StringBuilder> CheapReplaceAsync([NotNull] this StringBuilder sbdInput, string strOriginal, string strOldValue,
+            Func<Task<string>> funcNewValueFactory, CancellationToken token = default)
         {
-            token.ThrowIfCancellationRequested();
-            if (sbdInput.Length > 0 && !string.IsNullOrEmpty(strOriginal) && funcNewValueFactory != null)
-            {
-                token.ThrowIfCancellationRequested();
-                if (eStringComparison == StringComparison.Ordinal)
-                {
-                    if (strOriginal.Contains(strOldValue))
-                    {
-                        token.ThrowIfCancellationRequested();
-                        Task<string> tskReplaceTask = funcNewValueFactory.Invoke();
-                        using (CancellationTokenTaskSource<string> objCancellationTokenTaskSource
-                               = new CancellationTokenTaskSource<string>(token))
-                        {
-                            await Task.WhenAny(tskReplaceTask, objCancellationTokenTaskSource.Task).ConfigureAwait(false);
-                        }
-                        token.ThrowIfCancellationRequested();
-                        sbdInput.Replace(strOldValue, await tskReplaceTask.ConfigureAwait(false));
-                    }
-                }
-                else if (strOriginal.IndexOf(strOldValue, eStringComparison) != -1)
-                {
-                    token.ThrowIfCancellationRequested();
-                    Task<string> tskReplaceTask = funcNewValueFactory.Invoke();
-                    string strOldStringBuilderValue = sbdInput.ToString();
-                    sbdInput.Clear();
-                    token.ThrowIfCancellationRequested();
-                    using (CancellationTokenTaskSource<string> objCancellationTokenTaskSource
-                           = new CancellationTokenTaskSource<string>(token))
-                    {
-                        await Task.WhenAny(tskReplaceTask, objCancellationTokenTaskSource.Task).ConfigureAwait(false);
-                    }
-                    token.ThrowIfCancellationRequested();
-                    sbdInput.Append(strOldStringBuilderValue.Replace(strOldValue, await tskReplaceTask.ConfigureAwait(false), eStringComparison));
-                }
-            }
-
-            return sbdInput;
+            return sbdInput.Replace(strOldValue, await funcNewValueFactory());
         }
 
         /// <summary>
@@ -224,7 +124,6 @@ namespace Chummer
         /// <param name="strSeparator">The string to use as a separator. <paramref name="strSeparator" /> is included in the returned string only if value has more than one element.</param>
         /// <param name="lstValues">A collection that contains the objects to append.</param>
         /// <returns><paramref name="sbdInput" /> with values appended.</returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static StringBuilder AppendJoin<T>([NotNull] this StringBuilder sbdInput, string strSeparator, IEnumerable<T> lstValues)
         {
             if (lstValues == null)
@@ -247,7 +146,6 @@ namespace Chummer
         /// <param name="strSeparator">The string to use as a separator. <paramref name="strSeparator" /> is included in the returned string only if value has more than one element.</param>
         /// <param name="lstValues">A collection that contains the strings to append.</param>
         /// <returns><paramref name="sbdInput" /> with values appended.</returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static StringBuilder AppendJoin([NotNull] this StringBuilder sbdInput, string strSeparator, IEnumerable<string> lstValues)
         {
             if (lstValues == null)
@@ -272,7 +170,6 @@ namespace Chummer
         /// <param name="intStartIndex">The first element in <paramref name="astrValues" /> to use.</param>
         /// <param name="intCount">The number of elements of <paramref name="astrValues" /> to use.</param>
         /// <returns><paramref name="sbdInput" /> with values appended.</returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static StringBuilder AppendJoin([NotNull] this StringBuilder sbdInput, string strSeparator, string[] astrValues, int intStartIndex, int intCount)
         {
             if (astrValues == null)
@@ -299,7 +196,6 @@ namespace Chummer
         /// <param name="strSeparator">The string to use as a separator. <paramref name="strSeparator" /> is included in the returned string only if value has more than one element.</param>
         /// <param name="astrValues">An array that contains the string to append.</param>
         /// <returns><paramref name="sbdInput" /> with values appended.</returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static StringBuilder AppendJoin([NotNull] this StringBuilder sbdInput, string strSeparator, params string[] astrValues)
         {
             if (astrValues == null)
@@ -320,7 +216,6 @@ namespace Chummer
         /// <param name="strSeparator">The string to use as a separator. <paramref name="strSeparator" /> is included in the returned string only if value has more than one element.</param>
         /// <param name="aobjValues">An array that contains the objects to append.</param>
         /// <returns><paramref name="sbdInput" /> with values appended.</returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static StringBuilder AppendJoin([NotNull] this StringBuilder sbdInput, string strSeparator, params object[] aobjValues)
         {
             if (aobjValues == null)
@@ -342,7 +237,6 @@ namespace Chummer
         /// <param name="chrSeparator">The char to use as a separator. <paramref name="chrSeparator" /> is included in the returned string only if value has more than one element.</param>
         /// <param name="lstValues">A collection that contains the objects to append.</param>
         /// <returns><paramref name="sbdInput" /> with values appended.</returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static StringBuilder AppendJoin<T>([NotNull] this StringBuilder sbdInput, char chrSeparator, IEnumerable<T> lstValues)
         {
             if (lstValues == null)
@@ -365,7 +259,6 @@ namespace Chummer
         /// <param name="chrSeparator">The char to use as a separator. <paramref name="chrSeparator" /> is included in the returned string only if value has more than one element.</param>
         /// <param name="lstValues">A collection that contains the strings to append.</param>
         /// <returns><paramref name="sbdInput" /> with values appended.</returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static StringBuilder AppendJoin([NotNull] this StringBuilder sbdInput, char chrSeparator, IEnumerable<string> lstValues)
         {
             if (lstValues == null)
@@ -390,7 +283,6 @@ namespace Chummer
         /// <param name="intStartIndex">The first element in <paramref name="astrValues" /> to use.</param>
         /// <param name="intCount">The number of elements of <paramref name="astrValues" /> to use.</param>
         /// <returns><paramref name="sbdInput" /> with values appended.</returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static StringBuilder AppendJoin([NotNull] this StringBuilder sbdInput, char chrSeparator, string[] astrValues, int intStartIndex, int intCount)
         {
             if (astrValues == null)
@@ -418,7 +310,6 @@ namespace Chummer
         /// <param name="chrSeparator">The char to use as a separator. <paramref name="chrSeparator" /> is included in the returned string only if value has more than one element.</param>
         /// <param name="astrValues">An array that contains the string to append.</param>
         /// <returns><paramref name="sbdInput" /> with values appended.</returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static StringBuilder AppendJoin([NotNull] this StringBuilder sbdInput, char chrSeparator, params string[] astrValues)
         {
             if (astrValues == null)
@@ -440,7 +331,6 @@ namespace Chummer
         /// <param name="chrSeparator">The char to use as a separator. <paramref name="chrSeparator" /> is included in the returned string only if value has more than one element.</param>
         /// <param name="aobjValues">An array that contains the objects to append.</param>
         /// <returns><paramref name="sbdInput" /> with values appended.</returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static StringBuilder AppendJoin([NotNull] this StringBuilder sbdInput, char chrSeparator, params object[] aobjValues)
         {
             if (aobjValues == null)
@@ -463,7 +353,6 @@ namespace Chummer
         /// <param name="lstValues">A collection that contains the strings to append.</param>
         /// <param name="token">Cancellation token to listen to.</param>
         /// <returns><paramref name="sbdInput" /> with values appended.</returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static async Task<StringBuilder> AppendJoinAsync<T>([NotNull] this StringBuilder sbdInput, string strSeparator, IEnumerable<Task<T>> lstValues, CancellationToken token = default)
         {
             token.ThrowIfCancellationRequested();
@@ -489,7 +378,6 @@ namespace Chummer
         /// <param name="lstValues">A collection that contains the strings to append.</param>
         /// <param name="token">Cancellation token to listen to.</param>
         /// <returns><paramref name="sbdInput" /> with values appended.</returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static async Task<StringBuilder> AppendJoinAsync([NotNull] this StringBuilder sbdInput, string strSeparator, IEnumerable<Task<string>> lstValues, CancellationToken token = default)
         {
             token.ThrowIfCancellationRequested();
@@ -517,7 +405,6 @@ namespace Chummer
         /// <param name="intCount">The number of elements of <paramref name="astrValues" /> to use.</param>
         /// <param name="token">Cancellation token to listen to.</param>
         /// <returns><paramref name="sbdInput" /> with values appended.</returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static async Task<StringBuilder> AppendJoinAsync([NotNull] this StringBuilder sbdInput, string strSeparator, Task<string>[] astrValues, int intStartIndex, int intCount, CancellationToken token = default)
         {
             token.ThrowIfCancellationRequested();
@@ -547,7 +434,6 @@ namespace Chummer
         /// <param name="astrValues">An array that contains the string to append.</param>
         /// <param name="token">Cancellation token to listen to.</param>
         /// <returns><paramref name="sbdInput" /> with values appended.</returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static async Task<StringBuilder> AppendJoinAsync([NotNull] this StringBuilder sbdInput, string strSeparator, CancellationToken token = default, params Task<string>[] astrValues)
         {
             token.ThrowIfCancellationRequested();
@@ -571,7 +457,6 @@ namespace Chummer
         /// <param name="aobjValues">An array that contains the objects to append.</param>
         /// <param name="token">Cancellation token to listen to.</param>
         /// <returns><paramref name="sbdInput" /> with values appended.</returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static async Task<StringBuilder> AppendJoinAsync([NotNull] this StringBuilder sbdInput, string strSeparator, CancellationToken token = default, params Task<object>[] aobjValues)
         {
             token.ThrowIfCancellationRequested();
@@ -596,7 +481,6 @@ namespace Chummer
         /// <param name="lstValues">A collection that contains the objects to append.</param>
         /// <param name="token">Cancellation token to listen to.</param>
         /// <returns><paramref name="sbdInput" /> with values appended.</returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static async Task<StringBuilder> AppendJoinAsync<T>([NotNull] this StringBuilder sbdInput, char chrSeparator, IEnumerable<Task<T>> lstValues, CancellationToken token = default)
         {
             token.ThrowIfCancellationRequested();
@@ -622,7 +506,6 @@ namespace Chummer
         /// <param name="lstValues">A collection that contains the strings to append.</param>
         /// <param name="token">Cancellation token to listen to.</param>
         /// <returns><paramref name="sbdInput" /> with values appended.</returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static async Task<StringBuilder> AppendJoinAsync([NotNull] this StringBuilder sbdInput, char chrSeparator, IEnumerable<Task<string>> lstValues, CancellationToken token = default)
         {
             token.ThrowIfCancellationRequested();
@@ -650,7 +533,6 @@ namespace Chummer
         /// <param name="intCount">The number of elements of <paramref name="astrValues" /> to use.</param>
         /// <param name="token">Cancellation token to listen to.</param>
         /// <returns><paramref name="sbdInput" /> with values appended.</returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static async Task<StringBuilder> AppendJoinAsync([NotNull] this StringBuilder sbdInput, char chrSeparator, Task<string>[] astrValues, int intStartIndex, int intCount, CancellationToken token = default)
         {
             token.ThrowIfCancellationRequested();
@@ -680,7 +562,6 @@ namespace Chummer
         /// <param name="astrValues">An array that contains the string to append.</param>
         /// <param name="token">Cancellation token to listen to.</param>
         /// <returns><paramref name="sbdInput" /> with values appended.</returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static async Task<StringBuilder> AppendJoinAsync([NotNull] this StringBuilder sbdInput, char chrSeparator, CancellationToken token = default, params Task<string>[] astrValues)
         {
             token.ThrowIfCancellationRequested();
@@ -704,7 +585,6 @@ namespace Chummer
         /// <param name="aobjValues">An array that contains the objects to append.</param>
         /// <param name="token">Cancellation token to listen to.</param>
         /// <returns><paramref name="sbdInput" /> with values appended.</returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static async Task<StringBuilder> AppendJoinAsync([NotNull] this StringBuilder sbdInput, char chrSeparator, CancellationToken token = default, params Task<object>[] aobjValues)
         {
             token.ThrowIfCancellationRequested();
