@@ -301,9 +301,7 @@ namespace Chummer.Xml
 
         /// <summary>
         /// Like TryGetField for strings, only with as little overhead as possible.
-        /// </summary>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool TryGetStringFieldQuickly(this XPathNavigator node, string field, [NotNullWhen(true)] ref string? read)
+        /// </summary>        public static bool TryGetStringFieldQuickly(this XPathNavigator node, string field, [NotNullWhen(true)] ref string? read)
         {
             if (node == null)
             {
@@ -325,9 +323,7 @@ namespace Chummer.Xml
 
         /// <summary>
         /// Like TryGetField for strings, only with as little overhead as possible and with an extra line ending normalization thrown in.
-        /// </summary>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool TryGetMultiLineStringFieldQuickly(this XPathNavigator node, string field, ref string read)
+        /// </summary>        public static bool TryGetMultiLineStringFieldQuickly(this XPathNavigator node, string field, ref string read)
         {
             string? strReturn = null;
             if (node.TryGetStringFieldQuickly(field, ref strReturn))
@@ -340,9 +336,7 @@ namespace Chummer.Xml
 
         /// <summary>
         /// Like TryGetField for ints, but taking advantage of int.TryParse... boo, no TryParse interface! :(
-        /// </summary>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool TryGetInt32FieldQuickly(this XPathNavigator node, string field, ref int read, IFormatProvider objCulture = null)
+        /// </summary>        public static bool TryGetInt32FieldQuickly(this XPathNavigator node, string field, ref int read, IFormatProvider objCulture = null)
         {
             if (node == null)
                 return false;
@@ -362,9 +356,7 @@ namespace Chummer.Xml
 
         /// <summary>
         /// Like TryGetField for bools, but taking advantage of bool.TryParse... boo, no TryParse interface! :(
-        /// </summary>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool TryGetBoolFieldQuickly(this XPathNavigator node, string field, ref bool read)
+        /// </summary>        public static bool TryGetBoolFieldQuickly(this XPathNavigator node, string field, ref bool read)
         {
             if (node == null)
                 return false;
@@ -379,9 +371,7 @@ namespace Chummer.Xml
 
         /// <summary>
         /// Like TryGetField for decimals, but taking advantage of decimal.TryParse... boo, no TryParse interface! :(
-        /// </summary>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool TryGetDecFieldQuickly(this XPathNavigator node, string field, ref decimal read, IFormatProvider objCulture = null)
+        /// </summary>        public static bool TryGetDecFieldQuickly(this XPathNavigator node, string field, ref decimal read, IFormatProvider objCulture = null)
         {
             if (node == null)
                 return false;
@@ -401,9 +391,7 @@ namespace Chummer.Xml
 
         /// <summary>
         /// Like TryGetField for doubles, but taking advantage of double.TryParse... boo, no TryParse interface! :(
-        /// </summary>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool TryGetDoubleFieldQuickly(this XPathNavigator node, string field, ref double read, IFormatProvider objCulture = null)
+        /// </summary>        public static bool TryGetDoubleFieldQuickly(this XPathNavigator node, string field, ref double read, IFormatProvider objCulture = null)
         {
             if (node == null)
                 return false;
@@ -423,9 +411,7 @@ namespace Chummer.Xml
 
         /// <summary>
         /// Like TryGetField for float, but taking advantage of float.TryParse... boo, no TryParse interface! :(
-        /// </summary>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool TryGetFloatFieldQuickly(this XPathNavigator node, string field, ref float read, IFormatProvider objCulture = null)
+        /// </summary>        public static bool TryGetFloatFieldQuickly(this XPathNavigator node, string field, ref float read, IFormatProvider objCulture = null)
         {
             if (node == null)
                 return false;
@@ -449,9 +435,7 @@ namespace Chummer.Xml
         /// <param name="node">XPathNavigator node of the object.</param>
         /// <param name="field">Field name of the InnerXML element we're looking for.</param>
         /// <param name="read">Guid that will be returned.</param>
-        /// <param name="falseIfEmpty">Defaults to true. If false, will return an empty Guid if the returned Guid field is empty.</param>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool TryGetGuidFieldQuickly(this XPathNavigator node, string field, ref Guid read, bool falseIfEmpty = true)
+        /// <param name="falseIfEmpty">Defaults to true. If false, will return an empty Guid if the returned Guid field is empty.</param>        public static bool TryGetGuidFieldQuickly(this XPathNavigator node, string field, ref Guid read, bool falseIfEmpty = true)
         {
             if (node == null)
                 return false;
@@ -472,9 +456,7 @@ namespace Chummer.Xml
         /// Determine whether an XPathNavigator with the specified name exists within an XPathNavigator.
         /// </summary>
         /// <param name="xmlNode">XPathNavigator to examine.</param>
-        /// <param name="strName">Name of the XPathNavigator to look for.</param>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool NodeExists(this XPathNavigator xmlNode, string strName)
+        /// <param name="strName">Name of the XPathNavigator to look for.</param>        public static bool NodeExists(this XPathNavigator xmlNode, string strName)
         {
             if (string.IsNullOrEmpty(strName) || xmlNode == null)
                 return false;
@@ -489,9 +471,7 @@ namespace Chummer.Xml
         /// <param name="strPath">Name of the XPathNavigator to look for.</param>
         /// <param name="strId">Element to search for. If it parses as a guid or f it fails to parse as a guid AND blnIdIsGuid is set, it will still search for id, otherwise it will search for a node with a name element that matches.</param>
         /// <param name="strExtraXPath">'Extra' value to append to the search.</param>
-        /// <param name="blnIdIsGuid">Whether to evaluate the ID as a GUID or a string. Use false to pass strId as a string.</param>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static XPathNavigator TryGetNodeByNameOrId(this XPathNavigator node, string strPath, string strId, string strExtraXPath = "", bool blnIdIsGuid = true)
+        /// <param name="blnIdIsGuid">Whether to evaluate the ID as a GUID or a string. Use false to pass strId as a string.</param>        public static XPathNavigator TryGetNodeByNameOrId(this XPathNavigator node, string strPath, string strId, string strExtraXPath = "", bool blnIdIsGuid = true)
         {
             if (node == null || string.IsNullOrEmpty(strPath) || string.IsNullOrEmpty(strId))
                 return null;
@@ -519,9 +499,7 @@ namespace Chummer.Xml
 
         /// <summary>
         /// Query the XPathNavigator for a given node with an id. Includes ToUpperInvariant processing to handle uppercase ids.
-        /// </summary>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static XPathNavigator TryGetNodeById(this XPathNavigator node, string strPath, Guid guidId, string strExtraXPath = "")
+        /// </summary>        public static XPathNavigator TryGetNodeById(this XPathNavigator node, string strPath, Guid guidId, string strExtraXPath = "")
         {
             if (node == null || string.IsNullOrEmpty(strPath))
                 return null;
@@ -542,9 +520,7 @@ namespace Chummer.Xml
         /// Create a new XmlNode in an XmlDocument based on the contents of an XPathNavigator
         /// </summary>
         /// <param name="xmlNode">XPathNavigator to examine.</param>
-        /// <param name="xmlParentDocument">Document to house the XmlNode</param>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static XmlNode ToXmlNode(this XPathNavigator xmlNode, XmlDocument xmlParentDocument)
+        /// <param name="xmlParentDocument">Document to house the XmlNode</param>        public static XmlNode ToXmlNode(this XPathNavigator xmlNode, XmlDocument xmlParentDocument)
         {
             if (xmlNode == null || xmlParentDocument == null)
                 return null;

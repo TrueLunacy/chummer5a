@@ -197,45 +197,6 @@ namespace Chummer.Xml
         }
 
         /// <summary>
-        /// This method is syntactic sugar for attempting to read a data field
-        /// from an XmlNode. This version preserves the output variable in case
-        /// of a failed read
-        /// </summary>
-        /// <typeparam name="T">The type to convert to</typeparam>
-        /// <param name="node">The XmlNode to read from</param>
-        /// <param name="field">The field to try and extract from the XmlNode</param>
-        /// <param name="read">The variable to save the read to, if successful</param>
-        /// <returns>true if successful read</returns>
-        public static bool TryPreserveField<T>(this XmlNode node, string field, ref T read) where T : IConvertible
-        {
-            if (node.TryGetField(field, out T value))
-            {
-                read = value;
-                return true;
-            }
-
-            return false;
-        }
-
-        /// <summary>
-        /// Checks if the specific field exists and is equal to value
-        /// </summary>
-        /// <param name="node">The XmlNode to read from</param>
-        /// <param name="field">The field to check on the XmlNode</param>
-        /// <param name="value">The value to compare to</param>
-        /// <returns>true if the field exists and is equal to value</returns>
-        public static bool TryCheckValue(this XmlNode node, string field, string value)
-        {
-            //QUESTION: Create regex version?
-            if (node.TryGetField(field, out string fieldValue))
-            {
-                return fieldValue == value;
-            }
-
-            return false;
-        }
-
-        /// <summary>
         /// Processes a single operation node with children that are either nodes to check whether the parent has a node that fulfills a condition, or they are nodes that are parents to further operation nodes
         /// </summary>
         /// <param name="blnIsOrNode">Whether this is an OR node (true) or an AND node (false). Default is AND (false).</param>
@@ -247,19 +208,6 @@ namespace Chummer.Xml
         {
             XPathNavigator xmlParentNavigator = xmlParentNode?.CreateNavigator();
             return xmlParentNavigator.ProcessFilterOperationNode(xmlOperationNode, blnIsOrNode);
-        }
-
-        /// <summary>
-        /// Processes a single operation node with children that are either nodes to check whether the parent has a node that fulfills a condition, or they are nodes that are parents to further operation nodes
-        /// </summary>
-        /// <param name="blnIsOrNode">Whether this is an OR node (true) or an AND node (false). Default is AND (false).</param>
-        /// <param name="xmlOperationNode">The node containing the filter operation or a list of filter operations. Every element here is checked against corresponding elements in the parent node, using an operation specified in the element's attributes.</param>
-        /// <param name="xmlParentNode">The parent node against which the filter operations are checked.</param>
-        /// <returns>True if the parent node passes the conditions set in the operation node/nodelist, false otherwise.</returns>
-        public static bool ProcessFilterOperationNode(this XmlNode xmlParentNode, XmlNode xmlOperationNode, bool blnIsOrNode)
-        {
-            XPathNavigator xmlParentNavigator = xmlParentNode?.CreateNavigator();
-            return xmlParentNavigator.ProcessFilterOperationNode(xmlOperationNode?.CreateNavigator(), blnIsOrNode);
         }
 
         /// <summary>
@@ -281,31 +229,8 @@ namespace Chummer.Xml
         }
 
         /// <summary>
-        /// Processes a single operation node with children that are either nodes to check whether the parent has a node that fulfills a condition, or they are nodes that are parents to further operation nodes
-        /// </summary>
-        /// <param name="blnIsOrNode">Whether this is an OR node (true) or an AND node (false). Default is AND (false).</param>
-        /// <param name="xmlOperationNode">The node containing the filter operation or a list of filter operations. Every element here is checked against corresponding elements in the parent node, using an operation specified in the element's attributes.</param>
-        /// <param name="xmlParentNode">The parent node against which the filter operations are checked.</param>
-        /// <param name="token">Cancellation token to listen to.</param>
-        /// <returns>True if the parent node passes the conditions set in the operation node/nodelist, false otherwise.</returns>
-        public static Task<bool> ProcessFilterOperationNodeAsync(this XmlNode xmlParentNode, XmlNode xmlOperationNode, bool blnIsOrNode, CancellationToken token = default)
-        {
-            if (token.IsCancellationRequested)
-                return Task.FromCanceled<bool>(token);
-            XPathNavigator xmlParentNavigator = xmlParentNode?.CreateNavigator();
-            if (token.IsCancellationRequested)
-                return Task.FromCanceled<bool>(token);
-            XPathNavigator xmlOperationNavigator = xmlOperationNode?.CreateNavigator();
-            return token.IsCancellationRequested
-                ? Task.FromCanceled<bool>(token)
-                : xmlParentNavigator.ProcessFilterOperationNodeAsync(xmlOperationNavigator, blnIsOrNode, token);
-        }
-
-        /// <summary>
         /// Like TryGetField for strings, only with as little overhead as possible.
-        /// </summary>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool TryGetStringFieldQuickly(this XmlNode node, string field, ref string read)
+        /// </summary>        public static bool TryGetStringFieldQuickly(this XmlNode node, string field, ref string read)
         {
             XmlElement objField = node?[field];
             if (objField != null)
@@ -322,9 +247,7 @@ namespace Chummer.Xml
 
         /// <summary>
         /// Like TryGetField for strings, only with as little overhead as possible.
-        /// </summary>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool TryGetMultiLineStringFieldQuickly(this XmlNode node, string field, ref string read)
+        /// </summary>        public static bool TryGetMultiLineStringFieldQuickly(this XmlNode node, string field, ref string read)
         {
             string strReturn = string.Empty;
             if (node.TryGetStringFieldQuickly(field, ref strReturn))
@@ -337,9 +260,7 @@ namespace Chummer.Xml
 
         /// <summary>
         /// Like TryGetField for ints, but taking advantage of int.TryParse... boo, no TryParse interface! :(
-        /// </summary>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool TryGetInt32FieldQuickly(this XmlNode node, string field, ref int read, IFormatProvider objCulture = null)
+        /// </summary>        public static bool TryGetInt32FieldQuickly(this XmlNode node, string field, ref int read, IFormatProvider objCulture = null)
         {
             XmlElement objField = node?[field];
             if (objField == null)
@@ -354,9 +275,7 @@ namespace Chummer.Xml
 
         /// <summary>
         /// Like TryGetField for bools, but taking advantage of bool.TryParse... boo, no TryParse interface! :(
-        /// </summary>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool TryGetBoolFieldQuickly(this XmlNode node, string field, ref bool read)
+        /// </summary>        public static bool TryGetBoolFieldQuickly(this XmlNode node, string field, ref bool read)
         {
             XmlElement objField = node?[field];
             if (objField == null)
@@ -369,9 +288,7 @@ namespace Chummer.Xml
 
         /// <summary>
         /// Like TryGetField for decimals, but taking advantage of decimal.TryParse... boo, no TryParse interface! :(
-        /// </summary>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool TryGetDecFieldQuickly(this XmlNode node, string field, ref decimal read, IFormatProvider objCulture = null)
+        /// </summary>        public static bool TryGetDecFieldQuickly(this XmlNode node, string field, ref decimal read, IFormatProvider objCulture = null)
         {
             XmlElement objField = node?[field];
             if (objField == null)
@@ -386,9 +303,7 @@ namespace Chummer.Xml
 
         /// <summary>
         /// Like TryGetField for doubles, but taking advantage of double.TryParse... boo, no TryParse interface! :(
-        /// </summary>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool TryGetDoubleFieldQuickly(this XmlNode node, string field, ref double read, IFormatProvider objCulture = null)
+        /// </summary>        public static bool TryGetDoubleFieldQuickly(this XmlNode node, string field, ref double read, IFormatProvider objCulture = null)
         {
             XmlElement objField = node?[field];
             if (objField == null)
@@ -403,9 +318,7 @@ namespace Chummer.Xml
 
         /// <summary>
         /// Like TryGetField for float, but taking advantage of float.TryParse... boo, no TryParse interface! :(
-        /// </summary>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool TryGetFloatFieldQuickly(this XmlNode node, string field, ref float read, IFormatProvider objCulture = null)
+        /// </summary>        public static bool TryGetFloatFieldQuickly(this XmlNode node, string field, ref float read, IFormatProvider objCulture = null)
         {
             XmlElement objField = node?[field];
             if (objField == null)
@@ -424,9 +337,7 @@ namespace Chummer.Xml
         /// <param name="node">XPathNavigator node of the object.</param>
         /// <param name="field">Field name of the InnerXML element we're looking for.</param>
         /// <param name="read">Guid that will be returned.</param>
-        /// <param name="falseIfEmpty">Defaults to true. If false, will return an empty Guid if the returned Guid field is empty.</param>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool TryGetGuidFieldQuickly(this XmlNode node, string field, ref Guid read, bool falseIfEmpty = true)
+        /// <param name="falseIfEmpty">Defaults to true. If false, will return an empty Guid if the returned Guid field is empty.</param>        public static bool TryGetGuidFieldQuickly(this XmlNode node, string field, ref Guid read, bool falseIfEmpty = true)
         {
             XmlNode objField = node.SelectSingleNode(field);
             if (objField == null)
@@ -441,9 +352,7 @@ namespace Chummer.Xml
 
         /// <summary>
         /// Query the XmlNode for a given node with an id or name element. Includes ToUpperInvariant processing to handle uppercase ids.
-        /// </summary>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static XmlNode TryGetNodeByNameOrId(this XmlNode node, string strPath, string strId, string strExtraXPath = "")
+        /// </summary>        public static XmlNode TryGetNodeByNameOrId(this XmlNode node, string strPath, string strId, string strExtraXPath = "")
         {
             if (node == null || string.IsNullOrEmpty(strPath) || string.IsNullOrEmpty(strId))
                 return null;
@@ -462,9 +371,7 @@ namespace Chummer.Xml
 
         /// <summary>
         /// Query the XmlNode for a given node with an id. Includes ToUpperInvariant processing to handle uppercase ids.
-        /// </summary>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static XmlNode TryGetNodeById(this XmlNode node, string strPath, Guid guidId, string strExtraXPath = "")
+        /// </summary>        public static XmlNode TryGetNodeById(this XmlNode node, string strPath, Guid guidId, string strExtraXPath = "")
         {
             if (node == null || string.IsNullOrEmpty(strPath))
                 return null;
@@ -485,9 +392,7 @@ namespace Chummer.Xml
         /// Determine whether an XmlNode with the specified name exists within an XmlNode.
         /// </summary>
         /// <param name="xmlNode">XmlNode to examine.</param>
-        /// <param name="strName">Name of the XmlNode to look for.</param>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool NodeExists(this XmlNode xmlNode, string strName)
+        /// <param name="strName">Name of the XmlNode to look for.</param>        public static bool NodeExists(this XmlNode xmlNode, string strName)
         {
             if (string.IsNullOrEmpty(strName))
                 return false;

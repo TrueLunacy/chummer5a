@@ -25,7 +25,7 @@ namespace Chummer.Xml
 {
     public static class CompressionHelper
     {
-        public enum ChummerCompressionPreset
+        public enum CompressionLevel
         {
             Fast,
             Balanced,
@@ -33,7 +33,7 @@ namespace Chummer.Xml
         }
 
         public static void CompressToLzmaFile(this Stream input, FileStream output,
-                                              ChummerCompressionPreset eChummerCompressionPreset)
+                                              CompressionLevel compressionLevel)
         {
             using LzmaStream lzmastream = new LzmaStream(LzmaEncoderProperties.Default, false, output);
             // we have to write the header (properties + length) manually
@@ -44,10 +44,10 @@ namespace Chummer.Xml
             input.CopyTo(lzmastream);
         }
 
-        public static async Task CompressToLzmaFileAsync(this Stream objInStream, FileStream objOutStream,
-                                                   ChummerCompressionPreset eChummerCompressionPreset)
+        public static async Task CompressToLzmaFileAsync(this Stream input, FileStream output,
+                                                   CompressionLevel compressionLevel)
         {
-            CompressToLzmaFile(objInStream, objOutStream, eChummerCompressionPreset);
+            await Task.Run(() => CompressToLzmaFile(input, output, compressionLevel));
         }
 
         public static void DecompressLzmaFile(this FileStream input, Stream output)
@@ -64,9 +64,9 @@ namespace Chummer.Xml
             lzmaStream.CopyTo(output);
         }
 
-        public static async Task DecompressLzmaFileAsync(this FileStream objInStream, Stream objOutStream)
+        public static async Task DecompressLzmaFileAsync(this FileStream input, Stream output)
         {
-            DecompressLzmaFile(objInStream, objOutStream);
+            await Task.Run(() => DecompressLzmaFile(input, output));
         }
     }
 }

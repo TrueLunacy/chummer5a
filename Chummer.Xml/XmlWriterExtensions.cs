@@ -27,9 +27,7 @@ namespace Chummer.Xml
 {
     public static class XmlWriterExtensions
     {
-        /// <inheritdoc cref="XmlWriter.WriteStartElementAsync"/>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static async Task WriteStartElementAsync(this XmlWriter objWriter, string localName, CancellationToken token = default)
+        /// <inheritdoc cref="XmlWriter.WriteStartElementAsync"/>        public static async Task WriteStartElementAsync(this XmlWriter objWriter, string localName, CancellationToken token = default)
         {
             token.ThrowIfCancellationRequested();
             await objWriter.WriteStartElementAsync(null, localName, null).ConfigureAwait(false);
@@ -39,9 +37,7 @@ namespace Chummer.Xml
             }
         }
 
-        /// <inheritdoc cref="XmlWriter.WriteElementStringAsync"/>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static async Task WriteElementStringAsync(this XmlWriter objWriter, string localName, string value, CancellationToken token = default)
+        /// <inheritdoc cref="XmlWriter.WriteElementStringAsync"/>        public static async Task WriteElementStringAsync(this XmlWriter objWriter, string localName, string value, CancellationToken token = default)
         {
             token.ThrowIfCancellationRequested();
             await objWriter.WriteElementStringAsync(null, localName, null, value).ConfigureAwait(false);
@@ -51,9 +47,7 @@ namespace Chummer.Xml
             }
         }
 
-        /// <inheritdoc cref="XmlWriter.WriteElementStringAsync"/>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static async Task WriteAttributeStringAsync(this XmlWriter objWriter, string localName, string value, CancellationToken token = default)
+        /// <inheritdoc cref="XmlWriter.WriteElementStringAsync"/>        public static async Task WriteAttributeStringAsync(this XmlWriter objWriter, string localName, string value, CancellationToken token = default)
         {
             token.ThrowIfCancellationRequested();
             await objWriter.WriteAttributeStringAsync(null, localName, null, value).ConfigureAwait(false);
@@ -62,9 +56,7 @@ namespace Chummer.Xml
                 throw new InvalidOperationException(nameof(objWriter));
             }
         }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static XmlElementWriteHelper StartElement(this XmlWriter objWriter, string localName)
+        public static XmlElementWriteHelper StartElement(this XmlWriter objWriter, string localName)
         {
             XmlElementWriteHelper objReturn = XmlElementWriteHelper.StartElement(objWriter, localName);
             if (objWriter.WriteState == WriteState.Error)
@@ -73,9 +65,7 @@ namespace Chummer.Xml
             }
             return objReturn;
         }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static async Task<XmlElementWriteHelper> StartElementAsync(this XmlWriter objWriter, string localName, CancellationToken token = default)
+        public static async Task<XmlElementWriteHelper> StartElementAsync(this XmlWriter objWriter, string localName, CancellationToken token = default)
         {
             XmlElementWriteHelper objReturn = await XmlElementWriteHelper.StartElementAsync(objWriter, localName, token).ConfigureAwait(false);
             if (objWriter.WriteState == WriteState.Error)

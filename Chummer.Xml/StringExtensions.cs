@@ -37,195 +37,147 @@ namespace Chummer.Xml
     {
         public static string EmptyGuid { get; } = Guid.Empty.ToString("D", CultureInfo.InvariantCulture);
 
-        public static bool IsEmptyGuid(this string strInput)
+        public static bool IsEmptyGuid(this string str)
         {
-            return strInput == EmptyGuid;
+            return str == EmptyGuid;
         }
 
-        public static async Task<string> JoinAsync(string strSeparator, IEnumerable<Task<string>> lstStringTasks,
+        public static async Task<string> JoinAsync(string separator, IEnumerable<Task<string>> stringTasks,
                                                    CancellationToken token = default)
         {
-            return string.Join(strSeparator, await Task.WhenAll(lstStringTasks));
-        }
-
-        /// <summary>
-        /// Identical to string::Replace(), but the comparison for equality is custom-defined instead of always being case-sensitive Ordinal
-        /// </summary>
-        /// <param name="strInput">String on which to operate</param>
-        /// <param name="strOldValue">Substring to replace</param>
-        /// <param name="strNewValue">Substring with which <paramref name="strOldValue"/> gets replaced</param>
-        /// <param name="eStringComparison">String Comparison to use when checking for identity</param>
-        /// <returns>New string with all instances of <paramref name="strOldValue"/> replaced with <paramref name="strNewValue"/>, but where the equality check was custom-defined by <paramref name="eStringComparison"/></returns>
-        public static string Replace(this string strInput, string strOldValue, string strNewValue,
-                                     StringComparison eStringComparison)
-        {
-            if (string.IsNullOrEmpty(strInput) || string.IsNullOrEmpty(strOldValue))
-                return strInput;
-            if (strNewValue == null)
-                throw new ArgumentNullException(nameof(strNewValue));
-            // Built-in Replace method uses Ordinal comparison, so just defer to that if that is what we have defined
-            if (eStringComparison == StringComparison.Ordinal)
-                return strInput.Replace(strOldValue, strNewValue);
-            // Do the check first before we do anything else so that we exit out quickly if nothing needs replacing
-            int intHead = strInput.IndexOf(strOldValue, eStringComparison);
-            if (intHead == -1)
-                return strInput;
-            using (new FetchSafelyFromPool<StringBuilder>(Utils.StringBuilderPool, out StringBuilder sbdReturn))
-            {
-                // Buffer size is increased by 1 in addition to the length-dependent stuff in order to compensate for integer division rounding down
-                int intNewCapacity = strInput.Length + 1 + Math.Max(0, strNewValue.Length - strOldValue.Length);
-                if (sbdReturn.Capacity < intNewCapacity)
-                    sbdReturn.Capacity = intNewCapacity;
-                int intEndPositionOfLastReplace = 0;
-                // intHead already set to the index of the first instance, for loop's initializer can be left empty
-                for (;
-                     intHead != -1;
-                     intHead = strInput.IndexOf(strOldValue, intEndPositionOfLastReplace, eStringComparison))
-                {
-                    sbdReturn.Append(strInput, intEndPositionOfLastReplace, intHead - intEndPositionOfLastReplace)
-                             .Append(strNewValue);
-                    intEndPositionOfLastReplace = intHead + strOldValue.Length;
-                }
-
-                sbdReturn.Append(strInput, intEndPositionOfLastReplace, strInput.Length - intEndPositionOfLastReplace);
-                return sbdReturn.ToString();
-            }
+            return string.Join(separator, await Task.WhenAll(stringTasks));
         }
 
         /// <summary>
         /// Method to quickly remove all instances of a char from a string (much faster than using Replace() with an empty string)
         /// </summary>
-        /// <param name="strInput">String on which to operate</param>
-        /// <param name="chrToDelete">Character to remove</param>
+        /// <param name="input">String on which to operate</param>
+        /// <param name="toRemove">Character to remove</param>
         /// <returns>New string with characters removed</returns>
-        public static string FastEscape(this string strInput, char chrToDelete)
+        public static string FastEscape(this string input, char toRemove)
         {
-            return strInput.Replace(chrToDelete.ToString(), "");
+            return input.Replace(toRemove.ToString(), "");
         }
 
         /// <summary>
         /// Method to quickly remove all instances of all chars in an array from a string (much faster than using a series of Replace() with an empty string)
         /// </summary>
-        /// <param name="strInput">String on which to operate</param>
-        /// <param name="achrToDelete">Array of characters to remove</param>
+        /// <param name="input">String on which to operate</param>
+        /// <param name="toRemove">Array of characters to remove</param>
         /// <returns>New string with characters removed</returns>
-        public static string FastEscape(this string strInput, params char[] achrToDelete)
+        public static string FastEscape(this string input, params char[] toRemove)
         {
-            foreach (char c in achrToDelete)
-                strInput = strInput.Replace(c.ToString(), "");
-            return strInput;
+            foreach (char c in toRemove)
+                input = input.Replace(c.ToString(), "");
+            return input;
         }
 
         /// <summary>
         /// Method to quickly remove all instances of a substring from a string (should be faster than using Replace() with an empty string)
         /// </summary>
-        /// <param name="strInput">String on which to operate</param>
-        /// <param name="strSubstringToDelete">Substring to remove</param>
-        /// <param name="eComparison">Comparison rules by which to find instances of the substring to remove. Useful for when case-insensitive removal is required.</param>
-        /// <returns>New string with <paramref name="strSubstringToDelete"/> removed</returns>
-        public static string FastEscape(this string strInput, string strSubstringToDelete,
-                                        StringComparison eComparison = StringComparison.Ordinal)
+        /// <param name="input">String on which to operate</param>
+        /// <param name="toDelete">Substring to remove</param>
+        /// <param name="comparision">Comparison rules by which to find instances of the substring to remove. Useful for when case-insensitive removal is required.</param>
+        /// <returns>New string with <paramref name="toDelete"/> removed</returns>
+        public static string FastEscape(this string input, string toDelete,
+                                        StringComparison comparision = StringComparison.Ordinal)
         {
             // It's actually faster to just run Replace(), albeit with our special comparison override, than to make our own fancy function
-            return strInput.Replace(strSubstringToDelete, string.Empty, eComparison);
+            return input.Replace(toDelete, string.Empty, comparision);
         }
 
         /// <summary>
         /// Method to quickly remove the first instance of a substring from a string.
         /// </summary>
-        /// <param name="strInput">String on which to operate.</param>
-        /// <param name="strSubstringToDelete">Substring to remove.</param>
-        /// <param name="intStartIndex">Index from which to begin searching.</param>
-        /// <param name="eComparison">Comparison rules by which to find the substring to remove. Useful for when case-insensitive removal is required.</param>
-        /// <returns>New string with the first instance of <paramref name="strSubstringToDelete"/> removed starting from <paramref name="intStartIndex"/>.</returns>
-        public static string FastEscapeOnceFromStart(this string strInput, string strSubstringToDelete,
-                                                     int intStartIndex = 0,
-                                                     StringComparison eComparison = StringComparison.Ordinal)
+        /// <param name="input">String on which to operate.</param>
+        /// <param name="toDelete">Substring to remove.</param>
+        /// <param name="startIndex">Index from which to begin searching.</param>
+        /// <param name="comparision">Comparison rules by which to find the substring to remove. Useful for when case-insensitive removal is required.</param>
+        /// <returns>New string with the first instance of <paramref name="toDelete"/> removed starting from <paramref name="startIndex"/>.</returns>
+        public static string? FastEscapeOnceFromStart(this string? input, string? toDelete,
+                                                     int startIndex = 0,
+                                                     StringComparison comparision = StringComparison.Ordinal)
         {
-            if (strSubstringToDelete == null)
-                return strInput;
-            int intToDeleteLength = strSubstringToDelete.Length;
+            if (toDelete == null)
+                return input;
+            int intToDeleteLength = toDelete.Length;
             if (intToDeleteLength == 0)
-                return strInput;
-            if (strInput == null)
+                return input;
+            if (input == null)
                 return string.Empty;
-            if (strInput.Length < intToDeleteLength)
-                return strInput;
+            if (input.Length < intToDeleteLength)
+                return input;
 
-            int intIndexToBeginRemove = strInput.IndexOf(strSubstringToDelete, intStartIndex, eComparison);
-            return intIndexToBeginRemove == -1 ? strInput : strInput.Remove(intIndexToBeginRemove, intToDeleteLength);
+            int intIndexToBeginRemove = input.IndexOf(toDelete, startIndex, comparision);
+            return intIndexToBeginRemove == -1 ? input : input.Remove(intIndexToBeginRemove, intToDeleteLength);
         }
 
         /// <summary>
         /// Method to quickly remove the last instance of a substring from a string.
         /// </summary>
-        /// <param name="strInput">String on which to operate.</param>
-        /// <param name="strSubstringToDelete">Substring to remove.</param>
-        /// <param name="intStartIndex">Index from which to begin searching (proceeding towards the beginning of the string).</param>
-        /// <param name="eComparison">Comparison rules by which to find the substring to remove. Useful for when case-insensitive removal is required.</param>
-        /// <returns>New string with the last instance of <paramref name="strSubstringToDelete"/> removed starting from <paramref name="intStartIndex"/>.</returns>
-        public static string FastEscapeOnceFromEnd(this string strInput, string strSubstringToDelete,
-                                                   int intStartIndex = -1,
-                                                   StringComparison eComparison = StringComparison.Ordinal)
+        /// <param name="input">String on which to operate.</param>
+        /// <param name="toDelete">Substring to remove.</param>
+        /// <param name="index">Index from which to begin searching (proceeding towards the beginning of the string).</param>
+        /// <param name="comparision">Comparison rules by which to find the substring to remove. Useful for when case-insensitive removal is required.</param>
+        /// <returns>New string with the last instance of <paramref name="toDelete"/> removed starting from <paramref name="index"/>.</returns>
+        public static string? FastEscapeOnceFromEnd(this string? input, string? toDelete,
+                                                   int index = -1,
+                                                   StringComparison comparision = StringComparison.Ordinal)
         {
-            if (string.IsNullOrEmpty(strInput) || strSubstringToDelete == null)
-                return strInput;
-            int intToDeleteLength = strSubstringToDelete.Length;
+            if (string.IsNullOrEmpty(input) || toDelete == null)
+                return input;
+            int intToDeleteLength = toDelete.Length;
             if (intToDeleteLength == 0)
-                return strInput;
-            if (intStartIndex < 0)
-                intStartIndex += strInput.Length;
-            if (intStartIndex < intToDeleteLength - 1)
-                return strInput;
+                return input;
+            if (index < 0)
+                index += input.Length;
+            if (index < intToDeleteLength - 1)
+                return input;
 
-            int intIndexToBeginRemove = strInput.LastIndexOf(strSubstringToDelete, intStartIndex, eComparison);
-            return intIndexToBeginRemove == -1 ? strInput : strInput.Remove(intIndexToBeginRemove, intToDeleteLength);
+            int intIndexToBeginRemove = input.LastIndexOf(toDelete, index, comparision);
+            return intIndexToBeginRemove == -1 ? input : input.Remove(intIndexToBeginRemove, intToDeleteLength);
         }
 
         /// <summary>
         /// Syntactic sugar for string::IndexOfAny that uses params in its argument for the char array.
         /// </summary>
-        /// <param name="strHaystack">String to search.</param>
+        /// <param name="haystack">String to search.</param>
         /// <param name="anyOf">Array of characters to match with IndexOfAny</param>
         /// <returns></returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static int IndexOfAny(this string strHaystack, params char[] anyOf)
+        public static int IndexOfAny(this string haystack, params char[] anyOf)
         {
-            if (string.IsNullOrEmpty(strHaystack))
-                return -1;
-            return strHaystack.IndexOfAny(anyOf);
+            return haystack.IndexOfAny(anyOf);
         }
 
         /// <summary>
         /// Find the index of the first instance of a set of strings inside a haystack string.
         /// </summary>
-        /// <param name="strHaystack">String to search.</param>
-        /// <param name="astrNeedles">Array of strings to match.</param>
-        /// <param name="eComparison">Comparison rules by which to find instances of the substring to remove. Useful for when case-insensitive removal is required.</param>
+        /// <param name="haystack">String to search.</param>
+        /// <param name="needles">Array of strings to match.</param>
+        /// <param name="comparision">Comparison rules by which to find instances of the substring to remove. Useful for when case-insensitive removal is required.</param>
         /// <returns></returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static int IndexOfAny(this string strHaystack, IReadOnlyCollection<string> astrNeedles, StringComparison eComparison)
+        public static int IndexOfAny(this string haystack, IReadOnlyCollection<string> needles, StringComparison comparision)
         {
-            if (string.IsNullOrEmpty(strHaystack))
+            if (string.IsNullOrEmpty(haystack))
                 return -1;
-            int intHaystackLength = strHaystack.Length;
+            int intHaystackLength = haystack.Length;
             if (intHaystackLength == 0)
                 return -1;
-            if (astrNeedles == null)
+            if (needles == null)
                 return -1;
-            int intNumNeedles = astrNeedles.Count;
+            int intNumNeedles = needles.Count;
             if (intNumNeedles == 0)
                 return -1;
 
             // While one might think this is the slowest, worst-scaling way of checking for multiple needles, it's actually faster
             // in C# than a more detailed approach where characters of the haystack are progressively checked against all needles.
-            if (astrNeedles.All(x => x.Length > intHaystackLength))
+            if (needles.All(x => x.Length > intHaystackLength))
                 return -1;
 
             int intEarliestNeedleIndex = intHaystackLength;
-            foreach (string strNeedle in astrNeedles)
+            foreach (string strNeedle in needles)
             {
-                int intNeedleIndex = strHaystack.IndexOf(strNeedle, 0, Math.Min(intHaystackLength, intEarliestNeedleIndex + strNeedle.Length), eComparison);
+                int intNeedleIndex = haystack.IndexOf(strNeedle, 0, Math.Min(intHaystackLength, intEarliestNeedleIndex + strNeedle.Length), comparision);
                 if (intNeedleIndex >= 0 && intNeedleIndex < intEarliestNeedleIndex)
                     intEarliestNeedleIndex = intNeedleIndex;
             }
@@ -233,320 +185,98 @@ namespace Chummer.Xml
         }
 
         /// <summary>
-        /// Find the index of the first instance of a set of strings inside a haystack string.
+        /// Find if of a haystack string contains any of a set of strings.
         /// </summary>
-        /// <param name="strHaystack">String to search.</param>
-        /// <param name="astrNeedles">Array of strings to match.</param>
-        /// <param name="eComparison">Comparison rules by which to find instances of the substring to remove. Useful for when case-insensitive removal is required.</param>
+        /// <param name="haystack">String to search.</param>
+        /// <param name="needles">Array of strings to match.</param>
+        /// <param name="comparision">Comparison rules by which to find instances of the substring to remove. Useful for when case-insensitive removal is required.</param>
         /// <returns></returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static int IndexOfAny(this string strHaystack, IEnumerable<string> astrNeedles, StringComparison eComparison = StringComparison.Ordinal)
+        public static bool ContainsAny(this string haystack, IEnumerable<string> needles, StringComparison comparision = StringComparison.Ordinal)
         {
-            if (string.IsNullOrEmpty(strHaystack))
-                return -1;
-            int intHaystackLength = strHaystack.Length;
-            if (intHaystackLength == 0)
-                return -1;
-            if (astrNeedles == null)
-                return -1;
+            if (string.IsNullOrEmpty(haystack))
+                return false;
+            if (needles == null)
+                return false;
 
-            // While one might think this is the slowest, worst-scaling way of checking for multiple needles, it's actually faster
-            // in C# than a more detailed approach where characters of the haystack are progressively checked against all needles.
-
-            int intEarliestNeedleIndex = intHaystackLength;
-            foreach (string strNeedle in astrNeedles)
-            {
-                int intNeedleIndex = strHaystack.IndexOf(strNeedle, 0, Math.Min(intHaystackLength, intEarliestNeedleIndex + strNeedle.Length), eComparison);
-                if (intNeedleIndex >= 0 && intNeedleIndex < intEarliestNeedleIndex)
-                    intEarliestNeedleIndex = intNeedleIndex;
-            }
-            return intEarliestNeedleIndex != intHaystackLength ? intEarliestNeedleIndex : -1;
-        }
-
-        /// <summary>
-        /// Find the index of the first instance of a set of strings inside a haystack string.
-        /// </summary>
-        /// <param name="strHaystack">String to search.</param>
-        /// <param name="astrNeedles">Array of strings to match.</param>
-        /// <returns></returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static int IndexOfAny(this string strHaystack, params string[] astrNeedles)
-        {
-            return strHaystack.IndexOfAny(astrNeedles, StringComparison.Ordinal);
+            return needles.Any(x => haystack.Contains(x, comparision));
         }
 
         /// <summary>
         /// Find if of a haystack string contains any of a set of strings.
         /// </summary>
-        /// <param name="strHaystack">String to search.</param>
-        /// <param name="astrNeedles">Array of strings to match.</param>
-        /// <param name="eComparison">Comparison rules by which to find instances of the substring to remove. Useful for when case-insensitive removal is required.</param>
+        /// <param name="haystack">String to search.</param>
+        /// <param name="needles">Array of strings to match.</param>
         /// <returns></returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool ContainsAny(this string strHaystack, IReadOnlyCollection<string> astrNeedles, StringComparison eComparison)
+        public static bool ContainsAny(this string haystack, params string[] needles)
         {
-            if (string.IsNullOrEmpty(strHaystack))
-                return false;
-            int intHaystackLength = strHaystack.Length;
-            if (intHaystackLength == 0)
-                return false;
-            if (astrNeedles == null)
-                return false;
-            int intNumNeedles = astrNeedles.Count;
-            if (intNumNeedles == 0)
-                return false;
-
-            // While one might think this is the slowest, worst-scaling way of checking for multiple needles, it's actually faster
-            // in C# than a more detailed approach where characters of the haystack are progressively checked against all needles.
-
-            return astrNeedles.Any(x => x.Length <= intHaystackLength && strHaystack.Contains(x, eComparison));
-        }
-
-        /// <summary>
-        /// Find if of a haystack string contains any of a set of strings.
-        /// </summary>
-        /// <param name="strHaystack">String to search.</param>
-        /// <param name="astrNeedles">Array of strings to match.</param>
-        /// <param name="eComparison">Comparison rules by which to find instances of the substring to remove. Useful for when case-insensitive removal is required.</param>
-        /// <returns></returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool ContainsAny(this string strHaystack, IEnumerable<string> astrNeedles, StringComparison eComparison = StringComparison.Ordinal)
-        {
-            if (string.IsNullOrEmpty(strHaystack))
-                return false;
-            int intHaystackLength = strHaystack.Length;
-            if (intHaystackLength == 0)
-                return false;
-            return astrNeedles != null &&
-                   // While one might think this is the slowest, worst-scaling way of checking for multiple needles, it's actually faster
-                   // in C# than a more detailed approach where characters of the haystack are progressively checked against all needles.
-                   astrNeedles.Any(strNeedle => strHaystack.Contains(strNeedle, eComparison));
-        }
-
-        /// <summary>
-        /// Find if of a haystack string contains any of a set of strings.
-        /// </summary>
-        /// <param name="strHaystack">String to search.</param>
-        /// <param name="astrNeedles">Array of strings to match.</param>
-        /// <returns></returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool ContainsAny(this string strHaystack, params string[] astrNeedles)
-        {
-            return strHaystack.ContainsAny(astrNeedles, StringComparison.Ordinal);
+            return haystack.ContainsAny(needles, StringComparison.Ordinal);
         }
 
         /// <summary>
         /// Find if of a haystack string contains any of a set of strings (parallelized version where each needle is checked in parallel).
         /// </summary>
-        /// <param name="strHaystack">String to search.</param>
-        /// <param name="astrNeedles">Array of strings to match.</param>
-        /// <param name="eComparison">Comparison rules by which to find instances of the substring to remove. Useful for when case-insensitive removal is required.</param>
+        /// <param name="haystack">String to search.</param>
+        /// <param name="needles">Array of strings to match.</param>
+        /// <param name="comparision">Comparison rules by which to find instances of the substring to remove. Useful for when case-insensitive removal is required.</param>
         /// <returns></returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool ContainsAnyParallel(this string strHaystack, IReadOnlyCollection<string> astrNeedles, StringComparison eComparison)
+        public static bool ContainsAnyParallel(this string haystack, IReadOnlyCollection<string> needles, StringComparison comparision)
         {
-            if (string.IsNullOrEmpty(strHaystack))
-                return false;
-            int intHaystackLength = strHaystack.Length;
-            if (intHaystackLength == 0)
-                return false;
-            if (astrNeedles == null)
-                return false;
-            int intNumNeedles = astrNeedles.Count;
-            if (intNumNeedles == 0)
-                return false;
-
-            // While one might think this is the slowest, worst-scaling way of checking for multiple needles, it's actually faster
-            // in C# than a more detailed approach where characters of the haystack are progressively checked against all needles.
-
-            return astrNeedles.AsParallel().Any(x => x.Length <= intHaystackLength && strHaystack.Contains(x, eComparison));
+            // It feels unlikely parallel computation is truly needed
+            return haystack.ContainsAny(needles, comparision);
         }
 
-        /// <summary>
-        /// Find if of a haystack string contains any of a set of strings (parallelized version where each needle is checked in parallel).
-        /// </summary>
-        /// <param name="strHaystack">String to search.</param>
-        /// <param name="astrNeedles">Array of strings to match.</param>
-        /// <param name="eComparison">Comparison rules by which to find instances of the substring to remove. Useful for when case-insensitive removal is required.</param>
-        /// <returns></returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool ContainsAnyParallel(this string strHaystack, IEnumerable<string> astrNeedles, StringComparison eComparison = StringComparison.Ordinal)
-        {
-            if (string.IsNullOrEmpty(strHaystack))
-                return false;
-            int intHaystackLength = strHaystack.Length;
-            if (intHaystackLength == 0)
-                return false;
-            return astrNeedles != null &&
-                   // While one might think this is the slowest, worst-scaling way of checking for multiple needles, it's actually faster
-                   // in C# than a more detailed approach where characters of the haystack are progressively checked against all needles.
-                   astrNeedles.AsParallel().Any(strNeedle => strHaystack.Contains(strNeedle, eComparison));
-        }
 
         /// <summary>
-        /// Find if of a haystack string contains any of a set of strings (parallelized version where each needle is checked in parallel).
+        /// Version of string::Split() that avoids allocations where possible, thus making it lighter on memory (and also on CPU because allocations take time) than all versions of string::Split()
         /// </summary>
-        /// <param name="strHaystack">String to search.</param>
-        /// <param name="astrNeedles">Array of strings to match.</param>
-        /// <returns></returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool ContainsAnyParallel(this string strHaystack, params string[] astrNeedles)
+        /// <param name="input">Input textblock.</param>
+        /// <param name="separator">Character to use for splitting.</param>
+        /// <param name="options">Optional argument that can be used to skip over empty entries.</param>
+        /// <returns>Enumerable containing substrings of <paramref name="input"/> split based on <paramref name="separator"/></returns>
+        public static IEnumerable<string> SplitNoAlloc(this string input, char separator,
+                                                       StringSplitOptions options = StringSplitOptions.None)
         {
-            return strHaystack.ContainsAnyParallel(astrNeedles, StringComparison.Ordinal);
-        }
-
-        /// <summary>
-        /// Syntactic sugar for string::Split that uses one separator char in its argument in addition to StringSplitOptions.
-        /// </summary>
-        /// <param name="strInput">String to search.</param>
-        /// <param name="chrSeparator">Separator to use.</param>
-        /// <param name="eSplitOptions">String split options.</param>
-        /// <returns></returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static string[] Split(this string strInput, char chrSeparator, StringSplitOptions eSplitOptions)
-        {
-            if (strInput == null)
-                throw new ArgumentNullException(nameof(strInput));
-            return strInput.Split(new[] {chrSeparator}, eSplitOptions);
-        }
-
-        /// <summary>
-        /// Syntactic sugar for string::Split that uses one separator string in its argument in addition to StringSplitOptions.
-        /// </summary>
-        /// <param name="strInput">String to search.</param>
-        /// <param name="strSeparator">Separator to use.</param>
-        /// <param name="eSplitOptions">String split options.</param>
-        /// <returns></returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static string[] Split(this string strInput, string strSeparator, StringSplitOptions eSplitOptions)
-        {
-            if (strInput == null)
-                throw new ArgumentNullException(nameof(strInput));
-            return strInput.Split(new[] {strSeparator}, eSplitOptions);
-        }
-
-        /// <summary>
-        /// Syntactic sugar for a version of Contains(char) for strings that is faster than messing with Linq
-        /// </summary>
-        /// <param name="strHaystack">Input string to search.</param>
-        /// <param name="chrNeedle">Character for which to look.</param>
-        /// <returns></returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool Contains(this string strHaystack, char chrNeedle)
-        {
-            if (strHaystack == null)
-                throw new ArgumentNullException(nameof(strHaystack));
-            return strHaystack.IndexOf(chrNeedle) != -1;
-        }
-
-        /// <summary>
-        /// Syntactic sugar for a version of Contains(string) for strings based on a specified StringComparison
-        /// </summary>
-        /// <param name="strHaystack">Input string to search.</param>
-        /// <param name="strNeedle">String for which to look.</param>
-        /// <param name="eComparison">Comparison to use.</param>
-        /// <returns></returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool Contains(this string strHaystack, string strNeedle, StringComparison eComparison)
-        {
-            if (strHaystack == null)
-                throw new ArgumentNullException(nameof(strHaystack));
-            return strHaystack.IndexOf(strNeedle, eComparison) != -1;
+            return input.Split(separator, options);
         }
 
         /// <summary>
         /// Version of string::Split() that avoids allocations where possible, thus making it lighter on memory (and also on CPU because allocations take time) than all versions of string::Split()
         /// </summary>
-        /// <param name="strInput">Input textblock.</param>
-        /// <param name="chrSplit">Character to use for splitting.</param>
-        /// <param name="eSplitOptions">Optional argument that can be used to skip over empty entries.</param>
-        /// <returns>Enumerable containing substrings of <paramref name="strInput"/> split based on <paramref name="chrSplit"/></returns>
-        public static IEnumerable<string> SplitNoAlloc(this string strInput, char chrSplit,
-                                                       StringSplitOptions eSplitOptions = StringSplitOptions.None)
+        /// <param name="input">Input textblock.</param>
+        /// <param name="separator">String to use for splitting.</param>
+        /// <param name="options">Optional argument that can be used to skip over empty entries.</param>
+        /// <returns>Enumerable containing substrings of <paramref name="input"/> split based on <paramref name="separator"/></returns>
+        public static IEnumerable<string> SplitNoAlloc(this string input, string separator,
+                                                       StringSplitOptions options = StringSplitOptions.None)
         {
-            if (string.IsNullOrEmpty(strInput))
-                yield break;
-            int intLoopLength;
-            for (int intStart = 0; intStart < strInput.Length; intStart += intLoopLength + 1)
-            {
-                intLoopLength = strInput.IndexOf(chrSplit, intStart);
-                if (intLoopLength < 0)
-                    intLoopLength = strInput.Length;
-                intLoopLength -= intStart;
-                if (intLoopLength != 0)
-                    yield return strInput.Substring(intStart, intLoopLength);
-                else if (eSplitOptions == StringSplitOptions.None)
-                    yield return string.Empty;
-            }
+            return input.Split(separator, options);
         }
 
         /// <summary>
         /// Version of string::Split() that avoids allocations where possible, thus making it lighter on memory (and also on CPU because allocations take time) than all versions of string::Split()
         /// </summary>
-        /// <param name="strInput">Input textblock.</param>
-        /// <param name="strSplit">String to use for splitting.</param>
-        /// <param name="eSplitOptions">Optional argument that can be used to skip over empty entries.</param>
-        /// <returns>Enumerable containing substrings of <paramref name="strInput"/> split based on <paramref name="strSplit"/></returns>
-        public static IEnumerable<string> SplitNoAlloc(this string strInput, string strSplit,
-                                                       StringSplitOptions eSplitOptions = StringSplitOptions.None)
+        /// <param name="input">Input textblock.</param>
+        /// <param name="separators">Characters to use for splitting.</param>
+        /// <returns>Enumerable containing substrings of <paramref name="input"/> split based on <paramref name="separators"/></returns>
+        public static IEnumerable<string> SplitNoAlloc(this string input, params char[] separators)
         {
-            if (string.IsNullOrEmpty(strInput))
-                yield break;
-            if (string.IsNullOrEmpty(strSplit))
-            {
-                yield return strInput;
-                yield break;
-            }
-
-            int intLoopLength;
-            for (int intStart = 0; intStart < strInput.Length; intStart += intLoopLength + strSplit.Length)
-            {
-                intLoopLength = strInput.IndexOf(strSplit, intStart, StringComparison.Ordinal);
-                if (intLoopLength < 0)
-                    intLoopLength = strInput.Length;
-                intLoopLength -= intStart;
-                if (intLoopLength != 0)
-                    yield return strInput.Substring(intStart, intLoopLength);
-                else if (eSplitOptions == StringSplitOptions.None)
-                    yield return string.Empty;
-            }
-        }
-
-        /// <summary>
-        /// Version of string::Split() that avoids allocations where possible, thus making it lighter on memory (and also on CPU because allocations take time) than all versions of string::Split()
-        /// </summary>
-        /// <param name="strInput">Input textblock.</param>
-        /// <param name="achrSplit">Characters to use for splitting.</param>
-        /// <returns>Enumerable containing substrings of <paramref name="strInput"/> split based on <paramref name="achrSplit"/></returns>
-        public static IEnumerable<string> SplitNoAlloc(this string strInput, params char[] achrSplit)
-        {
-            if (string.IsNullOrEmpty(strInput))
-                yield break;
-            int intLoopLength;
-            for (int intStart = 0; intStart < strInput.Length; intStart += intLoopLength + 1)
-            {
-                intLoopLength = strInput.IndexOfAny(achrSplit, intStart);
-                if (intLoopLength < 0)
-                    intLoopLength = strInput.Length;
-                intLoopLength -= intStart;
-                yield return intLoopLength != 0 ? strInput.Substring(intStart, intLoopLength) : string.Empty;
-            }
+            return input.Split(separators);
         }
 
         /// <summary>
         /// Normalizes whitespace for a given textblock, removing extra spaces and trimming the string.
         /// </summary>
-        /// <param name="strInput">Input textblock</param>
+        /// <param name="input">Input textblock</param>
         /// <param name="funcIsWhiteSpace">Custom function with which to check if a character should count as whitespace. If null, defaults to char::IsWhiteSpace && !char::IsControl.</param>
         /// <returns>New string with any chars that return true from <paramref name="funcIsWhiteSpace"/> replaced with the first whitespace in a sequence and any excess whitespace removed.</returns>
-        public static string NormalizeWhiteSpace(this string strInput)
+        public static string NormalizeWhiteSpace(this string input)
         {
-            if (strInput == null)
+            if (input == null)
                 return string.Empty;
-            int intLength = strInput.Length;
+            int intLength = input.Length;
             if (intLength == 0)
-                return strInput;
-            Func<char, bool> funcIsWhiteSpace = x => char.IsWhiteSpace(x) && !char.IsControl(x);
+                return input;
+            static bool funcIsWhiteSpace(char x) => char.IsWhiteSpace(x) && !char.IsControl(x);
             string strReturn;
             char[] achrNewChars = ArrayPool<char>.Shared.Rent(intLength);
             try
@@ -558,7 +288,7 @@ namespace Chummer.Xml
                 char chrLastAddedCharacter = ' ';
                 for (int i = 0; i < intLength; ++i)
                 {
-                    char chrLoop = strInput[i];
+                    char chrLoop = input[i];
                     // If we encounter a block of identical whitespace chars, we replace the first instance with chrWhiteSpace, then skip over the rest until we encounter a char that isn't whitespace
                     if (funcIsWhiteSpace(chrLoop))
                     {
@@ -600,46 +330,34 @@ namespace Chummer.Xml
         /// <summary>
         /// Returns whether a string contains only legal characters.
         /// </summary>
-        /// <param name="strInput">String to check.</param>
-        /// <param name="blnWhitelist">Whether the list of chars is a whitelist and the string can only contain characters in the list (true) or a blacklist and the string cannot contain any characts in the list (false).</param>
-        /// <param name="achrChars">List of chars against which to check the string.</param>
+        /// <param name="input">String to check.</param>
+        /// <param name="isWhitelist">Whether the list of chars is a whitelist and the string can only contain characters in the list (true) or a blacklist and the string cannot contain any characts in the list (false).</param>
+        /// <param name="chars">List of chars against which to check the string.</param>
         /// <returns>True if the string contains only legal characters, false if the string contains at least one illegal character.</returns>
-        public static bool IsLegalCharsOnly(this string strInput, bool blnWhitelist, params char[] achrChars)
+        public static bool IsLegalCharsOnly(this string input, bool isWhitelist, IReadOnlyList<char> chars)
         {
-            return IsLegalCharsOnly(strInput, blnWhitelist, Array.AsReadOnly(achrChars));
-        }
-
-        /// <summary>
-        /// Returns whether a string contains only legal characters.
-        /// </summary>
-        /// <param name="strInput">String to check.</param>
-        /// <param name="blnWhitelist">Whether the list of chars is a whitelist and the string can only contain characters in the list (true) or a blacklist and the string cannot contain any characts in the list (false).</param>
-        /// <param name="achrChars">List of chars against which to check the string.</param>
-        /// <returns>True if the string contains only legal characters, false if the string contains at least one illegal character.</returns>
-        public static bool IsLegalCharsOnly(this string strInput, bool blnWhitelist, IReadOnlyList<char> achrChars)
-        {
-            if (strInput == null)
+            if (input == null)
                 return false;
-            int intLength = strInput.Length;
+            int intLength = input.Length;
             if (intLength == 0)
                 return true;
-            int intLegalCharsLength = achrChars.Count;
+            int intLegalCharsLength = chars.Count;
             if (intLegalCharsLength == 0)
                 return true;
             for (int i = 0; i < intLength; ++i)
             {
-                char chrLoop = strInput[i];
+                char chrLoop = input[i];
                 bool blnCharIsInList = false;
                 for (int j = 0; j < intLegalCharsLength; ++j)
                 {
-                    if (chrLoop == achrChars[j])
+                    if (chrLoop == chars[j])
                     {
                         blnCharIsInList = true;
                         break;
                     }
                 }
 
-                if (blnCharIsInList != blnWhitelist)
+                if (blnCharIsInList != isWhitelist)
                     return false;
             }
 
@@ -649,119 +367,53 @@ namespace Chummer.Xml
         /// <summary>
         /// Trims a substring out of the beginning of a string. If the substring appears multiple times at the beginning, all instances of it will be trimmed.
         /// </summary>
-        /// <param name="strInput">String on which to operate</param>
-        /// <param name="strToTrim">Substring to trim</param>
-        /// <param name="eComparison">Comparison rules by which to find the substring to remove. Useful for when case-insensitive removal is required.</param>
+        /// <param name="input">String on which to operate</param>
+        /// <param name="substring">Substring to trim</param>
+        /// <param name="comparision">Comparison rules by which to find the substring to remove. Useful for when case-insensitive removal is required.</param>
         /// <returns>Trimmed String</returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static string TrimStart(this string strInput, string strToTrim,
-                                       StringComparison eComparison = StringComparison.Ordinal)
+        public static string TrimStart(this string input, string substring,
+                                       StringComparison comparision = StringComparison.Ordinal)
         {
-            if (string.IsNullOrEmpty(strInput) || string.IsNullOrEmpty(strToTrim))
-                return strInput;
-            int intTrimLength = strToTrim.Length;
+            if (string.IsNullOrEmpty(input) || string.IsNullOrEmpty(substring))
+                return input;
+            int intTrimLength = substring.Length;
             if (intTrimLength == 1)
-                return strInput.TrimStart(strToTrim[0]);
+                return input.TrimStart(substring[0]);
 
-            int i = strInput.IndexOf(strToTrim, eComparison);
+            int i = input.IndexOf(substring, comparision);
             if (i == -1)
-                return strInput;
+                return input;
 
             int intAmountToTrim = 0;
             do
             {
                 intAmountToTrim += intTrimLength;
-                i = strInput.IndexOf(strToTrim, intAmountToTrim, eComparison);
+                i = input.IndexOf(substring, intAmountToTrim, comparision);
             } while (i != -1);
 
-            return strInput.Substring(intAmountToTrim);
+            return input.Substring(intAmountToTrim);
         }
 
-        /// <summary>
-        /// Trims a substring out of the end of a string. If the substring appears multiple times at the end, all instances of it will be trimmed.
-        /// </summary>
-        /// <param name="strInput">String on which to operate</param>
-        /// <param name="strToTrim">Substring to trim</param>
-        /// <param name="eComparison">Comparison rules by which to find the substring to remove. Useful for when case-insensitive removal is required.</param>
-        /// <returns>Trimmed String</returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static string TrimEnd(this string strInput, string strToTrim,
-                                     StringComparison eComparison = StringComparison.Ordinal)
-        {
-            if (string.IsNullOrEmpty(strInput) || string.IsNullOrEmpty(strToTrim))
-                return strInput;
-            int intTrimLength = strToTrim.Length;
-            if (intTrimLength == 1)
-                return strInput.TrimEnd(strToTrim[0]);
-
-            int i = strInput.LastIndexOf(strToTrim, eComparison);
-            if (i == -1)
-                return strInput;
-
-            int intInputLastIndex = strInput.Length - 1;
-            int intAmountToTrim = 0;
-            do
-            {
-                intAmountToTrim += intTrimLength;
-                i = strInput.LastIndexOf(strToTrim, intInputLastIndex - intAmountToTrim, eComparison);
-            } while (i != -1);
-
-            return strInput.Substring(0, intInputLastIndex - intTrimLength);
-        }
 
         /// <summary>
         /// Escapes a substring once out of a string if the string begins with it.
         /// </summary>
-        /// <param name="strInput">String on which to operate</param>
-        /// <param name="strToTrim">Substring to escape</param>
+        /// <param name="input">String on which to operate</param>
+        /// <param name="substring">Substring to escape</param>
         /// <param name="blnOmitCheck">If we already know that the string begins with the substring</param>
-        /// <returns>String with <paramref name="strToTrim"/> escaped out once from the beginning of it.</returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static string TrimStartOnce(this string strInput, string strToTrim, bool blnOmitCheck = false)
+        /// <returns>String with <paramref name="substring"/> escaped out once from the beginning of it.</returns>
+        public static string TrimStartOnce(this string input, string substring, bool blnOmitCheck = false)
         {
-            if (!string.IsNullOrEmpty(strInput) && !string.IsNullOrEmpty(strToTrim)
+            if (!string.IsNullOrEmpty(input) && !string.IsNullOrEmpty(substring)
                                                 // Need to make sure string actually starts with the substring, otherwise we don't want to be cutting out the beginning of the string
                                                 && (blnOmitCheck
-                                                    || strInput.StartsWith(strToTrim, StringComparison.Ordinal)))
+                                                    || input.StartsWith(substring, StringComparison.Ordinal)))
             {
-                int intTrimLength = strToTrim.Length;
-                return strInput.Substring(intTrimLength, strInput.Length - intTrimLength);
+                int intTrimLength = substring.Length;
+                return input.Substring(intTrimLength, input.Length - intTrimLength);
             }
 
-            return strInput;
-        }
-
-        /// <summary>
-        /// If a string begins with any substrings, the one with which it begins is trimmed out of the string once.
-        /// </summary>
-        /// <param name="strInput">String on which to operate</param>
-        /// <param name="astrToTrim">Substrings to trim</param>
-        /// <returns>Trimmed String</returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static string TrimStartOnce(this string strInput, params string[] astrToTrim)
-        {
-            if (!string.IsNullOrEmpty(strInput) && astrToTrim != null)
-            {
-                // Without this we could trim a smaller string just because it was found first, this makes sure we find the largest one
-                int intHowMuchToTrim = 0;
-
-                int intLength = astrToTrim.Length;
-                for (int i = 0; i < intLength; ++i)
-                {
-                    string strStringToTrim = astrToTrim[i];
-                    // Need to make sure string actually starts with the substring, otherwise we don't want to be cutting out the beginning of the string
-                    if (strStringToTrim.Length > intHowMuchToTrim
-                        && strInput.StartsWith(strStringToTrim, StringComparison.Ordinal))
-                    {
-                        intHowMuchToTrim = strStringToTrim.Length;
-                    }
-                }
-
-                if (intHowMuchToTrim > 0)
-                    return strInput.Substring(intHowMuchToTrim);
-            }
-
-            return strInput;
+            return input;
         }
 
         /// <summary>
@@ -770,28 +422,13 @@ namespace Chummer.Xml
         /// <param name="strInput">String on which to operate</param>
         /// <param name="chrToTrim">Char to escape</param>
         /// <returns>String with <paramref name="chrToTrim"/> escaped out once from the beginning of it.</returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static string TrimStartOnce(this string strInput, char chrToTrim)
         {
             if (!string.IsNullOrEmpty(strInput) && strInput[0] == chrToTrim)
             {
-                return strInput.Substring(1, strInput.Length - 1);
+                return strInput[1..];
             }
 
-            return strInput;
-        }
-
-        /// <summary>
-        /// If a string begins with any chars, the one with which it begins is trimmed out of the string once.
-        /// </summary>
-        /// <param name="strInput">String on which to operate</param>
-        /// <param name="achrToTrim">Chars to trim</param>
-        /// <returns>Trimmed String</returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static string TrimStartOnce(this string strInput, params char[] achrToTrim)
-        {
-            if (!string.IsNullOrEmpty(strInput) && strInput.StartsWith(achrToTrim))
-                return strInput.Substring(1, strInput.Length - 1);
             return strInput;
         }
 
@@ -802,7 +439,6 @@ namespace Chummer.Xml
         /// <param name="strToTrim">Substring to trim</param>
         /// <param name="blnOmitCheck">If we already know that the string ends with the substring</param>
         /// <returns>Trimmed String</returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static string TrimEndOnce(this string strInput, string strToTrim, bool blnOmitCheck = false)
         {
             if (!string.IsNullOrEmpty(strInput) && !string.IsNullOrEmpty(strToTrim)
@@ -822,7 +458,6 @@ namespace Chummer.Xml
         /// <param name="strInput">String on which to operate</param>
         /// <param name="astrToTrim">Substrings to trim</param>
         /// <returns>Trimmed String</returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static string TrimEndOnce(this string strInput, params string[] astrToTrim)
         {
             if (!string.IsNullOrEmpty(strInput) && astrToTrim != null)
@@ -855,7 +490,6 @@ namespace Chummer.Xml
         /// <param name="strInput">String on which to operate</param>
         /// <param name="chrToTrim">Char to trim</param>
         /// <returns>Trimmed String</returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static string TrimEndOnce(this string strInput, char chrToTrim)
         {
             if (!string.IsNullOrEmpty(strInput))
@@ -874,7 +508,6 @@ namespace Chummer.Xml
         /// <param name="strInput">String on which to operate</param>
         /// <param name="achrToTrim">Chars to trim</param>
         /// <returns>Trimmed String</returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static string TrimEndOnce(this string strInput, params char[] achrToTrim)
         {
             if (!string.IsNullOrEmpty(strInput) && strInput.EndsWith(achrToTrim))
@@ -883,25 +516,11 @@ namespace Chummer.Xml
         }
 
         /// <summary>
-        /// Determines whether the first char of this string instance matches the specified char.
-        /// </summary>
-        /// <param name="strInput">String to check.</param>
-        /// <param name="chrToCheck">Char to check.</param>
-        /// <returns>True if string has a non-zero length and begins with the char, false otherwise.</returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool StartsWith(this string strInput, char chrToCheck)
-        {
-            return strInput?.Length > 0 && strInput[0] == chrToCheck;
-        }
-
-        /// <summary>
         /// Determines whether the first char of this string instance matches any of the specified chars.
         /// </summary>
         /// <param name="strInput">String to check.</param>
         /// <param name="achrToCheck">Chars to check.</param>
-        /// <returns>True if string has a non-zero length and begins with any of the specified chars, false otherwise.</returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool StartsWith(this string strInput, params char[] achrToCheck)
+        /// <returns>True if string has a non-zero length and begins with any of the specified chars, false otherwise.</returns>        public static bool StartsWith(this string strInput, params char[] achrToCheck)
         {
             if (string.IsNullOrEmpty(strInput) || achrToCheck == null)
                 return false;
@@ -917,51 +536,11 @@ namespace Chummer.Xml
         }
 
         /// <summary>
-        /// Determines whether the beginning of this string instance matches any of the specified strings.
-        /// </summary>
-        /// <param name="strInput">String to check.</param>
-        /// <param name="astrToCheck">Strings to check.</param>
-        /// <returns>True if string has a non-zero length and begins with any of the specified chars, false otherwise.</returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool StartsWith(this string strInput, params string[] astrToCheck)
-        {
-            if (!string.IsNullOrEmpty(strInput) && astrToCheck != null)
-            {
-                int intLength = astrToCheck.Length;
-                for (int i = 0; i < intLength; ++i)
-                {
-                    if (strInput.StartsWith(astrToCheck[i], StringComparison.Ordinal))
-                    {
-                        return true;
-                    }
-                }
-            }
-
-            return false;
-        }
-
-        /// <summary>
-        /// Determines whether the last char of this string instance matches the specified char.
-        /// </summary>
-        /// <param name="strInput">String to check.</param>
-        /// <param name="chrToCheck">Char to check.</param>
-        /// <returns>True if string has a non-zero length and ends with the char, false otherwise.</returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool EndsWith(this string strInput, char chrToCheck)
-        {
-            if (strInput == null)
-                return false;
-            int intLength = strInput.Length;
-            return intLength > 0 && strInput[intLength - 1] == chrToCheck;
-        }
-
-        /// <summary>
         /// Determines whether the last char of this string instance matches any of the specified chars.
         /// </summary>
         /// <param name="strInput">String to check.</param>
         /// <param name="achrToCheck">Chars to check.</param>
         /// <returns>True if string has a non-zero length and ends with any of the specified chars, false otherwise.</returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool EndsWith(this string strInput, params char[] achrToCheck)
         {
             if (strInput == null || achrToCheck == null)
@@ -985,9 +564,7 @@ namespace Chummer.Xml
         /// </summary>
         /// <param name="strInput">String to check.</param>
         /// <param name="astrToCheck">Strings to check.</param>
-        /// <returns>True if string has a non-zero length and ends with any of the specified chars, false otherwise.</returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool EndsWith(this string strInput, params string[] astrToCheck)
+        /// <returns>True if string has a non-zero length and ends with any of the specified chars, false otherwise.</returns>        public static bool EndsWith(this string strInput, params string[] astrToCheck)
         {
             if (!string.IsNullOrEmpty(strInput) && astrToCheck != null)
             {
@@ -1012,9 +589,7 @@ namespace Chummer.Xml
         /// <param name="strOldValue">Pattern for which to check and which to replace.</param>
         /// <param name="funcNewValueFactory">Function to generate the string that replaces the pattern in the base string.</param>
         /// <param name="eStringComparison">The StringComparison to use for finding and replacing items.</param>
-        /// <returns>The result of a string::Replace() method if a replacement is made, the original string otherwise.</returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static string CheapReplace(this string strInput, string strOldValue, Func<string> funcNewValueFactory,
+        /// <returns>The result of a string::Replace() method if a replacement is made, the original string otherwise.</returns>        public static string CheapReplace(this string strInput, string strOldValue, Func<string> funcNewValueFactory,
                                           StringComparison eStringComparison = StringComparison.Ordinal)
         {
             if (!string.IsNullOrEmpty(strInput) && funcNewValueFactory != null)
@@ -1041,9 +616,7 @@ namespace Chummer.Xml
         /// <param name="funcNewValueFactory">Function to generate the string that replaces the pattern in the base string.</param>
         /// <param name="eStringComparison">The StringComparison to use for finding and replacing items.</param>
         /// <param name="token">Cancellation token to listen to.</param>
-        /// <returns>The result of a string::Replace() method if a replacement is made, the original string otherwise.</returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static async Task<string> CheapReplaceAsync(this string strInput, string strOldValue,
+        /// <returns>The result of a string::Replace() method if a replacement is made, the original string otherwise.</returns>        public static async Task<string> CheapReplaceAsync(this string strInput, string strOldValue,
                                                            Func<string> funcNewValueFactory,
                                                            StringComparison eStringComparison
                                                                = StringComparison.Ordinal,
@@ -1063,32 +636,7 @@ namespace Chummer.Xml
         /// <param name="funcNewValueFactory">Function to generate the string that replaces the pattern in the base string.</param>
         /// <param name="eStringComparison">The StringComparison to use for finding and replacing items.</param>
         /// <param name="token">Cancellation token to listen to.</param>
-        /// <returns>The result of a string::Replace() method if a replacement is made, the original string otherwise.</returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static async Task<string> CheapReplaceAsync(this ValueTask<string> strInputTask, string strOldValue,
-                                                           Func<string> funcNewValueFactory,
-                                                           StringComparison eStringComparison
-                                                               = StringComparison.Ordinal,
-                                                           CancellationToken token = default)
-        {
-            token.ThrowIfCancellationRequested();
-            return await CheapReplaceAsync(await strInputTask.ConfigureAwait(false), strOldValue, funcNewValueFactory,
-                                           eStringComparison, token).ConfigureAwait(false);
-        }
-
-        /// <summary>
-        /// Like string::Replace(), but meant for if the new value would be expensive to calculate. Actually slower than string::Replace() if the new value is something simple.
-        /// This is the async version that can be run in case a value is really expensive to get.
-        /// If the string does not contain any instances of the pattern to replace, then the expensive method to generate a replacement is not run.
-        /// </summary>
-        /// <param name="strInputTask">Task returning the base string in which the replacing takes place.</param>
-        /// <param name="strOldValue">Pattern for which to check and which to replace.</param>
-        /// <param name="funcNewValueFactory">Function to generate the string that replaces the pattern in the base string.</param>
-        /// <param name="eStringComparison">The StringComparison to use for finding and replacing items.</param>
-        /// <param name="token">Cancellation token to listen to.</param>
-        /// <returns>The result of a string::Replace() method if a replacement is made, the original string otherwise.</returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static async Task<string> CheapReplaceAsync(this Task<string> strInputTask, string strOldValue,
+        /// <returns>The result of a string::Replace() method if a replacement is made, the original string otherwise.</returns>        public static async Task<string> CheapReplaceAsync(this Task<string> strInputTask, string strOldValue,
                                                            Func<string> funcNewValueFactory,
                                                            StringComparison eStringComparison
                                                                = StringComparison.Ordinal,
@@ -1109,9 +657,7 @@ namespace Chummer.Xml
         /// <param name="funcNewValueFactory">Function to generate the string that replaces the pattern in the base string.</param>
         /// <param name="eStringComparison">The StringComparison to use for finding and replacing items.</param>
         /// <param name="token">Cancellation token to listen to.</param>
-        /// <returns>The result of a string::Replace() method if a replacement is made, the original string otherwise.</returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static async Task<string> CheapReplaceAsync(this string strInput, string strOldValue,
+        /// <returns>The result of a string::Replace() method if a replacement is made, the original string otherwise.</returns>        public static async Task<string> CheapReplaceAsync(this string strInput, string strOldValue,
                                                            Func<Task<string>> funcNewValueFactory,
                                                            StringComparison eStringComparison
                                                                = StringComparison.Ordinal,
@@ -1152,32 +698,7 @@ namespace Chummer.Xml
         /// <param name="funcNewValueFactory">Function to generate the string that replaces the pattern in the base string.</param>
         /// <param name="eStringComparison">The StringComparison to use for finding and replacing items.</param>
         /// <param name="token">Cancellation token to listen to.</param>
-        /// <returns>The result of a string::Replace() method if a replacement is made, the original string otherwise.</returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static async Task<string> CheapReplaceAsync(this ValueTask<string> strInputTask, string strOldValue,
-                                                           Func<Task<string>> funcNewValueFactory,
-                                                           StringComparison eStringComparison
-                                                               = StringComparison.Ordinal,
-                                                           CancellationToken token = default)
-        {
-            token.ThrowIfCancellationRequested();
-            return await CheapReplaceAsync(await strInputTask.ConfigureAwait(false), strOldValue, funcNewValueFactory,
-                                           eStringComparison, token).ConfigureAwait(false);
-        }
-
-        /// <summary>
-        /// Like string::Replace(), but meant for if the new value would be expensive to calculate. Actually slower than string::Replace() if the new value is something simple.
-        /// This is the async version that can be run in case a value is really expensive to get.
-        /// If the string does not contain any instances of the pattern to replace, then the expensive method to generate a replacement is not run.
-        /// </summary>
-        /// <param name="strInputTask">Task returning the base string in which the replacing takes place.</param>
-        /// <param name="strOldValue">Pattern for which to check and which to replace.</param>
-        /// <param name="funcNewValueFactory">Function to generate the string that replaces the pattern in the base string.</param>
-        /// <param name="eStringComparison">The StringComparison to use for finding and replacing items.</param>
-        /// <param name="token">Cancellation token to listen to.</param>
-        /// <returns>The result of a string::Replace() method if a replacement is made, the original string otherwise.</returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static async Task<string> CheapReplaceAsync(this Task<string> strInputTask, string strOldValue,
+        /// <returns>The result of a string::Replace() method if a replacement is made, the original string otherwise.</returns>        public static async Task<string> CheapReplaceAsync(this Task<string> strInputTask, string strOldValue,
                                                            Func<Task<string>> funcNewValueFactory,
                                                            StringComparison eStringComparison
                                                                = StringComparison.Ordinal,
@@ -1192,9 +713,7 @@ namespace Chummer.Xml
         /// Tests whether a given string is a Guid. Returns false if not.
         /// </summary>
         /// <param name="strGuid">String to test.</param>
-        /// <returns>True if string is a Guid, false if not.</returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool IsGuid(this string strGuid)
+        /// <returns>True if string is a Guid, false if not.</returns>        public static bool IsGuid(this string strGuid)
         {
             return Guid.TryParse(strGuid, out Guid _);
         }
@@ -1224,19 +743,6 @@ namespace Chummer.Xml
             foreach (KeyValuePair<string, string> kvpLigature in s_DicLigaturesMap)
                 strReturn = strReturn.Replace(kvpLigature.Key, kvpLigature.Value);
             return strReturn;
-        }
-
-        /// <summary>
-        /// Replace some of the bad ligatures that are present in Shadowrun sourcebooks with proper characters
-        /// </summary>
-        /// <param name="sbdInput">StringBuilder to clean.</param>
-        public static StringBuilder CleanStylisticLigatures(this StringBuilder sbdInput)
-        {
-            if (sbdInput == null)
-                throw new ArgumentNullException(nameof(sbdInput));
-            foreach (KeyValuePair<string, string> kvpLigature in s_DicLigaturesMap)
-                sbdInput.Replace(kvpLigature.Key, kvpLigature.Value);
-            return sbdInput;
         }
 
         /// <summary>
@@ -1521,16 +1027,6 @@ namespace Chummer.Xml
         }
 
         /// <summary>
-        /// Checks if a string contains any HTML tags
-        /// </summary>
-        /// <param name="strInput">The string to check.</param>
-        /// <returns>True if the string contains HTML tags, False otherwise.</returns>
-        public static bool ContainsHtmlTags(this string strInput)
-        {
-            return !string.IsNullOrEmpty(strInput) && s_RgxHtmlTagExpression.Value.IsMatch(strInput);
-        }
-
-        /// <summary>
         /// Cleans a string of characters that could cause issues when saved in an xml file and then loaded back in
         /// </summary>
         /// <param name="strInput"></param>
@@ -1544,9 +1040,6 @@ namespace Chummer.Xml
 
         private static readonly Lazy<Regex> s_RgxInvalidUnicodeCharsExpression = new Lazy<Regex>(() => new Regex(
             @"[\u0000-\u0008\u000B\u000C\u000E-\u001F]",
-            RegexOptions.IgnoreCase | RegexOptions.Multiline | RegexOptions.CultureInvariant | RegexOptions.Compiled));
-
-        private static readonly Lazy<Regex> s_RgxHtmlTagExpression = new Lazy<Regex>(() => new Regex(@"/<\/?[a-z][\s\S]*>/i",
             RegexOptions.IgnoreCase | RegexOptions.Multiline | RegexOptions.CultureInvariant | RegexOptions.Compiled));
 
         private static readonly Lazy<Regex> s_RgxLineEndingsExpression = new Lazy<Regex>(() => new Regex(@"\r\n|\n\r|\n|\r",
@@ -1815,28 +1308,6 @@ namespace Chummer.Xml
             var shared = ArrayPool<byte>.Shared.Rent(arrayLength);
             Array.Copy(array, shared, arrayLength);
             return shared;
-        }
-
-        /// <summary>
-        /// Reads the specified string that encodes binary data as base-64 digits into a stream directly.
-        /// Much more memory-efficient version of Convert.FromBase64String() if the byte array would just be immediately fed into a stream anyway.
-        /// However, much slower than using Convert.FromBase64String() or ToBase64PooledByteArray() because of unusable optimizations around writing to streams in unsafe code.
-        /// </summary>
-        /// <param name="s">The string to convert and feed into <paramref name="stream"/>.</param>
-        /// <param name="stream">Stream to hold the byte array of the base-64 decoded version of <paramref name="s"/>.</param>
-        /// <param name="token">Cancellation token to listen to, if any.</param>
-        /// <exception cref="ArgumentNullException">s is null.</exception>
-        /// <exception cref="FormatException">The length of s, ignoring white-space characters, is not zero or a multiple of 4. -or-The format of s is invalid. s contains a non-base-64 character, more than two padding characters, or a non-white space-character among the padding characters.</exception>
-        public static void ToBase64Stream(this string s, Stream stream, CancellationToken token = default)
-        {
-            token.ThrowIfCancellationRequested();
-            if (s == null)
-            {
-                throw new ArgumentNullException(nameof(s));
-            }
-
-            var array = Convert.FromBase64String(s);
-            stream.Write(array);
         }
     }
 }
