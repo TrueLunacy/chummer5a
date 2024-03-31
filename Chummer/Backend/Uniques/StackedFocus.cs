@@ -85,8 +85,8 @@ namespace Chummer
         {
             using (LockObject.EnterWriteLock())
             {
-                objNode.TryGetField("guid", Guid.TryParse, out _guiID);
-                objNode.TryGetField("gearid", Guid.TryParse, out _guiGearId);
+                objNode.TryGetField("guid", out _guiID);
+                objNode.TryGetField("gearid", out _guiGearId);
                 _blnBonded = objNode["bonded"]?.InnerText == bool.TrueString;
                 using (XmlNodeList nodGearList = objNode.SelectNodes("gears/gear"))
                 {

@@ -85,7 +85,7 @@ namespace Chummer.Backend.Skills
             string strName = string.Empty;
             if (!xmlNode.TryGetStringFieldQuickly("name", ref strName) || string.IsNullOrEmpty(strName))
                 return null;
-            if (!xmlNode.TryGetField("guid", Guid.TryParse, out Guid guiTemp))
+            if (!xmlNode.TryGetField("guid", out Guid guiTemp))
                 guiTemp = Guid.NewGuid();
 
             return new SkillSpecialization(objCharacter, strName, xmlNode["free"]?.InnerText == bool.TrueString, xmlNode["expertise"]?.InnerText == bool.TrueString)

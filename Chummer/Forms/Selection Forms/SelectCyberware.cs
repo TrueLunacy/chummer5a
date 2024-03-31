@@ -558,8 +558,8 @@ namespace Chummer
                                 {
                                     int intMinAgility = 3;
                                     int intMinStrength = 3;
-                                    xmlCyberware.TryGetInt32FieldQuickly("minagility", ref intMinAgility);
-                                    xmlCyberware.TryGetInt32FieldQuickly("minstrength", ref intMinStrength);
+                                    xmlCyberware.TryGetFieldUninitialized("minagility", ref intMinAgility);
+                                    xmlCyberware.TryGetFieldUninitialized("minstrength", ref intMinStrength);
                                     dicVehicleValues = new Dictionary<string, int>(2)
                                     {
                                         { "STRMinimum", intMinStrength },
@@ -1669,8 +1669,8 @@ namespace Chummer
                                 {
                                     int intMinAgility = 3;
                                     int intMinStrength = 3;
-                                    xmlCyberware.TryGetInt32FieldQuickly("minagility", ref intMinAgility);
-                                    xmlCyberware.TryGetInt32FieldQuickly("minstrength", ref intMinStrength);
+                                    xmlCyberware.TryGetFieldUninitialized("minagility", ref intMinAgility);
+                                    xmlCyberware.TryGetFieldUninitialized("minstrength", ref intMinStrength);
                                     dicVehicleValues = new Dictionary<string, int>(2)
                                     {
                                         { "STRMinimum", intMinStrength },

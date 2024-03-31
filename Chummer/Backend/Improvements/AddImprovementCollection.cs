@@ -362,9 +362,9 @@ namespace Chummer
                         int intMin = 0;
                         int intMax = 0;
                         int intAugMax = 0;
-                        objXmlAttribute.TryGetInt32FieldQuickly("min", ref intMin);
-                        objXmlAttribute.TryGetInt32FieldQuickly("max", ref intMax);
-                        objXmlAttribute.TryGetInt32FieldQuickly("aug", ref intAugMax);
+                        objXmlAttribute.TryGetFieldUninitialized("min", ref intMin);
+                        objXmlAttribute.TryGetFieldUninitialized("max", ref intMax);
+                        objXmlAttribute.TryGetFieldUninitialized("aug", ref intAugMax);
 
                         CreateImprovement(strAttribute, _objImprovementSource, SourceName,
                             Improvement.ImprovementType.ReplaceAttribute,
@@ -2287,7 +2287,7 @@ namespace Chummer
             Log.Trace(new object[] { "attributelevel", bonusNode.OuterXml });
             string strAttrib = string.Empty;
             int value = 1;
-            bonusNode.TryGetInt32FieldQuickly("val", ref value);
+            bonusNode.TryGetFieldUninitialized("val", ref value);
             if (bonusNode.TryGetStringFieldQuickly("name", ref strAttrib))
             {
                 CreateImprovement(strAttrib, _objImprovementSource, SourceName,
@@ -2382,7 +2382,7 @@ namespace Chummer
             Log.Trace(new object[] { "skilllevel", bonusNode.OuterXml });
             string strSkill = string.Empty;
             int intValue = 1;
-            bonusNode.TryGetInt32FieldQuickly("val", ref intValue);
+            bonusNode.TryGetFieldUninitialized("val", ref intValue);
             if (bonusNode.TryGetStringFieldQuickly("name", ref strSkill))
             {
                 CreateImprovement(strSkill, _objImprovementSource, SourceName, Improvement.ImprovementType.SkillLevel, _strUnique, intValue);
@@ -2526,7 +2526,7 @@ namespace Chummer
             string strSkillGroup = string.Empty;
             int value = 1;
             if (bonusNode.TryGetStringFieldQuickly("name", ref strSkillGroup) &&
-                bonusNode.TryGetInt32FieldQuickly("val", ref value))
+                bonusNode.TryGetFieldUninitialized("val", ref value))
             {
                 CreateImprovement(strSkillGroup, _objImprovementSource, SourceName,
                     Improvement.ImprovementType.SkillGroupLevel, _strUnique, value);

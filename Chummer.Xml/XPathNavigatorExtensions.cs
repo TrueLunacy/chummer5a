@@ -31,35 +31,43 @@ namespace Chummer.Xml
 {
     public static class XPathNavigatorExtensions
     {
-        public delegate bool TryParseFunction<T>(string input, out T result);
-
         /// <summary>
-        /// This method is syntactic sugar for attempting to read a data field
-        /// from an XmlNode. This version sets the output variable to its
-        /// default value in case of a failed read and can be used for
-        /// initializing variables. It can work on any type, but it requires
-        /// a tryParse style function that is fed the nodes InnerText
+        /// Uses ISpanParseable to read a data field. The value is guaranteed to be the default
+        /// value for the given type (0 for numeric types, null for reference types, 0-init for all other struct types)
+        /// if the field cannot be read or parsed.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="node"></param>
         /// <param name="field"></param>
-        /// <param name="parser"></param>
-        /// <param name="read"></param>
-        /// <param name="onError"></param>
+        /// <param name="value"></param>
         /// <returns></returns>
-        public static bool TryGetField<T>(this XPathNavigator node, string field, TryParseFunction<T> parser, out T read, T onError = default)
+        public static bool TryGetField<T>(this XPathNavigator? node, string field, [NotNullWhen(true)] out T? value)
+            where T : IParsable<T>
         {
-            if (parser != null)
-            {
-                XPathNavigator objField = node?.SelectSingleNode(field);
-                if (objField != null)
-                {
-                    return parser(objField.Value, out read);
-                }
-            }
+            value = default;
+            return node.TryGetFieldUninitialized(field, ref value);
+        }
 
-            read = onError;
-            return false;
+        /// <summary>
+        /// Uses ISpanParseable to read a data field. The value is guaranteed to be the default
+        /// value for the given type (0 for numeric types, null for reference types, 0-init for all other struct types)
+        /// if the field cannot be read or parsed.
+        ///
+        /// The difference between this and TryGetField is that this does not set the value upon failure.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="node"></param>
+        /// <param name="field"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static bool TryGetFieldUninitialized<T>(this XPathNavigator? node, string field, [NotNullWhen(true)] ref T? value)
+            where T : IParsable<T>
+        {
+            string? text = node?.SelectSingleNode(field)?.Value;
+            bool result = T.TryParse(text, CultureInfo.InvariantCulture, out T? temp);
+            if (result)
+                value = temp;
+            return result;
         }
 
         /// <summary>
@@ -70,39 +78,21 @@ namespace Chummer.Xml
         /// <param name="xmlParentNode">The parent node against which the filter operations are checked.</param>
         /// <param name="token">Cancellation token to listen to.</param>
         /// <returns>True if the parent node passes the conditions set in the operation node/nodelist, false otherwise.</returns>
-        public static bool ProcessFilterOperationNode(this XPathNavigator xmlParentNode,
-                                                      XPathNavigator xmlOperationNode, bool blnIsOrNode, CancellationToken token = default)
-        {
-            throw new NotImplementedException();
-            //return Utils.SafelyRunSynchronously(() => ProcessFilterOperationNodeCoreAsync(true, xmlParentNode, xmlOperationNode, blnIsOrNode, token), token);
-        }
-
-        /// <summary>
-        /// Processes a single operation node with children that are either nodes to check whether the parent has a node that fulfills a condition, or they are nodes that are parents to further operation nodes
-        /// </summary>
-        /// <param name="blnIsOrNode">Whether this is an OR node (true) or an AND node (false). Default is AND (false).</param>
-        /// <param name="xmlOperationNode">The node containing the filter operation or a list of filter operations. Every element here is checked against corresponding elements in the parent node, using an operation specified in the element's attributes.</param>
-        /// <param name="xmlParentNode">The parent node against which the filter operations are checked.</param>
-        /// <param name="token">Cancellation token to listen to.</param>
-        /// <returns>True if the parent node passes the conditions set in the operation node/nodelist, false otherwise.</returns>
-        public static Task<bool> ProcessFilterOperationNodeAsync(this XPathNavigator xmlParentNode,
+        public static async Task<bool> ProcessFilterOperationNodeAsync(this XPathNavigator xmlParentNode,
                                                                  XPathNavigator xmlOperationNode, bool blnIsOrNode, CancellationToken token = default)
         {
-            return ProcessFilterOperationNodeCoreAsync(false, xmlParentNode, xmlOperationNode, blnIsOrNode, token);
+            return ProcessFilterOperationNode(xmlParentNode, xmlOperationNode, blnIsOrNode);
         }
 
         /// <summary>
         /// Processes a single operation node with children that are either nodes to check whether the parent has a node that fulfills a condition, or they are nodes that are parents to further operation nodes
-        /// Uses flag hack method design outlined here to avoid locking:
-        /// https://docs.microsoft.com/en-us/archive/msdn-magazine/2015/july/async-programming-brownfield-async-development
         /// </summary>
-        /// <param name="blnSync">Flag for whether method should always use synchronous code or not.</param>
         /// <param name="blnIsOrNode">Whether this is an OR node (true) or an AND node (false). Default is AND (false).</param>
         /// <param name="xmlOperationNode">The node containing the filter operation or a list of filter operations. Every element here is checked against corresponding elements in the parent node, using an operation specified in the element's attributes.</param>
         /// <param name="xmlParentNode">The parent node against which the filter operations are checked.</param>
         /// <param name="token">Cancellation token to listen to.</param>
         /// <returns>True if the parent node passes the conditions set in the operation node/nodelist, false otherwise.</returns>
-        private static async Task<bool> ProcessFilterOperationNodeCoreAsync(bool blnSync, XPathNavigator xmlParentNode, XPathNavigator xmlOperationNode, bool blnIsOrNode, CancellationToken token = default)
+        public static bool ProcessFilterOperationNode(this XPathNavigator xmlParentNode, XPathNavigator xmlOperationNode, bool blnIsOrNode)
         {
             if (xmlOperationNode == null)
                 return false;
@@ -110,45 +100,29 @@ namespace Chummer.Xml
             foreach (XPathNavigator xmlOperationChildNode in xmlOperationNode.SelectChildren(XPathNodeType.Element))
             {
                 bool blnInvert
-                    = xmlOperationChildNode.SelectSingleNodeAndCacheExpression("@NOT", token) != null;
+                    = xmlOperationChildNode.SelectSingleNodeAndCacheExpression("@NOT") != null;
 
                 bool blnOperationChildNodeResult = blnInvert;
                 string strNodeName = xmlOperationChildNode.Name;
                 switch (strNodeName)
                 {
                     case "OR":
-                        blnOperationChildNodeResult =
-                            (blnSync
-                                // ReSharper disable once MethodHasAsyncOverload
-                                ? ProcessFilterOperationNode(xmlParentNode, xmlOperationChildNode, true, token)
-                                : await ProcessFilterOperationNodeAsync(xmlParentNode, xmlOperationChildNode, true, token).ConfigureAwait(false))
+                        blnOperationChildNodeResult = ProcessFilterOperationNode(xmlParentNode, xmlOperationChildNode, true)
                             != blnInvert;
                         break;
 
                     case "NOR":
-                        blnOperationChildNodeResult =
-                            (blnSync
-                                // ReSharper disable once MethodHasAsyncOverload
-                                ? ProcessFilterOperationNode(xmlParentNode, xmlOperationChildNode, true, token)
-                                : await ProcessFilterOperationNodeAsync(xmlParentNode, xmlOperationChildNode, true, token).ConfigureAwait(false))
+                        blnOperationChildNodeResult = ProcessFilterOperationNode(xmlParentNode, xmlOperationChildNode, true)
                             == blnInvert;
                         break;
 
                     case "AND":
-                        blnOperationChildNodeResult =
-                            (blnSync
-                                // ReSharper disable once MethodHasAsyncOverload
-                                ? ProcessFilterOperationNode(xmlParentNode, xmlOperationChildNode, false, token)
-                                : await ProcessFilterOperationNodeAsync(xmlParentNode, xmlOperationChildNode, false, token).ConfigureAwait(false))
+                        blnOperationChildNodeResult = ProcessFilterOperationNode(xmlParentNode, xmlOperationChildNode, false)
                             != blnInvert;
                         break;
 
                     case "NAND":
-                        blnOperationChildNodeResult =
-                            (blnSync
-                                // ReSharper disable once MethodHasAsyncOverload
-                                ? ProcessFilterOperationNode(xmlParentNode, xmlOperationChildNode, false, token)
-                                : await ProcessFilterOperationNodeAsync(xmlParentNode, xmlOperationChildNode, false, token).ConfigureAwait(false))
+                        blnOperationChildNodeResult = ProcessFilterOperationNode(xmlParentNode, xmlOperationChildNode, false)
                             == blnInvert;
                         break;
 
@@ -160,7 +134,7 @@ namespace Chummer.Xml
                         {
                             if (xmlParentNode != null)
                             {
-                                XPathNavigator objOperationAttribute = xmlOperationChildNode.SelectSingleNodeAndCacheExpression("@operation", token);
+                                XPathNavigator objOperationAttribute = xmlOperationChildNode.SelectSingleNodeAndCacheExpression("@operation");
                                 string strOperationType = objOperationAttribute?.Value ?? "==";
                                 XPathNodeIterator objXmlTargetNodeList = xmlParentNode.Select(strNodeName);
                                 // If we're just checking for existence of a node, no need for more processing
@@ -170,9 +144,9 @@ namespace Chummer.Xml
                                 }
                                 else
                                 {
-                                    bool blnOperationChildNodeAttributeOr = xmlOperationChildNode.SelectSingleNodeAndCacheExpression("@OR", token) != null;
+                                    bool blnOperationChildNodeAttributeOr = xmlOperationChildNode.SelectSingleNodeAndCacheExpression("@OR") != null;
                                     // default is "any", replace with switch() if more check modes are necessary
-                                    XPathNavigator objCheckTypeAttribute = xmlOperationChildNode.SelectSingleNodeAndCacheExpression("@checktype", token);
+                                    XPathNavigator objCheckTypeAttribute = xmlOperationChildNode.SelectSingleNodeAndCacheExpression("@checktype");
                                     bool blnCheckAll = objCheckTypeAttribute?.Value == "all";
                                     blnOperationChildNodeResult = blnCheckAll;
                                     string strOperationChildNodeText = xmlOperationChildNode.Value;
@@ -184,15 +158,9 @@ namespace Chummer.Xml
                                         if (xmlTargetNode.SelectChildren(XPathNodeType.Element).Count > 0)
                                         {
                                             if (xmlOperationChildNode.SelectChildren(XPathNodeType.Element).Count > 0)
-                                                boolSubNodeResult = (blnSync
-                                                                        // ReSharper disable once MethodHasAsyncOverload
-                                                                        ? ProcessFilterOperationNode(xmlTargetNode,
+                                                boolSubNodeResult = ProcessFilterOperationNode(xmlTargetNode,
                                                                             xmlOperationChildNode,
-                                                                            blnOperationChildNodeAttributeOr, token)
-                                                                        : await ProcessFilterOperationNodeAsync(
-                                                                            xmlTargetNode,
-                                                                            xmlOperationChildNode,
-                                                                            blnOperationChildNodeAttributeOr, token).ConfigureAwait(false))
+                                                                            blnOperationChildNodeAttributeOr)
                                                                     != blnInvert;
                                         }
                                         else
@@ -301,7 +269,8 @@ namespace Chummer.Xml
 
         /// <summary>
         /// Like TryGetField for strings, only with as little overhead as possible.
-        /// </summary>        public static bool TryGetStringFieldQuickly(this XPathNavigator node, string field, [NotNullWhen(true)] ref string? read)
+        /// </summary>
+        public static bool TryGetStringFieldQuickly(this XPathNavigator node, string field, [NotNullWhen(true)] ref string? read)
         {
             if (node == null)
             {
@@ -323,7 +292,8 @@ namespace Chummer.Xml
 
         /// <summary>
         /// Like TryGetField for strings, only with as little overhead as possible and with an extra line ending normalization thrown in.
-        /// </summary>        public static bool TryGetMultiLineStringFieldQuickly(this XPathNavigator node, string field, ref string read)
+        /// </summary>
+        public static bool TryGetMultiLineStringFieldQuickly(this XPathNavigator node, string field, ref string read)
         {
             string? strReturn = null;
             if (node.TryGetStringFieldQuickly(field, ref strReturn))
@@ -335,128 +305,11 @@ namespace Chummer.Xml
         }
 
         /// <summary>
-        /// Like TryGetField for ints, but taking advantage of int.TryParse... boo, no TryParse interface! :(
-        /// </summary>        public static bool TryGetInt32FieldQuickly(this XPathNavigator node, string field, ref int read, IFormatProvider objCulture = null)
-        {
-            if (node == null)
-                return false;
-            XPathNavigator? objField = node.SelectSingleNode(XmlUtilities.CacheExpression(field));
-            if (objField != null)
-            {
-                if (objCulture == null)
-                    objCulture = CultureInfo.InvariantCulture;
-                if (int.TryParse(objField.Value, NumberStyles.Any, objCulture, out int intTmp))
-                {
-                    read = intTmp;
-                    return true;
-                }
-            }
-            return false;
-        }
-
-        /// <summary>
-        /// Like TryGetField for bools, but taking advantage of bool.TryParse... boo, no TryParse interface! :(
-        /// </summary>        public static bool TryGetBoolFieldQuickly(this XPathNavigator node, string field, ref bool read)
-        {
-            if (node == null)
-                return false;
-            XPathNavigator? objField = node.SelectSingleNode(XmlUtilities.CacheExpression(field));
-            if (objField != null && bool.TryParse(objField.Value, out bool blnTmp))
-            {
-                read = blnTmp;
-                return true;
-            }
-            return false;
-        }
-
-        /// <summary>
-        /// Like TryGetField for decimals, but taking advantage of decimal.TryParse... boo, no TryParse interface! :(
-        /// </summary>        public static bool TryGetDecFieldQuickly(this XPathNavigator node, string field, ref decimal read, IFormatProvider objCulture = null)
-        {
-            if (node == null)
-                return false;
-            XPathNavigator objField = node.SelectSingleNode(XmlUtilities.CacheExpression(field));
-            if (objField != null)
-            {
-                if (objCulture == null)
-                    objCulture = CultureInfo.InvariantCulture;
-                if (decimal.TryParse(objField.Value, NumberStyles.Any, objCulture, out decimal decTmp))
-                {
-                    read = decTmp;
-                    return true;
-                }
-            }
-            return false;
-        }
-
-        /// <summary>
-        /// Like TryGetField for doubles, but taking advantage of double.TryParse... boo, no TryParse interface! :(
-        /// </summary>        public static bool TryGetDoubleFieldQuickly(this XPathNavigator node, string field, ref double read, IFormatProvider objCulture = null)
-        {
-            if (node == null)
-                return false;
-            XPathNavigator? objField = node.SelectSingleNode(XmlUtilities.CacheExpression(field));
-            if (objField != null)
-            {
-                if (objCulture == null)
-                    objCulture = CultureInfo.InvariantCulture;
-                if (double.TryParse(objField.Value, NumberStyles.Any, objCulture, out double dblTmp))
-                {
-                    read = dblTmp;
-                    return true;
-                }
-            }
-            return false;
-        }
-
-        /// <summary>
-        /// Like TryGetField for float, but taking advantage of float.TryParse... boo, no TryParse interface! :(
-        /// </summary>        public static bool TryGetFloatFieldQuickly(this XPathNavigator node, string field, ref float read, IFormatProvider objCulture = null)
-        {
-            if (node == null)
-                return false;
-            XPathNavigator? objField = node.SelectSingleNode(XmlUtilities.CacheExpression(field));
-            if (objField != null)
-            {
-                if (objCulture == null)
-                    objCulture = CultureInfo.InvariantCulture;
-                if (float.TryParse(objField.Value, NumberStyles.Any, objCulture, out float fltTmp))
-                {
-                    read = fltTmp;
-                    return true;
-                }
-            }
-            return false;
-        }
-
-        /// <summary>
-        /// Like TryGetField for guids, but taking advantage of guid.TryParse. Allows for returning false if the guid is Empty.
-        /// </summary>
-        /// <param name="node">XPathNavigator node of the object.</param>
-        /// <param name="field">Field name of the InnerXML element we're looking for.</param>
-        /// <param name="read">Guid that will be returned.</param>
-        /// <param name="falseIfEmpty">Defaults to true. If false, will return an empty Guid if the returned Guid field is empty.</param>        public static bool TryGetGuidFieldQuickly(this XPathNavigator node, string field, ref Guid read, bool falseIfEmpty = true)
-        {
-            if (node == null)
-                return false;
-            XPathNavigator? objField = node.SelectSingleNode(XmlUtilities.CacheExpression(field));
-            if (objField == null)
-                return false;
-            if (!Guid.TryParse(objField.Value, out Guid guidTmp))
-                return false;
-            if (guidTmp == Guid.Empty && falseIfEmpty)
-            {
-                return false;
-            }
-            read = guidTmp;
-            return true;
-        }
-
-        /// <summary>
         /// Determine whether an XPathNavigator with the specified name exists within an XPathNavigator.
         /// </summary>
         /// <param name="xmlNode">XPathNavigator to examine.</param>
-        /// <param name="strName">Name of the XPathNavigator to look for.</param>        public static bool NodeExists(this XPathNavigator xmlNode, string strName)
+        /// <param name="strName">Name of the XPathNavigator to look for.</param>
+        public static bool NodeExists(this XPathNavigator xmlNode, string strName)
         {
             if (string.IsNullOrEmpty(strName) || xmlNode == null)
                 return false;
@@ -471,7 +324,8 @@ namespace Chummer.Xml
         /// <param name="strPath">Name of the XPathNavigator to look for.</param>
         /// <param name="strId">Element to search for. If it parses as a guid or f it fails to parse as a guid AND blnIdIsGuid is set, it will still search for id, otherwise it will search for a node with a name element that matches.</param>
         /// <param name="strExtraXPath">'Extra' value to append to the search.</param>
-        /// <param name="blnIdIsGuid">Whether to evaluate the ID as a GUID or a string. Use false to pass strId as a string.</param>        public static XPathNavigator TryGetNodeByNameOrId(this XPathNavigator node, string strPath, string strId, string strExtraXPath = "", bool blnIdIsGuid = true)
+        /// <param name="blnIdIsGuid">Whether to evaluate the ID as a GUID or a string. Use false to pass strId as a string.</param>
+        public static XPathNavigator TryGetNodeByNameOrId(this XPathNavigator node, string strPath, string strId, string strExtraXPath = "", bool blnIdIsGuid = true)
         {
             if (node == null || string.IsNullOrEmpty(strPath) || string.IsNullOrEmpty(strId))
                 return null;
@@ -499,7 +353,8 @@ namespace Chummer.Xml
 
         /// <summary>
         /// Query the XPathNavigator for a given node with an id. Includes ToUpperInvariant processing to handle uppercase ids.
-        /// </summary>        public static XPathNavigator TryGetNodeById(this XPathNavigator node, string strPath, Guid guidId, string strExtraXPath = "")
+        /// </summary>
+        public static XPathNavigator TryGetNodeById(this XPathNavigator node, string strPath, Guid guidId, string strExtraXPath = "")
         {
             if (node == null || string.IsNullOrEmpty(strPath))
                 return null;
@@ -520,7 +375,8 @@ namespace Chummer.Xml
         /// Create a new XmlNode in an XmlDocument based on the contents of an XPathNavigator
         /// </summary>
         /// <param name="xmlNode">XPathNavigator to examine.</param>
-        /// <param name="xmlParentDocument">Document to house the XmlNode</param>        public static XmlNode ToXmlNode(this XPathNavigator xmlNode, XmlDocument xmlParentDocument)
+        /// <param name="xmlParentDocument">Document to house the XmlNode</param>
+        public static XmlNode ToXmlNode(this XPathNavigator xmlNode, XmlDocument xmlParentDocument)
         {
             if (xmlNode == null || xmlParentDocument == null)
                 return null;

@@ -64,7 +64,7 @@ namespace Chummer
         /// <param name="xmlTechniqueDataNode">XmlNode to create the object from.</param>
         public void Create(XmlNode xmlTechniqueDataNode)
         {
-            if (!xmlTechniqueDataNode.TryGetField("id", Guid.TryParse, out _guiSourceID))
+            if (!xmlTechniqueDataNode.TryGetField("id", out _guiSourceID))
             {
                 Log.Warn(new object[] { "Missing id field for xmlnode", xmlTechniqueDataNode });
                 Utils.BreakIfDebug();
@@ -103,7 +103,7 @@ namespace Chummer
         public async Task CreateAsync(XmlNode xmlTechniqueDataNode, CancellationToken token = default)
         {
             token.ThrowIfCancellationRequested();
-            if (!xmlTechniqueDataNode.TryGetField("id", Guid.TryParse, out _guiSourceID))
+            if (!xmlTechniqueDataNode.TryGetField("id", out _guiSourceID))
             {
                 Log.Warn(new object[] { "Missing id field for xmlnode", xmlTechniqueDataNode });
                 Utils.BreakIfDebug();
@@ -188,16 +188,16 @@ namespace Chummer
         /// <param name="objNode">XmlNode to load.</param>
         public void Load(XmlNode objNode)
         {
-            if (!objNode.TryGetField("guid", Guid.TryParse, out _guiID))
+            if (!objNode.TryGetField("guid", out _guiID))
             {
                 _guiID = Guid.NewGuid();
             }
             objNode.TryGetStringFieldQuickly("name", ref _strName);
             _objCachedMyXmlNode = null;
             _objCachedMyXPathNode = null;
-            if (!objNode.TryGetGuidFieldQuickly("sourceid", ref _guiSourceID))
+            if (!objNode.TryGetFieldUninitialized("sourceid", ref _guiSourceID))
             {
-                this.GetNodeXPath()?.TryGetGuidFieldQuickly("id", ref _guiSourceID);
+                this.GetNodeXPath()?.TryGetFieldUninitialized("id", ref _guiSourceID);
             }
             objNode.TryGetStringFieldQuickly("source", ref _strSource);
             objNode.TryGetStringFieldQuickly("page", ref _strPage);
@@ -400,7 +400,7 @@ namespace Chummer
             if (objReturn == null)
             {
                 objReturn = objDoc.TryGetNodeByNameOrId("/chummer/techniques/technique", Name);
-                objReturn?.TryGetGuidFieldQuickly("id", ref _guiSourceID);
+                objReturn?.TryGetFieldUninitialized("id", ref _guiSourceID);
             }
             _objCachedMyXmlNode = objReturn;
             _strCachedXmlNodeLanguage = strLanguage;
@@ -425,7 +425,7 @@ namespace Chummer
             if (objReturn == null)
             {
                 objReturn = objDoc.TryGetNodeByNameOrId("/chummer/techniques/technique", Name);
-                objReturn?.TryGetGuidFieldQuickly("id", ref _guiSourceID);
+                objReturn?.TryGetFieldUninitialized("id", ref _guiSourceID);
             }
             _objCachedMyXPathNode = objReturn;
             _strCachedXPathNodeLanguage = strLanguage;

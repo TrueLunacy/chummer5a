@@ -135,7 +135,7 @@ namespace Chummer.Backend.Equipment
             int intCount = 0;
             if (node.TryGetStringFieldQuickly("id", ref strAmmoGuid)
                 && !string.IsNullOrEmpty(strAmmoGuid)
-                && node.TryGetInt32FieldQuickly("count", ref intCount)
+                && node.TryGetFieldUninitialized("count", ref intCount)
                 && Guid.TryParse(strAmmoGuid, out Guid guiClipId))
             {
                 Gear objGear = null;

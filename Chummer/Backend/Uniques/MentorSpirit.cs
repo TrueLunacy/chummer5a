@@ -99,7 +99,7 @@ namespace Chummer
                 _eMentorType = eMentorType;
                 _objCachedMyXmlNode = null;
                 _objCachedMyXPathNode = null;
-                if (!xmlMentor.TryGetField("id", Guid.TryParse, out _guiSourceID))
+                if (!xmlMentor.TryGetField("id", out _guiSourceID))
                 {
                     Log.Warn(new object[] {"Missing id field for xmlnode", xmlMentor});
                     Utils.BreakIfDebug();
@@ -284,7 +284,7 @@ namespace Chummer
                 _eMentorType = eMentorType;
                 _objCachedMyXmlNode = null;
                 _objCachedMyXPathNode = null;
-                if (!xmlMentor.TryGetField("id", Guid.TryParse, out _guiSourceID))
+                if (!xmlMentor.TryGetField("id", out _guiSourceID))
                 {
                     Log.Warn(new object[] { "Missing id field for xmlnode", xmlMentor });
                     Utils.BreakIfDebug();
@@ -553,7 +553,7 @@ namespace Chummer
                 return;
             using (LockObject.EnterWriteLock())
             {
-                if (!objNode.TryGetField("guid", Guid.TryParse, out _guiID))
+                if (!objNode.TryGetField("guid", out _guiID))
                 {
                     _guiID = Guid.NewGuid();
                 }
@@ -572,12 +572,12 @@ namespace Chummer
                 }
 
                 Lazy<XPathNavigator> objMyNode = new Lazy<XPathNavigator>(() => this.GetNodeXPath());
-                if (!objNode.TryGetGuidFieldQuickly("sourceid", ref _guiSourceID)
-                    && objMyNode.Value?.TryGetGuidFieldQuickly("id", ref _guiSourceID) == false)
+                if (!objNode.TryGetFieldUninitialized("sourceid", ref _guiSourceID)
+                    && objMyNode.Value?.TryGetFieldUninitialized("id", ref _guiSourceID) == false)
                 {
                     _objCharacter.LoadDataXPath("qualities.xml")
                                  .TryGetNodeByNameOrId("/chummer/mentors/mentor", Name)
-                                 ?.TryGetGuidFieldQuickly("id", ref _guiSourceID);
+                                 ?.TryGetFieldUninitialized("id", ref _guiSourceID);
                 }
 
                 objNode.TryGetStringFieldQuickly("extra", ref _strExtra);
@@ -608,7 +608,7 @@ namespace Chummer
                     objNode.TryGetMultiLineStringFieldQuickly("disadvantage", ref _strDisadvantage);
                 }
 
-                objNode.TryGetBoolFieldQuickly("mentormask", ref _blnMentorMask);
+                objNode.TryGetFieldUninitialized("mentormask", ref _blnMentorMask);
                 _nodBonus = objNode["bonus"];
                 _nodChoice1 = objNode["choice1"];
                 _nodChoice2 = objNode["choice2"];
@@ -1509,7 +1509,7 @@ namespace Chummer
                 if (objReturn == null)
                 {
                     objReturn = objDoc.TryGetNodeByNameOrId("/chummer/mentors/mentor", blnSync ? Name : await GetNameAsync(token).ConfigureAwait(false));
-                    objReturn?.TryGetGuidFieldQuickly("id", ref _guiSourceID);
+                    objReturn?.TryGetFieldUninitialized("id", ref _guiSourceID);
                 }
 
                 _objCachedMyXmlNode = objReturn;
@@ -1558,7 +1558,7 @@ namespace Chummer
                 if (objReturn == null)
                 {
                     objReturn = objDoc.TryGetNodeByNameOrId("/chummer/mentors/mentor", blnSync ? Name : await GetNameAsync(token).ConfigureAwait(false));
-                    objReturn?.TryGetGuidFieldQuickly("id", ref _guiSourceID);
+                    objReturn?.TryGetFieldUninitialized("id", ref _guiSourceID);
                 }
                 _objCachedMyXPathNode = objReturn;
                 _strCachedXPathNodeLanguage = strLanguage;

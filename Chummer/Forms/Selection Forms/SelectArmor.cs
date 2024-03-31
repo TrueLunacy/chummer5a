@@ -250,7 +250,7 @@ namespace Chummer
                                 await objOldArmor.DisposeAsync().ConfigureAwait(false);
 
                             int intRating = 0;
-                            if (xmlArmor.TryGetInt32FieldQuickly("rating", ref intRating))
+                            if (xmlArmor.TryGetFieldUninitialized("rating", ref intRating))
                             {
                                 await nudRating.DoThreadSafeAsync(x => x.Maximum = intRating, token).ConfigureAwait(false);
                                 if (await chkHideOverAvailLimit.DoThreadSafeFuncAsync(x => x.Checked, token).ConfigureAwait(false))

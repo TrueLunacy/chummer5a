@@ -282,7 +282,7 @@ namespace Chummer
                     foreach (XmlNode xmlChildItem in xmlChildrenList)
                     {
                         int intRating = 0;
-                        xmlChildItem.TryGetInt32FieldQuickly("rating", ref intRating);
+                        xmlChildItem.TryGetFieldUninitialized("rating", ref intRating);
                         string strName = string.Empty;
                         xmlChildItem.TryGetStringFieldQuickly("name", ref strName);
 

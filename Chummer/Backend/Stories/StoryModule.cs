@@ -61,7 +61,7 @@ namespace Chummer
         {
             using (LockObject.EnterWriteLock())
             {
-                xmlStoryModuleDataNode.TryGetField("id", Guid.TryParse, out _guiSourceID);
+                xmlStoryModuleDataNode.TryGetField("id", out _guiSourceID);
                 xmlStoryModuleDataNode.TryGetStringFieldQuickly("name", ref _strName);
 
                 XPathNavigator xmlTextsNode = xmlStoryModuleDataNode.SelectSingleNodeAndCacheExpression("texts");
@@ -91,7 +91,7 @@ namespace Chummer
             try
             {
                 token.ThrowIfCancellationRequested();
-                xmlStoryModuleDataNode.TryGetField("id", Guid.TryParse, out _guiSourceID);
+                xmlStoryModuleDataNode.TryGetField("id", out _guiSourceID);
                 xmlStoryModuleDataNode.TryGetStringFieldQuickly("name", ref _strName);
 
                 XPathNavigator xmlTextsNode = xmlStoryModuleDataNode
@@ -705,7 +705,7 @@ namespace Chummer
                 if (objReturn == null && SourceID != Guid.Empty)
                 {
                     objReturn = objDoc.TryGetNodeByNameOrId("/chummer/stories/story", Name);
-                    objReturn?.TryGetGuidFieldQuickly("id", ref _guiSourceID);
+                    objReturn?.TryGetFieldUninitialized("id", ref _guiSourceID);
                 }
                 _objCachedMyXmlNode = objReturn;
                 _strCachedXmlNodeLanguage = strLanguage;
@@ -749,7 +749,7 @@ namespace Chummer
                 if (objReturn == null && SourceID != Guid.Empty)
                 {
                     objReturn = objDoc.TryGetNodeByNameOrId("/chummer/stories/story", Name);
-                    objReturn?.TryGetGuidFieldQuickly("id", ref _guiSourceID);
+                    objReturn?.TryGetFieldUninitialized("id", ref _guiSourceID);
                 }
                 _objCachedMyXPathNode = objReturn;
                 _strCachedXPathNodeLanguage = strLanguage;

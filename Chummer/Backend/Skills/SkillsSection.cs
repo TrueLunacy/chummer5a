@@ -601,7 +601,7 @@ namespace Chummer.Backend.Skills
                             if (blnDeleteSkillsFromBackupIfFound)
                             {
                                 if (!_dicSkillBackups.IsEmpty
-                                    && xmlSkill.TryGetField("id", Guid.TryParse, out Guid guiSkillId)
+                                    && xmlSkill.TryGetField("id", out Guid guiSkillId)
                                     && _dicSkillBackups.TryRemove(guiSkillId, out Skill objSkill)
                                     && objSkill != null)
                                 {
@@ -621,7 +621,7 @@ namespace Chummer.Backend.Skills
                                 }
                             }
                             else if (!_dicSkillBackups.IsEmpty
-                                     && xmlSkill.TryGetField("id", Guid.TryParse, out Guid guiSkillId)
+                                     && xmlSkill.TryGetField("id", out Guid guiSkillId)
                                      && _dicSkillBackups.TryGetValue(guiSkillId, out Skill objSkill)
                                      && objSkill != null)
                             {
@@ -671,7 +671,7 @@ namespace Chummer.Backend.Skills
                             if (blnDeleteSkillsFromBackupIfFound)
                             {
                                 if (!_dicSkillBackups.IsEmpty
-                                    && xmlSkill.TryGetField("id", Guid.TryParse, out Guid guiSkillId) &&
+                                    && xmlSkill.TryGetField("id", out Guid guiSkillId) &&
                                     _dicSkillBackups.TryRemove(guiSkillId, out Skill objSkill) && objSkill != null)
                                 {
                                     lstReturn.Add(objSkill);
@@ -691,7 +691,7 @@ namespace Chummer.Backend.Skills
                                 }
                             }
                             else if (!_dicSkillBackups.IsEmpty
-                                     && xmlSkill.TryGetField("id", Guid.TryParse, out Guid guiSkillId) &&
+                                     && xmlSkill.TryGetField("id", out Guid guiSkillId) &&
                                      _dicSkillBackups.TryGetValue(guiSkillId, out Skill objSkill) && objSkill != null)
                             {
                                 lstReturn.Add(objSkill);
@@ -2008,9 +2008,9 @@ namespace Chummer.Backend.Skills
                             }
 
                             int intTmp = 0;
-                            if (xmlSkillNode.TryGetInt32FieldQuickly("skillptsmax", ref intTmp))
+                            if (xmlSkillNode.TryGetFieldUninitialized("skillptsmax", ref intTmp))
                                 SkillPointsMaximum = intTmp;
-                            if (xmlSkillNode.TryGetInt32FieldQuickly("skillgrpsmax", ref intTmp))
+                            if (xmlSkillNode.TryGetFieldUninitialized("skillgrpsmax", ref intTmp))
                                 SkillGroupPointsMaximum = intTmp;
 
                             //Timekeeper.Finish("load_char_skills");

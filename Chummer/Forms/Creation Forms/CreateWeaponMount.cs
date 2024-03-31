@@ -686,7 +686,7 @@ namespace Chummer
                         else
                         {
                             int intTotalSlots = 0;
-                            xmlSelectedMount.TryGetInt32FieldQuickly("slots", ref intTotalSlots);
+                            xmlSelectedMount.TryGetFieldUninitialized("slots", ref intTotalSlots);
                             foreach (string strSelectedId in astrSelectedValues)
                             {
                                 if (!string.IsNullOrEmpty(strSelectedId))
@@ -695,7 +695,7 @@ namespace Chummer
                                     if (xmlLoopNode == null)
                                         continue;
                                     int intLoopSlots = 0;
-                                    if (xmlLoopNode.TryGetInt32FieldQuickly("slots", ref intLoopSlots))
+                                    if (xmlLoopNode.TryGetFieldUninitialized("slots", ref intLoopSlots))
                                     {
                                         intTotalSlots += intLoopSlots;
                                     }
@@ -761,9 +761,9 @@ namespace Chummer
 
                 decimal decCost = 0;
                 if (!await chkFreeItem.DoThreadSafeFuncAsync(x => x.Checked, token).ConfigureAwait(false) && _blnAllowEditOptions)
-                    xmlSelectedMount.TryGetDecFieldQuickly("cost", ref decCost);
+                    xmlSelectedMount.TryGetFieldUninitialized("cost", ref decCost);
                 int intSlots = 0;
-                xmlSelectedMount.TryGetInt32FieldQuickly("slots", ref intSlots);
+                xmlSelectedMount.TryGetFieldUninitialized("slots", ref intSlots);
 
                 string strAvail = xmlSelectedMount.SelectSingleNodeAndCacheExpression("avail", token)?.Value ?? string.Empty;
                 char chrAvailSuffix = strAvail.Length > 0 ? strAvail[strAvail.Length - 1] : ' ';
@@ -783,12 +783,12 @@ namespace Chummer
                     if (!await chkFreeItem.DoThreadSafeFuncAsync(x => x.Checked, token).ConfigureAwait(false) && _blnAllowEditOptions)
                     {
                         decimal decLoopCost = 0;
-                        if (xmlLoopNode.TryGetDecFieldQuickly("cost", ref decLoopCost))
+                        if (xmlLoopNode.TryGetFieldUninitialized("cost", ref decLoopCost))
                             decCost += decLoopCost;
                     }
 
                     int intLoopSlots = 0;
-                    if (xmlLoopNode.TryGetInt32FieldQuickly("slots", ref intLoopSlots))
+                    if (xmlLoopNode.TryGetFieldUninitialized("slots", ref intLoopSlots))
                         intSlots += intLoopSlots;
 
                     string strLoopAvail = xmlLoopNode["avail"]?.InnerText ?? string.Empty;
@@ -893,7 +893,7 @@ namespace Chummer
                         xmlSelectedMount = _xmlDocXPath.TryGetNodeByNameOrId("/chummer/weaponmounts/weaponmount", strSelectedMount);
 
                     int intSlots = 0;
-                    xmlSelectedMount.TryGetInt32FieldQuickly("slots", ref intSlots);
+                    xmlSelectedMount.TryGetFieldUninitialized("slots", ref intSlots);
 
                     string[] astrSelectedValues =
                     {

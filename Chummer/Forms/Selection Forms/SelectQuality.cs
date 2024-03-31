@@ -122,7 +122,7 @@ namespace Chummer
                 {
                     await nudRating.DoThreadSafeAsync(x => x.ValueAsInt = x.MinimumAsInt).ConfigureAwait(false);
                     int intMaxRating = int.MaxValue;
-                    if (xmlQuality.TryGetInt32FieldQuickly("limit", ref intMaxRating)
+                    if (xmlQuality.TryGetFieldUninitialized("limit", ref intMaxRating)
                         && xmlQuality.SelectSingleNodeAndCacheExpression("nolevels") == null)
                     {
                         await lblRatingNALabel.DoThreadSafeAsync(x => x.Visible = false).ConfigureAwait(false);

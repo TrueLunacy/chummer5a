@@ -242,7 +242,7 @@ namespace Chummer.Backend.Equipment
             bool blnCreateImprovements = true, bool blnSkipSelectForms = false, CancellationToken token = default)
         {
             token.ThrowIfCancellationRequested();
-            if (!objXmlVehicle.TryGetField("id", Guid.TryParse, out _guiSourceID))
+            if (!objXmlVehicle.TryGetField("id", out _guiSourceID))
             {
                 Log.Warn(new object[] { "Missing id field for xmlnode", objXmlVehicle });
                 Utils.BreakIfDebug();
@@ -310,19 +310,19 @@ namespace Chummer.Backend.Equipment
                     _intOffroadSpeed = _intSpeed;
                 }
             }
-            objXmlVehicle.TryGetInt32FieldQuickly("pilot", ref _intPilot);
-            objXmlVehicle.TryGetInt32FieldQuickly("body", ref _intBody);
-            objXmlVehicle.TryGetInt32FieldQuickly("armor", ref _intArmor);
-            objXmlVehicle.TryGetInt32FieldQuickly("sensor", ref _intSensor);
-            objXmlVehicle.TryGetInt32FieldQuickly("seats", ref _intSeats);
-            if (!objXmlVehicle.TryGetInt32FieldQuickly("modslots", ref _intDroneModSlots))
+            objXmlVehicle.TryGetFieldUninitialized("pilot", ref _intPilot);
+            objXmlVehicle.TryGetFieldUninitialized("body", ref _intBody);
+            objXmlVehicle.TryGetFieldUninitialized("armor", ref _intArmor);
+            objXmlVehicle.TryGetFieldUninitialized("sensor", ref _intSensor);
+            objXmlVehicle.TryGetFieldUninitialized("seats", ref _intSeats);
+            if (!objXmlVehicle.TryGetFieldUninitialized("modslots", ref _intDroneModSlots))
                 _intDroneModSlots = _intBody;
-            objXmlVehicle.TryGetInt32FieldQuickly("powertrainmodslots", ref _intAddPowertrainModSlots);
-            objXmlVehicle.TryGetInt32FieldQuickly("protectionmodslots", ref _intAddProtectionModSlots);
-            objXmlVehicle.TryGetInt32FieldQuickly("weaponmodslots", ref _intAddWeaponModSlots);
-            objXmlVehicle.TryGetInt32FieldQuickly("bodymodslots", ref _intAddBodyModSlots);
-            objXmlVehicle.TryGetInt32FieldQuickly("electromagneticmodslots", ref _intAddElectromagneticModSlots);
-            objXmlVehicle.TryGetInt32FieldQuickly("cosmeticmodslots", ref _intAddCosmeticModSlots);
+            objXmlVehicle.TryGetFieldUninitialized("powertrainmodslots", ref _intAddPowertrainModSlots);
+            objXmlVehicle.TryGetFieldUninitialized("protectionmodslots", ref _intAddProtectionModSlots);
+            objXmlVehicle.TryGetFieldUninitialized("weaponmodslots", ref _intAddWeaponModSlots);
+            objXmlVehicle.TryGetFieldUninitialized("bodymodslots", ref _intAddBodyModSlots);
+            objXmlVehicle.TryGetFieldUninitialized("electromagneticmodslots", ref _intAddElectromagneticModSlots);
+            objXmlVehicle.TryGetFieldUninitialized("cosmeticmodslots", ref _intAddCosmeticModSlots);
             objXmlVehicle.TryGetStringFieldQuickly("avail", ref _strAvail);
             if (!objXmlVehicle.TryGetMultiLineStringFieldQuickly("altnotes", ref _strNotes))
                 objXmlVehicle.TryGetMultiLineStringFieldQuickly("notes", ref _strNotes);
@@ -946,7 +946,7 @@ namespace Chummer.Backend.Equipment
         {
             if (objNode == null)
                 return;
-            if (blnCopy || !objNode.TryGetField("guid", Guid.TryParse, out _guiID))
+            if (blnCopy || !objNode.TryGetField("guid", out _guiID))
             {
                 _guiID = Guid.NewGuid();
             }
@@ -954,9 +954,9 @@ namespace Chummer.Backend.Equipment
             _objCachedMyXmlNode = null;
             _objCachedMyXPathNode = null;
             Lazy<XmlNode> objMyNode = new Lazy<XmlNode>(() => this.GetNode());
-            if (!objNode.TryGetGuidFieldQuickly("sourceid", ref _guiSourceID))
+            if (!objNode.TryGetFieldUninitialized("sourceid", ref _guiSourceID))
             {
-                objMyNode.Value?.TryGetGuidFieldQuickly("id", ref _guiSourceID);
+                objMyNode.Value?.TryGetFieldUninitialized("id", ref _guiSourceID);
             }
 
             if (blnCopy)
@@ -966,13 +966,13 @@ namespace Chummer.Backend.Equipment
             else
             {
                 bool blnIsHomeNode = false;
-                if (objNode.TryGetBoolFieldQuickly("homenode", ref blnIsHomeNode) && blnIsHomeNode)
+                if (objNode.TryGetFieldUninitialized("homenode", ref blnIsHomeNode) && blnIsHomeNode)
                 {
                     this.SetHomeNode(_objCharacter, true);
                 }
             }
             bool blnIsActive = false;
-            if (objNode.TryGetBoolFieldQuickly("active", ref blnIsActive) && blnIsActive)
+            if (objNode.TryGetFieldUninitialized("active", ref blnIsActive) && blnIsActive)
                 this.SetActiveCommlink(_objCharacter, true);
 
             objNode.TryGetStringFieldQuickly("category", ref _strCategory);
@@ -1034,29 +1034,29 @@ namespace Chummer.Backend.Equipment
                     }
                 }
             }
-            objNode.TryGetInt32FieldQuickly("seats", ref _intSeats);
-            objNode.TryGetInt32FieldQuickly("pilot", ref _intPilot);
-            objNode.TryGetInt32FieldQuickly("body", ref _intBody);
-            objNode.TryGetInt32FieldQuickly("armor", ref _intArmor);
-            objNode.TryGetInt32FieldQuickly("sensor", ref _intSensor);
+            objNode.TryGetFieldUninitialized("seats", ref _intSeats);
+            objNode.TryGetFieldUninitialized("pilot", ref _intPilot);
+            objNode.TryGetFieldUninitialized("body", ref _intBody);
+            objNode.TryGetFieldUninitialized("armor", ref _intArmor);
+            objNode.TryGetFieldUninitialized("sensor", ref _intSensor);
             objNode.TryGetStringFieldQuickly("avail", ref _strAvail);
             objNode.TryGetStringFieldQuickly("cost", ref _strCost);
-            objNode.TryGetInt32FieldQuickly("addslots", ref _intAddSlots);
-            objNode.TryGetInt32FieldQuickly("modslots", ref _intDroneModSlots);
-            objNode.TryGetInt32FieldQuickly("powertrainmodslots", ref _intAddPowertrainModSlots);
-            objNode.TryGetInt32FieldQuickly("protectionmodslots", ref _intAddProtectionModSlots);
-            objNode.TryGetInt32FieldQuickly("weaponmodslots", ref _intAddWeaponModSlots);
-            objNode.TryGetInt32FieldQuickly("bodymodslots", ref _intAddBodyModSlots);
-            objNode.TryGetInt32FieldQuickly("electromagneticmodslots", ref _intAddElectromagneticModSlots);
-            objNode.TryGetInt32FieldQuickly("cosmeticmodslots", ref _intAddCosmeticModSlots);
+            objNode.TryGetFieldUninitialized("addslots", ref _intAddSlots);
+            objNode.TryGetFieldUninitialized("modslots", ref _intDroneModSlots);
+            objNode.TryGetFieldUninitialized("powertrainmodslots", ref _intAddPowertrainModSlots);
+            objNode.TryGetFieldUninitialized("protectionmodslots", ref _intAddProtectionModSlots);
+            objNode.TryGetFieldUninitialized("weaponmodslots", ref _intAddWeaponModSlots);
+            objNode.TryGetFieldUninitialized("bodymodslots", ref _intAddBodyModSlots);
+            objNode.TryGetFieldUninitialized("electromagneticmodslots", ref _intAddElectromagneticModSlots);
+            objNode.TryGetFieldUninitialized("cosmeticmodslots", ref _intAddCosmeticModSlots);
             objNode.TryGetStringFieldQuickly("source", ref _strSource);
             objNode.TryGetStringFieldQuickly("page", ref _strPage);
             objNode.TryGetStringFieldQuickly("parentid", ref _strParentID);
-            objNode.TryGetInt32FieldQuickly("matrixcmfilled", ref _intMatrixCMFilled);
-            objNode.TryGetInt32FieldQuickly("physicalcmfilled", ref _intPhysicalCMFilled);
+            objNode.TryGetFieldUninitialized("matrixcmfilled", ref _intMatrixCMFilled);
+            objNode.TryGetFieldUninitialized("physicalcmfilled", ref _intPhysicalCMFilled);
             objNode.TryGetStringFieldQuickly("vehiclename", ref _strVehicleName);
-            objNode.TryGetInt32FieldQuickly("sortorder", ref _intSortOrder);
-            objNode.TryGetBoolFieldQuickly("stolen", ref _blnStolen);
+            objNode.TryGetFieldUninitialized("sortorder", ref _intSortOrder);
+            objNode.TryGetFieldUninitialized("stolen", ref _blnStolen);
             string strNodeInnerXml = objNode.InnerXml;
 
             // Load gear first so that ammo stuff for weapons get loaded in properly
@@ -1102,7 +1102,7 @@ namespace Chummer.Backend.Equipment
                         if (Name.StartsWith("Proteus Krake", StringComparison.Ordinal)
                             && !blnKrakePassDone
                             && _objCharacter.LastSavedVersion < new Version(5, 213, 28)
-                            && (!nodChild.TryGetGuidFieldQuickly("sourceid", ref guidDummy) || guidDummy == Guid.Empty))
+                            && (!nodChild.TryGetFieldUninitialized("sourceid", ref guidDummy) || guidDummy == Guid.Empty))
                         {
                             blnKrakePassDone = true;
                             // If there are any Weapon Mounts that come with the Vehicle, add them.
@@ -1262,8 +1262,8 @@ namespace Chummer.Backend.Equipment
             objNode.TryGetStringFieldQuickly("notesColor", ref sNotesColor);
             _colNotes = ColorTranslator.FromHtml(sNotesColor);
 
-            objNode.TryGetBoolFieldQuickly("discountedcost", ref _blnDiscountCost);
-            if (!objNode.TryGetBoolFieldQuickly("dealerconnection", ref _blnDealerConnectionDiscount))
+            objNode.TryGetFieldUninitialized("discountedcost", ref _blnDiscountCost);
+            if (!objNode.TryGetFieldUninitialized("dealerconnection", ref _blnDealerConnectionDiscount))
             {
                 _blnDealerConnectionDiscount = DoesDealerConnectionCurrentlyApply();
             }
@@ -4223,7 +4223,7 @@ namespace Chummer.Backend.Equipment
             if (objReturn == null && SourceID != Guid.Empty)
             {
                 objReturn = objDoc.TryGetNodeByNameOrId("/chummer/vehicles/vehicle", Name);
-                objReturn?.TryGetGuidFieldQuickly("id", ref _guiSourceID);
+                objReturn?.TryGetFieldUninitialized("id", ref _guiSourceID);
             }
             _objCachedMyXmlNode = objReturn;
             _strCachedXmlNodeLanguage = strLanguage;
@@ -4247,7 +4247,7 @@ namespace Chummer.Backend.Equipment
             if (objReturn == null && SourceID != Guid.Empty)
             {
                 objReturn = objDoc.TryGetNodeByNameOrId("/chummer/vehicles/vehicle", Name);
-                objReturn?.TryGetGuidFieldQuickly("id", ref _guiSourceID);
+                objReturn?.TryGetFieldUninitialized("id", ref _guiSourceID);
             }
             _objCachedMyXPathNode = objReturn;
             _strCachedXPathNodeLanguage = strLanguage;

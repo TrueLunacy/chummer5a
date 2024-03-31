@@ -147,9 +147,9 @@ namespace Chummer
                 _guiID = Guid.Empty;
                 return;
             }
-            objNode.TryGetInt32FieldQuickly("force", ref _intForce);
-            objNode.TryGetInt32FieldQuickly("nethits", ref _intNetHits);
-            objNode.TryGetBoolFieldQuickly("self", ref _blnSelfSustained);
+            objNode.TryGetFieldUninitialized("force", ref _intForce);
+            objNode.TryGetFieldUninitialized("nethits", ref _intNetHits);
+            objNode.TryGetFieldUninitialized("self", ref _blnSelfSustained);
         }
 
         /// <summary>

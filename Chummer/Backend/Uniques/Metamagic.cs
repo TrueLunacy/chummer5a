@@ -76,7 +76,7 @@ namespace Chummer
             string strForcedValue = "", CancellationToken token = default)
         {
             token.ThrowIfCancellationRequested();
-            if (!objXmlMetamagicNode.TryGetField("id", Guid.TryParse, out _guiSourceID))
+            if (!objXmlMetamagicNode.TryGetField("id", out _guiSourceID))
             {
                 Log.Warn(new object[] { "Missing id field for xmlnode", objXmlMetamagicNode });
                 Utils.BreakIfDebug();
@@ -91,7 +91,7 @@ namespace Chummer
             objXmlMetamagicNode.TryGetStringFieldQuickly("source", ref _strSource);
             objXmlMetamagicNode.TryGetStringFieldQuickly("page", ref _strPage);
             _eImprovementSource = objSource;
-            objXmlMetamagicNode.TryGetInt32FieldQuickly("grade", ref _intGrade);
+            objXmlMetamagicNode.TryGetFieldUninitialized("grade", ref _intGrade);
             if (!objXmlMetamagicNode.TryGetMultiLineStringFieldQuickly("altnotes", ref _strNotes))
                 objXmlMetamagicNode.TryGetMultiLineStringFieldQuickly("notes", ref _strNotes);
 
@@ -158,7 +158,7 @@ namespace Chummer
             string strForcedValue = "", CancellationToken token = default)
         {
             token.ThrowIfCancellationRequested();
-            if (!objXmlMetamagicNode.TryGetField("id", Guid.TryParse, out _guiSourceID))
+            if (!objXmlMetamagicNode.TryGetField("id", out _guiSourceID))
             {
                 Log.Warn(new object[] { "Missing id field for xmlnode", objXmlMetamagicNode });
                 Utils.BreakIfDebug();
@@ -173,7 +173,7 @@ namespace Chummer
             objXmlMetamagicNode.TryGetStringFieldQuickly("source", ref _strSource);
             objXmlMetamagicNode.TryGetStringFieldQuickly("page", ref _strPage);
             _eImprovementSource = objSource;
-            objXmlMetamagicNode.TryGetInt32FieldQuickly("grade", ref _intGrade);
+            objXmlMetamagicNode.TryGetFieldUninitialized("grade", ref _intGrade);
             if (!objXmlMetamagicNode.TryGetMultiLineStringFieldQuickly("altnotes", ref _strNotes))
                 objXmlMetamagicNode.TryGetMultiLineStringFieldQuickly("notes", ref _strNotes);
 
@@ -290,7 +290,7 @@ namespace Chummer
         /// <param name="objNode">XmlNode to load.</param>
         public void Load(XmlNode objNode)
         {
-            if (!objNode.TryGetField("guid", Guid.TryParse, out _guiID))
+            if (!objNode.TryGetField("guid", out _guiID))
             {
                 _guiID = Guid.NewGuid();
             }
@@ -299,14 +299,14 @@ namespace Chummer
             _objCachedMyXmlNode = null;
             _objCachedMyXPathNode = null;
 
-            if (!objNode.TryGetGuidFieldQuickly("sourceid", ref _guiSourceID))
+            if (!objNode.TryGetFieldUninitialized("sourceid", ref _guiSourceID))
             {
-                this.GetNodeXPath()?.TryGetGuidFieldQuickly("id", ref _guiSourceID);
+                this.GetNodeXPath()?.TryGetFieldUninitialized("id", ref _guiSourceID);
             }
             objNode.TryGetStringFieldQuickly("source", ref _strSource);
             objNode.TryGetStringFieldQuickly("page", ref _strPage);
-            objNode.TryGetBoolFieldQuickly("paidwithkarma", ref _blnPaidWithKarma);
-            objNode.TryGetInt32FieldQuickly("grade", ref _intGrade);
+            objNode.TryGetFieldUninitialized("paidwithkarma", ref _blnPaidWithKarma);
+            objNode.TryGetFieldUninitialized("grade", ref _intGrade);
 
             _nodBonus = objNode["bonus"];
             if (objNode["improvementsource"] != null)
@@ -597,7 +597,7 @@ namespace Chummer
             if (objReturn == null)
             {
                 objReturn = objDoc.TryGetNodeByNameOrId(strPath, Name);
-                objReturn?.TryGetGuidFieldQuickly("id", ref _guiSourceID);
+                objReturn?.TryGetFieldUninitialized("id", ref _guiSourceID);
             }
             _objCachedMyXmlNode = objReturn;
             _strCachedXmlNodeLanguage = strLanguage;
@@ -631,7 +631,7 @@ namespace Chummer
             if (objReturn == null)
             {
                 objReturn = objDoc.TryGetNodeByNameOrId(strPath, Name);
-                objReturn?.TryGetGuidFieldQuickly("id", ref _guiSourceID);
+                objReturn?.TryGetFieldUninitialized("id", ref _guiSourceID);
             }
             _objCachedMyXPathNode = objReturn;
             _strCachedXPathNodeLanguage = strLanguage;

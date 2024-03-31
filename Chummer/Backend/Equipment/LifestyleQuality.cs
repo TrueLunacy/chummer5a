@@ -141,7 +141,7 @@ namespace Chummer.Backend.Equipment
             using (LockObject.EnterWriteLock())
             {
                 _objParentLifestyle = objParentLifestyle;
-                if (!objXmlLifestyleQuality.TryGetField("id", Guid.TryParse, out _guiSourceID))
+                if (!objXmlLifestyleQuality.TryGetField("id", out _guiSourceID))
                 {
                     Log.Warn(new object[] {"Missing id field for xmlnode", objXmlLifestyleQuality});
                     Utils.BreakIfDebug();
@@ -158,20 +158,20 @@ namespace Chummer.Backend.Equipment
                     _objCachedMyXPathNode = null;
                 }
 
-                objXmlLifestyleQuality.TryGetInt32FieldQuickly("lp", ref _intLPCost);
+                objXmlLifestyleQuality.TryGetFieldUninitialized("lp", ref _intLPCost);
                 objXmlLifestyleQuality.TryGetStringFieldQuickly("cost", ref _strCost);
-                objXmlLifestyleQuality.TryGetInt32FieldQuickly("multiplier", ref _intMultiplier);
-                objXmlLifestyleQuality.TryGetInt32FieldQuickly("multiplierbaseonly", ref _intBaseMultiplier);
+                objXmlLifestyleQuality.TryGetFieldUninitialized("multiplier", ref _intMultiplier);
+                objXmlLifestyleQuality.TryGetFieldUninitialized("multiplierbaseonly", ref _intBaseMultiplier);
                 if (objXmlLifestyleQuality.TryGetStringFieldQuickly("category", ref _strCategory))
                     _eType = ConvertToLifestyleQualityType(_strCategory);
                 OriginSource = objLifestyleQualitySource;
-                objXmlLifestyleQuality.TryGetInt32FieldQuickly("areamaximum", ref _intAreaMaximum);
-                objXmlLifestyleQuality.TryGetInt32FieldQuickly("comfortsmaximum", ref _intComfortsMaximum);
-                objXmlLifestyleQuality.TryGetInt32FieldQuickly("securitymaximum", ref _intSecurityMaximum);
-                objXmlLifestyleQuality.TryGetInt32FieldQuickly("area", ref _intArea);
-                objXmlLifestyleQuality.TryGetInt32FieldQuickly("comforts", ref _intComforts);
-                objXmlLifestyleQuality.TryGetInt32FieldQuickly("security", ref _intSecurity);
-                objXmlLifestyleQuality.TryGetBoolFieldQuickly("print", ref _blnPrint);
+                objXmlLifestyleQuality.TryGetFieldUninitialized("areamaximum", ref _intAreaMaximum);
+                objXmlLifestyleQuality.TryGetFieldUninitialized("comfortsmaximum", ref _intComfortsMaximum);
+                objXmlLifestyleQuality.TryGetFieldUninitialized("securitymaximum", ref _intSecurityMaximum);
+                objXmlLifestyleQuality.TryGetFieldUninitialized("area", ref _intArea);
+                objXmlLifestyleQuality.TryGetFieldUninitialized("comforts", ref _intComforts);
+                objXmlLifestyleQuality.TryGetFieldUninitialized("security", ref _intSecurity);
+                objXmlLifestyleQuality.TryGetFieldUninitialized("print", ref _blnPrint);
                 if (!objXmlLifestyleQuality.TryGetMultiLineStringFieldQuickly("altnotes", ref _strNotes))
                     objXmlLifestyleQuality.TryGetMultiLineStringFieldQuickly("notes", ref _strNotes);
 
@@ -251,7 +251,7 @@ namespace Chummer.Backend.Equipment
             {
                 token.ThrowIfCancellationRequested();
                 _objParentLifestyle = objParentLifestyle;
-                if (!objXmlLifestyleQuality.TryGetField("id", Guid.TryParse, out _guiSourceID))
+                if (!objXmlLifestyleQuality.TryGetField("id", out _guiSourceID))
                 {
                     Log.Warn(new object[] { "Missing id field for xmlnode", objXmlLifestyleQuality });
                     Utils.BreakIfDebug();
@@ -268,20 +268,20 @@ namespace Chummer.Backend.Equipment
                     _objCachedMyXPathNode = null;
                 }
 
-                objXmlLifestyleQuality.TryGetInt32FieldQuickly("lp", ref _intLPCost);
+                objXmlLifestyleQuality.TryGetFieldUninitialized("lp", ref _intLPCost);
                 objXmlLifestyleQuality.TryGetStringFieldQuickly("cost", ref _strCost);
-                objXmlLifestyleQuality.TryGetInt32FieldQuickly("multiplier", ref _intMultiplier);
-                objXmlLifestyleQuality.TryGetInt32FieldQuickly("multiplierbaseonly", ref _intBaseMultiplier);
+                objXmlLifestyleQuality.TryGetFieldUninitialized("multiplier", ref _intMultiplier);
+                objXmlLifestyleQuality.TryGetFieldUninitialized("multiplierbaseonly", ref _intBaseMultiplier);
                 if (objXmlLifestyleQuality.TryGetStringFieldQuickly("category", ref _strCategory))
                     _eType = ConvertToLifestyleQualityType(_strCategory);
                 OriginSource = objLifestyleQualitySource;
-                objXmlLifestyleQuality.TryGetInt32FieldQuickly("areamaximum", ref _intAreaMaximum);
-                objXmlLifestyleQuality.TryGetInt32FieldQuickly("comfortsmaximum", ref _intComfortsMaximum);
-                objXmlLifestyleQuality.TryGetInt32FieldQuickly("securitymaximum", ref _intSecurityMaximum);
-                objXmlLifestyleQuality.TryGetInt32FieldQuickly("area", ref _intArea);
-                objXmlLifestyleQuality.TryGetInt32FieldQuickly("comforts", ref _intComforts);
-                objXmlLifestyleQuality.TryGetInt32FieldQuickly("security", ref _intSecurity);
-                objXmlLifestyleQuality.TryGetBoolFieldQuickly("print", ref _blnPrint);
+                objXmlLifestyleQuality.TryGetFieldUninitialized("areamaximum", ref _intAreaMaximum);
+                objXmlLifestyleQuality.TryGetFieldUninitialized("comfortsmaximum", ref _intComfortsMaximum);
+                objXmlLifestyleQuality.TryGetFieldUninitialized("securitymaximum", ref _intSecurityMaximum);
+                objXmlLifestyleQuality.TryGetFieldUninitialized("area", ref _intArea);
+                objXmlLifestyleQuality.TryGetFieldUninitialized("comforts", ref _intComforts);
+                objXmlLifestyleQuality.TryGetFieldUninitialized("security", ref _intSecurity);
+                objXmlLifestyleQuality.TryGetFieldUninitialized("print", ref _blnPrint);
                 if (!objXmlLifestyleQuality.TryGetMultiLineStringFieldQuickly("altnotes", ref _strNotes))
                     objXmlLifestyleQuality.TryGetMultiLineStringFieldQuickly("notes", ref _strNotes);
 
@@ -450,37 +450,37 @@ namespace Chummer.Backend.Equipment
             using (LockObject.EnterWriteLock())
             {
                 _objParentLifestyle = objParentLifestyle;
-                if (!objNode.TryGetField("guid", Guid.TryParse, out _guiID))
+                if (!objNode.TryGetField("guid", out _guiID))
                     _guiID = Guid.NewGuid();
                 objNode.TryGetStringFieldQuickly("name", ref _strName);
                 _objCachedMyXmlNode = null;
                 _objCachedMyXPathNode = null;
                 Lazy<XPathNavigator> objMyNode = new Lazy<XPathNavigator>(() => this.GetNodeXPath());
-                if (!objNode.TryGetGuidFieldQuickly("sourceid", ref _guiSourceID))
+                if (!objNode.TryGetFieldUninitialized("sourceid", ref _guiSourceID))
                 {
-                    objMyNode.Value?.TryGetGuidFieldQuickly("id", ref _guiSourceID);
+                    objMyNode.Value?.TryGetFieldUninitialized("id", ref _guiSourceID);
                 }
 
                 objNode.TryGetStringFieldQuickly("extra", ref _strExtra);
-                objNode.TryGetInt32FieldQuickly("lp", ref _intLPCost);
+                objNode.TryGetFieldUninitialized("lp", ref _intLPCost);
                 objNode.TryGetStringFieldQuickly("cost", ref _strCost);
-                objNode.TryGetInt32FieldQuickly("multiplier", ref _intMultiplier);
-                objNode.TryGetInt32FieldQuickly("basemultiplier", ref _intBaseMultiplier);
-                if (!objNode.TryGetBoolFieldQuickly("uselpcost", ref _blnUseLPCost))
-                    objNode.TryGetBoolFieldQuickly("contributetolimit", ref _blnUseLPCost);
-                if (!objNode.TryGetInt32FieldQuickly("areamaximum", ref _intAreaMaximum))
-                    objMyNode.Value?.TryGetInt32FieldQuickly("areamaximum", ref _intAreaMaximum);
-                if (!objNode.TryGetInt32FieldQuickly("area", ref _intArea))
-                    objMyNode.Value?.TryGetInt32FieldQuickly("area", ref _intArea);
-                if (!objNode.TryGetInt32FieldQuickly("securitymaximum", ref _intSecurityMaximum))
-                    objMyNode.Value?.TryGetInt32FieldQuickly("securitymaximum", ref _intSecurityMaximum);
-                if (!objNode.TryGetInt32FieldQuickly("security", ref _intSecurity))
-                    objMyNode.Value?.TryGetInt32FieldQuickly("security", ref _intSecurity);
-                if (!objNode.TryGetInt32FieldQuickly("comforts", ref _intComforts))
-                    objMyNode.Value?.TryGetInt32FieldQuickly("comforts", ref _intComforts);
-                if (!objNode.TryGetInt32FieldQuickly("comfortsmaximum", ref _intComfortsMaximum))
-                    objMyNode.Value?.TryGetInt32FieldQuickly("comfortsmaximum", ref _intComfortsMaximum);
-                objNode.TryGetBoolFieldQuickly("print", ref _blnPrint);
+                objNode.TryGetFieldUninitialized("multiplier", ref _intMultiplier);
+                objNode.TryGetFieldUninitialized("basemultiplier", ref _intBaseMultiplier);
+                if (!objNode.TryGetFieldUninitialized("uselpcost", ref _blnUseLPCost))
+                    objNode.TryGetFieldUninitialized("contributetolimit", ref _blnUseLPCost);
+                if (!objNode.TryGetFieldUninitialized("areamaximum", ref _intAreaMaximum))
+                    objMyNode.Value?.TryGetFieldUninitialized("areamaximum", ref _intAreaMaximum);
+                if (!objNode.TryGetFieldUninitialized("area", ref _intArea))
+                    objMyNode.Value?.TryGetFieldUninitialized("area", ref _intArea);
+                if (!objNode.TryGetFieldUninitialized("securitymaximum", ref _intSecurityMaximum))
+                    objMyNode.Value?.TryGetFieldUninitialized("securitymaximum", ref _intSecurityMaximum);
+                if (!objNode.TryGetFieldUninitialized("security", ref _intSecurity))
+                    objMyNode.Value?.TryGetFieldUninitialized("security", ref _intSecurity);
+                if (!objNode.TryGetFieldUninitialized("comforts", ref _intComforts))
+                    objMyNode.Value?.TryGetFieldUninitialized("comforts", ref _intComforts);
+                if (!objNode.TryGetFieldUninitialized("comfortsmaximum", ref _intComfortsMaximum))
+                    objMyNode.Value?.TryGetFieldUninitialized("comfortsmaximum", ref _intComfortsMaximum);
+                objNode.TryGetFieldUninitialized("print", ref _blnPrint);
                 if (objNode["lifestylequalitytype"] != null)
                     _eType = ConvertToLifestyleQualityType(objNode["lifestylequalitytype"].InnerText);
                 if (objNode["lifestylequalitysource"] != null)
@@ -488,8 +488,8 @@ namespace Chummer.Backend.Equipment
                 if (!objNode.TryGetStringFieldQuickly("category", ref _strCategory)
                     && objMyNode.Value?.TryGetStringFieldQuickly("category", ref _strCategory) != true)
                     _strCategory = string.Empty;
-                objNode.TryGetBoolFieldQuickly("free", ref _blnFree);
-                objNode.TryGetBoolFieldQuickly("isfreegrid", ref _blnIsFreeGrid);
+                objNode.TryGetFieldUninitialized("free", ref _blnFree);
+                objNode.TryGetFieldUninitialized("isfreegrid", ref _blnIsFreeGrid);
                 objNode.TryGetStringFieldQuickly("source", ref _strSource);
                 objNode.TryGetStringFieldQuickly("page", ref _strPage);
                 string strAllowedFreeLifestyles = string.Empty;
@@ -569,23 +569,23 @@ namespace Chummer.Backend.Equipment
                 string strTemp = string.Empty;
                 if (objLifestyleQualityNode.TryGetStringFieldQuickly("cost", ref strTemp))
                     CostString = strTemp;
-                if (objLifestyleQualityNode.TryGetInt32FieldQuickly("lp", ref intTemp))
+                if (objLifestyleQualityNode.TryGetFieldUninitialized("lp", ref intTemp))
                     LPCost = intTemp;
-                if (objLifestyleQualityNode.TryGetInt32FieldQuickly("areamaximum", ref intTemp))
+                if (objLifestyleQualityNode.TryGetFieldUninitialized("areamaximum", ref intTemp))
                     AreaMaximum = intTemp;
-                if (objLifestyleQualityNode.TryGetInt32FieldQuickly("comfortsmaximum", ref intTemp))
+                if (objLifestyleQualityNode.TryGetFieldUninitialized("comfortsmaximum", ref intTemp))
                     ComfortsMaximum = intTemp;
-                if (objLifestyleQualityNode.TryGetInt32FieldQuickly("securitymaximum", ref intTemp))
+                if (objLifestyleQualityNode.TryGetFieldUninitialized("securitymaximum", ref intTemp))
                     SecurityMaximum = intTemp;
-                if (objLifestyleQualityNode.TryGetInt32FieldQuickly("area", ref intTemp))
+                if (objLifestyleQualityNode.TryGetFieldUninitialized("area", ref intTemp))
                     Area = intTemp;
-                if (objLifestyleQualityNode.TryGetInt32FieldQuickly("comforts", ref intTemp))
+                if (objLifestyleQualityNode.TryGetFieldUninitialized("comforts", ref intTemp))
                     Comforts = intTemp;
-                if (objLifestyleQualityNode.TryGetInt32FieldQuickly("security", ref intTemp))
+                if (objLifestyleQualityNode.TryGetFieldUninitialized("security", ref intTemp))
                     Security = intTemp;
-                if (objLifestyleQualityNode.TryGetInt32FieldQuickly("multiplier", ref intTemp))
+                if (objLifestyleQualityNode.TryGetFieldUninitialized("multiplier", ref intTemp))
                     Multiplier = intTemp;
-                if (objLifestyleQualityNode.TryGetInt32FieldQuickly("multiplierbaseonly", ref intTemp))
+                if (objLifestyleQualityNode.TryGetFieldUninitialized("multiplierbaseonly", ref intTemp))
                     BaseMultiplier = intTemp;
             }
         }
@@ -2011,7 +2011,7 @@ namespace Chummer.Backend.Equipment
                 if (objReturn == null)
                 {
                     objReturn = objDoc.TryGetNodeByNameOrId("/chummer/qualities/quality", Name);
-                    objReturn?.TryGetGuidFieldQuickly("id", ref _guiSourceID);
+                    objReturn?.TryGetFieldUninitialized("id", ref _guiSourceID);
                 }
                 _objCachedMyXmlNode = objReturn;
                 _strCachedXmlNodeLanguage = strLanguage;
@@ -2058,7 +2058,7 @@ namespace Chummer.Backend.Equipment
                 if (objReturn == null)
                 {
                     objReturn = objDoc.TryGetNodeByNameOrId("/chummer/qualities/quality", Name);
-                    objReturn?.TryGetGuidFieldQuickly("id", ref _guiSourceID);
+                    objReturn?.TryGetFieldUninitialized("id", ref _guiSourceID);
                 }
                 _objCachedMyXPathNode = objReturn;
                 _strCachedXPathNodeLanguage = strLanguage;

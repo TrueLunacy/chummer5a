@@ -1884,12 +1884,12 @@ namespace Chummer.Backend.Skills
                 return;
             using (LockObject.EnterWriteLock(token))
             {
-                if (xmlNode.TryGetField("id", Guid.TryParse, out Guid g) && g != Guid.Empty)
+                if (xmlNode.TryGetField("id", out Guid g) && g != Guid.Empty)
                     _guidId = g;
                 xmlNode.TryGetStringFieldQuickly("name", ref _strGroupName);
-                xmlNode.TryGetInt32FieldQuickly("karma", ref _intSkillFromKarma);
-                xmlNode.TryGetInt32FieldQuickly("base", ref _intSkillFromSp);
-                xmlNode.TryGetBoolFieldQuickly("isbroken", ref _blnIsBroken);
+                xmlNode.TryGetFieldUninitialized("karma", ref _intSkillFromKarma);
+                xmlNode.TryGetFieldUninitialized("base", ref _intSkillFromSp);
+                xmlNode.TryGetFieldUninitialized("isbroken", ref _blnIsBroken);
             }
         }
 

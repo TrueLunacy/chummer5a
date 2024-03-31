@@ -129,11 +129,11 @@ namespace Chummer.Backend.Attributes
             using (LockObject.EnterWriteLock())
             {
                 objNode.TryGetStringFieldQuickly("name", ref _strAbbrev);
-                objNode.TryGetInt32FieldQuickly("metatypemin", ref _intMetatypeMin);
-                objNode.TryGetInt32FieldQuickly("metatypemax", ref _intMetatypeMax);
-                objNode.TryGetInt32FieldQuickly("metatypeaugmax", ref _intMetatypeAugMax);
-                objNode.TryGetInt32FieldQuickly("base", ref _intBase);
-                objNode.TryGetInt32FieldQuickly("karma", ref _intKarma);
+                objNode.TryGetFieldUninitialized("metatypemin", ref _intMetatypeMin);
+                objNode.TryGetFieldUninitialized("metatypemax", ref _intMetatypeMax);
+                objNode.TryGetFieldUninitialized("metatypeaugmax", ref _intMetatypeAugMax);
+                objNode.TryGetFieldUninitialized("base", ref _intBase);
+                objNode.TryGetFieldUninitialized("karma", ref _intKarma);
                 if (!BaseUnlocked && !_objCharacter.Created)
                 {
                     _intBase = 0;
@@ -141,7 +141,7 @@ namespace Chummer.Backend.Attributes
 
                 //Converts old attributes to split metatype minimum and base. Saves recalculating Base - TotalMinimum all the time.
                 int i = 0;
-                if (objNode.TryGetInt32FieldQuickly("value", ref i))
+                if (objNode.TryGetFieldUninitialized("value", ref i))
                 {
                     i -= _intMetatypeMin;
                     if (BaseUnlocked)
@@ -158,7 +158,7 @@ namespace Chummer.Backend.Attributes
 
                 int intCreateKarma = 0;
                 // Shim for that one time karma was split into career and create values
-                if (objNode.TryGetInt32FieldQuickly("createkarma", ref intCreateKarma))
+                if (objNode.TryGetFieldUninitialized("createkarma", ref intCreateKarma))
                 {
                     _intKarma += intCreateKarma;
                 }

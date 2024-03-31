@@ -66,9 +66,11 @@ namespace Chummer
                     XPathNavigator xmlNode = xmlObjManifest.CreateNavigator()
                                                            .SelectSingleNodeAndCacheExpression("manifest");
 
-                    if (!xmlNode.TryGetField("version", VersionExtensions.TryParse, out _objMyVersion))
-                        _objMyVersion = new Version(1, 0);
-                    xmlNode.TryGetGuidFieldQuickly("guid", ref _guid);
+                    //VersionShim will implicitly cast to Version
+                    _objMyVersion = xmlNode.TryGetField("version", out VersionShim version)
+                        ? version
+                        : new Version(1, 0);
+                    xmlNode.TryGetFieldUninitialized("guid", ref _guid);
 
                     GetManifestDescriptions(xmlNode);
                     GetManifestAuthors(xmlNode);
@@ -111,7 +113,7 @@ namespace Chummer
                     bool isMain = false;
 
                     objXmlNode.TryGetStringFieldQuickly("name", ref authorName);
-                    objXmlNode.TryGetBoolFieldQuickly("main", ref isMain);
+                    objXmlNode.TryGetFieldUninitialized("main", ref isMain);
 
                     if (!string.IsNullOrEmpty(authorName) && !_dicAuthorDictionary.ContainsKey(authorName))
                         //Maybe a stupid idea? But who would add two authors with the same name anyway?
@@ -130,14 +132,16 @@ namespace Chummer
                     string strDependencyName = string.Empty;
 
                     objXmlNode.TryGetStringFieldQuickly("name", ref strDependencyName);
-                    objXmlNode.TryGetGuidFieldQuickly("guid", ref guidId);
+                    objXmlNode.TryGetFieldUninitialized("guid", ref guidId);
 
                     //If there is no name any displays based on this are worthless and if there isn't a ID no comparisons will work
                     if (string.IsNullOrEmpty(strDependencyName) || guidId == Guid.Empty)
                         continue;
 
-                    objXmlNode.TryGetField("maxversion", VersionExtensions.TryParse, out Version objNewMaximumVersion);
-                    objXmlNode.TryGetField("minversion", VersionExtensions.TryParse, out Version objNewMinimumVersion);
+                    // VersionShim will implicitly cast to Version
+                    objXmlNode.TryGetField("maxversion", out VersionShim objNewMaximumVersion);
+                    objXmlNode.TryGetField("minversion", out VersionShim objNewMinimumVersion);
+
 
                     DirectoryDependency objDependency
                         = new DirectoryDependency(strDependencyName, guidId, objNewMinimumVersion,
@@ -155,14 +159,15 @@ namespace Chummer
                     string strDependencyName = string.Empty;
 
                     objXmlNode.TryGetStringFieldQuickly("name", ref strDependencyName);
-                    objXmlNode.TryGetGuidFieldQuickly("guid", ref guidId);
+                    objXmlNode.TryGetFieldUninitialized("guid", ref guidId);
 
                     //If there is no name any displays based on this are worthless and if there isn't a ID no comparisons will work
                     if (string.IsNullOrEmpty(strDependencyName) || guidId == Guid.Empty)
                         continue;
 
-                    objXmlNode.TryGetField("maxversion", VersionExtensions.TryParse, out Version objNewMaximumVersion);
-                    objXmlNode.TryGetField("minversion", VersionExtensions.TryParse, out Version objNewMinimumVersion);
+                    // VersionShim will implicitly cast to Version
+                    objXmlNode.TryGetField("maxversion", out VersionShim objNewMaximumVersion);
+                    objXmlNode.TryGetField("minversion", out VersionShim objNewMinimumVersion);
 
                     DirectoryDependency objIncompatibility
                         = new DirectoryDependency(strDependencyName, guidId, objNewMinimumVersion,

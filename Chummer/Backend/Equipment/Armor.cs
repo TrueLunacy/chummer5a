@@ -340,7 +340,7 @@ namespace Chummer.Backend.Equipment
             bool blnCreateChildren = true, bool blnSkipSelectForms = false, CancellationToken token = default)
         {
             token.ThrowIfCancellationRequested();
-            if (!objXmlArmorNode.TryGetField("id", Guid.TryParse, out _guiSourceID))
+            if (!objXmlArmorNode.TryGetField("id", out _guiSourceID))
             {
                 Log.Warn(new object[] { "Missing id field for armor xmlnode", objXmlArmorNode });
                 Utils.BreakIfDebug();
@@ -358,7 +358,7 @@ namespace Chummer.Backend.Equipment
             if (objXmlArmorNode.TryGetStringFieldQuickly("armoroverride", ref _strArmorOverrideValue) && _strArmorOverrideValue == "0")
                 _strArmorOverrideValue = string.Empty;
             _intRating = intRating;
-            objXmlArmorNode.TryGetInt32FieldQuickly("rating", ref _intMaxRating);
+            objXmlArmorNode.TryGetFieldUninitialized("rating", ref _intMaxRating);
             objXmlArmorNode.TryGetStringFieldQuickly("ratinglabel", ref _strRatingLabel);
             objXmlArmorNode.TryGetStringFieldQuickly("armorcapacity", ref _strArmorCapacity);
             objXmlArmorNode.TryGetStringFieldQuickly("avail", ref _strAvail);
@@ -384,7 +384,7 @@ namespace Chummer.Backend.Equipment
                         await DisplayPageAsync(GlobalSettings.Language, token).ConfigureAwait(false), _objCharacter, token).ConfigureAwait(false);
             }
 
-            objXmlArmorNode.TryGetBoolFieldQuickly("encumbrance", ref _blnEncumbrance);
+            objXmlArmorNode.TryGetFieldUninitialized("encumbrance", ref _blnEncumbrance);
             _nodBonus = objXmlArmorNode["bonus"];
             _nodWirelessBonus = objXmlArmorNode["wirelessbonus"];
             _blnWirelessOn = false;
@@ -742,7 +742,7 @@ namespace Chummer.Backend.Equipment
 
             objXmlArmorNode.TryGetStringFieldQuickly("programs", ref _strProgramLimit);
             objXmlArmorNode.TryGetStringFieldQuickly("canformpersona", ref _strCanFormPersona);
-            objXmlArmorNode.TryGetInt32FieldQuickly("matrixcmbonus", ref _intMatrixCMBonus);
+            objXmlArmorNode.TryGetFieldUninitialized("matrixcmbonus", ref _intMatrixCMBonus);
 
             if (!blnSkipSelectForms)
             {
@@ -908,7 +908,7 @@ namespace Chummer.Backend.Equipment
             }
             else
             {
-                if (!objNode.TryGetField("guid", Guid.TryParse, out _guiID))
+                if (!objNode.TryGetField("guid", out _guiID))
                 {
                     _guiID = Guid.NewGuid();
                 }
@@ -934,12 +934,12 @@ namespace Chummer.Backend.Equipment
                 }
             }
 
-            if (!objNode.TryGetGuidFieldQuickly("sourceid", ref _guiSourceID))
+            if (!objNode.TryGetFieldUninitialized("sourceid", ref _guiSourceID))
             {
-                objMyNode.Value?.TryGetGuidFieldQuickly("id", ref _guiSourceID);
+                objMyNode.Value?.TryGetFieldUninitialized("id", ref _guiSourceID);
             }
 
-            if (!objNode.TryGetBoolFieldQuickly("encumbrance", ref _blnEncumbrance))
+            if (!objNode.TryGetFieldUninitialized("encumbrance", ref _blnEncumbrance))
                 _blnEncumbrance = true;
 
             objNode.TryGetStringFieldQuickly("category", ref _strCategory);
@@ -952,29 +952,29 @@ namespace Chummer.Backend.Equipment
             if (objNode.TryGetStringFieldQuickly("armoroverride", ref _strArmorOverrideValue) && _strArmorOverrideValue == "0")
                 _strArmorOverrideValue = string.Empty;
             objNode.TryGetStringFieldQuickly("armorcapacity", ref _strArmorCapacity);
-            objNode.TryGetInt32FieldQuickly("rating", ref _intRating);
-            objNode.TryGetInt32FieldQuickly("maxrating", ref _intMaxRating);
+            objNode.TryGetFieldUninitialized("rating", ref _intRating);
+            objNode.TryGetFieldUninitialized("maxrating", ref _intMaxRating);
             objNode.TryGetStringFieldQuickly("ratinglabel", ref _strRatingLabel);
             objNode.TryGetStringFieldQuickly("page", ref _strPage);
             objNode.TryGetStringFieldQuickly("armorname", ref _strArmorName);
-            objNode.TryGetBoolFieldQuickly("equipped", ref _blnEquipped);
+            objNode.TryGetFieldUninitialized("equipped", ref _blnEquipped);
             objNode.TryGetStringFieldQuickly("extra", ref _strExtra);
-            objNode.TryGetInt32FieldQuickly("damage", ref _intDamage);
+            objNode.TryGetFieldUninitialized("damage", ref _intDamage);
             objNode.TryGetMultiLineStringFieldQuickly("notes", ref _strNotes);
 
             string sNotesColor = ColorTranslator.ToHtml(ColorManager.HasNotesColor);
             objNode.TryGetStringFieldQuickly("notesColor", ref sNotesColor);
             _colNotes = ColorTranslator.FromHtml(sNotesColor);
 
-            objNode.TryGetBoolFieldQuickly("discountedcost", ref _blnDiscountCost);
-            objNode.TryGetBoolFieldQuickly("stolen", ref _blnStolen);
-            objNode.TryGetInt32FieldQuickly("sortorder", ref _intSortOrder);
+            objNode.TryGetFieldUninitialized("discountedcost", ref _blnDiscountCost);
+            objNode.TryGetFieldUninitialized("stolen", ref _blnStolen);
+            objNode.TryGetFieldUninitialized("sortorder", ref _intSortOrder);
             _nodBonus = objNode["bonus"];
             _nodWirelessBonus = objNode["wirelessbonus"];
-            if (!objNode.TryGetBoolFieldQuickly("wirelesson", ref _blnWirelessOn))
+            if (!objNode.TryGetFieldUninitialized("wirelesson", ref _blnWirelessOn))
                 _blnWirelessOn = false;
             bool blnIsActive = false;
-            if (objNode.TryGetBoolFieldQuickly("active", ref blnIsActive) && blnIsActive)
+            if (objNode.TryGetFieldUninitialized("active", ref blnIsActive) && blnIsActive)
                 this.SetActiveCommlink(_objCharacter, true);
             if (blnCopy)
             {
@@ -983,7 +983,7 @@ namespace Chummer.Backend.Equipment
             else
             {
                 bool blnIsHomeNode = false;
-                if (objNode.TryGetBoolFieldQuickly("homenode", ref blnIsHomeNode) && blnIsHomeNode)
+                if (objNode.TryGetFieldUninitialized("homenode", ref blnIsHomeNode) && blnIsHomeNode)
                 {
                     this.SetHomeNode(_objCharacter, true);
                 }
@@ -1014,8 +1014,8 @@ namespace Chummer.Backend.Equipment
                 objMyNode.Value?.TryGetStringFieldQuickly("modfirewall", ref _strModFirewall);
             if (!objNode.TryGetStringFieldQuickly("modattributearray", ref _strModAttributeArray))
                 objMyNode.Value?.TryGetStringFieldQuickly("modattributearray", ref _strModAttributeArray);
-            objNode.TryGetInt32FieldQuickly("matrixcmfilled", ref _intMatrixCMFilled);
-            objNode.TryGetInt32FieldQuickly("matrixcmbonus", ref _intMatrixCMBonus);
+            objNode.TryGetFieldUninitialized("matrixcmfilled", ref _intMatrixCMFilled);
+            objNode.TryGetFieldUninitialized("matrixcmbonus", ref _intMatrixCMBonus);
             if (!objNode.TryGetStringFieldQuickly("canformpersona", ref _strCanFormPersona))
                 objMyNode.Value?.TryGetStringFieldQuickly("canformpersona", ref _strCanFormPersona);
             XmlElement xmlChildrenNode = objNode["armormods"];
@@ -2805,7 +2805,7 @@ namespace Chummer.Backend.Equipment
             if (objReturn == null)
             {
                 objReturn = objDoc.TryGetNodeByNameOrId("/chummer/armors/armor", Name);
-                objReturn?.TryGetGuidFieldQuickly("id", ref _guiSourceID);
+                objReturn?.TryGetFieldUninitialized("id", ref _guiSourceID);
             }
 
             _objCachedMyXmlNode = objReturn;
@@ -2831,7 +2831,7 @@ namespace Chummer.Backend.Equipment
             if (objReturn == null)
             {
                 objReturn = objDoc.TryGetNodeByNameOrId("/chummer/armors/armor", Name);
-                objReturn?.TryGetGuidFieldQuickly("id", ref _guiSourceID);
+                objReturn?.TryGetFieldUninitialized("id", ref _guiSourceID);
             }
             _objCachedMyXPathNode = objReturn;
             _strCachedXPathNodeLanguage = strLanguage;

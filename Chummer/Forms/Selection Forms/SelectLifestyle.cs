@@ -516,7 +516,7 @@ namespace Chummer
             await _objLifestyle.SetDistrictAsync(await cboDistrict.DoThreadSafeFuncAsync(x => x.Text, token: token).ConfigureAwait(false), token).ConfigureAwait(false);
             await _objLifestyle.SetBoroughAsync(await cboBorough.DoThreadSafeFuncAsync(x => x.Text, token: token).ConfigureAwait(false), token).ConfigureAwait(false);
 
-            if (objXmlLifestyle.TryGetField("id", Guid.TryParse, out Guid source))
+            if (objXmlLifestyle.TryGetField("id", out Guid source))
             {
                 _objLifestyle.SourceID = source;
             }
@@ -595,7 +595,7 @@ namespace Chummer
                 {
                     objXmlAspect.TryGetStringFieldQuickly("name", ref strBaseLifestyle);
                     decimal decTemp = 0;
-                    if (objXmlAspect.TryGetDecFieldQuickly("cost", ref decTemp))
+                    if (objXmlAspect.TryGetFieldUninitialized("cost", ref decTemp))
                         decBaseCost += decTemp;
                     string strSource = objXmlAspect["source"]?.InnerText;
                     string strPage = objXmlAspect["altpage"]?.InnerText ?? objXmlAspect["page"]?.InnerText;
@@ -649,9 +649,9 @@ namespace Chummer
                                 "/chummer/qualities/quality", await treQualities.DoThreadSafeFuncAsync(() => objNode.Tag.ToString(), token: token).ConfigureAwait(false));
                             if (objXmlAspect == null)
                                 continue;
-                            if (objXmlAspect.TryGetDecFieldQuickly("multiplier", ref decTemp))
+                            if (objXmlAspect.TryGetFieldUninitialized("multiplier", ref decTemp))
                                 decMod += decTemp / 100.0m;
-                            if (objXmlAspect.TryGetDecFieldQuickly("multiplierbaseonly", ref decTemp))
+                            if (objXmlAspect.TryGetFieldUninitialized("multiplierbaseonly", ref decTemp))
                                 decBaseMultiplier += decTemp / 100.0m;
                         }
 

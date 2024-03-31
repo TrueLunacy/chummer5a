@@ -69,7 +69,7 @@ namespace Chummer
         /// <param name="objSource">Source of the Improvement.</param>
         public void Create(XmlNode objXmlArtNode, Improvement.ImprovementSource objSource)
         {
-            if (!objXmlArtNode.TryGetField("id", Guid.TryParse, out _guiSourceID))
+            if (!objXmlArtNode.TryGetField("id", out _guiSourceID))
             {
                 Log.Warn(new object[] { "Missing id field for xmlnode", objXmlArtNode });
                 Utils.BreakIfDebug();
@@ -97,7 +97,7 @@ namespace Chummer
                     DisplayPage(GlobalSettings.Language), _objCharacter);
             }
 
-            objXmlArtNode.TryGetInt32FieldQuickly("grade", ref _intGrade);
+            objXmlArtNode.TryGetFieldUninitialized("grade", ref _intGrade);
             _nodBonus = objXmlArtNode["bonus"];
             if (_nodBonus != null)
             {
@@ -130,7 +130,7 @@ namespace Chummer
         public async Task CreateAsync(XmlNode objXmlArtNode, Improvement.ImprovementSource objSource, CancellationToken token = default)
         {
             token.ThrowIfCancellationRequested();
-            if (!objXmlArtNode.TryGetField("id", Guid.TryParse, out _guiSourceID))
+            if (!objXmlArtNode.TryGetField("id", out _guiSourceID))
             {
                 Log.Warn(new object[] { "Missing id field for xmlnode", objXmlArtNode });
                 Utils.BreakIfDebug();
@@ -158,7 +158,7 @@ namespace Chummer
                     await DisplayPageAsync(GlobalSettings.Language, token).ConfigureAwait(false), _objCharacter, token).ConfigureAwait(false);
             }
 
-            objXmlArtNode.TryGetInt32FieldQuickly("grade", ref _intGrade);
+            objXmlArtNode.TryGetFieldUninitialized("grade", ref _intGrade);
             _nodBonus = objXmlArtNode["bonus"];
             if (_nodBonus != null)
             {
@@ -213,7 +213,7 @@ namespace Chummer
         /// <param name="objNode">XmlNode to load.</param>
         public void Load(XmlNode objNode)
         {
-            if (!objNode.TryGetField("guid", Guid.TryParse, out _guiID))
+            if (!objNode.TryGetField("guid", out _guiID))
             {
                 _guiID = Guid.NewGuid();
             }
@@ -221,9 +221,9 @@ namespace Chummer
             objNode.TryGetStringFieldQuickly("name", ref _strName);
             _objCachedMyXmlNode = null;
             _objCachedMyXPathNode = null;
-            if (!objNode.TryGetGuidFieldQuickly("sourceid", ref _guiSourceID))
+            if (!objNode.TryGetFieldUninitialized("sourceid", ref _guiSourceID))
             {
-                this.GetNodeXPath()?.TryGetGuidFieldQuickly("id", ref _guiSourceID);
+                this.GetNodeXPath()?.TryGetFieldUninitialized("id", ref _guiSourceID);
             }
             objNode.TryGetStringFieldQuickly("source", ref _strSource);
             objNode.TryGetStringFieldQuickly("page", ref _strPage);
@@ -231,7 +231,7 @@ namespace Chummer
             if (objNode["improvementsource"] != null)
                 _objImprovementSource = Improvement.ConvertToImprovementSource(objNode["improvementsource"].InnerText);
 
-            objNode.TryGetInt32FieldQuickly("grade", ref _intGrade);
+            objNode.TryGetFieldUninitialized("grade", ref _intGrade);
             objNode.TryGetMultiLineStringFieldQuickly("notes", ref _strNotes);
 
             string sNotesColor = ColorTranslator.ToHtml(ColorManager.HasNotesColor);
@@ -502,7 +502,7 @@ namespace Chummer
             if (objReturn == null)
             {
                 objReturn = objDoc.TryGetNodeByNameOrId("/chummer/arts/art", Name);
-                objReturn?.TryGetGuidFieldQuickly("id", ref _guiSourceID);
+                objReturn?.TryGetFieldUninitialized("id", ref _guiSourceID);
             }
             _objCachedMyXmlNode = objReturn;
             _strCachedXmlNodeLanguage = strLanguage;
@@ -527,7 +527,7 @@ namespace Chummer
             if (objReturn == null)
             {
                 objReturn = objDoc.TryGetNodeByNameOrId("/chummer/arts/art", Name);
-                objReturn?.TryGetGuidFieldQuickly("id", ref _guiSourceID);
+                objReturn?.TryGetFieldUninitialized("id", ref _guiSourceID);
             }
             _objCachedMyXPathNode = objReturn;
             _strCachedXPathNodeLanguage = strLanguage;

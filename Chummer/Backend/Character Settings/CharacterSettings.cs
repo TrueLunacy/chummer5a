@@ -3195,35 +3195,35 @@ namespace Chummer
                 // Setting name.
                 objXmlNode.TryGetStringFieldQuickly("name", ref _strName);
                 // License Restricted items.
-                objXmlNode.TryGetBoolFieldQuickly("licenserestricted", ref _blnLicenseRestrictedItems);
+                objXmlNode.TryGetFieldUninitialized("licenserestricted", ref _blnLicenseRestrictedItems);
                 // More Lethal Gameplay.
-                objXmlNode.TryGetBoolFieldQuickly("morelethalgameplay", ref _blnMoreLethalGameplay);
+                objXmlNode.TryGetFieldUninitialized("morelethalgameplay", ref _blnMoreLethalGameplay);
                 // Spirit Force Based on Total MAG.
-                objXmlNode.TryGetBoolFieldQuickly("spiritforcebasedontotalmag", ref _blnSpiritForceBasedOnTotalMAG);
+                objXmlNode.TryGetFieldUninitialized("spiritforcebasedontotalmag", ref _blnSpiritForceBasedOnTotalMAG);
                 // Nuyen per Build Point
-                if (!objXmlNode.TryGetDecFieldQuickly("nuyenperbpwftm", ref _decNuyenPerBPWftM))
+                if (!objXmlNode.TryGetFieldUninitialized("nuyenperbpwftm", ref _decNuyenPerBPWftM))
                 {
-                    objXmlNode.TryGetDecFieldQuickly("nuyenperbp", ref _decNuyenPerBPWftM);
+                    objXmlNode.TryGetFieldUninitialized("nuyenperbp", ref _decNuyenPerBPWftM);
                     _decNuyenPerBPWftP = _decNuyenPerBPWftM;
                 }
                 else
-                    objXmlNode.TryGetDecFieldQuickly("nuyenperbpwftp", ref _decNuyenPerBPWftP);
+                    objXmlNode.TryGetFieldUninitialized("nuyenperbpwftp", ref _decNuyenPerBPWftP);
 
                 // Knucks use Unarmed
-                objXmlNode.TryGetBoolFieldQuickly("unarmedimprovementsapplytoweapons",
+                objXmlNode.TryGetFieldUninitialized("unarmedimprovementsapplytoweapons",
                                                   ref _blnUnarmedImprovementsApplyToWeapons);
                 // Allow Initiation in Create Mode
-                objXmlNode.TryGetBoolFieldQuickly("allowinitiationincreatemode", ref _blnAllowInitiationInCreateMode);
+                objXmlNode.TryGetFieldUninitialized("allowinitiationincreatemode", ref _blnAllowInitiationInCreateMode);
                 // Use Points on Broken Groups
-                objXmlNode.TryGetBoolFieldQuickly("usepointsonbrokengroups", ref _blnUsePointsOnBrokenGroups);
+                objXmlNode.TryGetFieldUninitialized("usepointsonbrokengroups", ref _blnUsePointsOnBrokenGroups);
                 // Don't Double the Cost of purchasing Qualities in Career Mode
-                objXmlNode.TryGetBoolFieldQuickly("dontdoublequalities", ref _blnDontDoubleQualityPurchaseCost);
+                objXmlNode.TryGetFieldUninitialized("dontdoublequalities", ref _blnDontDoubleQualityPurchaseCost);
                 // Don't Double the Cost of removing Qualities in Career Mode
-                objXmlNode.TryGetBoolFieldQuickly("dontdoublequalityrefunds", ref _blnDontDoubleQualityRefundCost);
+                objXmlNode.TryGetFieldUninitialized("dontdoublequalityrefunds", ref _blnDontDoubleQualityRefundCost);
                 // Ignore Art Requirements from Street Grimoire
-                objXmlNode.TryGetBoolFieldQuickly("ignoreart", ref _blnIgnoreArt);
+                objXmlNode.TryGetFieldUninitialized("ignoreart", ref _blnIgnoreArt);
                 // Use Cyberleg Stats for Movement
-                objXmlNode.TryGetBoolFieldQuickly("cyberlegmovement", ref _blnCyberlegMovement);
+                objXmlNode.TryGetFieldUninitialized("cyberlegmovement", ref _blnCyberlegMovement);
                 // XPath expression for contact points
                 if (!objXmlNode.TryGetStringFieldQuickly("contactpointsexpression", ref _strContactPointsExpression))
                 {
@@ -3231,10 +3231,10 @@ namespace Chummer
                     int intTemp = 3;
                     bool blnTemp = false;
                     strTemp = "{CHAUnaug}";
-                    if (objXmlNode.TryGetBoolFieldQuickly("usetotalvalueforcontacts", ref blnTemp) && blnTemp)
+                    if (objXmlNode.TryGetFieldUninitialized("usetotalvalueforcontacts", ref blnTemp) && blnTemp)
                         strTemp = "{CHA}";
-                    if (objXmlNode.TryGetBoolFieldQuickly("freecontactsmultiplierenabled", ref blnTemp) && blnTemp)
-                        objXmlNode.TryGetInt32FieldQuickly("freekarmacontactsmultiplier", ref intTemp);
+                    if (objXmlNode.TryGetFieldUninitialized("freecontactsmultiplierenabled", ref blnTemp) && blnTemp)
+                        objXmlNode.TryGetFieldUninitialized("freekarmacontactsmultiplier", ref intTemp);
                     _strContactPointsExpression
                         = strTemp + " * " + intTemp.ToString(GlobalSettings.InvariantCultureInfo);
                 }
@@ -3247,11 +3247,11 @@ namespace Chummer
                     int intTemp = 2;
                     bool blnTemp = false;
                     strTemp = "({INTUnaug} + {LOGUnaug})";
-                    if (objXmlNode.TryGetBoolFieldQuickly("usetotalvalueforknowledge", ref blnTemp) && blnTemp)
+                    if (objXmlNode.TryGetFieldUninitialized("usetotalvalueforknowledge", ref blnTemp) && blnTemp)
                         strTemp = "({INT} + {LOG})";
-                    if (objXmlNode.TryGetBoolFieldQuickly("freekarmaknowledgemultiplierenabled", ref blnTemp)
+                    if (objXmlNode.TryGetFieldUninitialized("freekarmaknowledgemultiplierenabled", ref blnTemp)
                         && blnTemp)
-                        objXmlNode.TryGetInt32FieldQuickly("freekarmaknowledgemultiplier", ref intTemp);
+                        objXmlNode.TryGetFieldUninitialized("freekarmaknowledgemultiplier", ref intTemp);
                     _strKnowledgePointsExpression
                         = strTemp + " * " + intTemp.ToString(GlobalSettings.InvariantCultureInfo);
                 }
@@ -3280,96 +3280,96 @@ namespace Chummer
                 objXmlNode.TryGetStringFieldQuickly("encumbranceintervalexpression",
                                                     ref _strEncumbranceIntervalExpression);
                 // Whether to apply certain penalties to encumbrance and, if so, how much per tick
-                objXmlNode.TryGetBoolFieldQuickly("doencumbrancepenaltyphysicallimit",
+                objXmlNode.TryGetFieldUninitialized("doencumbrancepenaltyphysicallimit",
                                                   ref _blnDoEncumbrancePenaltyPhysicalLimit);
-                objXmlNode.TryGetBoolFieldQuickly("doencumbrancepenaltymovementspeed",
+                objXmlNode.TryGetFieldUninitialized("doencumbrancepenaltymovementspeed",
                                                   ref _blnDoEncumbrancePenaltyMovementSpeed);
-                objXmlNode.TryGetBoolFieldQuickly("doencumbrancepenaltyagility", ref _blnDoEncumbrancePenaltyAgility);
-                objXmlNode.TryGetBoolFieldQuickly("doencumbrancepenaltyreaction", ref _blnDoEncumbrancePenaltyReaction);
-                objXmlNode.TryGetBoolFieldQuickly("doencumbrancepenaltywoundmodifier",
+                objXmlNode.TryGetFieldUninitialized("doencumbrancepenaltyagility", ref _blnDoEncumbrancePenaltyAgility);
+                objXmlNode.TryGetFieldUninitialized("doencumbrancepenaltyreaction", ref _blnDoEncumbrancePenaltyReaction);
+                objXmlNode.TryGetFieldUninitialized("doencumbrancepenaltywoundmodifier",
                                                   ref _blnDoEncumbrancePenaltyWoundModifier);
-                objXmlNode.TryGetInt32FieldQuickly("encumbrancepenaltyphysicallimit",
+                objXmlNode.TryGetFieldUninitialized("encumbrancepenaltyphysicallimit",
                                                    ref _intEncumbrancePenaltyPhysicalLimit);
-                objXmlNode.TryGetInt32FieldQuickly("encumbrancepenaltymovementspeed",
+                objXmlNode.TryGetFieldUninitialized("encumbrancepenaltymovementspeed",
                                                    ref _intEncumbrancePenaltyMovementSpeed);
-                objXmlNode.TryGetInt32FieldQuickly("encumbrancepenaltyagility", ref _intEncumbrancePenaltyAgility);
-                objXmlNode.TryGetInt32FieldQuickly("encumbrancepenaltyreaction", ref _intEncumbrancePenaltyReaction);
-                objXmlNode.TryGetInt32FieldQuickly("encumbrancepenaltywoundmodifier",
+                objXmlNode.TryGetFieldUninitialized("encumbrancepenaltyagility", ref _intEncumbrancePenaltyAgility);
+                objXmlNode.TryGetFieldUninitialized("encumbrancepenaltyreaction", ref _intEncumbrancePenaltyReaction);
+                objXmlNode.TryGetFieldUninitialized("encumbrancepenaltywoundmodifier",
                                                    ref _intEncumbrancePenaltyWoundModifier);
                 // Drone Armor Multiplier Enabled
-                objXmlNode.TryGetBoolFieldQuickly("dronearmormultiplierenabled", ref _blnDroneArmorMultiplierEnabled);
+                objXmlNode.TryGetFieldUninitialized("dronearmormultiplierenabled", ref _blnDroneArmorMultiplierEnabled);
                 // Drone Armor Multiplier Value
-                objXmlNode.TryGetInt32FieldQuickly("dronearmorflatnumber", ref _intDroneArmorMultiplier);
+                objXmlNode.TryGetFieldUninitialized("dronearmorflatnumber", ref _intDroneArmorMultiplier);
                 // No Single Armor Encumbrance
-                objXmlNode.TryGetBoolFieldQuickly("nosinglearmorencumbrance", ref _blnNoSingleArmorEncumbrance);
+                objXmlNode.TryGetFieldUninitialized("nosinglearmorencumbrance", ref _blnNoSingleArmorEncumbrance);
                 // Ignore Armor Encumbrance
-                objXmlNode.TryGetBoolFieldQuickly("noarmorencumbrance", ref _blnNoArmorEncumbrance);
+                objXmlNode.TryGetFieldUninitialized("noarmorencumbrance", ref _blnNoArmorEncumbrance);
                 // Do not cap armor bonuses from accessories
-                objXmlNode.TryGetBoolFieldQuickly("uncappedarmoraccessorybonuses",
+                objXmlNode.TryGetFieldUninitialized("uncappedarmoraccessorybonuses",
                                                   ref _blnUncappedArmorAccessoryBonuses);
                 // Ignore Complex Form Limit
-                objXmlNode.TryGetBoolFieldQuickly("ignorecomplexformlimit", ref _blnIgnoreComplexFormLimit);
+                objXmlNode.TryGetFieldUninitialized("ignorecomplexformlimit", ref _blnIgnoreComplexFormLimit);
                 // Essence Loss Reduces Maximum Only.
-                objXmlNode.TryGetBoolFieldQuickly("esslossreducesmaximumonly", ref _blnESSLossReducesMaximumOnly);
+                objXmlNode.TryGetFieldUninitialized("esslossreducesmaximumonly", ref _blnESSLossReducesMaximumOnly);
                 // Allow Skill Regrouping.
-                objXmlNode.TryGetBoolFieldQuickly("allowskillregrouping", ref _blnAllowSkillRegrouping);
+                objXmlNode.TryGetFieldUninitialized("allowskillregrouping", ref _blnAllowSkillRegrouping);
                 // Whether skill specializations break skill groups.
-                objXmlNode.TryGetBoolFieldQuickly("specializationsbreakskillgroups",
+                objXmlNode.TryGetFieldUninitialized("specializationsbreakskillgroups",
                                                   ref _blnSpecializationsBreakSkillGroups);
                 // Metatype Costs Karma.
-                objXmlNode.TryGetBoolFieldQuickly("metatypecostskarma", ref _blnMetatypeCostsKarma);
+                objXmlNode.TryGetFieldUninitialized("metatypecostskarma", ref _blnMetatypeCostsKarma);
                 // Allow characters to spend karma before attribute points.
-                objXmlNode.TryGetBoolFieldQuickly("reverseattributepriorityorder",
+                objXmlNode.TryGetFieldUninitialized("reverseattributepriorityorder",
                                                   ref _blnReverseAttributePriorityOrder);
                 // Metatype Costs Karma Multiplier.
-                objXmlNode.TryGetInt32FieldQuickly("metatypecostskarmamultiplier", ref _intMetatypeCostMultiplier);
+                objXmlNode.TryGetFieldUninitialized("metatypecostskarmamultiplier", ref _intMetatypeCostMultiplier);
                 // Limb Count.
-                objXmlNode.TryGetInt32FieldQuickly("limbcount", ref _intLimbCount);
+                objXmlNode.TryGetFieldUninitialized("limbcount", ref _intLimbCount);
                 // Exclude Limb Slot.
                 objXmlNode.TryGetStringFieldQuickly("excludelimbslot", ref _strExcludeLimbSlot);
                 // Allow Cyberware Essence Cost Discounts.
-                objXmlNode.TryGetBoolFieldQuickly("allowcyberwareessdiscounts", ref _blnAllowCyberwareESSDiscounts);
+                objXmlNode.TryGetFieldUninitialized("allowcyberwareessdiscounts", ref _blnAllowCyberwareESSDiscounts);
                 // Use Maximum Armor Modifications.
-                objXmlNode.TryGetBoolFieldQuickly("maximumarmormodifications", ref _blnMaximumArmorModifications);
+                objXmlNode.TryGetFieldUninitialized("maximumarmormodifications", ref _blnMaximumArmorModifications);
                 // Allow Armor Degradation.
-                objXmlNode.TryGetBoolFieldQuickly("armordegredation", ref _blnArmorDegradation);
+                objXmlNode.TryGetFieldUninitialized("armordegredation", ref _blnArmorDegradation);
                 // Whether Karma costs for increasing Special Attributes is based on the shown value instead of actual value.
-                objXmlNode.TryGetBoolFieldQuickly("specialkarmacostbasedonshownvalue",
+                objXmlNode.TryGetFieldUninitialized("specialkarmacostbasedonshownvalue",
                                                   ref _blnSpecialKarmaCostBasedOnShownValue);
                 // Allow more than 35 BP in Positive Qualities.
-                objXmlNode.TryGetBoolFieldQuickly("exceedpositivequalities", ref _blnExceedPositiveQualities);
+                objXmlNode.TryGetFieldUninitialized("exceedpositivequalities", ref _blnExceedPositiveQualities);
                 // Double all positive qualities in excess of the limit
-                objXmlNode.TryGetBoolFieldQuickly("exceedpositivequalitiescostdoubled",
+                objXmlNode.TryGetFieldUninitialized("exceedpositivequalitiescostdoubled",
                                                   ref _blnExceedPositiveQualitiesCostDoubled);
 
-                objXmlNode.TryGetBoolFieldQuickly("mysaddppcareer", ref _blnMysAdeptAllowPpCareer);
+                objXmlNode.TryGetFieldUninitialized("mysaddppcareer", ref _blnMysAdeptAllowPpCareer);
 
                 // Split MAG for Mystic Adepts so that they have a separate MAG rating for Adept Powers instead of using the special PP rules for mystic adepts
-                objXmlNode.TryGetBoolFieldQuickly("mysadeptsecondmagattribute", ref _blnMysAdeptSecondMAGAttribute);
+                objXmlNode.TryGetFieldUninitialized("mysadeptsecondmagattribute", ref _blnMysAdeptSecondMAGAttribute);
 
                 // Grant a free specialization when taking a martial art.
-                objXmlNode.TryGetBoolFieldQuickly("freemartialartspecialization", ref _blnFreeMartialArtSpecialization);
+                objXmlNode.TryGetFieldUninitialized("freemartialartspecialization", ref _blnFreeMartialArtSpecialization);
                 // Can spend spells from Magic priority as power points
-                objXmlNode.TryGetBoolFieldQuickly("priorityspellsasadeptpowers", ref _blnPrioritySpellsAsAdeptPowers);
+                objXmlNode.TryGetFieldUninitialized("priorityspellsasadeptpowers", ref _blnPrioritySpellsAsAdeptPowers);
                 // Allow more than 35 BP in Negative Qualities.
-                objXmlNode.TryGetBoolFieldQuickly("exceednegativequalities", ref _blnExceedNegativeQualities);
+                objXmlNode.TryGetFieldUninitialized("exceednegativequalities", ref _blnExceedNegativeQualities);
                 // Character can still only receive 35 BP from Negative Qualities (though they can still add as many as they'd like).
-                if (!objXmlNode.TryGetBoolFieldQuickly("exceednegativequalitiesnobonus", ref _blnExceedNegativeQualitiesNoBonus))
-                    objXmlNode.TryGetBoolFieldQuickly("exceednegativequalitieslimit", ref _blnExceedNegativeQualitiesNoBonus);
+                if (!objXmlNode.TryGetFieldUninitialized("exceednegativequalitiesnobonus", ref _blnExceedNegativeQualitiesNoBonus))
+                    objXmlNode.TryGetFieldUninitialized("exceednegativequalitieslimit", ref _blnExceedNegativeQualitiesNoBonus);
                 // Whether Restricted items have their cost multiplied.
-                objXmlNode.TryGetBoolFieldQuickly("multiplyrestrictedcost", ref _blnMultiplyRestrictedCost);
+                objXmlNode.TryGetFieldUninitialized("multiplyrestrictedcost", ref _blnMultiplyRestrictedCost);
                 // Whether Forbidden items have their cost multiplied.
-                objXmlNode.TryGetBoolFieldQuickly("multiplyforbiddencost", ref _blnMultiplyForbiddenCost);
+                objXmlNode.TryGetFieldUninitialized("multiplyforbiddencost", ref _blnMultiplyForbiddenCost);
                 // Restricted cost multiplier.
-                objXmlNode.TryGetInt32FieldQuickly("restrictedcostmultiplier", ref _intRestrictedCostMultiplier);
+                objXmlNode.TryGetFieldUninitialized("restrictedcostmultiplier", ref _intRestrictedCostMultiplier);
                 // Forbidden cost multiplier.
-                objXmlNode.TryGetInt32FieldQuickly("forbiddencostmultiplier", ref _intForbiddenCostMultiplier);
+                objXmlNode.TryGetFieldUninitialized("forbiddencostmultiplier", ref _intForbiddenCostMultiplier);
                 // Only round essence when its value is displayed
-                objXmlNode.TryGetBoolFieldQuickly("donotroundessenceinternally", ref _blnDoNotRoundEssenceInternally);
+                objXmlNode.TryGetFieldUninitialized("donotroundessenceinternally", ref _blnDoNotRoundEssenceInternally);
                 // Allow use of enemies
-                objXmlNode.TryGetBoolFieldQuickly("enableenemytracking", ref _blnEnableEnemyTracking);
+                objXmlNode.TryGetFieldUninitialized("enableenemytracking", ref _blnEnableEnemyTracking);
                 // Have enemies contribute to negative quality limit
-                objXmlNode.TryGetBoolFieldQuickly("enemykarmaqualitylimit", ref _blnEnemyKarmaQualityLimit);
+                objXmlNode.TryGetFieldUninitialized("enemykarmaqualitylimit", ref _blnEnemyKarmaQualityLimit);
                 // Format in which nuyen values are displayed
                 objXmlNode.TryGetStringFieldQuickly("nuyenformat", ref _strNuyenFormat);
                 // Format in which weight values are displayed
@@ -3385,7 +3385,7 @@ namespace Chummer
                 {
                     int intTemp = 2;
                     // Number of decimal places to round to when calculating Essence.
-                    objXmlNode.TryGetInt32FieldQuickly("essencedecimals", ref intTemp);
+                    objXmlNode.TryGetFieldUninitialized("essencedecimals", ref intTemp);
                     EssenceDecimals = intTemp;
                 }
                 else
@@ -3409,158 +3409,158 @@ namespace Chummer
                 }
 
                 // Whether Capacity limits should be enforced.
-                objXmlNode.TryGetBoolFieldQuickly("enforcecapacity", ref _blnEnforceCapacity);
+                objXmlNode.TryGetFieldUninitialized("enforcecapacity", ref _blnEnforceCapacity);
                 // Whether Recoil modifiers are restricted (AR 148).
-                objXmlNode.TryGetBoolFieldQuickly("restrictrecoil", ref _blnRestrictRecoil);
+                objXmlNode.TryGetFieldUninitialized("restrictrecoil", ref _blnRestrictRecoil);
                 // Whether character are not restricted to the number of points they can invest in Nuyen.
-                objXmlNode.TryGetBoolFieldQuickly("unrestrictednuyen", ref _blnUnrestrictedNuyen);
+                objXmlNode.TryGetFieldUninitialized("unrestrictednuyen", ref _blnUnrestrictedNuyen);
                 // Whether Stacked Foci can go a combined Force higher than 6.
-                objXmlNode.TryGetBoolFieldQuickly("allowhigherstackedfoci", ref _blnAllowHigherStackedFoci);
+                objXmlNode.TryGetFieldUninitialized("allowhigherstackedfoci", ref _blnAllowHigherStackedFoci);
                 // Whether the user can change the status of a Weapon Mod or Accessory being part of the base Weapon.
-                objXmlNode.TryGetBoolFieldQuickly("alloweditpartofbaseweapon", ref _blnAllowEditPartOfBaseWeapon);
+                objXmlNode.TryGetFieldUninitialized("alloweditpartofbaseweapon", ref _blnAllowEditPartOfBaseWeapon);
                 // Whether the user can break Skill Groups while in Create Mode.
-                objXmlNode.TryGetBoolFieldQuickly("breakskillgroupsincreatemode",
+                objXmlNode.TryGetFieldUninitialized("breakskillgroupsincreatemode",
                                                   ref _blnStrictSkillGroupsInCreateMode);
                 // Whether the user is allowed to buy specializations with skill points for skills only bought with karma.
-                objXmlNode.TryGetBoolFieldQuickly("allowpointbuyspecializationsonkarmaskills",
+                objXmlNode.TryGetFieldUninitialized("allowpointbuyspecializationsonkarmaskills",
                                                   ref _blnAllowPointBuySpecializationsOnKarmaSkills);
                 // Whether any Detection Spell can be taken as Extended range version.
-                objXmlNode.TryGetBoolFieldQuickly("extendanydetectionspell", ref _blnExtendAnyDetectionSpell);
+                objXmlNode.TryGetFieldUninitialized("extendanydetectionspell", ref _blnExtendAnyDetectionSpell);
                 // Whether cyberlimbs are used for augmented attribute calculation.
-                objXmlNode.TryGetBoolFieldQuickly("dontusecyberlimbcalculation", ref _blnDontUseCyberlimbCalculation);
+                objXmlNode.TryGetFieldUninitialized("dontusecyberlimbcalculation", ref _blnDontUseCyberlimbCalculation);
                 // House rule: Treat the Metatype Attribute Minimum as 1 for the purpose of calculating Karma costs.
-                objXmlNode.TryGetBoolFieldQuickly("alternatemetatypeattributekarma",
+                objXmlNode.TryGetFieldUninitialized("alternatemetatypeattributekarma",
                                                   ref _blnAlternateMetatypeAttributeKarma);
                 // Whether Obsolescent can be removed/upgrade in the same manner as Obsolete.
-                objXmlNode.TryGetBoolFieldQuickly("allowobsolescentupgrade", ref _blnAllowObsolescentUpgrade);
+                objXmlNode.TryGetFieldUninitialized("allowobsolescentupgrade", ref _blnAllowObsolescentUpgrade);
                 // Whether Bioware Suites can be created and added.
-                objXmlNode.TryGetBoolFieldQuickly("allowbiowaresuites", ref _blnAllowBiowareSuites);
+                objXmlNode.TryGetFieldUninitialized("allowbiowaresuites", ref _blnAllowBiowareSuites);
                 // House rule: Free Spirits calculate their Power Points based on their MAG instead of EDG.
-                objXmlNode.TryGetBoolFieldQuickly("freespiritpowerpointsmag", ref _blnFreeSpiritPowerPointsMAG);
+                objXmlNode.TryGetFieldUninitialized("freespiritpowerpointsmag", ref _blnFreeSpiritPowerPointsMAG);
                 // House rule: Whether to compensate for the karma cost difference between raising skill ratings and skill groups when increasing the rating of the last skill in the group
-                objXmlNode.TryGetBoolFieldQuickly("compensateskillgroupkarmadifference",
+                objXmlNode.TryGetFieldUninitialized("compensateskillgroupkarmadifference",
                                                   ref _blnCompensateSkillGroupKarmaDifference);
                 // Optional Rule: Whether Life Modules should automatically create a character back story.
-                objXmlNode.TryGetBoolFieldQuickly("autobackstory", ref _blnAutomaticBackstory);
+                objXmlNode.TryGetFieldUninitialized("autobackstory", ref _blnAutomaticBackstory);
                 // House Rule: Whether Public Awareness should be a calculated attribute based on Street Cred and Notoriety.
-                objXmlNode.TryGetBoolFieldQuickly("usecalculatedpublicawareness", ref _blnUseCalculatedPublicAwareness);
+                objXmlNode.TryGetFieldUninitialized("usecalculatedpublicawareness", ref _blnUseCalculatedPublicAwareness);
                 // House Rule: Whether Improved Ability should be capped at 0.5 (false) or 1.5 (true) of the target skill's Learned Rating.
-                objXmlNode.TryGetBoolFieldQuickly("increasedimprovedabilitymodifier",
+                objXmlNode.TryGetFieldUninitialized("increasedimprovedabilitymodifier",
                                                   ref _blnIncreasedImprovedAbilityMultiplier);
                 // House Rule: Whether lifestyles will give free grid subscriptions found in HT to players.
-                objXmlNode.TryGetBoolFieldQuickly("allowfreegrids", ref _blnAllowFreeGrids);
+                objXmlNode.TryGetFieldUninitialized("allowfreegrids", ref _blnAllowFreeGrids);
                 // House Rule: Whether Technomancers should be allowed to receive Schooling discounts in the same manner as Awakened.
-                objXmlNode.TryGetBoolFieldQuickly("allowtechnomancerschooling", ref _blnAllowTechnomancerSchooling);
+                objXmlNode.TryGetFieldUninitialized("allowtechnomancerschooling", ref _blnAllowTechnomancerSchooling);
                 // House Rule: Maximum value that cyberlimbs can have as a bonus on top of their Customization.
-                objXmlNode.TryGetInt32FieldQuickly("cyberlimbattributebonuscap", ref _intCyberlimbAttributeBonusCap);
-                if (!objXmlNode.TryGetBoolFieldQuickly("cyberlimbattributebonuscapoverride",
+                objXmlNode.TryGetFieldUninitialized("cyberlimbattributebonuscap", ref _intCyberlimbAttributeBonusCap);
+                if (!objXmlNode.TryGetFieldUninitialized("cyberlimbattributebonuscapoverride",
                                                        ref _blnCyberlimbAttributeBonusCapOverride))
                     _blnCyberlimbAttributeBonusCapOverride = _intCyberlimbAttributeBonusCap == 4;
                 // House/Optional Rule: Attribute values are allowed to go below 0 due to Essence Loss.
-                objXmlNode.TryGetBoolFieldQuickly("unclampattributeminimum", ref _blnUnclampAttributeMinimum);
+                objXmlNode.TryGetFieldUninitialized("unclampattributeminimum", ref _blnUnclampAttributeMinimum);
                 // Following two settings used to be stored in global options, so they are fetched from the registry if they are not present
                 // Use Rigger 5.0 drone mods
-                if (!objXmlNode.TryGetBoolFieldQuickly("dronemods", ref _blnDroneMods))
+                if (!objXmlNode.TryGetFieldUninitialized("dronemods", ref _blnDroneMods))
                     GlobalSettings.LoadBoolFromRegistry(ref _blnDroneMods, "dronemods", string.Empty, true);
                 // Apply maximum drone attribute improvement rule to Pilot, too
-                if (!objXmlNode.TryGetBoolFieldQuickly("dronemodsmaximumpilot", ref _blnDroneModsMaximumPilot))
+                if (!objXmlNode.TryGetFieldUninitialized("dronemodsmaximumpilot", ref _blnDroneModsMaximumPilot))
                     GlobalSettings.LoadBoolFromRegistry(ref _blnDroneModsMaximumPilot, "dronemodsPilot", string.Empty,
                                                         true);
 
                 // Maximum number of attributes at metatype maximum in character creation
-                if (!objXmlNode.TryGetInt32FieldQuickly("maxnumbermaxattributescreate",
+                if (!objXmlNode.TryGetFieldUninitialized("maxnumbermaxattributescreate",
                                                         ref _intMaxNumberMaxAttributesCreate))
                 {
                     // Legacy shim
                     bool blnTemp = false;
-                    if (objXmlNode.TryGetBoolFieldQuickly("allow2ndmaxattribute", ref blnTemp) && blnTemp)
+                    if (objXmlNode.TryGetFieldUninitialized("allow2ndmaxattribute", ref blnTemp) && blnTemp)
                         _intMaxNumberMaxAttributesCreate = 2;
                 }
 
                 // Maximum skill rating in character creation
-                objXmlNode.TryGetInt32FieldQuickly("maxskillratingcreate", ref _intMaxSkillRatingCreate);
+                objXmlNode.TryGetFieldUninitialized("maxskillratingcreate", ref _intMaxSkillRatingCreate);
                 // Maximum knowledge skill rating in character creation
-                objXmlNode.TryGetInt32FieldQuickly("maxknowledgeskillratingcreate",
+                objXmlNode.TryGetFieldUninitialized("maxknowledgeskillratingcreate",
                                                    ref _intMaxKnowledgeSkillRatingCreate);
                 // Maximum skill rating
-                if (objXmlNode.TryGetInt32FieldQuickly("maxskillrating", ref _intMaxSkillRating)
+                if (objXmlNode.TryGetFieldUninitialized("maxskillrating", ref _intMaxSkillRating)
                     && _intMaxSkillRatingCreate > _intMaxSkillRating)
                     _intMaxSkillRatingCreate = _intMaxSkillRating;
                 // Maximum knowledge skill rating
-                if (objXmlNode.TryGetInt32FieldQuickly("maxknowledgeskillrating", ref _intMaxKnowledgeSkillRating)
+                if (objXmlNode.TryGetFieldUninitialized("maxknowledgeskillrating", ref _intMaxKnowledgeSkillRating)
                     && _intMaxKnowledgeSkillRatingCreate > _intMaxKnowledgeSkillRating)
                     _intMaxKnowledgeSkillRatingCreate = _intMaxKnowledgeSkillRating;
 
                 //House Rule: The DicePenalty per sustained spell or form
-                objXmlNode.TryGetInt32FieldQuickly("dicepenaltysustaining", ref _intDicePenaltySustaining);
+                objXmlNode.TryGetFieldUninitialized("dicepenaltysustaining", ref _intDicePenaltySustaining);
 
                 // Initiative dice
-                objXmlNode.TryGetInt32FieldQuickly("mininitiativedice", ref _intMinInitiativeDice);
-                objXmlNode.TryGetInt32FieldQuickly("maxinitiativedice", ref _intMaxInitiativeDice);
-                objXmlNode.TryGetInt32FieldQuickly("minastralinitiativedice", ref _intMinAstralInitiativeDice);
-                objXmlNode.TryGetInt32FieldQuickly("maxastralinitiativedice", ref _intMaxAstralInitiativeDice);
-                objXmlNode.TryGetInt32FieldQuickly("mincoldsiminitiativedice", ref _intMinColdSimInitiativeDice);
-                objXmlNode.TryGetInt32FieldQuickly("maxcoldsiminitiativedice", ref _intMaxColdSimInitiativeDice);
-                objXmlNode.TryGetInt32FieldQuickly("minhotsiminitiativedice", ref _intMinHotSimInitiativeDice);
-                objXmlNode.TryGetInt32FieldQuickly("maxhotsiminitiativedice", ref _intMaxHotSimInitiativeDice);
+                objXmlNode.TryGetFieldUninitialized("mininitiativedice", ref _intMinInitiativeDice);
+                objXmlNode.TryGetFieldUninitialized("maxinitiativedice", ref _intMaxInitiativeDice);
+                objXmlNode.TryGetFieldUninitialized("minastralinitiativedice", ref _intMinAstralInitiativeDice);
+                objXmlNode.TryGetFieldUninitialized("maxastralinitiativedice", ref _intMaxAstralInitiativeDice);
+                objXmlNode.TryGetFieldUninitialized("mincoldsiminitiativedice", ref _intMinColdSimInitiativeDice);
+                objXmlNode.TryGetFieldUninitialized("maxcoldsiminitiativedice", ref _intMaxColdSimInitiativeDice);
+                objXmlNode.TryGetFieldUninitialized("minhotsiminitiativedice", ref _intMinHotSimInitiativeDice);
+                objXmlNode.TryGetFieldUninitialized("maxhotsiminitiativedice", ref _intMaxHotSimInitiativeDice);
 
                 XPathNavigator xmlKarmaCostNode = objXmlNode.SelectSingleNodeAndCacheExpression("karmacost", token);
                 // Attempt to populate the Karma values.
                 if (xmlKarmaCostNode != null)
                 {
-                    xmlKarmaCostNode.TryGetInt32FieldQuickly("karmaattribute", ref _intKarmaAttribute);
-                    xmlKarmaCostNode.TryGetInt32FieldQuickly("karmaquality", ref _intKarmaQuality);
-                    xmlKarmaCostNode.TryGetInt32FieldQuickly("karmaspecialization", ref _intKarmaSpecialization);
-                    xmlKarmaCostNode.TryGetInt32FieldQuickly("karmaknospecialization", ref _intKarmaKnoSpecialization);
-                    xmlKarmaCostNode.TryGetInt32FieldQuickly("karmanewknowledgeskill", ref _intKarmaNewKnowledgeSkill);
-                    xmlKarmaCostNode.TryGetInt32FieldQuickly("karmanewactiveskill", ref _intKarmaNewActiveSkill);
-                    xmlKarmaCostNode.TryGetInt32FieldQuickly("karmanewskillgroup", ref _intKarmaNewSkillGroup);
-                    xmlKarmaCostNode.TryGetInt32FieldQuickly("karmaimproveknowledgeskill",
+                    xmlKarmaCostNode.TryGetFieldUninitialized("karmaattribute", ref _intKarmaAttribute);
+                    xmlKarmaCostNode.TryGetFieldUninitialized("karmaquality", ref _intKarmaQuality);
+                    xmlKarmaCostNode.TryGetFieldUninitialized("karmaspecialization", ref _intKarmaSpecialization);
+                    xmlKarmaCostNode.TryGetFieldUninitialized("karmaknospecialization", ref _intKarmaKnoSpecialization);
+                    xmlKarmaCostNode.TryGetFieldUninitialized("karmanewknowledgeskill", ref _intKarmaNewKnowledgeSkill);
+                    xmlKarmaCostNode.TryGetFieldUninitialized("karmanewactiveskill", ref _intKarmaNewActiveSkill);
+                    xmlKarmaCostNode.TryGetFieldUninitialized("karmanewskillgroup", ref _intKarmaNewSkillGroup);
+                    xmlKarmaCostNode.TryGetFieldUninitialized("karmaimproveknowledgeskill",
                                                              ref _intKarmaImproveKnowledgeSkill);
-                    xmlKarmaCostNode.TryGetInt32FieldQuickly("karmaimproveactiveskill",
+                    xmlKarmaCostNode.TryGetFieldUninitialized("karmaimproveactiveskill",
                                                              ref _intKarmaImproveActiveSkill);
-                    xmlKarmaCostNode.TryGetInt32FieldQuickly("karmaimproveskillgroup", ref _intKarmaImproveSkillGroup);
-                    xmlKarmaCostNode.TryGetInt32FieldQuickly("karmaspell", ref _intKarmaSpell);
-                    xmlKarmaCostNode.TryGetInt32FieldQuickly("karmanewcomplexform", ref _intKarmaNewComplexForm);
-                    xmlKarmaCostNode.TryGetInt32FieldQuickly("karmanewaiprogram", ref _intKarmaNewAIProgram);
-                    xmlKarmaCostNode.TryGetInt32FieldQuickly("karmanewaiadvancedprogram",
+                    xmlKarmaCostNode.TryGetFieldUninitialized("karmaimproveskillgroup", ref _intKarmaImproveSkillGroup);
+                    xmlKarmaCostNode.TryGetFieldUninitialized("karmaspell", ref _intKarmaSpell);
+                    xmlKarmaCostNode.TryGetFieldUninitialized("karmanewcomplexform", ref _intKarmaNewComplexForm);
+                    xmlKarmaCostNode.TryGetFieldUninitialized("karmanewaiprogram", ref _intKarmaNewAIProgram);
+                    xmlKarmaCostNode.TryGetFieldUninitialized("karmanewaiadvancedprogram",
                                                              ref _intKarmaNewAIAdvancedProgram);
-                    xmlKarmaCostNode.TryGetInt32FieldQuickly("karmacontact", ref _intKarmaContact);
-                    xmlKarmaCostNode.TryGetInt32FieldQuickly("karmaenemy", ref _intKarmaEnemy);
-                    xmlKarmaCostNode.TryGetInt32FieldQuickly("karmacarryover", ref _intKarmaCarryover);
-                    xmlKarmaCostNode.TryGetInt32FieldQuickly("karmaspirit", ref _intKarmaSpirit);
-                    if (!xmlKarmaCostNode.TryGetInt32FieldQuickly("karmatechnique", ref _intKarmaTechnique))
-                        xmlKarmaCostNode.TryGetInt32FieldQuickly("karmamaneuver", ref _intKarmaTechnique);
-                    xmlKarmaCostNode.TryGetInt32FieldQuickly("karmainitiation", ref _intKarmaInitiation);
-                    xmlKarmaCostNode.TryGetInt32FieldQuickly("karmainitiationflat", ref _intKarmaInitiationFlat);
-                    xmlKarmaCostNode.TryGetInt32FieldQuickly("karmametamagic", ref _intKarmaMetamagic);
-                    xmlKarmaCostNode.TryGetInt32FieldQuickly("karmajoingroup", ref _intKarmaJoinGroup);
-                    xmlKarmaCostNode.TryGetInt32FieldQuickly("karmaleavegroup", ref _intKarmaLeaveGroup);
-                    xmlKarmaCostNode.TryGetInt32FieldQuickly("karmaenhancement", ref _intKarmaEnhancement);
-                    xmlKarmaCostNode.TryGetInt32FieldQuickly("karmamysadpp", ref _intKarmaMysticAdeptPowerPoint);
-                    xmlKarmaCostNode.TryGetInt32FieldQuickly("karmaspiritfettering", ref _intKarmaSpiritFettering);
+                    xmlKarmaCostNode.TryGetFieldUninitialized("karmacontact", ref _intKarmaContact);
+                    xmlKarmaCostNode.TryGetFieldUninitialized("karmaenemy", ref _intKarmaEnemy);
+                    xmlKarmaCostNode.TryGetFieldUninitialized("karmacarryover", ref _intKarmaCarryover);
+                    xmlKarmaCostNode.TryGetFieldUninitialized("karmaspirit", ref _intKarmaSpirit);
+                    if (!xmlKarmaCostNode.TryGetFieldUninitialized("karmatechnique", ref _intKarmaTechnique))
+                        xmlKarmaCostNode.TryGetFieldUninitialized("karmamaneuver", ref _intKarmaTechnique);
+                    xmlKarmaCostNode.TryGetFieldUninitialized("karmainitiation", ref _intKarmaInitiation);
+                    xmlKarmaCostNode.TryGetFieldUninitialized("karmainitiationflat", ref _intKarmaInitiationFlat);
+                    xmlKarmaCostNode.TryGetFieldUninitialized("karmametamagic", ref _intKarmaMetamagic);
+                    xmlKarmaCostNode.TryGetFieldUninitialized("karmajoingroup", ref _intKarmaJoinGroup);
+                    xmlKarmaCostNode.TryGetFieldUninitialized("karmaleavegroup", ref _intKarmaLeaveGroup);
+                    xmlKarmaCostNode.TryGetFieldUninitialized("karmaenhancement", ref _intKarmaEnhancement);
+                    xmlKarmaCostNode.TryGetFieldUninitialized("karmamysadpp", ref _intKarmaMysticAdeptPowerPoint);
+                    xmlKarmaCostNode.TryGetFieldUninitialized("karmaspiritfettering", ref _intKarmaSpiritFettering);
 
                     // Attempt to load the Karma costs for Foci.
-                    xmlKarmaCostNode.TryGetInt32FieldQuickly("karmaalchemicalfocus", ref _intKarmaAlchemicalFocus);
-                    xmlKarmaCostNode.TryGetInt32FieldQuickly("karmabanishingfocus", ref _intKarmaBanishingFocus);
-                    xmlKarmaCostNode.TryGetInt32FieldQuickly("karmabindingfocus", ref _intKarmaBindingFocus);
-                    xmlKarmaCostNode.TryGetInt32FieldQuickly("karmacenteringfocus", ref _intKarmaCenteringFocus);
-                    xmlKarmaCostNode.TryGetInt32FieldQuickly("karmacounterspellingfocus",
+                    xmlKarmaCostNode.TryGetFieldUninitialized("karmaalchemicalfocus", ref _intKarmaAlchemicalFocus);
+                    xmlKarmaCostNode.TryGetFieldUninitialized("karmabanishingfocus", ref _intKarmaBanishingFocus);
+                    xmlKarmaCostNode.TryGetFieldUninitialized("karmabindingfocus", ref _intKarmaBindingFocus);
+                    xmlKarmaCostNode.TryGetFieldUninitialized("karmacenteringfocus", ref _intKarmaCenteringFocus);
+                    xmlKarmaCostNode.TryGetFieldUninitialized("karmacounterspellingfocus",
                                                              ref _intKarmaCounterspellingFocus);
-                    xmlKarmaCostNode.TryGetInt32FieldQuickly("karmadisenchantingfocus",
+                    xmlKarmaCostNode.TryGetFieldUninitialized("karmadisenchantingfocus",
                                                              ref _intKarmaDisenchantingFocus);
-                    xmlKarmaCostNode.TryGetInt32FieldQuickly("karmaflexiblesignaturefocus",
+                    xmlKarmaCostNode.TryGetFieldUninitialized("karmaflexiblesignaturefocus",
                                                              ref _intKarmaFlexibleSignatureFocus);
-                    xmlKarmaCostNode.TryGetInt32FieldQuickly("karmamaskingfocus", ref _intKarmaMaskingFocus);
-                    xmlKarmaCostNode.TryGetInt32FieldQuickly("karmapowerfocus", ref _intKarmaPowerFocus);
-                    xmlKarmaCostNode.TryGetInt32FieldQuickly("karmaqifocus", ref _intKarmaQiFocus);
-                    xmlKarmaCostNode.TryGetInt32FieldQuickly("karmaritualspellcastingfocus",
+                    xmlKarmaCostNode.TryGetFieldUninitialized("karmamaskingfocus", ref _intKarmaMaskingFocus);
+                    xmlKarmaCostNode.TryGetFieldUninitialized("karmapowerfocus", ref _intKarmaPowerFocus);
+                    xmlKarmaCostNode.TryGetFieldUninitialized("karmaqifocus", ref _intKarmaQiFocus);
+                    xmlKarmaCostNode.TryGetFieldUninitialized("karmaritualspellcastingfocus",
                                                              ref _intKarmaRitualSpellcastingFocus);
-                    xmlKarmaCostNode.TryGetInt32FieldQuickly("karmaspellcastingfocus", ref _intKarmaSpellcastingFocus);
-                    xmlKarmaCostNode.TryGetInt32FieldQuickly("karmaspellshapingfocus", ref _intKarmaSpellShapingFocus);
-                    xmlKarmaCostNode.TryGetInt32FieldQuickly("karmasummoningfocus", ref _intKarmaSummoningFocus);
-                    xmlKarmaCostNode.TryGetInt32FieldQuickly("karmasustainingfocus", ref _intKarmaSustainingFocus);
-                    xmlKarmaCostNode.TryGetInt32FieldQuickly("karmaweaponfocus", ref _intKarmaWeaponFocus);
+                    xmlKarmaCostNode.TryGetFieldUninitialized("karmaspellcastingfocus", ref _intKarmaSpellcastingFocus);
+                    xmlKarmaCostNode.TryGetFieldUninitialized("karmaspellshapingfocus", ref _intKarmaSpellShapingFocus);
+                    xmlKarmaCostNode.TryGetFieldUninitialized("karmasummoningfocus", ref _intKarmaSummoningFocus);
+                    xmlKarmaCostNode.TryGetFieldUninitialized("karmasustainingfocus", ref _intKarmaSustainingFocus);
+                    xmlKarmaCostNode.TryGetFieldUninitialized("karmaweaponfocus", ref _intKarmaWeaponFocus);
                 }
 
                 XPathNavigator xmlLegacyCharacterNavigator = null;
@@ -3849,22 +3849,22 @@ namespace Chummer
                     || xmlDefaultBuildNode?.TryGetStringFieldQuickly("buildmethod", ref strTemp) == true
                     && Enum.TryParse(strTemp, true, out eBuildMethod))
                     _eBuildMethod = eBuildMethod;
-                if (!objXmlNode.TryGetInt32FieldQuickly("buildpoints", ref _intBuildPoints))
-                    xmlDefaultBuildNode?.TryGetInt32FieldQuickly("buildpoints", ref _intBuildPoints);
-                if (!objXmlNode.TryGetInt32FieldQuickly("qualitykarmalimit", ref _intQualityKarmaLimit)
+                if (!objXmlNode.TryGetFieldUninitialized("buildpoints", ref _intBuildPoints))
+                    xmlDefaultBuildNode?.TryGetFieldUninitialized("buildpoints", ref _intBuildPoints);
+                if (!objXmlNode.TryGetFieldUninitialized("qualitykarmalimit", ref _intQualityKarmaLimit)
                     && BuildMethodUsesPriorityTables)
                     _intQualityKarmaLimit = _intBuildPoints;
                 objXmlNode.TryGetStringFieldQuickly("priorityarray", ref _strPriorityArray);
                 objXmlNode.TryGetStringFieldQuickly("prioritytable", ref _strPriorityTable);
-                objXmlNode.TryGetInt32FieldQuickly("sumtoten", ref _intSumtoTen);
-                if (!objXmlNode.TryGetInt32FieldQuickly("availability", ref _intAvailability))
-                    xmlDefaultBuildNode?.TryGetInt32FieldQuickly("availability", ref _intAvailability);
-                if (!objXmlNode.TryGetInt32FieldQuickly("maxmartialarts", ref _intMaxMartialArts))
-                    xmlDefaultBuildNode?.TryGetInt32FieldQuickly("maxmartialarts", ref _intMaxMartialArts);
-                if (!objXmlNode.TryGetInt32FieldQuickly("maxmartialtechniques", ref _intMaxMartialTechniques))
-                    xmlDefaultBuildNode?.TryGetInt32FieldQuickly("maxmartialtechniques", ref _intMaxMartialTechniques);
-                objXmlNode.TryGetDecFieldQuickly("nuyencarryover", ref _decNuyenCarryover);
-                objXmlNode.TryGetDecFieldQuickly("nuyenmaxbp", ref _decNuyenMaximumBP);
+                objXmlNode.TryGetFieldUninitialized("sumtoten", ref _intSumtoTen);
+                if (!objXmlNode.TryGetFieldUninitialized("availability", ref _intAvailability))
+                    xmlDefaultBuildNode?.TryGetFieldUninitialized("availability", ref _intAvailability);
+                if (!objXmlNode.TryGetFieldUninitialized("maxmartialarts", ref _intMaxMartialArts))
+                    xmlDefaultBuildNode?.TryGetFieldUninitialized("maxmartialarts", ref _intMaxMartialArts);
+                if (!objXmlNode.TryGetFieldUninitialized("maxmartialtechniques", ref _intMaxMartialTechniques))
+                    xmlDefaultBuildNode?.TryGetFieldUninitialized("maxmartialtechniques", ref _intMaxMartialTechniques);
+                objXmlNode.TryGetFieldUninitialized("nuyencarryover", ref _decNuyenCarryover);
+                objXmlNode.TryGetFieldUninitialized("nuyenmaxbp", ref _decNuyenMaximumBP);
 
                 _setBannedWareGrades.Clear();
                 foreach (XPathNavigator xmlGrade in objXmlNode.SelectAndCacheExpression("bannedwaregrades/grade", token))
@@ -3965,35 +3965,35 @@ namespace Chummer
                 // Setting name.
                 objXmlNode.TryGetStringFieldQuickly("name", ref _strName);
                 // License Restricted items.
-                objXmlNode.TryGetBoolFieldQuickly("licenserestricted", ref _blnLicenseRestrictedItems);
+                objXmlNode.TryGetFieldUninitialized("licenserestricted", ref _blnLicenseRestrictedItems);
                 // More Lethal Gameplay.
-                objXmlNode.TryGetBoolFieldQuickly("morelethalgameplay", ref _blnMoreLethalGameplay);
+                objXmlNode.TryGetFieldUninitialized("morelethalgameplay", ref _blnMoreLethalGameplay);
                 // Spirit Force Based on Total MAG.
-                objXmlNode.TryGetBoolFieldQuickly("spiritforcebasedontotalmag", ref _blnSpiritForceBasedOnTotalMAG);
+                objXmlNode.TryGetFieldUninitialized("spiritforcebasedontotalmag", ref _blnSpiritForceBasedOnTotalMAG);
                 // Nuyen per Build Point
-                if (!objXmlNode.TryGetDecFieldQuickly("nuyenperbpwftm", ref _decNuyenPerBPWftM))
+                if (!objXmlNode.TryGetFieldUninitialized("nuyenperbpwftm", ref _decNuyenPerBPWftM))
                 {
-                    objXmlNode.TryGetDecFieldQuickly("nuyenperbp", ref _decNuyenPerBPWftM);
+                    objXmlNode.TryGetFieldUninitialized("nuyenperbp", ref _decNuyenPerBPWftM);
                     _decNuyenPerBPWftP = _decNuyenPerBPWftM;
                 }
                 else
-                    objXmlNode.TryGetDecFieldQuickly("nuyenperbpwftp", ref _decNuyenPerBPWftP);
+                    objXmlNode.TryGetFieldUninitialized("nuyenperbpwftp", ref _decNuyenPerBPWftP);
 
                 // Knucks use Unarmed
-                objXmlNode.TryGetBoolFieldQuickly("unarmedimprovementsapplytoweapons",
+                objXmlNode.TryGetFieldUninitialized("unarmedimprovementsapplytoweapons",
                                                   ref _blnUnarmedImprovementsApplyToWeapons);
                 // Allow Initiation in Create Mode
-                objXmlNode.TryGetBoolFieldQuickly("allowinitiationincreatemode", ref _blnAllowInitiationInCreateMode);
+                objXmlNode.TryGetFieldUninitialized("allowinitiationincreatemode", ref _blnAllowInitiationInCreateMode);
                 // Use Points on Broken Groups
-                objXmlNode.TryGetBoolFieldQuickly("usepointsonbrokengroups", ref _blnUsePointsOnBrokenGroups);
+                objXmlNode.TryGetFieldUninitialized("usepointsonbrokengroups", ref _blnUsePointsOnBrokenGroups);
                 // Don't Double the Cost of purchasing Qualities in Career Mode
-                objXmlNode.TryGetBoolFieldQuickly("dontdoublequalities", ref _blnDontDoubleQualityPurchaseCost);
+                objXmlNode.TryGetFieldUninitialized("dontdoublequalities", ref _blnDontDoubleQualityPurchaseCost);
                 // Don't Double the Cost of removing Qualities in Career Mode
-                objXmlNode.TryGetBoolFieldQuickly("dontdoublequalityrefunds", ref _blnDontDoubleQualityRefundCost);
+                objXmlNode.TryGetFieldUninitialized("dontdoublequalityrefunds", ref _blnDontDoubleQualityRefundCost);
                 // Ignore Art Requirements from Street Grimoire
-                objXmlNode.TryGetBoolFieldQuickly("ignoreart", ref _blnIgnoreArt);
+                objXmlNode.TryGetFieldUninitialized("ignoreart", ref _blnIgnoreArt);
                 // Use Cyberleg Stats for Movement
-                objXmlNode.TryGetBoolFieldQuickly("cyberlegmovement", ref _blnCyberlegMovement);
+                objXmlNode.TryGetFieldUninitialized("cyberlegmovement", ref _blnCyberlegMovement);
                 // XPath expression for contact points
                 if (!objXmlNode.TryGetStringFieldQuickly("contactpointsexpression", ref _strContactPointsExpression))
                 {
@@ -4001,10 +4001,10 @@ namespace Chummer
                     int intTemp = 3;
                     bool blnTemp = false;
                     strTemp = "{CHAUnaug}";
-                    if (objXmlNode.TryGetBoolFieldQuickly("usetotalvalueforcontacts", ref blnTemp) && blnTemp)
+                    if (objXmlNode.TryGetFieldUninitialized("usetotalvalueforcontacts", ref blnTemp) && blnTemp)
                         strTemp = "{CHA}";
-                    if (objXmlNode.TryGetBoolFieldQuickly("freecontactsmultiplierenabled", ref blnTemp) && blnTemp)
-                        objXmlNode.TryGetInt32FieldQuickly("freekarmacontactsmultiplier", ref intTemp);
+                    if (objXmlNode.TryGetFieldUninitialized("freecontactsmultiplierenabled", ref blnTemp) && blnTemp)
+                        objXmlNode.TryGetFieldUninitialized("freekarmacontactsmultiplier", ref intTemp);
                     _strContactPointsExpression
                         = strTemp + " * " + intTemp.ToString(GlobalSettings.InvariantCultureInfo);
                 }
@@ -4017,11 +4017,11 @@ namespace Chummer
                     int intTemp = 2;
                     bool blnTemp = false;
                     strTemp = "({INTUnaug} + {LOGUnaug})";
-                    if (objXmlNode.TryGetBoolFieldQuickly("usetotalvalueforknowledge", ref blnTemp) && blnTemp)
+                    if (objXmlNode.TryGetFieldUninitialized("usetotalvalueforknowledge", ref blnTemp) && blnTemp)
                         strTemp = "({INT} + {LOG})";
-                    if (objXmlNode.TryGetBoolFieldQuickly("freekarmaknowledgemultiplierenabled", ref blnTemp)
+                    if (objXmlNode.TryGetFieldUninitialized("freekarmaknowledgemultiplierenabled", ref blnTemp)
                         && blnTemp)
-                        objXmlNode.TryGetInt32FieldQuickly("freekarmaknowledgemultiplier", ref intTemp);
+                        objXmlNode.TryGetFieldUninitialized("freekarmaknowledgemultiplier", ref intTemp);
                     _strKnowledgePointsExpression
                         = strTemp + " * " + intTemp.ToString(GlobalSettings.InvariantCultureInfo);
                 }
@@ -4050,98 +4050,98 @@ namespace Chummer
                 objXmlNode.TryGetStringFieldQuickly("encumbranceintervalexpression",
                                                     ref _strEncumbranceIntervalExpression);
                 // Whether to apply certain penalties to encumbrance and, if so, how much per tick
-                objXmlNode.TryGetBoolFieldQuickly("doencumbrancepenaltyphysicallimit",
+                objXmlNode.TryGetFieldUninitialized("doencumbrancepenaltyphysicallimit",
                                                   ref _blnDoEncumbrancePenaltyPhysicalLimit);
-                objXmlNode.TryGetBoolFieldQuickly("doencumbrancepenaltymovementspeed",
+                objXmlNode.TryGetFieldUninitialized("doencumbrancepenaltymovementspeed",
                                                   ref _blnDoEncumbrancePenaltyMovementSpeed);
-                objXmlNode.TryGetBoolFieldQuickly("doencumbrancepenaltyagility", ref _blnDoEncumbrancePenaltyAgility);
-                objXmlNode.TryGetBoolFieldQuickly("doencumbrancepenaltyreaction", ref _blnDoEncumbrancePenaltyReaction);
-                objXmlNode.TryGetBoolFieldQuickly("doencumbrancepenaltywoundmodifier",
+                objXmlNode.TryGetFieldUninitialized("doencumbrancepenaltyagility", ref _blnDoEncumbrancePenaltyAgility);
+                objXmlNode.TryGetFieldUninitialized("doencumbrancepenaltyreaction", ref _blnDoEncumbrancePenaltyReaction);
+                objXmlNode.TryGetFieldUninitialized("doencumbrancepenaltywoundmodifier",
                                                   ref _blnDoEncumbrancePenaltyWoundModifier);
-                objXmlNode.TryGetInt32FieldQuickly("encumbrancepenaltyphysicallimit",
+                objXmlNode.TryGetFieldUninitialized("encumbrancepenaltyphysicallimit",
                                                    ref _intEncumbrancePenaltyPhysicalLimit);
-                objXmlNode.TryGetInt32FieldQuickly("encumbrancepenaltymovementspeed",
+                objXmlNode.TryGetFieldUninitialized("encumbrancepenaltymovementspeed",
                                                    ref _intEncumbrancePenaltyMovementSpeed);
-                objXmlNode.TryGetInt32FieldQuickly("encumbrancepenaltyagility", ref _intEncumbrancePenaltyAgility);
-                objXmlNode.TryGetInt32FieldQuickly("encumbrancepenaltyreaction", ref _intEncumbrancePenaltyReaction);
-                objXmlNode.TryGetInt32FieldQuickly("encumbrancepenaltywoundmodifier",
+                objXmlNode.TryGetFieldUninitialized("encumbrancepenaltyagility", ref _intEncumbrancePenaltyAgility);
+                objXmlNode.TryGetFieldUninitialized("encumbrancepenaltyreaction", ref _intEncumbrancePenaltyReaction);
+                objXmlNode.TryGetFieldUninitialized("encumbrancepenaltywoundmodifier",
                                                    ref _intEncumbrancePenaltyWoundModifier);
                 // Drone Armor Multiplier Enabled
-                objXmlNode.TryGetBoolFieldQuickly("dronearmormultiplierenabled", ref _blnDroneArmorMultiplierEnabled);
+                objXmlNode.TryGetFieldUninitialized("dronearmormultiplierenabled", ref _blnDroneArmorMultiplierEnabled);
                 // Drone Armor Multiplier Value
-                objXmlNode.TryGetInt32FieldQuickly("dronearmorflatnumber", ref _intDroneArmorMultiplier);
+                objXmlNode.TryGetFieldUninitialized("dronearmorflatnumber", ref _intDroneArmorMultiplier);
                 // No Single Armor Encumbrance
-                objXmlNode.TryGetBoolFieldQuickly("nosinglearmorencumbrance", ref _blnNoSingleArmorEncumbrance);
+                objXmlNode.TryGetFieldUninitialized("nosinglearmorencumbrance", ref _blnNoSingleArmorEncumbrance);
                 // Ignore Armor Encumbrance
-                objXmlNode.TryGetBoolFieldQuickly("noarmorencumbrance", ref _blnNoArmorEncumbrance);
+                objXmlNode.TryGetFieldUninitialized("noarmorencumbrance", ref _blnNoArmorEncumbrance);
                 // Do not cap armor bonuses from accessories
-                objXmlNode.TryGetBoolFieldQuickly("uncappedarmoraccessorybonuses",
+                objXmlNode.TryGetFieldUninitialized("uncappedarmoraccessorybonuses",
                                                   ref _blnUncappedArmorAccessoryBonuses);
                 // Ignore Complex Form Limit
-                objXmlNode.TryGetBoolFieldQuickly("ignorecomplexformlimit", ref _blnIgnoreComplexFormLimit);
+                objXmlNode.TryGetFieldUninitialized("ignorecomplexformlimit", ref _blnIgnoreComplexFormLimit);
                 // Essence Loss Reduces Maximum Only.
-                objXmlNode.TryGetBoolFieldQuickly("esslossreducesmaximumonly", ref _blnESSLossReducesMaximumOnly);
+                objXmlNode.TryGetFieldUninitialized("esslossreducesmaximumonly", ref _blnESSLossReducesMaximumOnly);
                 // Allow Skill Regrouping.
-                objXmlNode.TryGetBoolFieldQuickly("allowskillregrouping", ref _blnAllowSkillRegrouping);
+                objXmlNode.TryGetFieldUninitialized("allowskillregrouping", ref _blnAllowSkillRegrouping);
                 // Whether skill specializations break skill groups.
-                objXmlNode.TryGetBoolFieldQuickly("specializationsbreakskillgroups",
+                objXmlNode.TryGetFieldUninitialized("specializationsbreakskillgroups",
                                                   ref _blnSpecializationsBreakSkillGroups);
                 // Metatype Costs Karma.
-                objXmlNode.TryGetBoolFieldQuickly("metatypecostskarma", ref _blnMetatypeCostsKarma);
+                objXmlNode.TryGetFieldUninitialized("metatypecostskarma", ref _blnMetatypeCostsKarma);
                 // Allow characters to spend karma before attribute points.
-                objXmlNode.TryGetBoolFieldQuickly("reverseattributepriorityorder",
+                objXmlNode.TryGetFieldUninitialized("reverseattributepriorityorder",
                                                   ref _blnReverseAttributePriorityOrder);
                 // Metatype Costs Karma Multiplier.
-                objXmlNode.TryGetInt32FieldQuickly("metatypecostskarmamultiplier", ref _intMetatypeCostMultiplier);
+                objXmlNode.TryGetFieldUninitialized("metatypecostskarmamultiplier", ref _intMetatypeCostMultiplier);
                 // Limb Count.
-                objXmlNode.TryGetInt32FieldQuickly("limbcount", ref _intLimbCount);
+                objXmlNode.TryGetFieldUninitialized("limbcount", ref _intLimbCount);
                 // Exclude Limb Slot.
                 objXmlNode.TryGetStringFieldQuickly("excludelimbslot", ref _strExcludeLimbSlot);
                 // Allow Cyberware Essence Cost Discounts.
-                objXmlNode.TryGetBoolFieldQuickly("allowcyberwareessdiscounts", ref _blnAllowCyberwareESSDiscounts);
+                objXmlNode.TryGetFieldUninitialized("allowcyberwareessdiscounts", ref _blnAllowCyberwareESSDiscounts);
                 // Use Maximum Armor Modifications.
-                objXmlNode.TryGetBoolFieldQuickly("maximumarmormodifications", ref _blnMaximumArmorModifications);
+                objXmlNode.TryGetFieldUninitialized("maximumarmormodifications", ref _blnMaximumArmorModifications);
                 // Allow Armor Degradation.
-                objXmlNode.TryGetBoolFieldQuickly("armordegredation", ref _blnArmorDegradation);
+                objXmlNode.TryGetFieldUninitialized("armordegredation", ref _blnArmorDegradation);
                 // Whether Karma costs for increasing Special Attributes is based on the shown value instead of actual value.
-                objXmlNode.TryGetBoolFieldQuickly("specialkarmacostbasedonshownvalue",
+                objXmlNode.TryGetFieldUninitialized("specialkarmacostbasedonshownvalue",
                                                   ref _blnSpecialKarmaCostBasedOnShownValue);
                 // Allow more than 35 BP in Positive Qualities.
-                objXmlNode.TryGetBoolFieldQuickly("exceedpositivequalities", ref _blnExceedPositiveQualities);
+                objXmlNode.TryGetFieldUninitialized("exceedpositivequalities", ref _blnExceedPositiveQualities);
                 // Double all positive qualities in excess of the limit
-                objXmlNode.TryGetBoolFieldQuickly("exceedpositivequalitiescostdoubled",
+                objXmlNode.TryGetFieldUninitialized("exceedpositivequalitiescostdoubled",
                                                   ref _blnExceedPositiveQualitiesCostDoubled);
 
-                objXmlNode.TryGetBoolFieldQuickly("mysaddppcareer", ref _blnMysAdeptAllowPpCareer);
+                objXmlNode.TryGetFieldUninitialized("mysaddppcareer", ref _blnMysAdeptAllowPpCareer);
 
                 // Split MAG for Mystic Adepts so that they have a separate MAG rating for Adept Powers instead of using the special PP rules for mystic adepts
-                objXmlNode.TryGetBoolFieldQuickly("mysadeptsecondmagattribute", ref _blnMysAdeptSecondMAGAttribute);
+                objXmlNode.TryGetFieldUninitialized("mysadeptsecondmagattribute", ref _blnMysAdeptSecondMAGAttribute);
 
                 // Grant a free specialization when taking a martial art.
-                objXmlNode.TryGetBoolFieldQuickly("freemartialartspecialization", ref _blnFreeMartialArtSpecialization);
+                objXmlNode.TryGetFieldUninitialized("freemartialartspecialization", ref _blnFreeMartialArtSpecialization);
                 // Can spend spells from Magic priority as power points
-                objXmlNode.TryGetBoolFieldQuickly("priorityspellsasadeptpowers", ref _blnPrioritySpellsAsAdeptPowers);
+                objXmlNode.TryGetFieldUninitialized("priorityspellsasadeptpowers", ref _blnPrioritySpellsAsAdeptPowers);
                 // Allow more than 35 BP in Negative Qualities.
-                objXmlNode.TryGetBoolFieldQuickly("exceednegativequalities", ref _blnExceedNegativeQualities);
+                objXmlNode.TryGetFieldUninitialized("exceednegativequalities", ref _blnExceedNegativeQualities);
                 // Character can still only receive 35 BP from Negative Qualities (though they can still add as many as they'd like).
-                if (!objXmlNode.TryGetBoolFieldQuickly("exceednegativequalitiesnobonus",
+                if (!objXmlNode.TryGetFieldUninitialized("exceednegativequalitiesnobonus",
                                                        ref _blnExceedNegativeQualitiesNoBonus))
-                    objXmlNode.TryGetBoolFieldQuickly("exceednegativequalitieslimit",
+                    objXmlNode.TryGetFieldUninitialized("exceednegativequalitieslimit",
                                                       ref _blnExceedNegativeQualitiesNoBonus);
                 // Whether Restricted items have their cost multiplied.
-                objXmlNode.TryGetBoolFieldQuickly("multiplyrestrictedcost", ref _blnMultiplyRestrictedCost);
+                objXmlNode.TryGetFieldUninitialized("multiplyrestrictedcost", ref _blnMultiplyRestrictedCost);
                 // Whether Forbidden items have their cost multiplied.
-                objXmlNode.TryGetBoolFieldQuickly("multiplyforbiddencost", ref _blnMultiplyForbiddenCost);
+                objXmlNode.TryGetFieldUninitialized("multiplyforbiddencost", ref _blnMultiplyForbiddenCost);
                 // Restricted cost multiplier.
-                objXmlNode.TryGetInt32FieldQuickly("restrictedcostmultiplier", ref _intRestrictedCostMultiplier);
+                objXmlNode.TryGetFieldUninitialized("restrictedcostmultiplier", ref _intRestrictedCostMultiplier);
                 // Forbidden cost multiplier.
-                objXmlNode.TryGetInt32FieldQuickly("forbiddencostmultiplier", ref _intForbiddenCostMultiplier);
+                objXmlNode.TryGetFieldUninitialized("forbiddencostmultiplier", ref _intForbiddenCostMultiplier);
                 // Only round essence when its value is displayed
-                objXmlNode.TryGetBoolFieldQuickly("donotroundessenceinternally", ref _blnDoNotRoundEssenceInternally);
+                objXmlNode.TryGetFieldUninitialized("donotroundessenceinternally", ref _blnDoNotRoundEssenceInternally);
                 // Allow use of enemies
-                objXmlNode.TryGetBoolFieldQuickly("enableenemytracking", ref _blnEnableEnemyTracking);
+                objXmlNode.TryGetFieldUninitialized("enableenemytracking", ref _blnEnableEnemyTracking);
                 // Have enemies contribute to negative quality limit
-                objXmlNode.TryGetBoolFieldQuickly("enemykarmaqualitylimit", ref _blnEnemyKarmaQualityLimit);
+                objXmlNode.TryGetFieldUninitialized("enemykarmaqualitylimit", ref _blnEnemyKarmaQualityLimit);
                 // Format in which nuyen values are displayed
                 objXmlNode.TryGetStringFieldQuickly("nuyenformat", ref _strNuyenFormat);
                 // Format in which weight values are displayed
@@ -4157,7 +4157,7 @@ namespace Chummer
                 {
                     int intTemp = 2;
                     // Number of decimal places to round to when calculating Essence.
-                    objXmlNode.TryGetInt32FieldQuickly("essencedecimals", ref intTemp);
+                    objXmlNode.TryGetFieldUninitialized("essencedecimals", ref intTemp);
                     EssenceDecimals = intTemp;
                 }
                 else
@@ -4181,158 +4181,158 @@ namespace Chummer
                 }
 
                 // Whether Capacity limits should be enforced.
-                objXmlNode.TryGetBoolFieldQuickly("enforcecapacity", ref _blnEnforceCapacity);
+                objXmlNode.TryGetFieldUninitialized("enforcecapacity", ref _blnEnforceCapacity);
                 // Whether Recoil modifiers are restricted (AR 148).
-                objXmlNode.TryGetBoolFieldQuickly("restrictrecoil", ref _blnRestrictRecoil);
+                objXmlNode.TryGetFieldUninitialized("restrictrecoil", ref _blnRestrictRecoil);
                 // Whether character are not restricted to the number of points they can invest in Nuyen.
-                objXmlNode.TryGetBoolFieldQuickly("unrestrictednuyen", ref _blnUnrestrictedNuyen);
+                objXmlNode.TryGetFieldUninitialized("unrestrictednuyen", ref _blnUnrestrictedNuyen);
                 // Whether Stacked Foci can go a combined Force higher than 6.
-                objXmlNode.TryGetBoolFieldQuickly("allowhigherstackedfoci", ref _blnAllowHigherStackedFoci);
+                objXmlNode.TryGetFieldUninitialized("allowhigherstackedfoci", ref _blnAllowHigherStackedFoci);
                 // Whether the user can change the status of a Weapon Mod or Accessory being part of the base Weapon.
-                objXmlNode.TryGetBoolFieldQuickly("alloweditpartofbaseweapon", ref _blnAllowEditPartOfBaseWeapon);
+                objXmlNode.TryGetFieldUninitialized("alloweditpartofbaseweapon", ref _blnAllowEditPartOfBaseWeapon);
                 // Whether the user can break Skill Groups while in Create Mode.
-                objXmlNode.TryGetBoolFieldQuickly("breakskillgroupsincreatemode",
+                objXmlNode.TryGetFieldUninitialized("breakskillgroupsincreatemode",
                                                   ref _blnStrictSkillGroupsInCreateMode);
                 // Whether the user is allowed to buy specializations with skill points for skills only bought with karma.
-                objXmlNode.TryGetBoolFieldQuickly("allowpointbuyspecializationsonkarmaskills",
+                objXmlNode.TryGetFieldUninitialized("allowpointbuyspecializationsonkarmaskills",
                                                   ref _blnAllowPointBuySpecializationsOnKarmaSkills);
                 // Whether any Detection Spell can be taken as Extended range version.
-                objXmlNode.TryGetBoolFieldQuickly("extendanydetectionspell", ref _blnExtendAnyDetectionSpell);
+                objXmlNode.TryGetFieldUninitialized("extendanydetectionspell", ref _blnExtendAnyDetectionSpell);
                 // Whether cyberlimbs are used for augmented attribute calculation.
-                objXmlNode.TryGetBoolFieldQuickly("dontusecyberlimbcalculation", ref _blnDontUseCyberlimbCalculation);
+                objXmlNode.TryGetFieldUninitialized("dontusecyberlimbcalculation", ref _blnDontUseCyberlimbCalculation);
                 // House rule: Treat the Metatype Attribute Minimum as 1 for the purpose of calculating Karma costs.
-                objXmlNode.TryGetBoolFieldQuickly("alternatemetatypeattributekarma",
+                objXmlNode.TryGetFieldUninitialized("alternatemetatypeattributekarma",
                                                   ref _blnAlternateMetatypeAttributeKarma);
                 // Whether Obsolescent can be removed/upgrade in the same manner as Obsolete.
-                objXmlNode.TryGetBoolFieldQuickly("allowobsolescentupgrade", ref _blnAllowObsolescentUpgrade);
+                objXmlNode.TryGetFieldUninitialized("allowobsolescentupgrade", ref _blnAllowObsolescentUpgrade);
                 // Whether Bioware Suites can be created and added.
-                objXmlNode.TryGetBoolFieldQuickly("allowbiowaresuites", ref _blnAllowBiowareSuites);
+                objXmlNode.TryGetFieldUninitialized("allowbiowaresuites", ref _blnAllowBiowareSuites);
                 // House rule: Free Spirits calculate their Power Points based on their MAG instead of EDG.
-                objXmlNode.TryGetBoolFieldQuickly("freespiritpowerpointsmag", ref _blnFreeSpiritPowerPointsMAG);
+                objXmlNode.TryGetFieldUninitialized("freespiritpowerpointsmag", ref _blnFreeSpiritPowerPointsMAG);
                 // House rule: Whether to compensate for the karma cost difference between raising skill ratings and skill groups when increasing the rating of the last skill in the group
-                objXmlNode.TryGetBoolFieldQuickly("compensateskillgroupkarmadifference",
+                objXmlNode.TryGetFieldUninitialized("compensateskillgroupkarmadifference",
                                                   ref _blnCompensateSkillGroupKarmaDifference);
                 // Optional Rule: Whether Life Modules should automatically create a character back story.
-                objXmlNode.TryGetBoolFieldQuickly("autobackstory", ref _blnAutomaticBackstory);
+                objXmlNode.TryGetFieldUninitialized("autobackstory", ref _blnAutomaticBackstory);
                 // House Rule: Whether Public Awareness should be a calculated attribute based on Street Cred and Notoriety.
-                objXmlNode.TryGetBoolFieldQuickly("usecalculatedpublicawareness", ref _blnUseCalculatedPublicAwareness);
+                objXmlNode.TryGetFieldUninitialized("usecalculatedpublicawareness", ref _blnUseCalculatedPublicAwareness);
                 // House Rule: Whether Improved Ability should be capped at 0.5 (false) or 1.5 (true) of the target skill's Learned Rating.
-                objXmlNode.TryGetBoolFieldQuickly("increasedimprovedabilitymodifier",
+                objXmlNode.TryGetFieldUninitialized("increasedimprovedabilitymodifier",
                                                   ref _blnIncreasedImprovedAbilityMultiplier);
                 // House Rule: Whether lifestyles will give free grid subscriptions found in HT to players.
-                objXmlNode.TryGetBoolFieldQuickly("allowfreegrids", ref _blnAllowFreeGrids);
+                objXmlNode.TryGetFieldUninitialized("allowfreegrids", ref _blnAllowFreeGrids);
                 // House Rule: Whether Technomancers should be allowed to receive Schooling discounts in the same manner as Awakened.
-                objXmlNode.TryGetBoolFieldQuickly("allowtechnomancerschooling", ref _blnAllowTechnomancerSchooling);
+                objXmlNode.TryGetFieldUninitialized("allowtechnomancerschooling", ref _blnAllowTechnomancerSchooling);
                 // House Rule: Maximum value that cyberlimbs can have as a bonus on top of their Customization.
-                objXmlNode.TryGetInt32FieldQuickly("cyberlimbattributebonuscap", ref _intCyberlimbAttributeBonusCap);
-                if (!objXmlNode.TryGetBoolFieldQuickly("cyberlimbattributebonuscapoverride",
+                objXmlNode.TryGetFieldUninitialized("cyberlimbattributebonuscap", ref _intCyberlimbAttributeBonusCap);
+                if (!objXmlNode.TryGetFieldUninitialized("cyberlimbattributebonuscapoverride",
                                                        ref _blnCyberlimbAttributeBonusCapOverride))
                     _blnCyberlimbAttributeBonusCapOverride = _intCyberlimbAttributeBonusCap == 4;
                 // House/Optional Rule: Attribute values are allowed to go below 0 due to Essence Loss.
-                objXmlNode.TryGetBoolFieldQuickly("unclampattributeminimum", ref _blnUnclampAttributeMinimum);
+                objXmlNode.TryGetFieldUninitialized("unclampattributeminimum", ref _blnUnclampAttributeMinimum);
                 // Following two settings used to be stored in global options, so they are fetched from the registry if they are not present
                 // Use Rigger 5.0 drone mods
-                if (!objXmlNode.TryGetBoolFieldQuickly("dronemods", ref _blnDroneMods))
+                if (!objXmlNode.TryGetFieldUninitialized("dronemods", ref _blnDroneMods))
                     GlobalSettings.LoadBoolFromRegistry(ref _blnDroneMods, "dronemods", string.Empty, true);
                 // Apply maximum drone attribute improvement rule to Pilot, too
-                if (!objXmlNode.TryGetBoolFieldQuickly("dronemodsmaximumpilot", ref _blnDroneModsMaximumPilot))
+                if (!objXmlNode.TryGetFieldUninitialized("dronemodsmaximumpilot", ref _blnDroneModsMaximumPilot))
                     GlobalSettings.LoadBoolFromRegistry(ref _blnDroneModsMaximumPilot, "dronemodsPilot", string.Empty,
                                                         true);
 
                 // Maximum number of attributes at metatype maximum in character creation
-                if (!objXmlNode.TryGetInt32FieldQuickly("maxnumbermaxattributescreate",
+                if (!objXmlNode.TryGetFieldUninitialized("maxnumbermaxattributescreate",
                                                         ref _intMaxNumberMaxAttributesCreate))
                 {
                     // Legacy shim
                     bool blnTemp = false;
-                    if (objXmlNode.TryGetBoolFieldQuickly("allow2ndmaxattribute", ref blnTemp) && blnTemp)
+                    if (objXmlNode.TryGetFieldUninitialized("allow2ndmaxattribute", ref blnTemp) && blnTemp)
                         _intMaxNumberMaxAttributesCreate = 2;
                 }
 
                 // Maximum skill rating in character creation
-                objXmlNode.TryGetInt32FieldQuickly("maxskillratingcreate", ref _intMaxSkillRatingCreate);
+                objXmlNode.TryGetFieldUninitialized("maxskillratingcreate", ref _intMaxSkillRatingCreate);
                 // Maximum knowledge skill rating in character creation
-                objXmlNode.TryGetInt32FieldQuickly("maxknowledgeskillratingcreate",
+                objXmlNode.TryGetFieldUninitialized("maxknowledgeskillratingcreate",
                                                    ref _intMaxKnowledgeSkillRatingCreate);
                 // Maximum skill rating
-                if (objXmlNode.TryGetInt32FieldQuickly("maxskillrating", ref _intMaxSkillRating)
+                if (objXmlNode.TryGetFieldUninitialized("maxskillrating", ref _intMaxSkillRating)
                     && _intMaxSkillRatingCreate > _intMaxSkillRating)
                     _intMaxSkillRatingCreate = _intMaxSkillRating;
                 // Maximum knowledge skill rating
-                if (objXmlNode.TryGetInt32FieldQuickly("maxknowledgeskillrating", ref _intMaxKnowledgeSkillRating)
+                if (objXmlNode.TryGetFieldUninitialized("maxknowledgeskillrating", ref _intMaxKnowledgeSkillRating)
                     && _intMaxKnowledgeSkillRatingCreate > _intMaxKnowledgeSkillRating)
                     _intMaxKnowledgeSkillRatingCreate = _intMaxKnowledgeSkillRating;
 
                 //House Rule: The DicePenalty per sustained spell or form
-                objXmlNode.TryGetInt32FieldQuickly("dicepenaltysustaining", ref _intDicePenaltySustaining);
+                objXmlNode.TryGetFieldUninitialized("dicepenaltysustaining", ref _intDicePenaltySustaining);
 
                 // Initiative dice
-                objXmlNode.TryGetInt32FieldQuickly("mininitiativedice", ref _intMinInitiativeDice);
-                objXmlNode.TryGetInt32FieldQuickly("maxinitiativedice", ref _intMaxInitiativeDice);
-                objXmlNode.TryGetInt32FieldQuickly("minastralinitiativedice", ref _intMinAstralInitiativeDice);
-                objXmlNode.TryGetInt32FieldQuickly("maxastralinitiativedice", ref _intMaxAstralInitiativeDice);
-                objXmlNode.TryGetInt32FieldQuickly("mincoldsiminitiativedice", ref _intMinColdSimInitiativeDice);
-                objXmlNode.TryGetInt32FieldQuickly("maxcoldsiminitiativedice", ref _intMaxColdSimInitiativeDice);
-                objXmlNode.TryGetInt32FieldQuickly("minhotsiminitiativedice", ref _intMinHotSimInitiativeDice);
-                objXmlNode.TryGetInt32FieldQuickly("maxhotsiminitiativedice", ref _intMaxHotSimInitiativeDice);
+                objXmlNode.TryGetFieldUninitialized("mininitiativedice", ref _intMinInitiativeDice);
+                objXmlNode.TryGetFieldUninitialized("maxinitiativedice", ref _intMaxInitiativeDice);
+                objXmlNode.TryGetFieldUninitialized("minastralinitiativedice", ref _intMinAstralInitiativeDice);
+                objXmlNode.TryGetFieldUninitialized("maxastralinitiativedice", ref _intMaxAstralInitiativeDice);
+                objXmlNode.TryGetFieldUninitialized("mincoldsiminitiativedice", ref _intMinColdSimInitiativeDice);
+                objXmlNode.TryGetFieldUninitialized("maxcoldsiminitiativedice", ref _intMaxColdSimInitiativeDice);
+                objXmlNode.TryGetFieldUninitialized("minhotsiminitiativedice", ref _intMinHotSimInitiativeDice);
+                objXmlNode.TryGetFieldUninitialized("maxhotsiminitiativedice", ref _intMaxHotSimInitiativeDice);
 
                 XPathNavigator xmlKarmaCostNode = objXmlNode.SelectSingleNodeAndCacheExpression("karmacost", token);
                 // Attempt to populate the Karma values.
                 if (xmlKarmaCostNode != null)
                 {
-                    xmlKarmaCostNode.TryGetInt32FieldQuickly("karmaattribute", ref _intKarmaAttribute);
-                    xmlKarmaCostNode.TryGetInt32FieldQuickly("karmaquality", ref _intKarmaQuality);
-                    xmlKarmaCostNode.TryGetInt32FieldQuickly("karmaspecialization", ref _intKarmaSpecialization);
-                    xmlKarmaCostNode.TryGetInt32FieldQuickly("karmaknospecialization", ref _intKarmaKnoSpecialization);
-                    xmlKarmaCostNode.TryGetInt32FieldQuickly("karmanewknowledgeskill", ref _intKarmaNewKnowledgeSkill);
-                    xmlKarmaCostNode.TryGetInt32FieldQuickly("karmanewactiveskill", ref _intKarmaNewActiveSkill);
-                    xmlKarmaCostNode.TryGetInt32FieldQuickly("karmanewskillgroup", ref _intKarmaNewSkillGroup);
-                    xmlKarmaCostNode.TryGetInt32FieldQuickly("karmaimproveknowledgeskill",
+                    xmlKarmaCostNode.TryGetFieldUninitialized("karmaattribute", ref _intKarmaAttribute);
+                    xmlKarmaCostNode.TryGetFieldUninitialized("karmaquality", ref _intKarmaQuality);
+                    xmlKarmaCostNode.TryGetFieldUninitialized("karmaspecialization", ref _intKarmaSpecialization);
+                    xmlKarmaCostNode.TryGetFieldUninitialized("karmaknospecialization", ref _intKarmaKnoSpecialization);
+                    xmlKarmaCostNode.TryGetFieldUninitialized("karmanewknowledgeskill", ref _intKarmaNewKnowledgeSkill);
+                    xmlKarmaCostNode.TryGetFieldUninitialized("karmanewactiveskill", ref _intKarmaNewActiveSkill);
+                    xmlKarmaCostNode.TryGetFieldUninitialized("karmanewskillgroup", ref _intKarmaNewSkillGroup);
+                    xmlKarmaCostNode.TryGetFieldUninitialized("karmaimproveknowledgeskill",
                                                              ref _intKarmaImproveKnowledgeSkill);
-                    xmlKarmaCostNode.TryGetInt32FieldQuickly("karmaimproveactiveskill",
+                    xmlKarmaCostNode.TryGetFieldUninitialized("karmaimproveactiveskill",
                                                              ref _intKarmaImproveActiveSkill);
-                    xmlKarmaCostNode.TryGetInt32FieldQuickly("karmaimproveskillgroup", ref _intKarmaImproveSkillGroup);
-                    xmlKarmaCostNode.TryGetInt32FieldQuickly("karmaspell", ref _intKarmaSpell);
-                    xmlKarmaCostNode.TryGetInt32FieldQuickly("karmanewcomplexform", ref _intKarmaNewComplexForm);
-                    xmlKarmaCostNode.TryGetInt32FieldQuickly("karmanewaiprogram", ref _intKarmaNewAIProgram);
-                    xmlKarmaCostNode.TryGetInt32FieldQuickly("karmanewaiadvancedprogram",
+                    xmlKarmaCostNode.TryGetFieldUninitialized("karmaimproveskillgroup", ref _intKarmaImproveSkillGroup);
+                    xmlKarmaCostNode.TryGetFieldUninitialized("karmaspell", ref _intKarmaSpell);
+                    xmlKarmaCostNode.TryGetFieldUninitialized("karmanewcomplexform", ref _intKarmaNewComplexForm);
+                    xmlKarmaCostNode.TryGetFieldUninitialized("karmanewaiprogram", ref _intKarmaNewAIProgram);
+                    xmlKarmaCostNode.TryGetFieldUninitialized("karmanewaiadvancedprogram",
                                                              ref _intKarmaNewAIAdvancedProgram);
-                    xmlKarmaCostNode.TryGetInt32FieldQuickly("karmacontact", ref _intKarmaContact);
-                    xmlKarmaCostNode.TryGetInt32FieldQuickly("karmaenemy", ref _intKarmaEnemy);
-                    xmlKarmaCostNode.TryGetInt32FieldQuickly("karmacarryover", ref _intKarmaCarryover);
-                    xmlKarmaCostNode.TryGetInt32FieldQuickly("karmaspirit", ref _intKarmaSpirit);
-                    if (!xmlKarmaCostNode.TryGetInt32FieldQuickly("karmatechnique", ref _intKarmaTechnique))
-                        xmlKarmaCostNode.TryGetInt32FieldQuickly("karmamaneuver", ref _intKarmaTechnique);
-                    xmlKarmaCostNode.TryGetInt32FieldQuickly("karmainitiation", ref _intKarmaInitiation);
-                    xmlKarmaCostNode.TryGetInt32FieldQuickly("karmainitiationflat", ref _intKarmaInitiationFlat);
-                    xmlKarmaCostNode.TryGetInt32FieldQuickly("karmametamagic", ref _intKarmaMetamagic);
-                    xmlKarmaCostNode.TryGetInt32FieldQuickly("karmajoingroup", ref _intKarmaJoinGroup);
-                    xmlKarmaCostNode.TryGetInt32FieldQuickly("karmaleavegroup", ref _intKarmaLeaveGroup);
-                    xmlKarmaCostNode.TryGetInt32FieldQuickly("karmaenhancement", ref _intKarmaEnhancement);
-                    xmlKarmaCostNode.TryGetInt32FieldQuickly("karmamysadpp", ref _intKarmaMysticAdeptPowerPoint);
-                    xmlKarmaCostNode.TryGetInt32FieldQuickly("karmaspiritfettering", ref _intKarmaSpiritFettering);
+                    xmlKarmaCostNode.TryGetFieldUninitialized("karmacontact", ref _intKarmaContact);
+                    xmlKarmaCostNode.TryGetFieldUninitialized("karmaenemy", ref _intKarmaEnemy);
+                    xmlKarmaCostNode.TryGetFieldUninitialized("karmacarryover", ref _intKarmaCarryover);
+                    xmlKarmaCostNode.TryGetFieldUninitialized("karmaspirit", ref _intKarmaSpirit);
+                    if (!xmlKarmaCostNode.TryGetFieldUninitialized("karmatechnique", ref _intKarmaTechnique))
+                        xmlKarmaCostNode.TryGetFieldUninitialized("karmamaneuver", ref _intKarmaTechnique);
+                    xmlKarmaCostNode.TryGetFieldUninitialized("karmainitiation", ref _intKarmaInitiation);
+                    xmlKarmaCostNode.TryGetFieldUninitialized("karmainitiationflat", ref _intKarmaInitiationFlat);
+                    xmlKarmaCostNode.TryGetFieldUninitialized("karmametamagic", ref _intKarmaMetamagic);
+                    xmlKarmaCostNode.TryGetFieldUninitialized("karmajoingroup", ref _intKarmaJoinGroup);
+                    xmlKarmaCostNode.TryGetFieldUninitialized("karmaleavegroup", ref _intKarmaLeaveGroup);
+                    xmlKarmaCostNode.TryGetFieldUninitialized("karmaenhancement", ref _intKarmaEnhancement);
+                    xmlKarmaCostNode.TryGetFieldUninitialized("karmamysadpp", ref _intKarmaMysticAdeptPowerPoint);
+                    xmlKarmaCostNode.TryGetFieldUninitialized("karmaspiritfettering", ref _intKarmaSpiritFettering);
 
                     // Attempt to load the Karma costs for Foci.
-                    xmlKarmaCostNode.TryGetInt32FieldQuickly("karmaalchemicalfocus", ref _intKarmaAlchemicalFocus);
-                    xmlKarmaCostNode.TryGetInt32FieldQuickly("karmabanishingfocus", ref _intKarmaBanishingFocus);
-                    xmlKarmaCostNode.TryGetInt32FieldQuickly("karmabindingfocus", ref _intKarmaBindingFocus);
-                    xmlKarmaCostNode.TryGetInt32FieldQuickly("karmacenteringfocus", ref _intKarmaCenteringFocus);
-                    xmlKarmaCostNode.TryGetInt32FieldQuickly("karmacounterspellingfocus",
+                    xmlKarmaCostNode.TryGetFieldUninitialized("karmaalchemicalfocus", ref _intKarmaAlchemicalFocus);
+                    xmlKarmaCostNode.TryGetFieldUninitialized("karmabanishingfocus", ref _intKarmaBanishingFocus);
+                    xmlKarmaCostNode.TryGetFieldUninitialized("karmabindingfocus", ref _intKarmaBindingFocus);
+                    xmlKarmaCostNode.TryGetFieldUninitialized("karmacenteringfocus", ref _intKarmaCenteringFocus);
+                    xmlKarmaCostNode.TryGetFieldUninitialized("karmacounterspellingfocus",
                                                              ref _intKarmaCounterspellingFocus);
-                    xmlKarmaCostNode.TryGetInt32FieldQuickly("karmadisenchantingfocus",
+                    xmlKarmaCostNode.TryGetFieldUninitialized("karmadisenchantingfocus",
                                                              ref _intKarmaDisenchantingFocus);
-                    xmlKarmaCostNode.TryGetInt32FieldQuickly("karmaflexiblesignaturefocus",
+                    xmlKarmaCostNode.TryGetFieldUninitialized("karmaflexiblesignaturefocus",
                                                              ref _intKarmaFlexibleSignatureFocus);
-                    xmlKarmaCostNode.TryGetInt32FieldQuickly("karmamaskingfocus", ref _intKarmaMaskingFocus);
-                    xmlKarmaCostNode.TryGetInt32FieldQuickly("karmapowerfocus", ref _intKarmaPowerFocus);
-                    xmlKarmaCostNode.TryGetInt32FieldQuickly("karmaqifocus", ref _intKarmaQiFocus);
-                    xmlKarmaCostNode.TryGetInt32FieldQuickly("karmaritualspellcastingfocus",
+                    xmlKarmaCostNode.TryGetFieldUninitialized("karmamaskingfocus", ref _intKarmaMaskingFocus);
+                    xmlKarmaCostNode.TryGetFieldUninitialized("karmapowerfocus", ref _intKarmaPowerFocus);
+                    xmlKarmaCostNode.TryGetFieldUninitialized("karmaqifocus", ref _intKarmaQiFocus);
+                    xmlKarmaCostNode.TryGetFieldUninitialized("karmaritualspellcastingfocus",
                                                              ref _intKarmaRitualSpellcastingFocus);
-                    xmlKarmaCostNode.TryGetInt32FieldQuickly("karmaspellcastingfocus", ref _intKarmaSpellcastingFocus);
-                    xmlKarmaCostNode.TryGetInt32FieldQuickly("karmaspellshapingfocus", ref _intKarmaSpellShapingFocus);
-                    xmlKarmaCostNode.TryGetInt32FieldQuickly("karmasummoningfocus", ref _intKarmaSummoningFocus);
-                    xmlKarmaCostNode.TryGetInt32FieldQuickly("karmasustainingfocus", ref _intKarmaSustainingFocus);
-                    xmlKarmaCostNode.TryGetInt32FieldQuickly("karmaweaponfocus", ref _intKarmaWeaponFocus);
+                    xmlKarmaCostNode.TryGetFieldUninitialized("karmaspellcastingfocus", ref _intKarmaSpellcastingFocus);
+                    xmlKarmaCostNode.TryGetFieldUninitialized("karmaspellshapingfocus", ref _intKarmaSpellShapingFocus);
+                    xmlKarmaCostNode.TryGetFieldUninitialized("karmasummoningfocus", ref _intKarmaSummoningFocus);
+                    xmlKarmaCostNode.TryGetFieldUninitialized("karmasustainingfocus", ref _intKarmaSustainingFocus);
+                    xmlKarmaCostNode.TryGetFieldUninitialized("karmaweaponfocus", ref _intKarmaWeaponFocus);
                 }
 
                 XPathNavigator xmlLegacyCharacterNavigator = null;
@@ -4637,22 +4637,22 @@ namespace Chummer
                     || xmlDefaultBuildNode?.TryGetStringFieldQuickly("buildmethod", ref strTemp) == true
                     && Enum.TryParse(strTemp, true, out eBuildMethod))
                     _eBuildMethod = eBuildMethod;
-                if (!objXmlNode.TryGetInt32FieldQuickly("buildpoints", ref _intBuildPoints))
-                    xmlDefaultBuildNode?.TryGetInt32FieldQuickly("buildpoints", ref _intBuildPoints);
-                if (!objXmlNode.TryGetInt32FieldQuickly("qualitykarmalimit", ref _intQualityKarmaLimit)
+                if (!objXmlNode.TryGetFieldUninitialized("buildpoints", ref _intBuildPoints))
+                    xmlDefaultBuildNode?.TryGetFieldUninitialized("buildpoints", ref _intBuildPoints);
+                if (!objXmlNode.TryGetFieldUninitialized("qualitykarmalimit", ref _intQualityKarmaLimit)
                     && BuildMethodUsesPriorityTables)
                     _intQualityKarmaLimit = _intBuildPoints;
                 objXmlNode.TryGetStringFieldQuickly("priorityarray", ref _strPriorityArray);
                 objXmlNode.TryGetStringFieldQuickly("prioritytable", ref _strPriorityTable);
-                objXmlNode.TryGetInt32FieldQuickly("sumtoten", ref _intSumtoTen);
-                if (!objXmlNode.TryGetInt32FieldQuickly("availability", ref _intAvailability))
-                    xmlDefaultBuildNode?.TryGetInt32FieldQuickly("availability", ref _intAvailability);
-                if (!objXmlNode.TryGetInt32FieldQuickly("maxmartialarts", ref _intMaxMartialArts))
-                    xmlDefaultBuildNode?.TryGetInt32FieldQuickly("maxmartialarts", ref _intMaxMartialArts);
-                if (!objXmlNode.TryGetInt32FieldQuickly("maxmartialtechniques", ref _intMaxMartialTechniques))
-                    xmlDefaultBuildNode?.TryGetInt32FieldQuickly("maxmartialtechniques", ref _intMaxMartialTechniques);
-                objXmlNode.TryGetDecFieldQuickly("nuyencarryover", ref _decNuyenCarryover);
-                objXmlNode.TryGetDecFieldQuickly("nuyenmaxbp", ref _decNuyenMaximumBP);
+                objXmlNode.TryGetFieldUninitialized("sumtoten", ref _intSumtoTen);
+                if (!objXmlNode.TryGetFieldUninitialized("availability", ref _intAvailability))
+                    xmlDefaultBuildNode?.TryGetFieldUninitialized("availability", ref _intAvailability);
+                if (!objXmlNode.TryGetFieldUninitialized("maxmartialarts", ref _intMaxMartialArts))
+                    xmlDefaultBuildNode?.TryGetFieldUninitialized("maxmartialarts", ref _intMaxMartialArts);
+                if (!objXmlNode.TryGetFieldUninitialized("maxmartialtechniques", ref _intMaxMartialTechniques))
+                    xmlDefaultBuildNode?.TryGetFieldUninitialized("maxmartialtechniques", ref _intMaxMartialTechniques);
+                objXmlNode.TryGetFieldUninitialized("nuyencarryover", ref _decNuyenCarryover);
+                objXmlNode.TryGetFieldUninitialized("nuyenmaxbp", ref _decNuyenMaximumBP);
 
                 _setBannedWareGrades.Clear();
                 foreach (XPathNavigator xmlGrade in objXmlNode.SelectAndCacheExpression("bannedwaregrades/grade", token))

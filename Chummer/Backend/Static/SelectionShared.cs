@@ -3352,7 +3352,7 @@ namespace Chummer
                     return new Tuple<bool, string>(
                         blnSync
                             // ReSharper disable MethodHasAsyncOverload
-                            ? objWeapon.GetNodeXPath(token).ProcessFilterOperationNode(xmlNode, false, token)
+                            ? objWeapon.GetNodeXPath(token).ProcessFilterOperationNode(xmlNode, false)
                             // ReSharper restore MethodHasAsyncOverload
                             : await (await objWeapon.GetNodeXPathAsync(token).ConfigureAwait(false)).ProcessFilterOperationNodeAsync(
                                 xmlNode, false, token).ConfigureAwait(false), strName);

@@ -91,25 +91,25 @@ namespace Chummer.Backend.Equipment
 
         public void Create(XmlNode objXmlData)
         {
-            objXmlData.TryGetField("guid", Guid.TryParse, out _guiID);
+            objXmlData.TryGetField("guid", out _guiID);
             objXmlData.TryGetStringFieldQuickly("name", ref _strName);
             _objCachedMyXmlNode = null;
             _objCachedMyXPathNode = null;
             objXmlData.TryGetStringFieldQuickly("category", ref _strCategory);
-            if (objXmlData["sourceid"] == null || !objXmlData.TryGetField("sourceid", Guid.TryParse, out _guiSourceID))
+            if (objXmlData["sourceid"] == null || !objXmlData.TryGetField("sourceid", out _guiSourceID))
             {
-                this.GetNodeXPath()?.TryGetField("id", Guid.TryParse, out _guiSourceID);
+                this.GetNodeXPath()?.TryGetField("id", out _guiSourceID);
             }
             objXmlData.TryGetStringFieldQuickly("availability", ref _strAvailability);
-            objXmlData.TryGetDecFieldQuickly("cost", ref _decCost);
-            objXmlData.TryGetDecFieldQuickly("quantity", ref _decQty);
-            objXmlData.TryGetInt32FieldQuickly("rating", ref _intAddictionRating);
-            objXmlData.TryGetInt32FieldQuickly("threshold", ref _intAddictionThreshold);
+            objXmlData.TryGetFieldUninitialized("cost", ref _decCost);
+            objXmlData.TryGetFieldUninitialized("quantity", ref _decQty);
+            objXmlData.TryGetFieldUninitialized("rating", ref _intAddictionRating);
+            objXmlData.TryGetFieldUninitialized("threshold", ref _intAddictionThreshold);
             objXmlData.TryGetStringFieldQuickly("grade", ref _strGrade);
-            objXmlData.TryGetInt32FieldQuickly("sortorder", ref _intSortOrder);
-            objXmlData.TryGetBoolFieldQuickly("stolen", ref _blnStolen);
+            objXmlData.TryGetFieldUninitialized("sortorder", ref _intSortOrder);
+            objXmlData.TryGetFieldUninitialized("stolen", ref _blnStolen);
             objXmlData.TryGetStringFieldQuickly("duration", ref _strDuration);
-            objXmlData.TryGetInt32FieldQuickly("durationdice", ref _intDurationDice);
+            objXmlData.TryGetFieldUninitialized("durationdice", ref _intDurationDice);
             DurationTimescale = CommonFunctions.ConvertStringToTimescale(objXmlData["timescale"]?.InnerText);
 
             objXmlData.TryGetField("source", out _strSource);
@@ -121,9 +121,9 @@ namespace Chummer.Backend.Equipment
             objXmlData.TryGetStringFieldQuickly("name", ref _strName);
             _objCachedMyXmlNode = null;
             _objCachedMyXPathNode = null;
-            if (!objXmlData.TryGetGuidFieldQuickly("sourceid", ref _guiSourceID))
+            if (!objXmlData.TryGetFieldUninitialized("sourceid", ref _guiSourceID))
             {
-                this.GetNodeXPath()?.TryGetGuidFieldQuickly("id", ref _guiSourceID);
+                this.GetNodeXPath()?.TryGetFieldUninitialized("id", ref _guiSourceID);
             }
             objXmlData.TryGetStringFieldQuickly("category", ref _strCategory);
             Grade = Grade.ConvertToCyberwareGrade(objXmlData["grade"]?.InnerText, Improvement.ImprovementSource.Drug, _objCharacter);
@@ -140,13 +140,13 @@ namespace Chummer.Backend.Equipment
             }
 
             objXmlData.TryGetStringFieldQuickly("availability", ref _strAvailability);
-            objXmlData.TryGetDecFieldQuickly("cost", ref _decCost);
-            objXmlData.TryGetDecFieldQuickly("quantity", ref _decQty);
-            objXmlData.TryGetInt32FieldQuickly("rating", ref _intAddictionRating);
-            objXmlData.TryGetInt32FieldQuickly("threshold", ref _intAddictionThreshold);
+            objXmlData.TryGetFieldUninitialized("cost", ref _decCost);
+            objXmlData.TryGetFieldUninitialized("quantity", ref _decQty);
+            objXmlData.TryGetFieldUninitialized("rating", ref _intAddictionRating);
+            objXmlData.TryGetFieldUninitialized("threshold", ref _intAddictionThreshold);
             objXmlData.TryGetStringFieldQuickly("grade", ref _strGrade);
-            objXmlData.TryGetInt32FieldQuickly("sortorder", ref _intSortOrder);
-            objXmlData.TryGetBoolFieldQuickly("stolen", ref _blnStolen);
+            objXmlData.TryGetFieldUninitialized("sortorder", ref _intSortOrder);
+            objXmlData.TryGetFieldUninitialized("stolen", ref _blnStolen);
             objXmlData.TryGetField("source", out _strSource);
             objXmlData.TryGetField("page", out _strPage);
         }
@@ -1529,7 +1529,7 @@ namespace Chummer.Backend.Equipment
             if (objReturn == null)
             {
                 objReturn = objDoc.TryGetNodeByNameOrId("/chummer/drugcomponents/drugcomponent", Name);
-                objReturn?.TryGetGuidFieldQuickly("id", ref _guiSourceID);
+                objReturn?.TryGetFieldUninitialized("id", ref _guiSourceID);
             }
             _objCachedMyXmlNode = objReturn;
             _strCachedXmlNodeLanguage = strLanguage;
@@ -1555,7 +1555,7 @@ namespace Chummer.Backend.Equipment
             if (objReturn == null)
             {
                 objReturn = objDoc.TryGetNodeByNameOrId("/chummer/drugcomponents/drugcomponent", Name);
-                objReturn?.TryGetGuidFieldQuickly("id", ref _guiSourceID);
+                objReturn?.TryGetFieldUninitialized("id", ref _guiSourceID);
             }
             _objCachedMyXPathNode = objReturn;
             _strCachedXPathNodeLanguage = strLanguage;
@@ -1650,11 +1650,11 @@ namespace Chummer.Backend.Equipment
             objXmlData.TryGetStringFieldQuickly("name", ref _strName);
             _objCachedMyXmlNode = null;
             _objCachedMyXPathNode = null;
-            if (!objXmlData.TryGetGuidFieldQuickly("sourceid", ref _guiSourceID))
+            if (!objXmlData.TryGetFieldUninitialized("sourceid", ref _guiSourceID))
             {
-                this.GetNodeXPath()?.TryGetGuidFieldQuickly("id", ref _guiSourceID);
+                this.GetNodeXPath()?.TryGetFieldUninitialized("id", ref _guiSourceID);
             }
-            objXmlData.TryGetField("internalid", Guid.TryParse, out _guidId);
+            objXmlData.TryGetField("internalid", out _guidId);
             objXmlData.TryGetStringFieldQuickly("category", ref _strCategory);
             XmlNodeList xmlEffectsList = objXmlData.SelectNodes("effects/effect");
             if (xmlEffectsList?.Count > 0)
@@ -1676,7 +1676,7 @@ namespace Chummer.Backend.Equipment
                                 case "attribute":
                                     {
                                         int intEffectValue = 0;
-                                        if (!string.IsNullOrEmpty(strEffectName) && objXmlEffect.TryGetInt32FieldQuickly("value", ref intEffectValue))
+                                        if (!string.IsNullOrEmpty(strEffectName) && objXmlEffect.TryGetFieldUninitialized("value", ref intEffectValue))
                                             objDrugEffect.Attributes[strEffectName] = intEffectValue;
                                     }
                                     break;
@@ -1684,7 +1684,7 @@ namespace Chummer.Backend.Equipment
                                 case "limit":
                                     {
                                         int intEffectValue = 0;
-                                        if (!string.IsNullOrEmpty(strEffectName) && objXmlEffect.TryGetInt32FieldQuickly("value", ref intEffectValue))
+                                        if (!string.IsNullOrEmpty(strEffectName) && objXmlEffect.TryGetFieldUninitialized("value", ref intEffectValue))
                                             objDrugEffect.Limits[strEffectName] = intEffectValue;
                                         break;
                                     }
@@ -1739,10 +1739,10 @@ namespace Chummer.Backend.Equipment
 
             objXmlData.TryGetStringFieldQuickly("availability", ref _strAvailability);
             objXmlData.TryGetStringFieldQuickly("cost", ref _strCost);
-            objXmlData.TryGetInt32FieldQuickly("level", ref _intLevel);
-            objXmlData.TryGetInt32FieldQuickly("limit", ref _intLimit);
-            objXmlData.TryGetInt32FieldQuickly("rating", ref _intAddictionRating);
-            objXmlData.TryGetInt32FieldQuickly("threshold", ref _intAddictionThreshold);
+            objXmlData.TryGetFieldUninitialized("level", ref _intLevel);
+            objXmlData.TryGetFieldUninitialized("limit", ref _intLimit);
+            objXmlData.TryGetFieldUninitialized("rating", ref _intAddictionRating);
+            objXmlData.TryGetFieldUninitialized("threshold", ref _intAddictionThreshold);
             objXmlData.TryGetStringFieldQuickly("source", ref _strSource);
             objXmlData.TryGetStringFieldQuickly("page", ref _strPage);
         }
@@ -2487,7 +2487,7 @@ namespace Chummer.Backend.Equipment
             if (objReturn == null)
             {
                 objReturn = objDoc.TryGetNodeByNameOrId("/chummer/drugcomponents/drugcomponent", Name);
-                objReturn?.TryGetGuidFieldQuickly("id", ref _guiSourceID);
+                objReturn?.TryGetFieldUninitialized("id", ref _guiSourceID);
             }
             _objCachedMyXmlNode = objReturn;
             _strCachedXmlNodeLanguage = strLanguage;
@@ -2512,7 +2512,7 @@ namespace Chummer.Backend.Equipment
             if (objReturn == null)
             {
                 objReturn = objDoc.TryGetNodeByNameOrId("/chummer/drugcomponents/drugcomponent", Name);
-                objReturn?.TryGetGuidFieldQuickly("id", ref _guiSourceID);
+                objReturn?.TryGetFieldUninitialized("id", ref _guiSourceID);
             }
             _objCachedMyXPathNode = objReturn;
             _strCachedXPathNodeLanguage = strLanguage;

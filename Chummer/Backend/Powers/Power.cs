@@ -177,12 +177,12 @@ namespace Chummer
             using (LockObject.EnterWriteLock())
             {
                 objNode.TryGetStringFieldQuickly("name", ref _strName);
-                objNode.TryGetField("id", Guid.TryParse, out _guiSourceID);
+                objNode.TryGetField("id", out _guiSourceID);
                 _objCachedMyXmlNode = null;
                 _objCachedMyXPathNode = null;
                 objNode.TryGetStringFieldQuickly("points", ref _strPointsPerLevel);
                 objNode.TryGetStringFieldQuickly("adeptway", ref _strAdeptWayDiscount);
-                objNode.TryGetBoolFieldQuickly("levels", ref _blnLevelsEnabled);
+                objNode.TryGetFieldUninitialized("levels", ref _blnLevelsEnabled);
                 _intRating = intRating;
                 if (!objNode.TryGetMultiLineStringFieldQuickly("altnotes", ref _strNotes))
                     objNode.TryGetMultiLineStringFieldQuickly("notes", ref _strNotes);
@@ -199,16 +199,16 @@ namespace Chummer
                                                          DisplayPage(GlobalSettings.Language), CharacterObject);
                 }
 
-                if (!objNode.TryGetInt32FieldQuickly("maxlevel", ref _intMaxLevels))
+                if (!objNode.TryGetFieldUninitialized("maxlevel", ref _intMaxLevels))
                 {
-                    objNode.TryGetInt32FieldQuickly("maxlevels", ref _intMaxLevels);
+                    objNode.TryGetFieldUninitialized("maxlevels", ref _intMaxLevels);
                 }
 
-                objNode.TryGetBoolFieldQuickly("discounted", ref _blnDiscountedAdeptWay);
-                objNode.TryGetBoolFieldQuickly("discountedgeas", ref _blnDiscountedGeas);
+                objNode.TryGetFieldUninitialized("discounted", ref _blnDiscountedAdeptWay);
+                objNode.TryGetFieldUninitialized("discountedgeas", ref _blnDiscountedGeas);
                 objNode.TryGetStringFieldQuickly("bonussource", ref _strBonusSource);
-                objNode.TryGetDecFieldQuickly("freepoints", ref _decFreePoints);
-                objNode.TryGetDecFieldQuickly("extrapointcost", ref _decExtraPointCost);
+                objNode.TryGetFieldUninitialized("freepoints", ref _decFreePoints);
+                objNode.TryGetFieldUninitialized("extrapointcost", ref _decExtraPointCost);
                 objNode.TryGetStringFieldQuickly("action", ref _strAction);
                 Bonus = objNode["bonus"];
                 if (objBonusNodeOverride != null)
@@ -306,7 +306,7 @@ namespace Chummer
         {
             using (LockObject.EnterWriteLock())
             {
-                if (!objNode.TryGetField("guid", Guid.TryParse, out _guiID))
+                if (!objNode.TryGetField("guid", out _guiID))
                 {
                     _guiID = Guid.NewGuid();
                 }
@@ -314,9 +314,9 @@ namespace Chummer
                 objNode.TryGetStringFieldQuickly("name", ref _strName);
                 _objCachedMyXmlNode = null;
                 _objCachedMyXPathNode = null;
-                if (!objNode.TryGetGuidFieldQuickly("sourceid", ref _guiSourceID))
+                if (!objNode.TryGetFieldUninitialized("sourceid", ref _guiSourceID))
                 {
-                    if (this.GetNodeXPath().TryGetField("id", Guid.TryParse, out _guiSourceID))
+                    if (this.GetNodeXPath().TryGetField("id", out _guiSourceID))
                     {
                         _objCachedMyXmlNode = null;
                         _objCachedMyXPathNode = null;
@@ -331,7 +331,7 @@ namespace Chummer
                                                                  .SelectSingleNode(
                                                                      "/chummer/powers/power[starts-with(./name, "
                                                                      + strPowerName.CleanXPath() + ")]");
-                        if (xmlPower.TryGetField("id", Guid.TryParse, out _guiSourceID))
+                        if (xmlPower.TryGetField("id", out _guiSourceID))
                         {
                             _objCachedMyXmlNode = null;
                             _objCachedMyXPathNode = null;
@@ -356,18 +356,18 @@ namespace Chummer
                                            ?? string.Empty;
                 }
 
-                objNode.TryGetInt32FieldQuickly("rating", ref _intRating);
-                objNode.TryGetBoolFieldQuickly("levels", ref _blnLevelsEnabled);
-                if (!objNode.TryGetInt32FieldQuickly("maxlevel", ref _intMaxLevels))
+                objNode.TryGetFieldUninitialized("rating", ref _intRating);
+                objNode.TryGetFieldUninitialized("levels", ref _blnLevelsEnabled);
+                if (!objNode.TryGetFieldUninitialized("maxlevel", ref _intMaxLevels))
                 {
-                    objNode.TryGetInt32FieldQuickly("maxlevels", ref _intMaxLevels);
+                    objNode.TryGetFieldUninitialized("maxlevels", ref _intMaxLevels);
                 }
 
-                objNode.TryGetBoolFieldQuickly("discounted", ref _blnDiscountedAdeptWay);
-                objNode.TryGetBoolFieldQuickly("discountedgeas", ref _blnDiscountedGeas);
+                objNode.TryGetFieldUninitialized("discounted", ref _blnDiscountedAdeptWay);
+                objNode.TryGetFieldUninitialized("discountedgeas", ref _blnDiscountedGeas);
                 objNode.TryGetStringFieldQuickly("bonussource", ref _strBonusSource);
-                objNode.TryGetDecFieldQuickly("freepoints", ref _decFreePoints);
-                objNode.TryGetDecFieldQuickly("extrapointcost", ref _decExtraPointCost);
+                objNode.TryGetFieldUninitialized("freepoints", ref _decFreePoints);
+                objNode.TryGetFieldUninitialized("extrapointcost", ref _decExtraPointCost);
                 objNode.TryGetStringFieldQuickly("source", ref _strSource);
                 objNode.TryGetStringFieldQuickly("page", ref _strPage);
                 objNode.TryGetMultiLineStringFieldQuickly("notes", ref _strNotes);
@@ -2966,7 +2966,7 @@ namespace Chummer
                 if (objReturn == null)
                 {
                     objReturn = objDoc.TryGetNodeByNameOrId("/chummer/powers/power", Name);
-                    objReturn?.TryGetGuidFieldQuickly("id", ref _guiSourceID);
+                    objReturn?.TryGetFieldUninitialized("id", ref _guiSourceID);
                 }
                 _objCachedMyXmlNode = objReturn;
                 _strCachedXmlNodeLanguage = strLanguage;
@@ -3010,7 +3010,7 @@ namespace Chummer
                 if (objReturn == null)
                 {
                     objReturn = objDoc.TryGetNodeByNameOrId("/chummer/powers/power", Name);
-                    objReturn?.TryGetGuidFieldQuickly("id", ref _guiSourceID);
+                    objReturn?.TryGetFieldUninitialized("id", ref _guiSourceID);
                 }
                 _objCachedMyXPathNode = objReturn;
                 _strCachedXPathNodeLanguage = strLanguage;
