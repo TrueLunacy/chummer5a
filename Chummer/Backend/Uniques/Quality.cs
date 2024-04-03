@@ -235,7 +235,7 @@ namespace Chummer
             string strForceValue = "", string strSourceName = "", CancellationToken token = default)
         {
             token.ThrowIfCancellationRequested();
-            if (!objXmlQuality.TryGetField("id", out _guiSourceID))
+            if (!objXmlQuality.TryGetField("id", Guid.TryParse, out _guiSourceID))
             {
                 Log.Warn(new object[] { "Missing id field for xmlnode", objXmlQuality });
                 Utils.BreakIfDebug();
@@ -252,10 +252,10 @@ namespace Chummer
                 token.ThrowIfCancellationRequested();
                 _strSourceName = strSourceName;
                 objXmlQuality.TryGetStringFieldQuickly("name", ref _strName);
-                if (!objXmlQuality.TryGetFieldUninitialized("metagenic", ref _blnMetagenic))
+                if (!objXmlQuality.TryGetBoolFieldQuickly("metagenic", ref _blnMetagenic))
                 {
                     //Shim for customdata files that have the old name for the metagenic flag.
-                    objXmlQuality.TryGetFieldUninitialized("metagenetic", ref _blnMetagenic);
+                    objXmlQuality.TryGetBoolFieldQuickly("metagenetic", ref _blnMetagenic);
                 }
 
                 if (!objXmlQuality.TryGetMultiLineStringFieldQuickly("altnotes", ref _strNotes))
@@ -265,16 +265,16 @@ namespace Chummer
                 objXmlQuality.TryGetStringFieldQuickly("notesColor", ref sNotesColor);
                 _colNotes = ColorTranslator.FromHtml(sNotesColor);
 
-                objXmlQuality.TryGetFieldUninitialized("karma", ref _intBP);
+                objXmlQuality.TryGetInt32FieldQuickly("karma", ref _intBP);
                 _eQualityType = ConvertToQualityType(objXmlQuality["category"]?.InnerText);
                 _eQualitySource = objQualitySource;
-                objXmlQuality.TryGetFieldUninitialized("doublecareer", ref _blnDoubleCostCareer);
-                objXmlQuality.TryGetFieldUninitialized("canbuywithspellpoints", ref _blnCanBuyWithSpellPoints);
-                objXmlQuality.TryGetFieldUninitialized("print", ref _blnPrint);
-                objXmlQuality.TryGetFieldUninitialized("implemented", ref _blnImplemented);
-                objXmlQuality.TryGetFieldUninitialized("contributetobp", ref _blnContributeToBP);
-                objXmlQuality.TryGetFieldUninitialized("contributetolimit", ref _blnContributeToLimit);
-                objXmlQuality.TryGetFieldUninitialized("stagedpurchase", ref _blnStagedPurchase);
+                objXmlQuality.TryGetBoolFieldQuickly("doublecareer", ref _blnDoubleCostCareer);
+                objXmlQuality.TryGetBoolFieldQuickly("canbuywithspellpoints", ref _blnCanBuyWithSpellPoints);
+                objXmlQuality.TryGetBoolFieldQuickly("print", ref _blnPrint);
+                objXmlQuality.TryGetBoolFieldQuickly("implemented", ref _blnImplemented);
+                objXmlQuality.TryGetBoolFieldQuickly("contributetobp", ref _blnContributeToBP);
+                objXmlQuality.TryGetBoolFieldQuickly("contributetolimit", ref _blnContributeToLimit);
+                objXmlQuality.TryGetBoolFieldQuickly("stagedpurchase", ref _blnStagedPurchase);
                 objXmlQuality.TryGetStringFieldQuickly("source", ref _strSource);
                 objXmlQuality.TryGetStringFieldQuickly("page", ref _strPage);
                 _blnMutant = objXmlQuality["mutant"] != null;
@@ -565,7 +565,7 @@ namespace Chummer
                 return;
             using (LockObject.EnterWriteLock())
             {
-                if (!objNode.TryGetField("guid", out _guiID))
+                if (!objNode.TryGetField("guid", Guid.TryParse, out _guiID))
                 {
                     _guiID = Guid.NewGuid();
                 }
@@ -574,20 +574,20 @@ namespace Chummer
                 _objCachedMyXmlNode = null;
                 _objCachedMyXPathNode = null;
                 Lazy<XmlNode> objMyNode = new Lazy<XmlNode>(() => this.GetNode());
-                if (!objNode.TryGetFieldUninitialized("sourceid", ref _guiSourceID))
+                if (!objNode.TryGetGuidFieldQuickly("sourceid", ref _guiSourceID))
                 {
-                    objMyNode.Value?.TryGetFieldUninitialized("id", ref _guiSourceID);
+                    objMyNode.Value?.TryGetGuidFieldQuickly("id", ref _guiSourceID);
                 }
 
                 objNode.TryGetStringFieldQuickly("extra", ref _strExtra);
-                objNode.TryGetFieldUninitialized("bp", ref _intBP);
-                objNode.TryGetFieldUninitialized("implemented", ref _blnImplemented);
-                objNode.TryGetFieldUninitialized("contributetobp", ref _blnContributeToBP);
-                objNode.TryGetFieldUninitialized("contributetolimit", ref _blnContributeToLimit);
-                objNode.TryGetFieldUninitialized("stagedpurchase", ref _blnStagedPurchase);
-                objNode.TryGetFieldUninitialized("print", ref _blnPrint);
-                objNode.TryGetFieldUninitialized("doublecareer", ref _blnDoubleCostCareer);
-                objNode.TryGetFieldUninitialized("canbuywithspellpoints", ref _blnCanBuyWithSpellPoints);
+                objNode.TryGetInt32FieldQuickly("bp", ref _intBP);
+                objNode.TryGetBoolFieldQuickly("implemented", ref _blnImplemented);
+                objNode.TryGetBoolFieldQuickly("contributetobp", ref _blnContributeToBP);
+                objNode.TryGetBoolFieldQuickly("contributetolimit", ref _blnContributeToLimit);
+                objNode.TryGetBoolFieldQuickly("stagedpurchase", ref _blnStagedPurchase);
+                objNode.TryGetBoolFieldQuickly("print", ref _blnPrint);
+                objNode.TryGetBoolFieldQuickly("doublecareer", ref _blnDoubleCostCareer);
+                objNode.TryGetBoolFieldQuickly("canbuywithspellpoints", ref _blnCanBuyWithSpellPoints);
                 _eQualityType = ConvertToQualityType(objNode["qualitytype"]?.InnerText);
                 _eQualitySource = ConvertToQualitySource(objNode["qualitysource"]?.InnerText);
                 string strTemp = string.Empty;
@@ -613,7 +613,7 @@ namespace Chummer
                 _nodFirstLevelBonus = objNode["firstlevelbonus"] ?? objMyNode.Value?["firstlevelbonus"];
                 _nodNaturalWeaponsNode = objNode["naturalweapons"] ?? objMyNode.Value?["naturalweapons"];
                 _nodDiscounts = objNode.SelectSingleNodeAndCacheExpressionAsNavigator("costdiscount");
-                objNode.TryGetField("weaponguid", out _guiWeaponID);
+                objNode.TryGetField("weaponguid", Guid.TryParse, out _guiWeaponID);
                 objNode.TryGetMultiLineStringFieldQuickly("notes", ref _strNotes);
 
                 string sNotesColor = ColorTranslator.ToHtml(ColorManager.HasNotesColor);
@@ -1198,7 +1198,7 @@ namespace Chummer
                 using (LockObject.EnterReadLock())
                 {
                     int intValue = 0;
-                    if (_nodDiscounts?.TryGetFieldUninitialized("value", ref intValue) != true)
+                    if (_nodDiscounts?.TryGetInt32FieldQuickly("value", ref intValue) != true)
                         return _intBP;
                     int intReturn = _intBP;
                     if (_nodDiscounts.RequirementsMet(_objCharacter))
@@ -1240,7 +1240,7 @@ namespace Chummer
             {
                 token.ThrowIfCancellationRequested();
                 int intValue = 0;
-                if (_nodDiscounts?.TryGetFieldUninitialized("value", ref intValue) != true)
+                if (_nodDiscounts?.TryGetInt32FieldQuickly("value", ref intValue) != true)
                     return _intBP;
                 int intReturn = _intBP;
                 if (await _nodDiscounts.RequirementsMetAsync(_objCharacter, token: token).ConfigureAwait(false))
@@ -2089,7 +2089,7 @@ namespace Chummer
                 if (objReturn == null)
                 {
                     objReturn = objDoc.TryGetNodeByNameOrId("/chummer/qualities/quality", Name);
-                    objReturn?.TryGetFieldUninitialized("id", ref _guiSourceID);
+                    objReturn?.TryGetGuidFieldQuickly("id", ref _guiSourceID);
                 }
                 _objCachedMyXmlNode = objReturn;
                 _strCachedXmlNodeLanguage = strLanguage;
@@ -2124,7 +2124,7 @@ namespace Chummer
                 if (objReturn == null)
                 {
                     objReturn = objDoc.TryGetNodeByNameOrId("/chummer/qualities/quality", Name);
-                    objReturn?.TryGetFieldUninitialized("id", ref _guiSourceID);
+                    objReturn?.TryGetGuidFieldQuickly("id", ref _guiSourceID);
                 }
                 _objCachedMyXPathNode = objReturn;
                 _strCachedXPathNodeLanguage = strLanguage;

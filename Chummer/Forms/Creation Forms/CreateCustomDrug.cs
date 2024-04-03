@@ -339,9 +339,9 @@ namespace Chummer
                                                                              .DoThreadSafeFuncAsync(
                                                                                  x => x.SelectedValue.ToString())
                                                                              .ConfigureAwait(false));
-            if (!objXmlGrade.TryGetFieldUninitialized("cost", ref _dblCostMultiplier))
+            if (!objXmlGrade.TryGetDoubleFieldQuickly("cost", ref _dblCostMultiplier))
                 _dblCostMultiplier = 1.0;
-            if (!objXmlGrade.TryGetFieldUninitialized("addictionthreshold", ref _intAddictionThreshold))
+            if (!objXmlGrade.TryGetInt32FieldQuickly("addictionthreshold", ref _intAddictionThreshold))
                 _intAddictionThreshold = 0;
             await UpdateCustomDrugStats().ConfigureAwait(false);
             string strDescription = await _objDrug.GenerateDescriptionAsync(0).ConfigureAwait(false);

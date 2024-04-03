@@ -187,7 +187,7 @@ namespace Chummer.Backend.Uniques
             {
                 ResetTradition();
                 Type = blnIsTechnomancerTradition ? TraditionType.RES : TraditionType.MAG;
-                if (xmlTraditionNode.TryGetField("id", out _guiSourceID))
+                if (xmlTraditionNode.TryGetField("id", Guid.TryParse, out _guiSourceID))
                 {
                     _xmlCachedMyXmlNode = null;
                     _objCachedMyXPathNode = null;
@@ -254,7 +254,7 @@ namespace Chummer.Backend.Uniques
                 token.ThrowIfCancellationRequested();
                 await ResetTraditionAsync(token).ConfigureAwait(false);
                 Type = blnIsTechnomancerTradition ? TraditionType.RES : TraditionType.MAG;
-                if (xmlTraditionNode.TryGetField("id", out _guiSourceID))
+                if (xmlTraditionNode.TryGetField("id", Guid.TryParse, out _guiSourceID))
                 {
                     _xmlCachedMyXmlNode = null;
                     _objCachedMyXPathNode = null;
@@ -483,17 +483,17 @@ namespace Chummer.Backend.Uniques
                     return;
                 }
 
-                if (!xmlNode.TryGetField("guid", out _guiID))
+                if (!xmlNode.TryGetField("guid", Guid.TryParse, out _guiID))
                 {
                     _guiID = Guid.NewGuid();
                 }
 
                 xmlNode.TryGetStringFieldQuickly("name", ref _strName);
                 Lazy<XPathNavigator> objMyNode = new Lazy<XPathNavigator>(() => this.GetNodeXPath());
-                if (!xmlNode.TryGetFieldUninitialized("sourceid", ref _guiSourceID)
-                    && !xmlNode.TryGetFieldUninitialized("id", ref _guiSourceID))
+                if (!xmlNode.TryGetGuidFieldQuickly("sourceid", ref _guiSourceID)
+                    && !xmlNode.TryGetGuidFieldQuickly("id", ref _guiSourceID))
                 {
-                    objMyNode.Value?.TryGetFieldUninitialized("id", ref _guiSourceID);
+                    objMyNode.Value?.TryGetGuidFieldQuickly("id", ref _guiSourceID);
                 }
 
                 xmlNode.TryGetStringFieldQuickly("extra", ref _strExtra);
@@ -641,7 +641,7 @@ namespace Chummer.Backend.Uniques
                     ? _objCharacter.LoadData("traditions.xml")
                                    .TryGetNodeByNameOrId("/chummer/traditions/tradition", _strName)
                     : null;
-                if (xmlTraditionDataNode?.TryGetField("id", out _guiSourceID) != true)
+                if (xmlTraditionDataNode?.TryGetField("id", Guid.TryParse, out _guiSourceID) != true)
                 {
                     _guiSourceID = new Guid(CustomMagicalTraditionGuid);
                     xmlTraditionDataNode = this.GetNode();

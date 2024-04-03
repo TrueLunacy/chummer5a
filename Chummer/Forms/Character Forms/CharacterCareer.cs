@@ -8660,7 +8660,7 @@ namespace Chummer
                         intRatingToAdd = frmPickQuality.MyForm.SelectedRating;
                         int intDummy = 0;
                         if (objXmlQuality != null && objXmlQuality["nolevels"] == null
-                                                  && objXmlQuality.TryGetFieldUninitialized("limit", ref intDummy))
+                                                  && objXmlQuality.TryGetInt32FieldQuickly("limit", ref intDummy))
                         {
                             string strQuality = frmPickQuality.MyForm.SelectedQuality;
                             intRatingToAdd -= await CharacterObject.Qualities.CountAsync(x =>
@@ -8701,12 +8701,12 @@ namespace Chummer
                             int intQualityBP = 0;
                             if (!blnFreeCost)
                             {
-                                objXmlQuality.TryGetFieldUninitialized("karma", ref intQualityBP);
+                                objXmlQuality.TryGetInt32FieldQuickly("karma", ref intQualityBP);
                                 XmlElement xmlDiscountNode = objXmlQuality["costdiscount"];
                                 if (xmlDiscountNode != null && await xmlDiscountNode.CreateNavigator().RequirementsMetAsync(CharacterObject, token: GenericToken).ConfigureAwait(false))
                                 {
                                     int intTemp = 0;
-                                    xmlDiscountNode.TryGetFieldUninitialized("value", ref intTemp);
+                                    xmlDiscountNode.TryGetInt32FieldQuickly("value", ref intTemp);
                                     switch (eQualityType)
                                     {
                                         case QualityType.Positive:
@@ -8949,7 +8949,7 @@ namespace Chummer
                     intRatingToAdd = frmPickQuality.MyForm.SelectedRating;
                     int intDummy = 0;
                     if (objXmlQuality != null && objXmlQuality["nolevels"] == null
-                                              && objXmlQuality.TryGetFieldUninitialized("limit", ref intDummy))
+                                              && objXmlQuality.TryGetInt32FieldQuickly("limit", ref intDummy))
                     {
                         string strQuality = frmPickQuality.MyForm.SelectedQuality;
                         intRatingToAdd -= await CharacterObject.Qualities.CountAsync(x =>
@@ -9372,7 +9372,7 @@ namespace Chummer
                             int intQualityBP = 0;
                             if (!blnFreeCost)
                             {
-                                objXmlSelectedQuality.TryGetFieldUninitialized("karma", ref intQualityBP);
+                                objXmlSelectedQuality.TryGetInt32FieldQuickly("karma", ref intQualityBP);
                                 XPathNavigator xpnDiscountNode
                                     = objXmlSelectedQuality
                                         .SelectSingleNodeAndCacheExpression("costdiscount", GenericToken);
@@ -9381,7 +9381,7 @@ namespace Chummer
                                         .ConfigureAwait(false))
                                 {
                                     int intTemp = 0;
-                                    xpnDiscountNode.TryGetFieldUninitialized("value", ref intTemp);
+                                    xpnDiscountNode.TryGetInt32FieldQuickly("value", ref intTemp);
                                     switch (eQualityType)
                                     {
                                         case QualityType.Positive:

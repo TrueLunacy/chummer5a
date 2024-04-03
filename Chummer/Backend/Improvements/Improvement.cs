@@ -532,12 +532,12 @@ namespace Chummer
             objNode.TryGetStringFieldQuickly("target", ref _strTarget);
             objNode.TryGetStringFieldQuickly("improvedname", ref _strImprovedName);
             objNode.TryGetStringFieldQuickly("sourcename", ref _strSourceName);
-            objNode.TryGetFieldUninitialized("min", ref _intMin);
-            objNode.TryGetFieldUninitialized("max", ref _intMax);
-            objNode.TryGetFieldUninitialized("aug", ref _decAug);
-            objNode.TryGetFieldUninitialized("augmax", ref _intAugMax);
-            objNode.TryGetFieldUninitialized("val", ref _decVal);
-            objNode.TryGetFieldUninitialized("rating", ref _intRating);
+            objNode.TryGetInt32FieldQuickly("min", ref _intMin);
+            objNode.TryGetInt32FieldQuickly("max", ref _intMax);
+            objNode.TryGetDecFieldQuickly("aug", ref _decAug);
+            objNode.TryGetInt32FieldQuickly("augmax", ref _intAugMax);
+            objNode.TryGetDecFieldQuickly("val", ref _decVal);
+            objNode.TryGetInt32FieldQuickly("rating", ref _intRating);
             objNode.TryGetStringFieldQuickly("exclude", ref _strExclude);
             objNode.TryGetStringFieldQuickly("condition", ref _strCondition);
             if (objNode["improvementttype"] != null)
@@ -572,20 +572,20 @@ namespace Chummer
                     break;
             }
 
-            objNode.TryGetFieldUninitialized("custom", ref _blnCustom);
+            objNode.TryGetBoolFieldQuickly("custom", ref _blnCustom);
             objNode.TryGetStringFieldQuickly("customname", ref _strCustomName);
             objNode.TryGetStringFieldQuickly("customid", ref _strCustomId);
             objNode.TryGetStringFieldQuickly("customgroup", ref _strCustomGroup);
-            if (objNode.TryGetFieldUninitialized("addtorating", ref _intAddToRating))
+            if (objNode.TryGetInt32FieldQuickly("addtorating", ref _intAddToRating))
             {
                 bool blnTemp = false;
-                if (objNode.TryGetFieldUninitialized("addtorating", ref blnTemp))
+                if (objNode.TryGetBoolFieldQuickly("addtorating", ref blnTemp))
                     _intAddToRating = blnTemp.ToInt32();
             }
-            if (objNode.TryGetFieldUninitialized("enabled", ref _intEnabled))
+            if (objNode.TryGetInt32FieldQuickly("enabled", ref _intEnabled))
             {
                 bool blnTemp = false;
-                if (objNode.TryGetFieldUninitialized("enabled", ref blnTemp))
+                if (objNode.TryGetBoolFieldQuickly("enabled", ref blnTemp))
                     _intEnabled = blnTemp.ToInt32();
             }
             objNode.TryGetMultiLineStringFieldQuickly("notes", ref _strNotes);
@@ -594,7 +594,7 @@ namespace Chummer
             objNode.TryGetStringFieldQuickly("notesColor", ref sNotesColor);
             _colNotes = ColorTranslator.FromHtml(sNotesColor);
 
-            objNode.TryGetFieldUninitialized("order", ref _intOrder);
+            objNode.TryGetInt32FieldQuickly("order", ref _intOrder);
 
             Log.Trace("Load exit");
         }

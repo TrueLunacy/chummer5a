@@ -235,7 +235,7 @@ namespace Chummer
                 return;
             using (LockObject.EnterWriteLock(token))
             {
-                objNode.TryGetField("guid", out _guiId);
+                objNode.TryGetField("guid", Guid.TryParse, out _guiId);
                 if (_guiId == Guid.Empty)
                     _guiId = Guid.NewGuid();
                 if (objNode.TryGetStringFieldQuickly("name", ref _strName))
@@ -248,11 +248,11 @@ namespace Chummer
                 if (objNode.TryGetStringFieldQuickly("type", ref strTemp))
                     _eEntityType = ConvertToSpiritType(strTemp);
                 objNode.TryGetStringFieldQuickly("crittername", ref _strCritterName);
-                objNode.TryGetFieldUninitialized("services", ref _intServicesOwed);
-                objNode.TryGetFieldUninitialized("force", ref _intForce);
+                objNode.TryGetInt32FieldQuickly("services", ref _intServicesOwed);
+                objNode.TryGetInt32FieldQuickly("force", ref _intForce);
                 Force = _intForce;
-                objNode.TryGetFieldUninitialized("bound", ref _blnBound);
-                objNode.TryGetFieldUninitialized("fettered", ref _blnFettered);
+                objNode.TryGetBoolFieldQuickly("bound", ref _blnBound);
+                objNode.TryGetBoolFieldQuickly("fettered", ref _blnFettered);
                 objNode.TryGetStringFieldQuickly("file", ref _strFileName);
                 objNode.TryGetStringFieldQuickly("relative", ref _strRelativeName);
                 objNode.TryGetStringFieldQuickly("notes", ref _strNotes);
@@ -280,7 +280,7 @@ namespace Chummer
             try
             {
                 token.ThrowIfCancellationRequested();
-                objNode.TryGetField("guid", out _guiId);
+                objNode.TryGetField("guid", Guid.TryParse, out _guiId);
                 if (_guiId == Guid.Empty)
                     _guiId = Guid.NewGuid();
                 if (objNode.TryGetStringFieldQuickly("name", ref _strName))
@@ -293,11 +293,11 @@ namespace Chummer
                 if (objNode.TryGetStringFieldQuickly("type", ref strTemp))
                     _eEntityType = ConvertToSpiritType(strTemp);
                 objNode.TryGetStringFieldQuickly("crittername", ref _strCritterName);
-                objNode.TryGetFieldUninitialized("services", ref _intServicesOwed);
-                objNode.TryGetFieldUninitialized("force", ref _intForce);
+                objNode.TryGetInt32FieldQuickly("services", ref _intServicesOwed);
+                objNode.TryGetInt32FieldQuickly("force", ref _intForce);
                 Force = _intForce;
-                objNode.TryGetFieldUninitialized("bound", ref _blnBound);
-                objNode.TryGetFieldUninitialized("fettered", ref _blnFettered);
+                objNode.TryGetBoolFieldQuickly("bound", ref _blnBound);
+                objNode.TryGetBoolFieldQuickly("fettered", ref _blnFettered);
                 objNode.TryGetStringFieldQuickly("file", ref _strFileName);
                 objNode.TryGetStringFieldQuickly("relative", ref _strRelativeName);
                 objNode.TryGetStringFieldQuickly("notes", ref _strNotes);
@@ -2830,7 +2830,7 @@ namespace Chummer
         {
             using (LockObject.EnterWriteLock(token))
             {
-                xmlSavedNode.TryGetFieldUninitialized("mainmugshotindex", ref _intMainMugshotIndex);
+                xmlSavedNode.TryGetInt32FieldQuickly("mainmugshotindex", ref _intMainMugshotIndex);
                 XPathNodeIterator xmlMugshotsList = xmlSavedNode.SelectAndCacheExpression("mugshots/mugshot", token);
                 List<string> lstMugshotsBase64 = new List<string>(xmlMugshotsList.Count);
                 foreach (XPathNavigator objXmlMugshot in xmlMugshotsList)
@@ -2863,7 +2863,7 @@ namespace Chummer
             try
             {
                 token.ThrowIfCancellationRequested();
-                xmlSavedNode.TryGetFieldUninitialized("mainmugshotindex", ref _intMainMugshotIndex);
+                xmlSavedNode.TryGetInt32FieldQuickly("mainmugshotindex", ref _intMainMugshotIndex);
                 XPathNodeIterator xmlMugshotsList = xmlSavedNode.SelectAndCacheExpression("mugshots/mugshot", token);
                 List<string> lstMugshotsBase64 = new List<string>(xmlMugshotsList.Count);
                 foreach (XPathNavigator objXmlMugshot in xmlMugshotsList)

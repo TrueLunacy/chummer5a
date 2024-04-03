@@ -50,7 +50,6 @@ using Microsoft.IO;
 using Newtonsoft.Json;
 using NLog;
 using Application = System.Windows.Forms.Application;
-using Chummer.Xml;
 
 namespace Chummer
 {
@@ -2796,9 +2795,9 @@ namespace Chummer
                 Source = charNode["source"]?.InnerText ?? "SR5";
                 Page = charNode["page"]?.InnerText ?? "0";
                 _intMetatypeBP = 0;
-                charNode.TryGetFieldUninitialized("karma", ref _intMetatypeBP);
+                charNode.TryGetInt32FieldQuickly("karma", ref _intMetatypeBP);
                 _intInitiativeDice = Settings.MinInitiativeDice;
-                charNode.TryGetFieldUninitialized("initiativedice", ref _intInitiativeDice);
+                charNode.TryGetInt32FieldQuickly("initiativedice", ref _intInitiativeDice);
 
                 Movement = objXmlMetatype["movement"]?.InnerText ?? string.Empty;
 
@@ -3486,9 +3485,9 @@ namespace Chummer
                 Source = charNode["source"]?.InnerText ?? "SR5";
                 Page = charNode["page"]?.InnerText ?? "0";
                 _intMetatypeBP = 0;
-                charNode.TryGetFieldUninitialized("karma", ref _intMetatypeBP);
+                charNode.TryGetInt32FieldQuickly("karma", ref _intMetatypeBP);
                 _intInitiativeDice = Settings.MinInitiativeDice;
-                charNode.TryGetFieldUninitialized("initiativedice", ref _intInitiativeDice);
+                charNode.TryGetInt32FieldQuickly("initiativedice", ref _intInitiativeDice);
 
                 Movement = objXmlMetatype["movement"]?.InnerText ?? string.Empty;
 
@@ -4843,7 +4842,7 @@ namespace Chummer
                                 token.ThrowIfCancellationRequested();
                                 XmlDocument objDoc = new XmlDocument { XmlResolver = null };
                                 using (XmlReader objXmlReader
-                                       = XmlReader.Create(objStream, XmlUtilities.SafeXmlReaderSettings))
+                                       = XmlReader.Create(objStream, GlobalSettings.SafeXmlReaderSettings))
                                     objDoc.Load(objXmlReader);
                                 using (FileStream objFileStream
                                        = new FileStream(strFileName, FileMode.Create, FileAccess.Write, FileShare.None))
@@ -5679,7 +5678,7 @@ namespace Chummer
                     token.ThrowIfCancellationRequested();
                     XmlDocument objDoc = new XmlDocument { XmlResolver = null };
                     using (XmlReader objXmlReader
-                           = XmlReader.Create(objStream, XmlUtilities.SafeXmlReaderSettings))
+                           = XmlReader.Create(objStream, GlobalSettings.SafeXmlReaderSettings))
                         objDoc.Load(objXmlReader);
                     using (FileStream objFileStream
                            = new FileStream(strFileName, FileMode.Create, FileAccess.Write, FileShare.None))
@@ -5690,7 +5689,8 @@ namespace Chummer
                         {
                             objStream.Seek(0, SeekOrigin.Begin);
                             await objStream.CompressToLzmaFileAsync(
-                                    objFileStream, GlobalSettings.Chum5lzCompressionLevel)
+                                    objFileStream, GlobalSettings.Chum5lzCompressionLevel,
+                                    token: token)
                                 .ConfigureAwait(false);
                         }
                     }
@@ -6325,8 +6325,8 @@ namespace Chummer
 
                             using (Timekeeper.StartSyncron("load_char_misc", loadActivity))
                             {
-                                xmlCharacterNavigator.TryGetFieldUninitialized("ignorerules", ref _blnIgnoreRules);
-                                xmlCharacterNavigator.TryGetFieldUninitialized("created", ref _blnCreated);
+                                xmlCharacterNavigator.TryGetBoolFieldQuickly("ignorerules", ref _blnIgnoreRules);
+                                xmlCharacterNavigator.TryGetBoolFieldQuickly("created", ref _blnCreated);
 
                                 if (blnSync)
                                     // ReSharper disable once MethodHasAsyncOverload
@@ -6369,7 +6369,7 @@ namespace Chummer
                                 {
                                     strVersion = strVersion.TrimStartOnce("0.");
 
-                                    if (!VersionShim.TryParse(strVersion, out _verSavedVersion))
+                                    if (!VersionExtensions.TryParse(strVersion, out _verSavedVersion))
                                     {
                                         _verSavedVersion = Utils.IsUnitTest
                                             ? new Version(int.MaxValue, int.MaxValue, int.MaxValue)
@@ -6457,7 +6457,7 @@ namespace Chummer
 
                                 int intSettingsHashCode = 0;
                                 bool blnHashCodeSuccess
-                                    = xmlCharacterNavigator.TryGetFieldUninitialized(
+                                    = xmlCharacterNavigator.TryGetInt32FieldQuickly(
                                         "settingshashcode", ref intSettingsHashCode);
 
                                 bool blnSuccess;
@@ -6527,9 +6527,9 @@ namespace Chummer
                                     }
 
                                     decimal decLegacyMaxNuyen = objDefaultSettings.NuyenMaximumBP;
-                                    xmlCharacterNavigator.TryGetFieldUninitialized("maxnuyen", ref decLegacyMaxNuyen);
+                                    xmlCharacterNavigator.TryGetDecFieldQuickly("maxnuyen", ref decLegacyMaxNuyen);
                                     int intLegacyMaxKarma = objDefaultSettings.BuildKarma;
-                                    xmlCharacterNavigator.TryGetFieldUninitialized("maxkarma",
+                                    xmlCharacterNavigator.TryGetInt32FieldQuickly("maxkarma",
                                         ref intLegacyMaxKarma);
 
                                     // Calculate a score for a character option that roughly coincides with how suitable it is as a
@@ -7091,7 +7091,7 @@ namespace Chummer
                                     }
                                 }
 
-                                if (xmlCharacterNavigator.TryGetFieldUninitialized("essenceatspecialstart",
+                                if (xmlCharacterNavigator.TryGetDecFieldQuickly("essenceatspecialstart",
                                         ref _decEssenceAtSpecialStart) &&
                                     _decEssenceAtSpecialStart > ESS.MetatypeMaximum)
                                 {
@@ -7103,9 +7103,9 @@ namespace Chummer
                                                                                ref _strVersionCreated);
 
                                 // Metatype information.
-                                xmlCharacterNavigator.TryGetFieldUninitialized("iscritter", ref _blnIsCritter);
+                                xmlCharacterNavigator.TryGetBoolFieldQuickly("iscritter", ref _blnIsCritter);
                                 xmlCharacterNavigator.TryGetStringFieldQuickly("metatype", ref _strMetatype);
-                                if (!xmlCharacterNavigator.TryGetFieldUninitialized("metatypeid", ref _guiMetatype))
+                                if (!xmlCharacterNavigator.TryGetGuidFieldQuickly("metatypeid", ref _guiMetatype))
                                 {
                                     // ReSharper disable once MethodHasAsyncOverload
                                     XPathNavigator objMetatypeNode = blnSync
@@ -7134,9 +7134,9 @@ namespace Chummer
                                                     .SelectSingleNodeAndCacheExpression("sprint/@alt", token)?.Value ??
                                                 string.Empty;
 
-                                xmlCharacterNavigator.TryGetFieldUninitialized("initiativedice",
+                                xmlCharacterNavigator.TryGetInt32FieldQuickly("initiativedice",
                                                                               ref _intInitiativeDice);
-                                xmlCharacterNavigator.TryGetFieldUninitialized("metatypebp", ref _intMetatypeBP);
+                                xmlCharacterNavigator.TryGetInt32FieldQuickly("metatypebp", ref _intMetatypeBP);
                                 xmlCharacterNavigator.TryGetStringFieldQuickly("metavariant", ref _strMetavariant);
                                 //Shim for characters created prior to Run Faster Errata
                                 if (_strMetavariant == "Cyclopean")
@@ -7159,7 +7159,7 @@ namespace Chummer
                                 {
                                     _guiMetavariant = Guid.Empty;
                                 }
-                                else if (!xmlCharacterNavigator.TryGetFieldUninitialized("metavariantid",
+                                else if (!xmlCharacterNavigator.TryGetGuidFieldQuickly("metavariantid",
                                         ref _guiMetavariant))
                                 {
                                     XPathNavigator objMetavariantNode = blnSync
@@ -7284,74 +7284,74 @@ namespace Chummer
                                         await _lstPrioritySkills.AddAsync(strSkill2, token).ConfigureAwait(false);
                                 }
 
-                                xmlCharacterNavigator.TryGetFieldUninitialized("possessed", ref _blnPossessed);
+                                xmlCharacterNavigator.TryGetBoolFieldQuickly("possessed", ref _blnPossessed);
 
-                                xmlCharacterNavigator.TryGetFieldUninitialized("contactpoints",
+                                xmlCharacterNavigator.TryGetInt32FieldQuickly("contactpoints",
                                                                               ref _intCachedContactPoints);
-                                xmlCharacterNavigator.TryGetFieldUninitialized("basecarrylimit",
+                                xmlCharacterNavigator.TryGetDecFieldQuickly("basecarrylimit",
                                                                             ref _decCachedBaseCarryLimit);
-                                xmlCharacterNavigator.TryGetFieldUninitialized("baseliftlimit",
+                                xmlCharacterNavigator.TryGetDecFieldQuickly("baseliftlimit",
                                                                             ref _decCachedBaseLiftLimit);
-                                xmlCharacterNavigator.TryGetFieldUninitialized("totalcarriedweight",
+                                xmlCharacterNavigator.TryGetDecFieldQuickly("totalcarriedweight",
                                                                             ref _decCachedTotalCarriedWeight);
-                                xmlCharacterNavigator.TryGetFieldUninitialized("encumbranceinterval",
+                                xmlCharacterNavigator.TryGetDecFieldQuickly("encumbranceinterval",
                                                                             ref _decCachedEncumbranceInterval);
-                                xmlCharacterNavigator.TryGetFieldUninitialized("cfplimit", ref _intCFPLimit);
-                                xmlCharacterNavigator.TryGetFieldUninitialized("ainormalprogramlimit",
+                                xmlCharacterNavigator.TryGetInt32FieldQuickly("cfplimit", ref _intCFPLimit);
+                                xmlCharacterNavigator.TryGetInt32FieldQuickly("ainormalprogramlimit",
                                                                               ref _intAINormalProgramLimit);
-                                xmlCharacterNavigator.TryGetFieldUninitialized("aiadvancedprogramlimit",
+                                xmlCharacterNavigator.TryGetInt32FieldQuickly("aiadvancedprogramlimit",
                                                                               ref _intAIAdvancedProgramLimit);
-                                xmlCharacterNavigator.TryGetFieldUninitialized("currentcounterspellingdice",
+                                xmlCharacterNavigator.TryGetInt32FieldQuickly("currentcounterspellingdice",
                                                                               ref _intCurrentCounterspellingDice);
-                                xmlCharacterNavigator.TryGetFieldUninitialized("currentliftcarryhits",
+                                xmlCharacterNavigator.TryGetInt32FieldQuickly("currentliftcarryhits",
                                                                               ref _intCurrentLiftCarryHits);
-                                xmlCharacterNavigator.TryGetFieldUninitialized("spelllimit", ref _intFreeSpells);
-                                xmlCharacterNavigator.TryGetFieldUninitialized("karma", ref _intKarma);
-                                xmlCharacterNavigator.TryGetFieldUninitialized("totalkarma", ref _intTotalKarma);
+                                xmlCharacterNavigator.TryGetInt32FieldQuickly("spelllimit", ref _intFreeSpells);
+                                xmlCharacterNavigator.TryGetInt32FieldQuickly("karma", ref _intKarma);
+                                xmlCharacterNavigator.TryGetInt32FieldQuickly("totalkarma", ref _intTotalKarma);
 
-                                xmlCharacterNavigator.TryGetFieldUninitialized("special", ref _intSpecial);
-                                xmlCharacterNavigator.TryGetFieldUninitialized("totalspecial", ref _intTotalSpecial);
-                                xmlCharacterNavigator.TryGetFieldUninitialized("totalattributes",
+                                xmlCharacterNavigator.TryGetInt32FieldQuickly("special", ref _intSpecial);
+                                xmlCharacterNavigator.TryGetInt32FieldQuickly("totalspecial", ref _intTotalSpecial);
+                                xmlCharacterNavigator.TryGetInt32FieldQuickly("totalattributes",
                                                                               ref _intTotalAttributes);
-                                xmlCharacterNavigator.TryGetFieldUninitialized("edgeused", ref _intEdgeUsed);
-                                xmlCharacterNavigator.TryGetFieldUninitialized("streetcred", ref _intStreetCred);
-                                xmlCharacterNavigator.TryGetFieldUninitialized("notoriety", ref _intNotoriety);
-                                xmlCharacterNavigator.TryGetFieldUninitialized("publicawareness",
+                                xmlCharacterNavigator.TryGetInt32FieldQuickly("edgeused", ref _intEdgeUsed);
+                                xmlCharacterNavigator.TryGetInt32FieldQuickly("streetcred", ref _intStreetCred);
+                                xmlCharacterNavigator.TryGetInt32FieldQuickly("notoriety", ref _intNotoriety);
+                                xmlCharacterNavigator.TryGetInt32FieldQuickly("publicawareness",
                                                                               ref _intPublicAwareness);
-                                xmlCharacterNavigator.TryGetFieldUninitialized("burntstreetcred",
+                                xmlCharacterNavigator.TryGetInt32FieldQuickly("burntstreetcred",
                                                                               ref _intBurntStreetCred);
-                                xmlCharacterNavigator.TryGetFieldUninitialized("baseastralreputation",
+                                xmlCharacterNavigator.TryGetInt32FieldQuickly("baseastralreputation",
                                                                               ref _intBaseAstralReputation);
-                                xmlCharacterNavigator.TryGetFieldUninitialized("basewildreputation",
+                                xmlCharacterNavigator.TryGetInt32FieldQuickly("basewildreputation",
                                                                               ref _intBaseWildReputation);
-                                xmlCharacterNavigator.TryGetFieldUninitialized("nuyen", ref _decNuyen);
-                                xmlCharacterNavigator.TryGetFieldUninitialized("startingnuyen", ref _decStartingNuyen);
-                                xmlCharacterNavigator.TryGetFieldUninitialized("nuyenbp", ref _decNuyenBP);
+                                xmlCharacterNavigator.TryGetDecFieldQuickly("nuyen", ref _decNuyen);
+                                xmlCharacterNavigator.TryGetDecFieldQuickly("startingnuyen", ref _decStartingNuyen);
+                                xmlCharacterNavigator.TryGetDecFieldQuickly("nuyenbp", ref _decNuyenBP);
 
-                                xmlCharacterNavigator.TryGetFieldUninitialized("adept", ref _blnAdeptEnabled);
-                                xmlCharacterNavigator.TryGetFieldUninitialized("magician", ref _blnMagicianEnabled);
-                                xmlCharacterNavigator.TryGetFieldUninitialized("technomancer",
+                                xmlCharacterNavigator.TryGetBoolFieldQuickly("adept", ref _blnAdeptEnabled);
+                                xmlCharacterNavigator.TryGetBoolFieldQuickly("magician", ref _blnMagicianEnabled);
+                                xmlCharacterNavigator.TryGetBoolFieldQuickly("technomancer",
                                                                              ref _blnTechnomancerEnabled);
-                                xmlCharacterNavigator.TryGetFieldUninitialized("ai", ref _blnAdvancedProgramsEnabled);
-                                xmlCharacterNavigator.TryGetFieldUninitialized("cyberwaredisabled",
+                                xmlCharacterNavigator.TryGetBoolFieldQuickly("ai", ref _blnAdvancedProgramsEnabled);
+                                xmlCharacterNavigator.TryGetBoolFieldQuickly("cyberwaredisabled",
                                                                              ref _blnCyberwareDisabled);
-                                xmlCharacterNavigator.TryGetFieldUninitialized("initiationdisabled",
+                                xmlCharacterNavigator.TryGetBoolFieldQuickly("initiationdisabled",
                                                                              ref _blnInitiationDisabled);
-                                xmlCharacterNavigator.TryGetFieldUninitialized("critter", ref _blnCritterEnabled);
+                                xmlCharacterNavigator.TryGetBoolFieldQuickly("critter", ref _blnCritterEnabled);
 
-                                xmlCharacterNavigator.TryGetFieldUninitialized("prototypetranshuman",
+                                xmlCharacterNavigator.TryGetDecFieldQuickly("prototypetranshuman",
                                                                             ref _decPrototypeTranshuman);
-                                xmlCharacterNavigator.TryGetFieldUninitialized("magenabled", ref _blnMAGEnabled);
-                                xmlCharacterNavigator.TryGetFieldUninitialized("initiategrade",
+                                xmlCharacterNavigator.TryGetBoolFieldQuickly("magenabled", ref _blnMAGEnabled);
+                                xmlCharacterNavigator.TryGetInt32FieldQuickly("initiategrade",
                                                                               ref _intInitiateGrade);
-                                xmlCharacterNavigator.TryGetFieldUninitialized("resenabled", ref _blnRESEnabled);
-                                xmlCharacterNavigator.TryGetFieldUninitialized("submersiongrade",
+                                xmlCharacterNavigator.TryGetBoolFieldQuickly("resenabled", ref _blnRESEnabled);
+                                xmlCharacterNavigator.TryGetInt32FieldQuickly("submersiongrade",
                                                                               ref _intSubmersionGrade);
-                                xmlCharacterNavigator.TryGetFieldUninitialized("depenabled", ref _blnDEPEnabled);
+                                xmlCharacterNavigator.TryGetBoolFieldQuickly("depenabled", ref _blnDEPEnabled);
                                 // Legacy shim
                                 if (!_blnCreated && !_blnMAGEnabled && !_blnRESEnabled && !_blnDEPEnabled)
                                     _decEssenceAtSpecialStart = decimal.MinValue;
-                                xmlCharacterNavigator.TryGetFieldUninitialized("groupmember", ref _blnGroupMember);
+                                xmlCharacterNavigator.TryGetBoolFieldQuickly("groupmember", ref _blnGroupMember);
                                 xmlCharacterNavigator.TryGetStringFieldQuickly("groupname", ref _strGroupName);
                                 xmlCharacterNavigator.TryGetMultiLineStringFieldQuickly("groupnotes",
                                     ref _strGroupNotes);
@@ -7436,7 +7436,7 @@ namespace Chummer
                                         // Load Edge use improvements from older versions of Chummer directly into Character's Edge Use property
                                         case "EdgeUse":
                                             decimal decOldEdgeUsed = 0;
-                                            if (objXmlImprovement.TryGetFieldUninitialized("aug", ref decOldEdgeUsed))
+                                            if (objXmlImprovement.TryGetDecFieldQuickly("aug", ref decOldEdgeUsed))
                                                 EdgeUsed = (-decOldEdgeUsed).StandardRound();
                                             continue;
                                         case "EssenceLoss":
@@ -8141,9 +8141,9 @@ namespace Chummer
                                 // Attempt to load the split MAG CharacterAttribute information for Mystic Adepts.
                                 if (_blnAdeptEnabled && _blnMagicianEnabled)
                                 {
-                                    xmlCharacterNavigator.TryGetFieldUninitialized("magsplitadept",
+                                    xmlCharacterNavigator.TryGetInt32FieldQuickly("magsplitadept",
                                         ref _intMAGAdept);
-                                    xmlCharacterNavigator.TryGetFieldUninitialized("magsplitmagician",
+                                    xmlCharacterNavigator.TryGetInt32FieldQuickly("magsplitmagician",
                                         ref _intMAGMagician);
                                 }
 
@@ -8349,11 +8349,11 @@ namespace Chummer
                                 }
 
                                 // Attempt to load Condition Monitor Progress.
-                                xmlCharacterNavigator.TryGetFieldUninitialized("physicalcmfilled",
+                                xmlCharacterNavigator.TryGetInt32FieldQuickly("physicalcmfilled",
                                                                               ref _intPhysicalCMFilled);
-                                xmlCharacterNavigator.TryGetFieldUninitialized("stuncmfilled", ref _intStunCMFilled);
+                                xmlCharacterNavigator.TryGetInt32FieldQuickly("stuncmfilled", ref _intStunCMFilled);
 
-                                xmlCharacterNavigator.TryGetFieldUninitialized("psyche", ref _blnPsycheActive);
+                                xmlCharacterNavigator.TryGetBoolFieldQuickly("psyche", ref _blnPsycheActive);
                                 //Timekeeper.Finish("load_char_misc2");
                             }
 
@@ -14732,7 +14732,7 @@ namespace Chummer
                                 if (xmlQualityNode == null)
                                     return;
                                 int intLoopKarma = 0;
-                                if (xmlQualityNode.TryGetFieldUninitialized("karma", ref intLoopKarma))
+                                if (xmlQualityNode.TryGetInt32FieldQuickly("karma", ref intLoopKarma))
                                     intMetatypeQualitiesValue += intLoopKarma;
                             }
                         }, token).ConfigureAwait(false);
@@ -14836,7 +14836,7 @@ namespace Chummer
                         // Karma needs to be added based on the character's metatype/metavariant Point Buy karma cost because that is what is used in Point Buy,
                         // not the metatype/metavariant attribute/quality costs.
                         int intTemp = 0;
-                        if ((await this.GetNodeXPathAsync(token: token).ConfigureAwait(false))?.TryGetFieldUninitialized("karma", ref intTemp) == true)
+                        if ((await this.GetNodeXPathAsync(token: token).ConfigureAwait(false))?.TryGetInt32FieldQuickly("karma", ref intTemp) == true)
                             intExtraKarmaToRemoveForPointBuyComparison -= intTemp;
 
                         // This is where "Talent" qualities like Adept and Technomancer get added in
@@ -14849,7 +14849,7 @@ namespace Chummer
                                     if (xmlQualityNode == null)
                                         return 0;
                                     int intLoopKarma = 0;
-                                    xmlQualityNode.TryGetFieldUninitialized("karma", ref intLoopKarma);
+                                    xmlQualityNode.TryGetInt32FieldQuickly("karma", ref intLoopKarma);
                                     return intLoopKarma;
                                 }, token).ConfigureAwait(false);
 
@@ -16574,7 +16574,7 @@ namespace Chummer
             // Mugshots
             using (LockObject.EnterWriteLock(token))
             {
-                xmlSavedNode.TryGetFieldUninitialized("mainmugshotindex", ref _intMainMugshotIndex);
+                xmlSavedNode.TryGetInt32FieldQuickly("mainmugshotindex", ref _intMainMugshotIndex);
                 XPathNodeIterator xmlMugshotsList = xmlSavedNode.SelectAndCacheExpression("mugshots/mugshot", token);
                 List<string> lstMugshotsBase64 = new List<string>(xmlMugshotsList.Count);
                 foreach (XPathNavigator objXmlMugshot in xmlMugshotsList)
@@ -16619,7 +16619,7 @@ namespace Chummer
             try
             {
                 token.ThrowIfCancellationRequested();
-                xmlSavedNode.TryGetFieldUninitialized("mainmugshotindex", ref _intMainMugshotIndex);
+                xmlSavedNode.TryGetInt32FieldQuickly("mainmugshotindex", ref _intMainMugshotIndex);
                 XPathNodeIterator xmlMugshotsList = xmlSavedNode.SelectAndCacheExpression("mugshots/mugshot", token);
                 List<string> lstMugshotsBase64 = new List<string>(xmlMugshotsList.Count);
                 foreach (XPathNavigator objXmlMugshot in xmlMugshotsList)
@@ -36870,7 +36870,7 @@ namespace Chummer
                                  .SelectAndCacheExpression("/chummer/availmap/avail"))
                     {
                         decimal decValue = 0;
-                        if (objNode.TryGetFieldUninitialized("value", ref decValue)
+                        if (objNode.TryGetDecFieldQuickly("value", ref decValue)
                             && !dicAvailabilityMap.ContainsKey(decValue))
                         {
                             dicAvailabilityMap.Add(
@@ -36914,7 +36914,7 @@ namespace Chummer
                                                  .SelectAndCacheExpression("/chummer/availmap/avail"))
                                     {
                                         decimal decValue = 0;
-                                        if (objNode.TryGetFieldUninitialized("value", ref decValue)
+                                        if (objNode.TryGetDecFieldQuickly("value", ref decValue)
                                             && !dicAvailabilityMap.ContainsKey(decValue))
                                         {
                                             dicAvailabilityMap.Add(
@@ -36965,7 +36965,7 @@ namespace Chummer
                              .SelectAndCacheExpression("/chummer/availmap/avail", token))
                     {
                         decimal decValue = 0;
-                        if (objNode.TryGetFieldUninitialized("value", ref decValue)
+                        if (objNode.TryGetDecFieldQuickly("value", ref decValue)
                             && !dicAvailabilityMap.ContainsKey(decValue))
                         {
                             dicAvailabilityMap.Add(
@@ -37021,7 +37021,7 @@ namespace Chummer
                                              .SelectAndCacheExpression("/chummer/availmap/avail", token))
                                     {
                                         decimal decValue = 0;
-                                        if (objNode.TryGetFieldUninitialized("value", ref decValue)
+                                        if (objNode.TryGetDecFieldQuickly("value", ref decValue)
                                             && !dicAvailabilityMap.ContainsKey(decValue))
                                         {
                                             dicAvailabilityMap.Add(
@@ -38111,7 +38111,7 @@ namespace Chummer
                         Quality objQuality = new Quality(this);
                         try
                         {
-                            if (i == 0 && xmlOldQuality.TryGetField("guid", out Guid guidOld))
+                            if (i == 0 && xmlOldQuality.TryGetField("guid", Guid.TryParse, out Guid guidOld))
                             {
                                 ImprovementManager.RemoveImprovements(this, Improvement.ImprovementSource.Quality,
                                                                       guidOld.ToString());
@@ -38160,7 +38160,7 @@ namespace Chummer
                         Quality objQuality = new Quality(this);
                         try
                         {
-                            if (i == 0 && xmlOldQuality.TryGetField("guid", out Guid guidOld))
+                            if (i == 0 && xmlOldQuality.TryGetField("guid", Guid.TryParse, out Guid guidOld))
                             {
                                 await ImprovementManager.RemoveImprovementsAsync(this, Improvement.ImprovementSource.Quality,
                                     guidOld.ToString(), token).ConfigureAwait(false);
@@ -43955,7 +43955,7 @@ namespace Chummer
                                                             token.ThrowIfCancellationRequested();
                                                             using (XmlReader objReader = XmlReader.Create(
                                                                        objStreamReader,
-                                                                       XmlUtilities.SafeXmlReaderSettings))
+                                                                       GlobalSettings.SafeXmlReaderSettings))
                                                             {
                                                                 token.ThrowIfCancellationRequested();
                                                                 XPathDocument xmlSourceDoc
@@ -44079,7 +44079,7 @@ namespace Chummer
                                                             token.ThrowIfCancellationRequested();
                                                             using (XmlReader objReader = XmlReader.Create(
                                                                        objStreamReader,
-                                                                       XmlUtilities.SafeXmlReaderSettings))
+                                                                       GlobalSettings.SafeXmlReaderSettings))
                                                             {
                                                                 token.ThrowIfCancellationRequested();
                                                                 XPathDocument xmlSourceDoc
@@ -44763,8 +44763,8 @@ namespace Chummer
                                 }
 
                                 /* TODO: Initiation, Submersion Grades
-                                objXmlCharacter.TryGetFieldUninitialized("initiategrade", ref _intInitiateGrade);
-                                objXmlCharacter.TryGetFieldUninitialized("submersiongrade", ref _intSubmersionGrade);
+                                objXmlCharacter.TryGetInt32FieldQuickly("initiategrade", ref _intInitiateGrade);
+                                objXmlCharacter.TryGetInt32FieldQuickly("submersiongrade", ref _intSubmersionGrade);
                                 */
                                 //Timekeeper.Finish("load_char_misc");
                             }
@@ -45058,8 +45058,8 @@ namespace Chummer
                                 // Attempt to load the split MAG CharacterAttribute information for Mystic Adepts.
                                 if (_blnAdeptEnabled && _blnMagicianEnabled)
                                 {
-                                    xmlCharacterNavigator.TryGetFieldUninitialized("magsplitadept", ref _intMAGAdept);
-                                    xmlCharacterNavigator.TryGetFieldUninitialized("magsplitmagician", ref _intMAGMagician);
+                                    xmlCharacterNavigator.TryGetInt32FieldQuickly("magsplitadept", ref _intMAGAdept);
+                                    xmlCharacterNavigator.TryGetInt32FieldQuickly("magsplitmagician", ref _intMAGMagician);
                                 }
                                 */
 

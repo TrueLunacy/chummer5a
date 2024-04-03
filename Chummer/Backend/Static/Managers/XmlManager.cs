@@ -148,7 +148,7 @@ namespace Chummer
                                 objContent.Save(objStream);
                                 objStream.Position = 0;
                                 using (XmlReader objXmlReader
-                                       = XmlReader.Create(objStream, XmlUtilities.SafeXmlReaderSettings))
+                                       = XmlReader.Create(objStream, GlobalSettings.SafeXmlReaderSettings))
                                     Interlocked.Exchange(ref _objXPathContent, new XPathDocument(objXmlReader));
                             }
                         }
@@ -184,7 +184,7 @@ namespace Chummer
                                 objContent.Save(objStream);
                                 objStream.Position = 0;
                                 using (XmlReader objXmlReader =
-                                       XmlReader.Create(objStream, XmlUtilities.SafeXmlReaderSettings))
+                                       XmlReader.Create(objStream, GlobalSettings.SafeXmlReaderSettings))
                                     Interlocked.Exchange(ref _objXPathContent, new XPathDocument(objXmlReader));
                             }
                         }
@@ -612,7 +612,7 @@ namespace Chummer
                     xmlDocumentOfReturn.Save(objStream);
                     objStream.Position = 0;
                     using (XmlReader objXmlReader
-                           = XmlReader.Create(objStream, XmlUtilities.SafeXmlReaderSettings))
+                           = XmlReader.Create(objStream, GlobalSettings.SafeXmlReaderSettings))
                         return new XPathDocument(objXmlReader).CreateNavigator();
                 }
             }

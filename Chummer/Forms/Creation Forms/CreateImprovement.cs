@@ -818,7 +818,7 @@ namespace Chummer
 
                     // Read it back in as an XmlDocument.
                 using (StreamReader objReader = new StreamReader(objStream, Encoding.UTF8, true))
-                using (XmlReader objXmlReader = XmlReader.Create(objReader, XmlUtilities.SafeXmlReaderSettings))
+                using (XmlReader objXmlReader = XmlReader.Create(objReader, GlobalSettings.SafeXmlReaderSettings))
                     objBonusXml.Load(objXmlReader);
             }
 

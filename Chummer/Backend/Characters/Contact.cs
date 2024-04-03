@@ -729,8 +729,8 @@ namespace Chummer
                 objNode.TryGetStringFieldQuickly("name", ref _strName);
                 objNode.TryGetStringFieldQuickly("role", ref _strRole);
                 objNode.TryGetStringFieldQuickly("location", ref _strLocation);
-                objNode.TryGetFieldUninitialized("connection", ref _intConnection);
-                objNode.TryGetFieldUninitialized("loyalty", ref _intLoyalty);
+                objNode.TryGetInt32FieldQuickly("connection", ref _intConnection);
+                objNode.TryGetInt32FieldQuickly("loyalty", ref _intLoyalty);
                 objNode.TryGetStringFieldQuickly("metatype", ref _strMetatype);
                 if (!objNode.TryGetStringFieldQuickly("gender", ref _strGender))
                     objNode.TryGetStringFieldQuickly("sex", ref _strGender);
@@ -750,23 +750,23 @@ namespace Chummer
                 _colNotes = ColorTranslator.FromHtml(sNotesColor);
 
                 objNode.TryGetStringFieldQuickly("groupname", ref _strGroupName);
-                objNode.TryGetFieldUninitialized("group", ref _blnIsGroup);
+                objNode.TryGetBoolFieldQuickly("group", ref _blnIsGroup);
                 objNode.TryGetStringFieldQuickly("guid", ref _strUnique);
-                objNode.TryGetFieldUninitialized("family", ref _blnFamily);
-                objNode.TryGetFieldUninitialized("blackmail", ref _blnBlackmail);
-                objNode.TryGetFieldUninitialized("free", ref _blnFree);
+                objNode.TryGetBoolFieldQuickly("family", ref _blnFamily);
+                objNode.TryGetBoolFieldQuickly("blackmail", ref _blnBlackmail);
+                objNode.TryGetBoolFieldQuickly("free", ref _blnFree);
                 if (objNode.SelectSingleNodeAndCacheExpression("colour", token) != null)
                 {
                     int intTmp = _objColor.ToArgb();
-                    if (objNode.TryGetFieldUninitialized("colour", ref intTmp))
+                    if (objNode.TryGetInt32FieldQuickly("colour", ref intTmp))
                         _objColor = Color.FromArgb(intTmp);
                 }
 
                 _blnReadOnly = objNode.SelectSingleNodeAndCacheExpression("readonly", token) != null;
 
-                if (!objNode.TryGetFieldUninitialized("groupenabled", ref _blnGroupEnabled))
+                if (!objNode.TryGetBoolFieldQuickly("groupenabled", ref _blnGroupEnabled))
                 {
-                    objNode.TryGetFieldUninitialized("mademan", ref _blnGroupEnabled);
+                    objNode.TryGetBoolFieldQuickly("mademan", ref _blnGroupEnabled);
                 }
 
                 RefreshLinkedCharacter(token: token);
@@ -790,8 +790,8 @@ namespace Chummer
                 objNode.TryGetStringFieldQuickly("name", ref _strName);
                 objNode.TryGetStringFieldQuickly("role", ref _strRole);
                 objNode.TryGetStringFieldQuickly("location", ref _strLocation);
-                objNode.TryGetFieldUninitialized("connection", ref _intConnection);
-                objNode.TryGetFieldUninitialized("loyalty", ref _intLoyalty);
+                objNode.TryGetInt32FieldQuickly("connection", ref _intConnection);
+                objNode.TryGetInt32FieldQuickly("loyalty", ref _intLoyalty);
                 objNode.TryGetStringFieldQuickly("metatype", ref _strMetatype);
                 if (!objNode.TryGetStringFieldQuickly("gender", ref _strGender))
                     objNode.TryGetStringFieldQuickly("sex", ref _strGender);
@@ -811,23 +811,23 @@ namespace Chummer
                 _colNotes = ColorTranslator.FromHtml(strNotesColor);
 
                 objNode.TryGetStringFieldQuickly("groupname", ref _strGroupName);
-                objNode.TryGetFieldUninitialized("group", ref _blnIsGroup);
+                objNode.TryGetBoolFieldQuickly("group", ref _blnIsGroup);
                 objNode.TryGetStringFieldQuickly("guid", ref _strUnique);
-                objNode.TryGetFieldUninitialized("family", ref _blnFamily);
-                objNode.TryGetFieldUninitialized("blackmail", ref _blnBlackmail);
-                objNode.TryGetFieldUninitialized("free", ref _blnFree);
+                objNode.TryGetBoolFieldQuickly("family", ref _blnFamily);
+                objNode.TryGetBoolFieldQuickly("blackmail", ref _blnBlackmail);
+                objNode.TryGetBoolFieldQuickly("free", ref _blnFree);
                 if (objNode.SelectSingleNodeAndCacheExpression("colour", token) != null)
                 {
                     int intTmp = _objColor.ToArgb();
-                    if (objNode.TryGetFieldUninitialized("colour", ref intTmp))
+                    if (objNode.TryGetInt32FieldQuickly("colour", ref intTmp))
                         _objColor = Color.FromArgb(intTmp);
                 }
 
                 _blnReadOnly = objNode.SelectSingleNodeAndCacheExpression("readonly", token) != null;
 
-                if (!objNode.TryGetFieldUninitialized("groupenabled", ref _blnGroupEnabled))
+                if (!objNode.TryGetBoolFieldQuickly("groupenabled", ref _blnGroupEnabled))
                 {
-                    objNode.TryGetFieldUninitialized("mademan", ref _blnGroupEnabled);
+                    objNode.TryGetBoolFieldQuickly("mademan", ref _blnGroupEnabled);
                 }
 
                 await RefreshLinkedCharacterAsync(token: token).ConfigureAwait(false);
@@ -3158,7 +3158,7 @@ namespace Chummer
         {
             using (LockObject.EnterWriteLock(token))
             {
-                xmlSavedNode.TryGetFieldUninitialized("mainmugshotindex", ref _intMainMugshotIndex);
+                xmlSavedNode.TryGetInt32FieldQuickly("mainmugshotindex", ref _intMainMugshotIndex);
                 XPathNodeIterator xmlMugshotsList = xmlSavedNode.SelectAndCacheExpression("mugshots/mugshot", token);
                 List<string> lstMugshotsBase64 = new List<string>(xmlMugshotsList.Count);
                 foreach (XPathNavigator objXmlMugshot in xmlMugshotsList)
@@ -3191,7 +3191,7 @@ namespace Chummer
             try
             {
                 token.ThrowIfCancellationRequested();
-                xmlSavedNode.TryGetFieldUninitialized("mainmugshotindex", ref _intMainMugshotIndex);
+                xmlSavedNode.TryGetInt32FieldQuickly("mainmugshotindex", ref _intMainMugshotIndex);
                 XPathNodeIterator xmlMugshotsList = xmlSavedNode.SelectAndCacheExpression("mugshots/mugshot", token);
                 List<string> lstMugshotsBase64 = new List<string>(xmlMugshotsList.Count);
                 foreach (XPathNavigator objXmlMugshot in xmlMugshotsList)

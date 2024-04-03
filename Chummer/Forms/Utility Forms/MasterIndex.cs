@@ -26,7 +26,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml.XPath;
-using Chummer.Xml;
 
 namespace Chummer
 {
@@ -228,28 +227,28 @@ namespace Chummer
                     await SourceString.Blank.SetControlAsync(lblSource, _objGenericToken).ConfigureAwait(false);
 
                     // Pre-load some very common expressions to speed up content load
-                    XmlUtilities.CacheExpression("/chummer");
-                    XmlUtilities.CacheExpression("/chummer/books/book/code");
+                    Utils.TryCacheExpression("/chummer", _objGenericToken);
+                    Utils.TryCacheExpression("/chummer/books/book/code", _objGenericToken);
                     foreach (XPathNavigator objCode in (await XmlManager
                                      .LoadXPathAsync("books.xml", token: _objGenericToken).ConfigureAwait(false))
                                  .SelectAndCacheExpression("/chummer/books/book/code", _objGenericToken))
                     {
-                        XmlUtilities.CacheExpression(
-                                "/chummer/books/book[code = " + objCode.Value.CleanXPath() + ']');
-                        XmlUtilities.CacheExpression(
-                                "/chummer/books/book[code = " + objCode.Value.CleanXPath() + "]/altcode");
+                        Utils.TryCacheExpression(
+                                "/chummer/books/book[code = " + objCode.Value.CleanXPath() + ']', _objGenericToken);
+                        Utils.TryCacheExpression(
+                                "/chummer/books/book[code = " + objCode.Value.CleanXPath() + "]/altcode", _objGenericToken);
                     }
 
-                    XmlUtilities.CacheExpression("name");
-                    XmlUtilities.CacheExpression("translate");
-                    XmlUtilities.CacheExpression("id");
-                    XmlUtilities.CacheExpression("source");
-                    XmlUtilities.CacheExpression("page");
-                    XmlUtilities.CacheExpression("altpage");
-                    XmlUtilities.CacheExpression("nameonpage");
-                    XmlUtilities.CacheExpression("altnameonpage");
-                    XmlUtilities.CacheExpression("notes");
-                    XmlUtilities.CacheExpression("altnotes");
+                    Utils.TryCacheExpression("name", _objGenericToken);
+                    Utils.TryCacheExpression("translate", _objGenericToken);
+                    Utils.TryCacheExpression("id", _objGenericToken);
+                    Utils.TryCacheExpression("source", _objGenericToken);
+                    Utils.TryCacheExpression("page", _objGenericToken);
+                    Utils.TryCacheExpression("altpage", _objGenericToken);
+                    Utils.TryCacheExpression("nameonpage", _objGenericToken);
+                    Utils.TryCacheExpression("altnameonpage", _objGenericToken);
+                    Utils.TryCacheExpression("notes", _objGenericToken);
+                    Utils.TryCacheExpression("altnotes", _objGenericToken);
 
                     await PopulateCharacterSettings(_objGenericToken).ConfigureAwait(false);
                     await LoadContent(_objGenericToken).ConfigureAwait(false);

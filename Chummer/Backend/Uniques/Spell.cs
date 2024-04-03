@@ -95,7 +95,7 @@ namespace Chummer
         {
             using (LockObject.EnterWriteLock())
             {
-                if (!objXmlSpellNode.TryGetField("id", out _guiSourceID))
+                if (!objXmlSpellNode.TryGetField("id", Guid.TryParse, out _guiSourceID))
                 {
                     Log.Warn(new object[] {"Missing id field for xmlnode", objXmlSpellNode});
                     Utils.BreakIfDebug();
@@ -183,7 +183,7 @@ namespace Chummer
             try
             {
                 token.ThrowIfCancellationRequested();
-                if (!objXmlSpellNode.TryGetField("id", out _guiSourceID))
+                if (!objXmlSpellNode.TryGetField("id", Guid.TryParse, out _guiSourceID))
                 {
                     Log.Warn(new object[] { "Missing id field for xmlnode", objXmlSpellNode });
                     Utils.BreakIfDebug();
@@ -354,7 +354,7 @@ namespace Chummer
                 return;
             using (LockObject.EnterWriteLock())
             {
-                if (!objNode.TryGetField("guid", out _guiID))
+                if (!objNode.TryGetField("guid", Guid.TryParse, out _guiID))
                 {
                     _guiID = Guid.NewGuid();
                 }
@@ -363,9 +363,9 @@ namespace Chummer
                 _objCachedMyXmlNode = null;
                 _objCachedMyXPathNode = null;
                 Lazy<XPathNavigator> objMyNode = new Lazy<XPathNavigator>(() => this.GetNodeXPath());
-                if (!objNode.TryGetFieldUninitialized("sourceid", ref _guiSourceID))
+                if (!objNode.TryGetGuidFieldQuickly("sourceid", ref _guiSourceID))
                 {
-                    objMyNode.Value?.TryGetFieldUninitialized("id", ref _guiSourceID);
+                    objMyNode.Value?.TryGetGuidFieldQuickly("id", ref _guiSourceID);
                 }
 
                 if (objNode.TryGetStringFieldQuickly("descriptors", ref _strDescriptors))
@@ -381,19 +381,19 @@ namespace Chummer
                         = Improvement.ConvertToImprovementSource(objNode["improvementsource"].InnerText);
                 }
 
-                objNode.TryGetFieldUninitialized("grade", ref _intGrade);
+                objNode.TryGetInt32FieldQuickly("grade", ref _intGrade);
                 objNode.TryGetStringFieldQuickly("dv", ref _strDV);
-                if (objNode.TryGetFieldUninitialized("limited", ref _blnLimited) && _blnLimited
+                if (objNode.TryGetBoolFieldQuickly("limited", ref _blnLimited) && _blnLimited
                                                                                && _objCharacter.LastSavedVersion
                                                                                <= new Version(5, 197, 30))
                 {
                     objMyNode.Value?.TryGetStringFieldQuickly("dv", ref _strDV);
                 }
 
-                objNode.TryGetFieldUninitialized("extended", ref _blnExtended);
+                objNode.TryGetBoolFieldQuickly("extended", ref _blnExtended);
                 if (_blnExtended)
                 {
-                    if (!objNode.TryGetFieldUninitialized("customextended", ref _blnCustomExtended))
+                    if (!objNode.TryGetBoolFieldQuickly("customextended", ref _blnCustomExtended))
                     {
                         _blnCustomExtended = !HashDescriptors.Any(x =>
                                                                       string.Equals(
@@ -404,10 +404,10 @@ namespace Chummer
                 else
                     _blnCustomExtended = false;
 
-                objNode.TryGetFieldUninitialized("freebonus", ref _blnFreeBonus);
-                if (!objNode.TryGetFieldUninitialized("barehandedadept", ref _blnBarehandedAdept))
-                    objNode.TryGetFieldUninitialized("usesunarmed", ref _blnBarehandedAdept);
-                objNode.TryGetFieldUninitialized("alchemical", ref _blnAlchemical);
+                objNode.TryGetBoolFieldQuickly("freebonus", ref _blnFreeBonus);
+                if (!objNode.TryGetBoolFieldQuickly("barehandedadept", ref _blnBarehandedAdept))
+                    objNode.TryGetBoolFieldQuickly("usesunarmed", ref _blnBarehandedAdept);
+                objNode.TryGetBoolFieldQuickly("alchemical", ref _blnAlchemical);
                 objNode.TryGetStringFieldQuickly("source", ref _strSource);
                 objNode.TryGetStringFieldQuickly("page", ref _strPage);
 
@@ -2036,7 +2036,7 @@ namespace Chummer
                 if (objReturn == null)
                 {
                     objReturn = objDoc.TryGetNodeByNameOrId("/chummer/spells/spell", Name);
-                    objReturn?.TryGetFieldUninitialized("id", ref _guiSourceID);
+                    objReturn?.TryGetGuidFieldQuickly("id", ref _guiSourceID);
                 }
                 _objCachedMyXmlNode = objReturn;
                 _strCachedXmlNodeLanguage = strLanguage;
@@ -2072,7 +2072,7 @@ namespace Chummer
                 if (objReturn == null)
                 {
                     objReturn = objDoc.TryGetNodeByNameOrId("/chummer/spells/spell", Name);
-                    objReturn?.TryGetFieldUninitialized("id", ref _guiSourceID);
+                    objReturn?.TryGetGuidFieldQuickly("id", ref _guiSourceID);
                 }
                 _objCachedMyXPathNode = objReturn;
                 _strCachedXPathNodeLanguage = strLanguage;

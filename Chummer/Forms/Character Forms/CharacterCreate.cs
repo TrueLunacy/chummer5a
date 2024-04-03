@@ -6124,7 +6124,7 @@ namespace Chummer
                             XmlNode objXmlQuality = objXmlDocument.TryGetNodeByNameOrId("/chummer/qualities/quality", strSelectedQuality);
                             int intDummy = 0;
                             if (objXmlQuality != null && objXmlQuality["nolevels"] == null
-                                                      && objXmlQuality.TryGetFieldUninitialized(
+                                                      && objXmlQuality.TryGetInt32FieldQuickly(
                                                           "limit", ref intDummy))
                             {
                                 intRatingToAdd -= await CharacterObject.Qualities.CountAsync(x =>
@@ -6330,7 +6330,7 @@ namespace Chummer
                     {
                         int intBP = 0;
                         if (await objSelectedQuality.GetTypeAsync(token).ConfigureAwait(false) == QualityType.Negative
-                            && objXmlDeleteQuality.TryGetFieldUninitialized("karma", ref intBP))
+                            && objXmlDeleteQuality.TryGetInt32FieldQuickly("karma", ref intBP))
                         {
                             intBP = -intBP;
                         }
@@ -22637,9 +22637,9 @@ namespace Chummer
                         if (objXmlModNode == null)
                             continue;
                         int intRating = 0;
-                        objXmlMod.TryGetFieldUninitialized("rating", ref intRating);
+                        objXmlMod.TryGetInt32FieldQuickly("rating", ref intRating);
                         int intMarkup = 0;
-                        objXmlMod.TryGetFieldUninitialized("markup", ref intMarkup);
+                        objXmlMod.TryGetInt32FieldQuickly("markup", ref intMarkup);
                         VehicleMod objMod = new VehicleMod(CharacterObject);
                         await objMod.CreateAsync(objXmlModNode, intRating, objVehicle, intMarkup, token: token).ConfigureAwait(false);
                         await objVehicle.Mods.AddAsync(objMod, token).ConfigureAwait(false);

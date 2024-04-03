@@ -32,7 +32,6 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml;
 using System.Xml.XPath;
-using Chummer.Xml;
 using iText.Kernel.Pdf;
 using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.Win32;
@@ -237,8 +236,8 @@ namespace Chummer
         public const string DefaultCharacterSettingDefaultValue = "223a11ff-80e0-428b-89a9-6ef1c243b8b6"; // GUID for built-in Standard option
         public const string DefaultMasterIndexSettingDefaultValue = "67e25032-2a4e-42ca-97fa-69f7f608236c"; // GUID for built-in Full House option
         public const DpiScalingMethod DefaultDpiScalingMethod = DpiScalingMethod.Zoom;
-        public const CompressionHelper.CompressionLevel DefaultChum5lzCompressionLevel
-            = CompressionHelper.CompressionLevel.Balanced;
+        public const LzmaHelper.ChummerCompressionPreset DefaultChum5lzCompressionLevel
+            = LzmaHelper.ChummerCompressionPreset.Balanced;
 
         private static DpiScalingMethod _eDpiScalingMethod = DefaultDpiScalingMethod;
 
@@ -260,7 +259,7 @@ namespace Chummer
         private static bool _blnPluginsEnabled;
         private static bool _blnAllowEasterEggs;
         private static bool _blnCustomDateTimeFormats;
-        private static CompressionHelper.CompressionLevel _eChum5lzCompressionLevel = DefaultChum5lzCompressionLevel; // Level of compression to use for .chum5lz files
+        private static LzmaHelper.ChummerCompressionPreset _eChum5lzCompressionLevel = DefaultChum5lzCompressionLevel; // Level of compression to use for .chum5lz files
         private static string _strCustomDateFormat;
         private static string _strCustomTimeFormat;
         private static string _strDefaultCharacterSetting = DefaultCharacterSettingDefaultValue;
@@ -676,7 +675,7 @@ namespace Chummer
             {
                 string strTemp = DefaultChum5lzCompressionLevel.ToString();
                 LoadStringFromRegistry(ref strTemp, "chum5lzcompressionlevel");
-                _eChum5lzCompressionLevel = (CompressionHelper.CompressionLevel)Enum.Parse(typeof(CompressionHelper.CompressionLevel), strTemp);
+                _eChum5lzCompressionLevel = (LzmaHelper.ChummerCompressionPreset)Enum.Parse(typeof(LzmaHelper.ChummerCompressionPreset), strTemp);
             }
             catch (Exception e)
             {
@@ -1499,13 +1498,11 @@ namespace Chummer
         /// <summary>
         /// XmlReaderSettings that should be used when reading almost Xml readable.
         /// </summary>
-        [Obsolete("Move to XmlSettings", true)]
         public static XmlReaderSettings SafeXmlReaderSettings { get; } = new XmlReaderSettings { XmlResolver = null, IgnoreComments = true, IgnoreWhitespace = true };
 
         /// <summary>
         /// XmlReaderSettings that should only be used if invalid characters are found.
         /// </summary>
-        [Obsolete("Move to XmlSettings", true)]
         public static XmlReaderSettings UnSafeXmlReaderSettings { get; } = new XmlReaderSettings { XmlResolver = null, IgnoreComments = true, IgnoreWhitespace = true, CheckCharacters = false };
 
         /// <summary>
@@ -2147,7 +2144,7 @@ namespace Chummer
 
         public static MostRecentlyUsedCollection<string> MostRecentlyUsedCharacters => s_LstMostRecentlyUsedCharacters;
 
-        public static CompressionHelper.CompressionLevel Chum5lzCompressionLevel
+        public static LzmaHelper.ChummerCompressionPreset Chum5lzCompressionLevel
         {
             get => _eChum5lzCompressionLevel;
             set => _eChum5lzCompressionLevel = value;

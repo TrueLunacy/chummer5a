@@ -132,7 +132,7 @@ namespace Chummer
             try
             {
                 int intBP = 0;
-                objXmlQuality.TryGetFieldUninitialized("lp", ref intBP);
+                objXmlQuality.TryGetInt32FieldQuickly("lp", ref intBP);
                 string strBP = await chkFree.DoThreadSafeFuncAsync(x => x.Checked).ConfigureAwait(false)
                     ? await LanguageManager.GetStringAsync("Checkbox_Free").ConfigureAwait(false)
                     : intBP.ToString(GlobalSettings.CultureInfo);

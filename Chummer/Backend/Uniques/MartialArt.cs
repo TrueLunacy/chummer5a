@@ -185,7 +185,7 @@ namespace Chummer
         {
             using (LockObject.EnterWriteLock())
             {
-                if (!objXmlArtNode.TryGetField("id", out _guiSourceID))
+                if (!objXmlArtNode.TryGetField("id", Guid.TryParse, out _guiSourceID))
                 {
                     Log.Warn(new object[] {"Missing id field for xmlnode", objXmlArtNode});
                     Utils.BreakIfDebug();
@@ -199,7 +199,7 @@ namespace Chummer
 
                 objXmlArtNode.TryGetStringFieldQuickly("source", ref _strSource);
                 objXmlArtNode.TryGetStringFieldQuickly("page", ref _strPage);
-                objXmlArtNode.TryGetFieldUninitialized("cost", ref _intKarmaCost);
+                objXmlArtNode.TryGetInt32FieldQuickly("cost", ref _intKarmaCost);
                 if (!objXmlArtNode.TryGetMultiLineStringFieldQuickly("altnotes", ref _strNotes))
                     objXmlArtNode.TryGetMultiLineStringFieldQuickly("notes", ref _strNotes);
 
@@ -236,7 +236,7 @@ namespace Chummer
             try
             {
                 token.ThrowIfCancellationRequested();
-                if (!objXmlArtNode.TryGetField("id", out _guiSourceID))
+                if (!objXmlArtNode.TryGetField("id", Guid.TryParse, out _guiSourceID))
                 {
                     Log.Warn(new object[] { "Missing id field for xmlnode", objXmlArtNode });
                     Utils.BreakIfDebug();
@@ -250,7 +250,7 @@ namespace Chummer
 
                 objXmlArtNode.TryGetStringFieldQuickly("source", ref _strSource);
                 objXmlArtNode.TryGetStringFieldQuickly("page", ref _strPage);
-                objXmlArtNode.TryGetFieldUninitialized("cost", ref _intKarmaCost);
+                objXmlArtNode.TryGetInt32FieldQuickly("cost", ref _intKarmaCost);
                 if (!objXmlArtNode.TryGetMultiLineStringFieldQuickly("altnotes", ref _strNotes))
                     objXmlArtNode.TryGetMultiLineStringFieldQuickly("notes", ref _strNotes);
 
@@ -360,7 +360,7 @@ namespace Chummer
                 return;
             using (LockObject.EnterWriteLock())
             {
-                if (!objNode.TryGetField("guid", out _guiID))
+                if (!objNode.TryGetField("guid", Guid.TryParse, out _guiID))
                 {
                     _guiID = Guid.NewGuid();
                 }
@@ -369,15 +369,15 @@ namespace Chummer
                 _objCachedMyXmlNode = null;
                 _objCachedMyXPathNode = null;
 
-                if (!objNode.TryGetFieldUninitialized("sourceid", ref _guiSourceID))
+                if (!objNode.TryGetGuidFieldQuickly("sourceid", ref _guiSourceID))
                 {
-                    this.GetNodeXPath()?.TryGetFieldUninitialized("id", ref _guiSourceID);
+                    this.GetNodeXPath()?.TryGetGuidFieldQuickly("id", ref _guiSourceID);
                 }
 
                 objNode.TryGetStringFieldQuickly("source", ref _strSource);
                 objNode.TryGetStringFieldQuickly("page", ref _strPage);
-                objNode.TryGetFieldUninitialized("cost", ref _intKarmaCost);
-                objNode.TryGetFieldUninitialized("isquality", ref _blnIsQuality);
+                objNode.TryGetInt32FieldQuickly("cost", ref _intKarmaCost);
+                objNode.TryGetBoolFieldQuickly("isquality", ref _blnIsQuality);
 
                 using (XmlNodeList xmlLegacyTechniqueList
                        = objNode.SelectNodes("martialartadvantages/martialartadvantage"))
@@ -810,7 +810,7 @@ namespace Chummer
                 if (objReturn == null)
                 {
                     objReturn = objDoc.TryGetNodeByNameOrId("/chummer/martialarts/martialart", Name);
-                    objReturn?.TryGetFieldUninitialized("id", ref _guiSourceID);
+                    objReturn?.TryGetGuidFieldQuickly("id", ref _guiSourceID);
                 }
                 _objCachedMyXmlNode = objReturn;
                 _strCachedXmlNodeLanguage = strLanguage;
@@ -844,7 +844,7 @@ namespace Chummer
                 if (objReturn == null)
                 {
                     objReturn = objDoc.TryGetNodeByNameOrId("/chummer/martialarts/martialart", Name);
-                    objReturn?.TryGetFieldUninitialized("id", ref _guiSourceID);
+                    objReturn?.TryGetGuidFieldQuickly("id", ref _guiSourceID);
                 }
                 _objCachedMyXPathNode = objReturn;
                 _strCachedXPathNodeLanguage = strLanguage;

@@ -69,7 +69,7 @@ namespace Chummer
         {
             if (objNode == null)
                 return;
-            objNode.TryGetField("guid", out _guiID);
+            objNode.TryGetField("guid", Guid.TryParse, out _guiID);
             string strGearId = string.Empty;
             if (objNode.TryGetStringFieldQuickly("gearid", ref strGearId))
             {

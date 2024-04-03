@@ -33,7 +33,6 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml;
 using System.Xml.Xsl;
-using Chummer.Xml;
 using Microsoft.IO;
 using Newtonsoft.Json;
 using NLog;

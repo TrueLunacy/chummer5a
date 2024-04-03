@@ -698,7 +698,7 @@ namespace Chummer
             }
 
             int intResult = 0;
-            if (VersionShim.TryParse(strLatestVersion, out Version objLatestVersion))
+            if (VersionExtensions.TryParse(strLatestVersion, out Version objLatestVersion))
                 intResult = objLatestVersion?.CompareTo(Utils.CurrentChummerVersion) ?? 0;
             token.ThrowIfCancellationRequested();
             string strSpace = await LanguageManager.GetStringAsync("String_Space", token: token).ConfigureAwait(false);

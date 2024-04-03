@@ -89,7 +89,7 @@ namespace Chummer
         {
             using (LockObject.EnterWriteLock())
             {
-                if (!objNode.TryGetField("guid", out _guiID))
+                if (!objNode.TryGetField("guid", Guid.TryParse, out _guiID))
                 {
                     _guiID = Guid.NewGuid();
                     _strName = objNode.InnerText;
@@ -104,7 +104,7 @@ namespace Chummer
                     _colNotes = ColorTranslator.FromHtml(sNotesColor);
                 }
 
-                objNode.TryGetFieldUninitialized("sortorder", ref _intSortOrder);
+                objNode.TryGetInt32FieldQuickly("sortorder", ref _intSortOrder);
 
                 if (Parent?.Contains(this) == false)
                     Parent.Add(this);

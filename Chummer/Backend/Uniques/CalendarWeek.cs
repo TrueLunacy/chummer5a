@@ -298,9 +298,9 @@ namespace Chummer
         {
             using (LockObject.EnterWriteLock())
             {
-                objNode.TryGetField("guid", out _guiID);
-                objNode.TryGetFieldUninitialized("year", ref _intYear);
-                objNode.TryGetFieldUninitialized("week", ref _intWeek);
+                objNode.TryGetField("guid", Guid.TryParse, out _guiID);
+                objNode.TryGetInt32FieldQuickly("year", ref _intYear);
+                objNode.TryGetInt32FieldQuickly("week", ref _intWeek);
                 objNode.TryGetMultiLineStringFieldQuickly("notes", ref _strNotes);
                 string sNotesColor = ColorTranslator.ToHtml(ColorManager.HasNotesColor);
                 objNode.TryGetStringFieldQuickly("notesColor", ref sNotesColor);

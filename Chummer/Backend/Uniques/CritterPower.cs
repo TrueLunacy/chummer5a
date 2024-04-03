@@ -80,7 +80,7 @@ namespace Chummer
         /// <param name="strForcedValue">Value to forcefully select for any ImprovementManager prompts.</param>
         public void Create(XmlNode objXmlPowerNode, int intRating = 0, string strForcedValue = "")
         {
-            if (!objXmlPowerNode.TryGetField("id", out _guiSourceID))
+            if (!objXmlPowerNode.TryGetField("id", Guid.TryParse, out _guiSourceID))
             {
                 Log.Warn(new object[] { "Missing id field for power xmlnode", objXmlPowerNode });
                 Utils.BreakIfDebug();
@@ -128,7 +128,7 @@ namespace Chummer
             objXmlPowerNode.TryGetStringFieldQuickly("duration", ref _strDuration);
             objXmlPowerNode.TryGetStringFieldQuickly("source", ref _strSource);
             objXmlPowerNode.TryGetStringFieldQuickly("page", ref _strPage);
-            objXmlPowerNode.TryGetFieldUninitialized("karma", ref _intKarma);
+            objXmlPowerNode.TryGetInt32FieldQuickly("karma", ref _intKarma);
 
             if (GlobalSettings.InsertPdfNotesIfAvailable && string.IsNullOrEmpty(Notes))
             {
@@ -203,7 +203,7 @@ namespace Chummer
         {
             if (objNode == null)
                 return;
-            if (!objNode.TryGetField("guid", out _guiID))
+            if (!objNode.TryGetField("guid", Guid.TryParse, out _guiID))
             {
                 _guiID = Guid.NewGuid();
             }
@@ -211,9 +211,9 @@ namespace Chummer
             objNode.TryGetStringFieldQuickly("name", ref _strName);
             _objCachedMyXmlNode = null;
             _objCachedMyXPathNode = null;
-            if (!objNode.TryGetFieldUninitialized("sourceid", ref _guiSourceID))
+            if (!objNode.TryGetGuidFieldQuickly("sourceid", ref _guiSourceID))
             {
-                this.GetNodeXPath()?.TryGetFieldUninitialized("id", ref _guiSourceID);
+                this.GetNodeXPath()?.TryGetGuidFieldQuickly("id", ref _guiSourceID);
             }
             objNode.TryGetStringFieldQuickly("extra", ref _strExtra);
             objNode.TryGetStringFieldQuickly("category", ref _strCategory);
@@ -223,10 +223,10 @@ namespace Chummer
             objNode.TryGetStringFieldQuickly("duration", ref _strDuration);
             objNode.TryGetStringFieldQuickly("source", ref _strSource);
             objNode.TryGetStringFieldQuickly("page", ref _strPage);
-            objNode.TryGetFieldUninitialized("karma", ref _intKarma);
-            objNode.TryGetFieldUninitialized("points", ref _decPowerPoints);
-            objNode.TryGetFieldUninitialized("counttowardslimit", ref _blnCountTowardsLimit);
-            objNode.TryGetFieldUninitialized("grade", ref _intGrade);
+            objNode.TryGetInt32FieldQuickly("karma", ref _intKarma);
+            objNode.TryGetDecFieldQuickly("points", ref _decPowerPoints);
+            objNode.TryGetBoolFieldQuickly("counttowardslimit", ref _blnCountTowardsLimit);
+            objNode.TryGetInt32FieldQuickly("grade", ref _intGrade);
             _nodBonus = objNode["bonus"];
             objNode.TryGetMultiLineStringFieldQuickly("notes", ref _strNotes);
 
@@ -234,7 +234,7 @@ namespace Chummer
             objNode.TryGetStringFieldQuickly("notesColor", ref sNotesColor);
             _colNotes = ColorTranslator.FromHtml(sNotesColor);
 
-            objNode.TryGetFieldUninitialized("sortorder", ref _intSortOrder);
+            objNode.TryGetInt32FieldQuickly("sortorder", ref _intSortOrder);
         }
 
         /// <summary>
@@ -808,7 +808,7 @@ namespace Chummer
             if (objReturn == null)
             {
                 objReturn = objDoc.TryGetNodeByNameOrId("/chummer/powers/power", Name);
-                objReturn?.TryGetFieldUninitialized("id", ref _guiSourceID);
+                objReturn?.TryGetGuidFieldQuickly("id", ref _guiSourceID);
             }
             _objCachedMyXmlNode = objReturn;
             _strCachedXmlNodeLanguage = strLanguage;
@@ -833,7 +833,7 @@ namespace Chummer
             if (objReturn == null)
             {
                 objReturn = objDoc.TryGetNodeByNameOrId("/chummer/powers/power", Name);
-                objReturn?.TryGetFieldUninitialized("id", ref _guiSourceID);
+                objReturn?.TryGetGuidFieldQuickly("id", ref _guiSourceID);
             }
             _objCachedMyXPathNode = objReturn;
             _strCachedXPathNodeLanguage = strLanguage;

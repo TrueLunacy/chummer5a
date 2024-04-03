@@ -70,7 +70,7 @@ namespace Chummer
         /// <param name="blnCanDelete">Can this AI program be deleted on its own (set to false for Improvement-granted programs).</param>
         public void Create(XmlNode objXmlProgramNode, string strExtra = "", bool blnCanDelete = true)
         {
-            if (!objXmlProgramNode.TryGetField("id", out _guiSourceID))
+            if (!objXmlProgramNode.TryGetField("id", Guid.TryParse, out _guiSourceID))
             {
                 Log.Warn(new object[] { "Missing id field for program xmlnode", objXmlProgramNode });
                 Utils.BreakIfDebug();
@@ -132,7 +132,7 @@ namespace Chummer
         public async Task CreateAsync(XmlNode objXmlProgramNode, string strExtra = "", bool blnCanDelete = true, CancellationToken token = default)
         {
             token.ThrowIfCancellationRequested();
-            if (!objXmlProgramNode.TryGetField("id", out _guiSourceID))
+            if (!objXmlProgramNode.TryGetField("id", Guid.TryParse, out _guiSourceID))
             {
                 Log.Warn(new object[] { "Missing id field for program xmlnode", objXmlProgramNode });
                 Utils.BreakIfDebug();
@@ -238,7 +238,7 @@ namespace Chummer
         {
             if (objNode == null)
                 return;
-            if (!objNode.TryGetField("guid", out _guiID))
+            if (!objNode.TryGetField("guid", Guid.TryParse, out _guiID))
             {
                 _guiID = Guid.NewGuid();
             }
@@ -246,13 +246,13 @@ namespace Chummer
             objNode.TryGetStringFieldQuickly("name", ref _strName);
             _objCachedMyXmlNode = null;
             _objCachedMyXPathNode = null;
-            if (!objNode.TryGetFieldUninitialized("sourceid", ref _guiSourceID))
+            if (!objNode.TryGetGuidFieldQuickly("sourceid", ref _guiSourceID))
             {
-                this.GetNodeXPath()?.TryGetFieldUninitialized("id", ref _guiSourceID);
+                this.GetNodeXPath()?.TryGetGuidFieldQuickly("id", ref _guiSourceID);
             }
 
-            objNode.TryGetFieldUninitialized("candelete", ref _blnCanDelete);
-            objNode.TryGetFieldUninitialized("isadvancedprogram", ref _blnIsAdvancedProgram);
+            objNode.TryGetBoolFieldQuickly("candelete", ref _blnCanDelete);
+            objNode.TryGetBoolFieldQuickly("isadvancedprogram", ref _blnIsAdvancedProgram);
             objNode.TryGetStringFieldQuickly("requiresprogram", ref _strRequiresProgram);
             // Legacy fix for weird, old way of storing this value
             if (_strRequiresProgram == LanguageManager.GetString("String_None")
@@ -548,7 +548,7 @@ namespace Chummer
             if (objReturn == null)
             {
                 objReturn = objDoc.TryGetNodeByNameOrId("/chummer/programs/program", Name);
-                objReturn?.TryGetFieldUninitialized("id", ref _guiSourceID);
+                objReturn?.TryGetGuidFieldQuickly("id", ref _guiSourceID);
             }
             _objCachedMyXmlNode = objReturn;
             _strCachedXmlNodeLanguage = strLanguage;
@@ -573,7 +573,7 @@ namespace Chummer
             if (objReturn == null)
             {
                 objReturn = objDoc.TryGetNodeByNameOrId("/chummer/programs/program", Name);
-                objReturn?.TryGetFieldUninitialized("id", ref _guiSourceID);
+                objReturn?.TryGetGuidFieldQuickly("id", ref _guiSourceID);
             }
             _objCachedMyXPathNode = objReturn;
             _strCachedXPathNodeLanguage = strLanguage;

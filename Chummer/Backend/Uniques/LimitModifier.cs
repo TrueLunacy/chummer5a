@@ -105,13 +105,13 @@ namespace Chummer
         /// <param name="objNode">XmlNode to load.</param>
         public void Load(XmlNode objNode)
         {
-            if (!objNode.TryGetField("guid", out _guiID))
+            if (!objNode.TryGetField("guid", Guid.TryParse, out _guiID))
                 _guiID = Guid.NewGuid();
             objNode.TryGetStringFieldQuickly("name", ref _strName);
             objNode.TryGetStringFieldQuickly("limit", ref _strLimit);
-            objNode.TryGetFieldUninitialized("bonus", ref _intBonus);
+            objNode.TryGetInt32FieldQuickly("bonus", ref _intBonus);
             objNode.TryGetStringFieldQuickly("condition", ref _strCondition);
-            if (!objNode.TryGetFieldUninitialized("candelete", ref _blnCanDelete))
+            if (!objNode.TryGetBoolFieldQuickly("candelete", ref _blnCanDelete))
             {
                 _blnCanDelete = _objCharacter.Improvements.All(x => x.ImproveType != Improvement.ImprovementType.LimitModifier || x.ImprovedName != InternalId);
             }

@@ -180,7 +180,7 @@ namespace Chummer
             if (objNode["nuyentype"] != null)
                 NuyenType = ConvertToNuyenExpenseType(objNode["nuyentype"].InnerText);
             objNode.TryGetStringFieldQuickly("objectid", ref _strObjectId);
-            objNode.TryGetFieldUninitialized("qty", ref _decQty);
+            objNode.TryGetDecFieldQuickly("qty", ref _decQty);
             objNode.TryGetStringFieldQuickly("extra", ref _strExtra);
         }
 
@@ -320,15 +320,15 @@ namespace Chummer
         {
             if (objNode == null)
                 return;
-            objNode.TryGetField("guid", out _guiID);
+            objNode.TryGetField("guid", Guid.TryParse, out _guiID);
             DateTime.TryParse(objNode["date"]?.InnerText, GlobalSettings.InvariantCultureInfo, DateTimeStyles.None, out _datDate);
-            objNode.TryGetFieldUninitialized("amount", ref _decAmount);
+            objNode.TryGetDecFieldQuickly("amount", ref _decAmount);
             if (objNode.TryGetStringFieldQuickly("reason", ref _strReason))
                 _strReason = _strReason.TrimEndOnce(" (" + LanguageManager.GetString("String_Expense_Refund") + ')').Replace("🡒", "->");
             if (objNode["type"] != null)
                 _eExpenseType = ConvertToExpenseType(objNode["type"].InnerText);
-            objNode.TryGetFieldUninitialized("refund", ref _blnRefund);
-            objNode.TryGetFieldUninitialized("forcecareervisible", ref _blnForceCareerVisible);
+            objNode.TryGetBoolFieldQuickly("refund", ref _blnRefund);
+            objNode.TryGetBoolFieldQuickly("forcecareervisible", ref _blnForceCareerVisible);
 
             if (objNode["undo"] != null)
             {

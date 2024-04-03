@@ -552,12 +552,11 @@ namespace Chummer
                 {
                     strCost = (await strCost.CheapReplaceAsync("Weapon Cost",
                                                                async () => (await _objParentWeapon.GetOwnCostAsync(token).ConfigureAwait(false)).ToString(
-                                                                   GlobalSettings.InvariantCultureInfo), token: token).ConfigureAwait(false))
-#warning todo: commented out until Weapon Total Cost is fixed in mainline
-                                /*.CheapReplaceAsync("Weapon Total Cost",
-                                                   async () => (await _objParentWeapon.MultipliableCostAsync(null, token).ConfigureAwait(false))
-                                                       .ToString(GlobalSettings.InvariantCultureInfo),
-                                                   token: token).ConfigureAwait(false))*/
+                                                                   GlobalSettings.InvariantCultureInfo), token: token)
+                                            .CheapReplaceAsync("Weapon Total Cost",
+                                                               async () => (await _objParentWeapon.MultipliableCostAsync(null, token).ConfigureAwait(false))
+                                                                   .ToString(GlobalSettings.InvariantCultureInfo),
+                                                               token: token).ConfigureAwait(false))
                         .Replace("Rating", intRating.ToString(GlobalSettings.CultureInfo));
                 }
 

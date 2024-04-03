@@ -241,13 +241,13 @@ namespace Chummer
         {
             if (objNode == null)
                 return;
-            if (!objNode.TryGetField("guid", out _guiID))
+            if (!objNode.TryGetField("guid", Guid.TryParse, out _guiID))
                 _guiID = Guid.NewGuid();
-            objNode.TryGetFieldUninitialized("res", ref _blnTechnomancer);
-            objNode.TryGetFieldUninitialized("grade", ref _intGrade);
-            objNode.TryGetFieldUninitialized("group", ref _blnGroup);
-            objNode.TryGetFieldUninitialized("ordeal", ref _blnOrdeal);
-            objNode.TryGetFieldUninitialized("schooling", ref _blnSchooling);
+            objNode.TryGetBoolFieldQuickly("res", ref _blnTechnomancer);
+            objNode.TryGetInt32FieldQuickly("grade", ref _intGrade);
+            objNode.TryGetBoolFieldQuickly("group", ref _blnGroup);
+            objNode.TryGetBoolFieldQuickly("ordeal", ref _blnOrdeal);
+            objNode.TryGetBoolFieldQuickly("schooling", ref _blnSchooling);
             objNode.TryGetMultiLineStringFieldQuickly("notes", ref _strNotes);
 
             string sNotesColor = ColorTranslator.ToHtml(ColorManager.HasNotesColor);

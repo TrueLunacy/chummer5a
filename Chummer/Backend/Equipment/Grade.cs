@@ -61,26 +61,26 @@ namespace Chummer.Backend.Equipment
         {
             objNode.TryGetStringFieldQuickly("name", ref _strName);
 
-            if (!objNode.TryGetField("guid", out _guiID))
+            if (!objNode.TryGetField("guid", Guid.TryParse, out _guiID))
             {
                 _guiID = Guid.NewGuid();
             }
-            if (!objNode.TryGetFieldUninitialized("sourceid", ref _guiSourceID))
+            if (!objNode.TryGetGuidFieldQuickly("sourceid", ref _guiSourceID))
             {
                 XPathNavigator xmlDataNode = _objCharacter.LoadDataXPath(GetDataFileNameFromImprovementSource(_eSource))
                     .TryGetNodeByNameOrId("/chummer/grades/grade", Name);
-                if (xmlDataNode?.TryGetField("id", out _guiSourceID) != true)
+                if (xmlDataNode?.TryGetField("id", Guid.TryParse, out _guiSourceID) != true)
                     _guiSourceID = Guid.NewGuid();
             }
-            objNode.TryGetFieldUninitialized("cost", ref _decCost);
-            objNode.TryGetFieldUninitialized("avail", ref _intAvail);
+            objNode.TryGetDecFieldQuickly("cost", ref _decCost);
+            objNode.TryGetInt32FieldQuickly("avail", ref _intAvail);
             objNode.TryGetStringFieldQuickly("source", ref _strSource);
             if (_eSource == Improvement.ImprovementSource.Drug)
-                objNode.TryGetFieldUninitialized("addictionthreshold", ref _intAddictionThreshold);
+                objNode.TryGetInt32FieldQuickly("addictionthreshold", ref _intAddictionThreshold);
             else
             {
-                objNode.TryGetFieldUninitialized("ess", ref _decEss);
-                if (!objNode.TryGetFieldUninitialized("devicerating", ref _intDeviceRating))
+                objNode.TryGetDecFieldQuickly("ess", ref _decEss);
+                if (!objNode.TryGetInt32FieldQuickly("devicerating", ref _intDeviceRating))
                 {
                     if (Name.Contains("Alphaware"))
                         _intDeviceRating = 3;

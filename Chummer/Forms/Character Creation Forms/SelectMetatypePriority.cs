@@ -1641,7 +1641,7 @@ namespace Chummer
                              && xmlResourcesPriority.SelectSingleNodeAndCacheExpression("gameplayoption", token) != null))
                         {
                             decimal decResources = 0;
-                            if (xmlResourcesPriority.TryGetFieldUninitialized("resources", ref decResources))
+                            if (xmlResourcesPriority.TryGetDecFieldQuickly("resources", ref decResources))
                             {
                                 await _objCharacter.SetNuyenAsync(decResources, token).ConfigureAwait(false);
                                 await _objCharacter.SetStartingNuyenAsync(decResources, token).ConfigureAwait(false);
@@ -1813,9 +1813,9 @@ namespace Chummer
                                     // Set starting magic
                                     int intTemp = 1;
                                     int intMax = 0;
-                                    if (!xmlTalentPriorityNode.TryGetFieldUninitialized("magic", ref intTemp))
+                                    if (!xmlTalentPriorityNode.TryGetInt32FieldQuickly("magic", ref intTemp))
                                         intTemp = 1;
-                                    if (!xmlTalentPriorityNode.TryGetFieldUninitialized("maxmagic", ref intMax))
+                                    if (!xmlTalentPriorityNode.TryGetInt32FieldQuickly("maxmagic", ref intMax))
                                         intMax = Math.Max(await CommonFunctions.ExpressionToIntAsync(
                                                 charNode["magmax"]?.InnerText, intForce,
                                                 token: token).ConfigureAwait(false),
@@ -1823,13 +1823,13 @@ namespace Chummer
                                     await _objCharacter.MAG.AssignLimitsAsync(intTemp, intMax, intMax, token)
                                         .ConfigureAwait(false);
                                     _objCharacter.FreeSpells
-                                        = xmlTalentPriorityNode.TryGetFieldUninitialized("spells", ref intTemp)
+                                        = xmlTalentPriorityNode.TryGetInt32FieldQuickly("spells", ref intTemp)
                                             ? intTemp
                                             : 0;
                                     // Set starting resonance
-                                    if (!xmlTalentPriorityNode.TryGetFieldUninitialized("resonance", ref intTemp))
+                                    if (!xmlTalentPriorityNode.TryGetInt32FieldQuickly("resonance", ref intTemp))
                                         intTemp = 1;
-                                    if (!xmlTalentPriorityNode.TryGetFieldUninitialized("maxresonance", ref intMax))
+                                    if (!xmlTalentPriorityNode.TryGetInt32FieldQuickly("maxresonance", ref intMax))
                                         intMax = Math.Max(await CommonFunctions.ExpressionToIntAsync(
                                                 charNode["resmax"]?.InnerText, intForce,
                                                 token: token).ConfigureAwait(false),
@@ -1837,13 +1837,13 @@ namespace Chummer
                                     await _objCharacter.RES.AssignLimitsAsync(intTemp, intMax, intMax, token)
                                         .ConfigureAwait(false);
                                     _objCharacter.CFPLimit
-                                        = xmlTalentPriorityNode.TryGetFieldUninitialized("cfp", ref intTemp)
+                                        = xmlTalentPriorityNode.TryGetInt32FieldQuickly("cfp", ref intTemp)
                                             ? intTemp
                                             : 0;
                                     // Set starting depth
-                                    if (!xmlTalentPriorityNode.TryGetFieldUninitialized("depth", ref intTemp))
+                                    if (!xmlTalentPriorityNode.TryGetInt32FieldQuickly("depth", ref intTemp))
                                         intTemp = 1;
-                                    if (!xmlTalentPriorityNode.TryGetFieldUninitialized("maxdepth", ref intMax))
+                                    if (!xmlTalentPriorityNode.TryGetInt32FieldQuickly("maxdepth", ref intMax))
                                         intMax = Math.Max(await CommonFunctions.ExpressionToIntAsync(
                                                 charNode["depmax"]?.InnerText, intForce,
                                                 token: token).ConfigureAwait(false),
@@ -1851,12 +1851,12 @@ namespace Chummer
                                     await _objCharacter.DEP.AssignLimitsAsync(intTemp, intMax, intMax, token)
                                         .ConfigureAwait(false);
                                     _objCharacter.AINormalProgramLimit
-                                        = xmlTalentPriorityNode.TryGetFieldUninitialized(
+                                        = xmlTalentPriorityNode.TryGetInt32FieldQuickly(
                                             "ainormalprogramlimit", ref intTemp)
                                             ? intTemp
                                             : 0;
                                     _objCharacter.AIAdvancedProgramLimit
-                                        = xmlTalentPriorityNode.TryGetFieldUninitialized(
+                                        = xmlTalentPriorityNode.TryGetInt32FieldQuickly(
                                             "aiadvancedprogramlimit", ref intTemp)
                                             ? intTemp
                                             : 0;
@@ -1962,7 +1962,7 @@ namespace Chummer
                              && objXmlAttributesPriority.SelectSingleNodeAndCacheExpression("gameplayoption", token) != null))
                         {
                             int intAttributes = 0;
-                            objXmlAttributesPriority.TryGetFieldUninitialized("attributes", ref intAttributes);
+                            objXmlAttributesPriority.TryGetInt32FieldQuickly("attributes", ref intAttributes);
                             if (boolHalveAttributePriorityPoints)
                                 intAttributes /= 2;
                             _objCharacter.TotalAttributes = _objCharacter.Attributes = intAttributes;
@@ -1985,9 +1985,9 @@ namespace Chummer
                              && objXmlSkillsPriority.SelectSingleNodeAndCacheExpression("gameplayoption", token) != null))
                         {
                             int intTemp = 0;
-                            if (objXmlSkillsPriority.TryGetFieldUninitialized("skills", ref intTemp))
+                            if (objXmlSkillsPriority.TryGetInt32FieldQuickly("skills", ref intTemp))
                                 _objCharacter.SkillsSection.SkillPointsMaximum = intTemp;
-                            if (objXmlSkillsPriority.TryGetFieldUninitialized("skillgroups", ref intTemp))
+                            if (objXmlSkillsPriority.TryGetInt32FieldQuickly("skillgroups", ref intTemp))
                                 _objCharacter.SkillsSection.SkillGroupPointsMaximum = intTemp;
                             break;
                         }

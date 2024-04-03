@@ -420,15 +420,15 @@ namespace Chummer.Backend.Skills
         /// <returns></returns>
         public static Skill Load(Character objCharacter, XmlNode xmlSkillNode, Skill objLoadingSkill = null)
         {
-            if (!xmlSkillNode.TryGetField("suid", out Guid suid))
+            if (!xmlSkillNode.TryGetField("suid", Guid.TryParse, out Guid suid))
             {
                 return null;
             }
 
-            Guid guidSkillId = xmlSkillNode.TryGetField("id", out Guid guiTemp) ? guiTemp : suid;
+            Guid guidSkillId = xmlSkillNode.TryGetField("id", Guid.TryParse, out Guid guiTemp) ? guiTemp : suid;
 
             bool blnIsKnowledgeSkill = false;
-            if (xmlSkillNode.TryGetFieldUninitialized("isknowledge", ref blnIsKnowledgeSkill) && blnIsKnowledgeSkill)
+            if (xmlSkillNode.TryGetBoolFieldQuickly("isknowledge", ref blnIsKnowledgeSkill) && blnIsKnowledgeSkill)
             {
                 if (!(objLoadingSkill is KnowledgeSkill objKnowledgeSkill))
                 {
@@ -488,7 +488,7 @@ namespace Chummer.Backend.Skills
                         return null;
 
                     bool blnExotic = false;
-                    xmlSkillDataNode.TryGetFieldUninitialized("exotic", ref blnExotic);
+                    xmlSkillDataNode.TryGetBoolFieldQuickly("exotic", ref blnExotic);
                     if (blnExotic)
                     {
                         ExoticSkill exotic = FromData(xmlSkillDataNode, objCharacter, false) as ExoticSkill
@@ -550,7 +550,7 @@ namespace Chummer.Backend.Skills
 
             try
             {
-                if (xmlSkillNode.TryGetField("guid", out guiTemp))
+                if (xmlSkillNode.TryGetField("guid", Guid.TryParse, out guiTemp))
                     objLoadingSkill.Id = guiTemp;
 
                 if (!xmlSkillNode.TryGetMultiLineStringFieldQuickly("altnotes", ref objLoadingSkill._strNotes))
@@ -562,9 +562,9 @@ namespace Chummer.Backend.Skills
 
                 if (!objLoadingSkill.IsNativeLanguage)
                 {
-                    xmlSkillNode.TryGetFieldUninitialized("karma", ref objLoadingSkill._intKarma);
-                    xmlSkillNode.TryGetFieldUninitialized("base", ref objLoadingSkill._intBase);
-                    xmlSkillNode.TryGetFieldUninitialized("buywithkarma", ref objLoadingSkill._blnBuyWithKarma);
+                    xmlSkillNode.TryGetInt32FieldQuickly("karma", ref objLoadingSkill._intKarma);
+                    xmlSkillNode.TryGetInt32FieldQuickly("base", ref objLoadingSkill._intBase);
+                    xmlSkillNode.TryGetBoolFieldQuickly("buywithkarma", ref objLoadingSkill._blnBuyWithKarma);
                     using (XmlNodeList xmlSpecList = xmlSkillNode.SelectNodes("specs/spec"))
                     {
                         if (xmlSpecList == null)
@@ -596,10 +596,7 @@ namespace Chummer.Backend.Skills
         {
             if (xmlSkillNode == null)
                 return null;
-            if (!xmlSkillNode.TryGetField("id", out Guid suid))
-            {
-                suid = Guid.NewGuid();
-            }
+            xmlSkillNode.TryGetField("id", Guid.TryParse, out Guid suid, Guid.NewGuid());
 
             int.TryParse(xmlSkillNode["base"]?.InnerText, NumberStyles.Any, GlobalSettings.InvariantCultureInfo, out int intBaseRating);
             int.TryParse(xmlSkillNode["rating"]?.InnerText, NumberStyles.Any, GlobalSettings.InvariantCultureInfo, out int intFullRating);
@@ -609,7 +606,7 @@ namespace Chummer.Backend.Skills
 
             string strName = xmlSkillNode["name"]?.InnerText ?? string.Empty;
             Skill objSkill;
-            if (xmlSkillNode.TryGetFieldUninitialized("knowledge", ref blnTemp) && blnTemp)
+            if (xmlSkillNode.TryGetBoolFieldQuickly("knowledge", ref blnTemp) && blnTemp)
             {
                 objSkill = new KnowledgeSkill(objCharacter)
                 {
@@ -644,7 +641,7 @@ namespace Chummer.Backend.Skills
                     return objSkill;
                 }
 
-                xmlSkillNode.TryGetFieldUninitialized("buywithkarma", ref objSkill._blnBuyWithKarma);
+                xmlSkillNode.TryGetBoolFieldQuickly("buywithkarma", ref objSkill._blnBuyWithKarma);
             }
 
             using (XmlNodeList xmlSpecList = xmlSkillNode.SelectNodes("skillspecializations/skillspecialization"))
@@ -674,7 +671,7 @@ namespace Chummer.Backend.Skills
                                                    .TryGetNodeByNameOrId(blnIsKnowledgeSkill
                                                                              ? "/chummer/knowledgeskills/skill"
                                                                              : "/chummer/skills/skill", strName);
-            if (xmlSkillDataNode == null || !xmlSkillDataNode.TryGetField("id", out Guid suid))
+            if (xmlSkillDataNode == null || !xmlSkillDataNode.TryGetField("id", Guid.TryParse, out Guid suid))
                 suid = Guid.NewGuid();
 
             bool blnIsNativeLanguage = false;
@@ -967,23 +964,23 @@ namespace Chummer.Backend.Skills
             Default = xmlNode["default"]?.InnerText == bool.TrueString;
             Source = xmlNode["source"]?.InnerText;
             Page = xmlNode["page"]?.InnerText;
-            if (xmlNode.TryGetField("id", out Guid guiTemp))
+            if (xmlNode.TryGetField("id", Guid.TryParse, out Guid guiTemp))
                 _guidSkillId = guiTemp;
-            else if (xmlNode.TryGetField("suid", out guiTemp))
+            else if (xmlNode.TryGetField("suid", Guid.TryParse, out guiTemp))
                 _guidSkillId = guiTemp;
-            if (xmlNode.TryGetField("guid", out guiTemp))
+            if (xmlNode.TryGetField("guid", Guid.TryParse, out guiTemp))
                 _guidInternalId = guiTemp;
 
             Lazy<XPathNavigator> objMyNode = new Lazy<XPathNavigator>(() => this.GetNodeXPath());
             bool blnTemp = false;
-            if (xmlNode.TryGetFieldUninitialized("requiresgroundmovement", ref blnTemp) ||
-                objMyNode.Value?.TryGetFieldUninitialized("requiresgroundmovement", ref blnTemp) == true)
+            if (xmlNode.TryGetBoolFieldQuickly("requiresgroundmovement", ref blnTemp) ||
+                objMyNode.Value?.TryGetBoolFieldQuickly("requiresgroundmovement", ref blnTemp) == true)
                 RequiresGroundMovement = blnTemp;
-            if (xmlNode.TryGetFieldUninitialized("requiresswimmovement", ref blnTemp) ||
-                objMyNode.Value?.TryGetFieldUninitialized("requiresswimmovement", ref blnTemp) == true)
+            if (xmlNode.TryGetBoolFieldQuickly("requiresswimmovement", ref blnTemp) ||
+                objMyNode.Value?.TryGetBoolFieldQuickly("requiresswimmovement", ref blnTemp) == true)
                 RequiresSwimMovement = blnTemp;
-            if (xmlNode.TryGetFieldUninitialized("requiresflymovement", ref blnTemp) ||
-                objMyNode.Value?.TryGetFieldUninitialized("requiresflymovement", ref blnTemp) == true)
+            if (xmlNode.TryGetBoolFieldQuickly("requiresflymovement", ref blnTemp) ||
+                objMyNode.Value?.TryGetBoolFieldQuickly("requiresflymovement", ref blnTemp) == true)
                 RequiresFlyMovement = blnTemp;
 
             if (blnDoSkillGroup)

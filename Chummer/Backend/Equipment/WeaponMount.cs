@@ -177,7 +177,7 @@ namespace Chummer.Backend.Equipment
         {
             token.ThrowIfCancellationRequested();
             if (objXmlMod == null) Utils.BreakIfDebug();
-            if (!objXmlMod.TryGetField("id", out _guiSourceID))
+            if (!objXmlMod.TryGetField("id", Guid.TryParse, out _guiSourceID))
             {
                 Log.Warn(new object[] { "Missing id field for xmlnode", objXmlMod });
                 Utils.BreakIfDebug();
@@ -191,10 +191,10 @@ namespace Chummer.Backend.Equipment
             objXmlMod.TryGetStringFieldQuickly("name", ref _strName);
             objXmlMod.TryGetStringFieldQuickly("category", ref _strCategory);
             objXmlMod.TryGetStringFieldQuickly("limit", ref _strLimit);
-            objXmlMod.TryGetFieldUninitialized("slots", ref _intSlots);
+            objXmlMod.TryGetInt32FieldQuickly("slots", ref _intSlots);
             objXmlMod.TryGetStringFieldQuickly("weaponcategories", ref _strAllowedWeaponCategories);
             objXmlMod.TryGetStringFieldQuickly("avail", ref _strAvail);
-            if (objXmlMod.TryGetFieldUninitialized("weaponcapacity", ref _intWeaponCapacity) && IsWeaponsFull)
+            if (objXmlMod.TryGetInt32FieldQuickly("weaponcapacity", ref _intWeaponCapacity) && IsWeaponsFull)
                 // If you ever hit this, you done fucked up. Make sure that weapon mounts cannot actually equip more weapons than they're allowed in the first place
                 Utils.BreakIfDebug();
             if (!objXmlMod.TryGetMultiLineStringFieldQuickly("altnotes", ref _strNotes))
@@ -404,41 +404,41 @@ namespace Chummer.Backend.Equipment
         {
             if (objNode == null)
                 return false;
-            if (blnCopy || !objNode.TryGetField("guid", out _guiID))
+            if (blnCopy || !objNode.TryGetField("guid", Guid.TryParse, out _guiID))
             {
                 _guiID = Guid.NewGuid();
             }
             objNode.TryGetStringFieldQuickly("name", ref _strName);
             _objCachedMyXmlNode = null;
             _objCachedMyXPathNode = null;
-            if (!objNode.TryGetFieldUninitialized("sourceid", ref _guiSourceID))
+            if (!objNode.TryGetGuidFieldQuickly("sourceid", ref _guiSourceID))
             {
                 XPathNavigator node = this.GetNodeXPath();
                 if (node != null)
-                    node.TryGetFieldUninitialized("id", ref _guiSourceID);
+                    node.TryGetGuidFieldQuickly("id", ref _guiSourceID);
                 else if (string.IsNullOrEmpty(Name))
                     return false; // No source ID, name, or node means this is probably a malformed weapon mount, stop it from loading
             }
 
             objNode.TryGetStringFieldQuickly("category", ref _strCategory);
             objNode.TryGetStringFieldQuickly("limit", ref _strLimit);
-            objNode.TryGetFieldUninitialized("slots", ref _intSlots);
+            objNode.TryGetInt32FieldQuickly("slots", ref _intSlots);
             objNode.TryGetStringFieldQuickly("weaponmountcategories", ref _strAllowedWeaponCategories);
             objNode.TryGetStringFieldQuickly("allowedweapons", ref _strAllowedWeapons);
             objNode.TryGetStringFieldQuickly("page", ref _strPage);
             objNode.TryGetStringFieldQuickly("avail", ref _strAvail);
             objNode.TryGetStringFieldQuickly("cost", ref _strCost);
-            objNode.TryGetFieldUninitialized("freecost", ref _blnFreeCost);
-            objNode.TryGetFieldUninitialized("markup", ref _decMarkup);
+            objNode.TryGetBoolFieldQuickly("freecost", ref _blnFreeCost);
+            objNode.TryGetDecFieldQuickly("markup", ref _decMarkup);
             objNode.TryGetStringFieldQuickly("source", ref _strSource);
             objNode.TryGetStringFieldQuickly("location", ref _strLocation);
-            objNode.TryGetFieldUninitialized("included", ref _blnIncludeInVehicle);
-            objNode.TryGetFieldUninitialized("equipped", ref _blnEquipped);
+            objNode.TryGetBoolFieldQuickly("included", ref _blnIncludeInVehicle);
+            objNode.TryGetBoolFieldQuickly("equipped", ref _blnEquipped);
             if (!_blnEquipped)
             {
-                objNode.TryGetFieldUninitialized("installed", ref _blnEquipped);
+                objNode.TryGetBoolFieldQuickly("installed", ref _blnEquipped);
             }
-            objNode.TryGetFieldUninitialized("weaponcapacity", ref _intWeaponCapacity);
+            objNode.TryGetInt32FieldQuickly("weaponcapacity", ref _intWeaponCapacity);
 
             XmlElement xmlChildrenNode = objNode["weaponmountoptions"];
             using (XmlNodeList xmlWeaponMountOptionList = xmlChildrenNode?.SelectNodes("weaponmountoption"))
@@ -502,10 +502,10 @@ namespace Chummer.Backend.Equipment
             objNode.TryGetStringFieldQuickly("notesColor", ref sNotesColor);
             _colNotes = ColorTranslator.FromHtml(sNotesColor);
 
-            objNode.TryGetFieldUninitialized("discountedcost", ref _blnDiscountCost);
+            objNode.TryGetBoolFieldQuickly("discountedcost", ref _blnDiscountCost);
             objNode.TryGetStringFieldQuickly("extra", ref _strExtra);
-            objNode.TryGetFieldUninitialized("sortorder", ref _intSortOrder);
-            objNode.TryGetFieldUninitialized("stolen", ref _blnStolen);
+            objNode.TryGetInt32FieldQuickly("sortorder", ref _intSortOrder);
+            objNode.TryGetBoolFieldQuickly("stolen", ref _blnStolen);
 
             return true;
         }
@@ -1663,7 +1663,7 @@ namespace Chummer.Backend.Equipment
             if (objReturn == null)
             {
                 objReturn = objDoc.TryGetNodeByNameOrId("/chummer/weaponmounts/weaponmount", Name);
-                objReturn?.TryGetFieldUninitialized("id", ref _guiSourceID);
+                objReturn?.TryGetGuidFieldQuickly("id", ref _guiSourceID);
             }
             _objCachedMyXmlNode = objReturn;
             _strCachedXmlNodeLanguage = strLanguage;
@@ -1707,7 +1707,7 @@ namespace Chummer.Backend.Equipment
             if (objReturn == null)
             {
                 objReturn = objDoc.TryGetNodeByNameOrId("/chummer/weaponmounts/weaponmount", Name);
-                objReturn?.TryGetFieldUninitialized("id", ref _guiSourceID);
+                objReturn?.TryGetGuidFieldQuickly("id", ref _guiSourceID);
             }
             _objCachedMyXPathNode = objReturn;
             _strCachedXPathNodeLanguage = strLanguage;
@@ -2106,10 +2106,10 @@ namespace Chummer.Backend.Equipment
             }
 
             _guiID = Guid.NewGuid();
-            objXmlMod.TryGetField("id", out _guiSourceID);
+            objXmlMod.TryGetField("id", Guid.TryParse, out _guiSourceID);
             objXmlMod.TryGetStringFieldQuickly("name", ref _strName);
             objXmlMod.TryGetStringFieldQuickly("category", ref _strCategory);
-            objXmlMod.TryGetFieldUninitialized("slots", ref _intSlots);
+            objXmlMod.TryGetInt32FieldQuickly("slots", ref _intSlots);
             objXmlMod.TryGetStringFieldQuickly("weaponcategories", ref _strAllowedWeaponCategories);
             objXmlMod.TryGetStringFieldQuickly("weapons", ref _strAllowedWeapons);
             objXmlMod.TryGetStringFieldQuickly("avail", ref _strAvail);
@@ -2252,24 +2252,24 @@ namespace Chummer.Backend.Equipment
                 return;
             _objCachedMyXmlNode = null;
             _objCachedMyXPathNode = null;
-            if (!objNode.TryGetField("guid", out _guiID))
+            if (!objNode.TryGetField("guid", Guid.TryParse, out _guiID))
             {
                 _guiID = Guid.NewGuid();
             }
             objNode.TryGetStringFieldQuickly("name", ref _strName);
             _objCachedMyXmlNode = null;
             _objCachedMyXPathNode = null;
-            if (!objNode.TryGetFieldUninitialized("sourceid", ref _guiSourceID))
+            if (!objNode.TryGetGuidFieldQuickly("sourceid", ref _guiSourceID))
             {
-                this.GetNodeXPath()?.TryGetFieldUninitialized("id", ref _guiSourceID);
+                this.GetNodeXPath()?.TryGetGuidFieldQuickly("id", ref _guiSourceID);
             }
             objNode.TryGetStringFieldQuickly("category", ref _strCategory);
-            objNode.TryGetFieldUninitialized("slots", ref _intSlots);
+            objNode.TryGetInt32FieldQuickly("slots", ref _intSlots);
             objNode.TryGetStringFieldQuickly("weaponmountcategories", ref _strAllowedWeaponCategories);
             objNode.TryGetStringFieldQuickly("allowedweapons", ref _strAllowedWeapons);
             objNode.TryGetStringFieldQuickly("avail", ref _strAvail);
             objNode.TryGetStringFieldQuickly("cost", ref _strCost);
-            objNode.TryGetFieldUninitialized("includedinparent", ref _blnIncludedInParent);
+            objNode.TryGetBoolFieldQuickly("includedinparent", ref _blnIncludedInParent);
         }
 
         #endregion Constructor, Create, Save and Load Methods
@@ -2506,7 +2506,7 @@ namespace Chummer.Backend.Equipment
             if (objReturn == null)
             {
                 objReturn = objDoc.TryGetNodeByNameOrId("/chummer/weaponmounts/weaponmount", Name);
-                objReturn?.TryGetFieldUninitialized("id", ref _guiSourceID);
+                objReturn?.TryGetGuidFieldQuickly("id", ref _guiSourceID);
             }
             _objCachedMyXmlNode = objReturn;
             _strCachedXmlNodeLanguage = strLanguage;
@@ -2532,7 +2532,7 @@ namespace Chummer.Backend.Equipment
             if (objReturn == null)
             {
                 objReturn = objDoc.TryGetNodeByNameOrId("/chummer/weaponmounts/weaponmount", Name);
-                objReturn?.TryGetFieldUninitialized("id", ref _guiSourceID);
+                objReturn?.TryGetGuidFieldQuickly("id", ref _guiSourceID);
             }
             _objCachedMyXPathNode = objReturn;
             _strCachedXPathNodeLanguage = strLanguage;

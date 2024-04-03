@@ -208,7 +208,7 @@ namespace Chummer.Backend.Equipment
                 return;
             _blnEquipped = !blnSkipSelectForms;
             _strForcedValue = strForceValue;
-            if (!objXmlGear.TryGetField("id", out _guiSourceID))
+            if (!objXmlGear.TryGetField("id", Guid.TryParse, out _guiSourceID))
             {
                 Log.Warn(new object[] { "Missing id field for armor xmlnode", objXmlGear });
                 Utils.BreakIfDebug();
@@ -234,7 +234,7 @@ namespace Chummer.Backend.Equipment
             objXmlGear.TryGetStringFieldQuickly("avail", ref _strAvail);
             objXmlGear.TryGetStringFieldQuickly("capacity", ref _strCapacity);
             objXmlGear.TryGetStringFieldQuickly("armorcapacity", ref _strArmorCapacity);
-            objXmlGear.TryGetFieldUninitialized("costfor", ref _decCostFor);
+            objXmlGear.TryGetDecFieldQuickly("costfor", ref _decCostFor);
             _decQty = _decCostFor;
             if (!objXmlGear.TryGetStringFieldQuickly("cost", ref _strCost))
                 _strCost = string.Empty;
@@ -259,16 +259,16 @@ namespace Chummer.Backend.Equipment
                 : Math.Max(Math.Min(intRating, await GetMaxRatingValueAsync(token).ConfigureAwait(false)),
                     await GetMinRatingValueAsync(token).ConfigureAwait(false));
             objXmlGear.TryGetStringFieldQuickly("devicerating", ref _strDeviceRating);
-            objXmlGear.TryGetFieldUninitialized("matrixcmbonus", ref _intMatrixCMBonus);
+            objXmlGear.TryGetInt32FieldQuickly("matrixcmbonus", ref _intMatrixCMBonus);
             objXmlGear.TryGetStringFieldQuickly("source", ref _strSource);
             objXmlGear.TryGetStringFieldQuickly("page", ref _strPage);
             objXmlGear.TryGetStringFieldQuickly("canformpersona", ref _strCanFormPersona);
             objXmlGear.TryGetStringFieldQuickly("ammoforweapontype", ref _strAmmoForWeaponType);
-            objXmlGear.TryGetFieldUninitialized("childcostmultiplier", ref _intChildCostMultiplier);
-            objXmlGear.TryGetFieldUninitialized("childavailmodifier", ref _intChildAvailModifier);
-            objXmlGear.TryGetFieldUninitialized("allowrename", ref _blnAllowRename);
-            objXmlGear.TryGetFieldUninitialized("stolen", ref _blnStolen);
-            objXmlGear.TryGetFieldUninitialized("isflechetteammo", ref _blnIsFlechetteAmmo);
+            objXmlGear.TryGetInt32FieldQuickly("childcostmultiplier", ref _intChildCostMultiplier);
+            objXmlGear.TryGetInt32FieldQuickly("childavailmodifier", ref _intChildAvailModifier);
+            objXmlGear.TryGetBoolFieldQuickly("allowrename", ref _blnAllowRename);
+            objXmlGear.TryGetBoolFieldQuickly("stolen", ref _blnStolen);
+            objXmlGear.TryGetBoolFieldQuickly("isflechetteammo", ref _blnIsFlechetteAmmo);
 
             if (GlobalSettings.InsertPdfNotesIfAvailable && string.IsNullOrEmpty(Notes))
             {
@@ -855,7 +855,7 @@ namespace Chummer.Backend.Equipment
             if (xmlChildDataNode == null)
                 return;
             int intChildRating = 0;
-            xmlChildNode.TryGetFieldUninitialized("rating", ref intChildRating);
+            xmlChildNode.TryGetInt32FieldQuickly("rating", ref intChildRating);
             decimal decChildQty = 1;
             string strChildForceSource = xmlChildNode["source"]?.InnerText ?? string.Empty;
             string strChildForcePage = xmlChildNode["page"]?.InnerText ?? string.Empty;
@@ -1067,7 +1067,7 @@ namespace Chummer.Backend.Equipment
             if (xmlChildDataNode == null)
                 return;
             int intChildRating = 0;
-            xmlChildNode.TryGetFieldUninitialized("rating", ref intChildRating);
+            xmlChildNode.TryGetInt32FieldQuickly("rating", ref intChildRating);
             decimal decChildQty = 1;
             string strChildForceSource = xmlChildNode["source"]?.InnerText ?? string.Empty;
             string strChildForcePage = xmlChildNode["page"]?.InnerText ?? string.Empty;
@@ -1487,7 +1487,7 @@ namespace Chummer.Backend.Equipment
         /// <param name="blnCopy">Whether we are loading a copy of an existing gear.</param>
         public void Load(XmlNode objNode, bool blnCopy = false)
         {
-            if (blnCopy || !objNode.TryGetField("guid", out _guiID))
+            if (blnCopy || !objNode.TryGetField("guid", Guid.TryParse, out _guiID))
             {
                 _guiID = Guid.NewGuid();
             }
@@ -1497,22 +1497,22 @@ namespace Chummer.Backend.Equipment
             _objCachedMyXmlNode = null;
             _objCachedMyXPathNode = null;
             Lazy<XmlNode> objMyNode = new Lazy<XmlNode>(() => this.GetNode());
-            if (!objNode.TryGetFieldUninitialized("sourceid", ref _guiSourceID) &&
-                !objNode.TryGetFieldUninitialized("id", ref _guiSourceID))
+            if (!objNode.TryGetGuidFieldQuickly("sourceid", ref _guiSourceID) &&
+                !objNode.TryGetGuidFieldQuickly("id", ref _guiSourceID))
             {
                 _guiSourceID = Guid.Empty;
             }
 
-            objNode.TryGetFieldUninitialized("matrixcmfilled", ref _intMatrixCMFilled);
-            objNode.TryGetFieldUninitialized("matrixcmbonus", ref _intMatrixCMBonus);
+            objNode.TryGetInt32FieldQuickly("matrixcmfilled", ref _intMatrixCMFilled);
+            objNode.TryGetInt32FieldQuickly("matrixcmbonus", ref _intMatrixCMBonus);
             objNode.TryGetStringFieldQuickly("capacity", ref _strCapacity);
             objNode.TryGetStringFieldQuickly("armorcapacity", ref _strArmorCapacity);
             objNode.TryGetStringFieldQuickly("minrating", ref _strMinRating);
             objNode.TryGetStringFieldQuickly("maxrating", ref _strMaxRating);
             if (_strMaxRating == "0")
                 _strMaxRating = string.Empty;
-            objNode.TryGetFieldUninitialized("rating", ref _intRating);
-            objNode.TryGetFieldUninitialized("qty", ref _decQty);
+            objNode.TryGetInt32FieldQuickly("rating", ref _intRating);
+            objNode.TryGetDecFieldQuickly("qty", ref _decQty);
             objNode.TryGetStringFieldQuickly("avail", ref _strAvail);
 
             // Legacy shim
@@ -1522,7 +1522,7 @@ namespace Chummer.Backend.Equipment
                 objMyNode.Value?.TryGetStringFieldQuickly("avail", ref _strAvail);
             }
 
-            objNode.TryGetFieldUninitialized("costfor", ref _decCostFor);
+            objNode.TryGetDecFieldQuickly("costfor", ref _decCostFor);
             objNode.TryGetStringFieldQuickly("cost", ref _strCost);
             // Legacy shim
             if (string.IsNullOrEmpty(_strCost) &&
@@ -1536,20 +1536,20 @@ namespace Chummer.Backend.Equipment
             objNode.TryGetStringFieldQuickly("extra", ref _strExtra);
             if (_strExtra == "Hold-Outs")
                 _strExtra = "Holdouts";
-            objNode.TryGetFieldUninitialized("bonded", ref _blnBonded);
-            objNode.TryGetFieldUninitialized("equipped", ref _blnEquipped);
+            objNode.TryGetBoolFieldQuickly("bonded", ref _blnBonded);
+            objNode.TryGetBoolFieldQuickly("equipped", ref _blnEquipped);
             _nodBonus = objNode["bonus"];
             _nodWirelessBonus = objNode["wirelessbonus"];
-            if (!objNode.TryGetFieldUninitialized("wirelesson", ref _blnWirelessOn))
+            if (!objNode.TryGetBoolFieldQuickly("wirelesson", ref _blnWirelessOn))
                 _blnWirelessOn = false;
             _nodWeaponBonus = objNode["weaponbonus"];
             _nodFlechetteWeaponBonus = objNode["flechetteweaponbonus"];
             objNode.TryGetStringFieldQuickly("source", ref _strSource);
             objNode.TryGetStringFieldQuickly("page", ref _strPage);
-            objNode.TryGetFieldUninitialized("stolen", ref _blnStolen);
-            if (!objNode.TryGetFieldUninitialized("isflechetteammmo", ref _blnIsFlechetteAmmo))
+            objNode.TryGetBoolFieldQuickly("stolen", ref _blnStolen);
+            if (!objNode.TryGetBoolFieldQuickly("isflechetteammmo", ref _blnIsFlechetteAmmo))
             {
-                objMyNode.Value?.TryGetFieldUninitialized("isflechetteammmo", ref _blnIsFlechetteAmmo);
+                objMyNode.Value?.TryGetBoolFieldQuickly("isflechetteammmo", ref _blnIsFlechetteAmmo);
                 if (_nodFlechetteWeaponBonus == null && _blnIsFlechetteAmmo)
                     _nodFlechetteWeaponBonus = objMyNode.Value?["flechetteweaponbonus"];
             }
@@ -1570,17 +1570,17 @@ namespace Chummer.Backend.Equipment
                 _guiWeaponID = Guid.Empty;
             }
 
-            objNode.TryGetFieldUninitialized("childcostmultiplier", ref _intChildCostMultiplier);
-            objNode.TryGetFieldUninitialized("childavailmodifier", ref _intChildAvailModifier);
+            objNode.TryGetInt32FieldQuickly("childcostmultiplier", ref _intChildCostMultiplier);
+            objNode.TryGetInt32FieldQuickly("childavailmodifier", ref _intChildAvailModifier);
 
             objNode.TryGetStringFieldQuickly("gearname", ref _strGearName);
             objNode.TryGetStringFieldQuickly("forcedvalue", ref _strForcedValue);
-            objNode.TryGetFieldUninitialized("allowrename", ref _blnAllowRename);
+            objNode.TryGetBoolFieldQuickly("allowrename", ref _blnAllowRename);
             if (!objNode.TryGetStringFieldQuickly("parentid", ref _strParentID))
             {
                 // Legacy Shim
                 bool blnIncludedInParent = false;
-                if (objNode.TryGetFieldUninitialized("includedinparent", ref blnIncludedInParent) && blnIncludedInParent)
+                if (objNode.TryGetBoolFieldQuickly("includedinparent", ref blnIncludedInParent) && blnIncludedInParent)
                 {
                     // ParentIDs were only added when improvements were added that could allow for the adding of gear by something that would not become the gear's parent...
                     // ... so all we care about is that this string is not empty and does not match the internal IDs of any sources for adding gear via improvements.
@@ -1649,8 +1649,8 @@ namespace Chummer.Backend.Equipment
             objNode.TryGetStringFieldQuickly("notesColor", ref sNotesColor);
             _colNotes = ColorTranslator.FromHtml(sNotesColor);
 
-            objNode.TryGetFieldUninitialized("discountedcost", ref _blnDiscountCost);
-            objNode.TryGetFieldUninitialized("sortorder", ref _intSortOrder);
+            objNode.TryGetBoolFieldQuickly("discountedcost", ref _blnDiscountCost);
+            objNode.TryGetInt32FieldQuickly("sortorder", ref _intSortOrder);
 
             // Convert old qi foci to the new bonus. In order to force the user to update their powers, unequip the focus and remove all improvements.
             if (_strName == "Qi Focus")
@@ -1822,7 +1822,7 @@ namespace Chummer.Backend.Equipment
             if (!objNode.TryGetStringFieldQuickly("modattributearray", ref _strModAttributeArray))
                 objMyNode.Value?.TryGetStringFieldQuickly("modattributearray", ref _strModAttributeArray);
             bool blnIsActive = false;
-            if (objNode.TryGetFieldUninitialized("active", ref blnIsActive) && blnIsActive)
+            if (objNode.TryGetBoolFieldQuickly("active", ref blnIsActive) && blnIsActive)
                 this.SetActiveCommlink(_objCharacter, true);
             if (blnCopy)
             {
@@ -1831,13 +1831,13 @@ namespace Chummer.Backend.Equipment
             else
             {
                 bool blnIsHomeNode = false;
-                if (objNode.TryGetFieldUninitialized("homenode", ref blnIsHomeNode) && blnIsHomeNode)
+                if (objNode.TryGetBoolFieldQuickly("homenode", ref blnIsHomeNode) && blnIsHomeNode)
                 {
                     this.SetHomeNode(_objCharacter, true);
                 }
             }
 
-            if (!objNode.TryGetFieldUninitialized("canswapattributes", ref _blnCanSwapAttributes) &&
+            if (!objNode.TryGetBoolFieldQuickly("canswapattributes", ref _blnCanSwapAttributes) &&
                 Category == "Cyberdecks")
             {
                 // Legacy shim
@@ -1870,7 +1870,7 @@ namespace Chummer.Backend.Equipment
 
                 objMyNode.Value?.TryGetStringFieldQuickly("canformpersona", ref _strCanFormPersona);
                 bool blnIsCommlinkLegacy = false;
-                objNode.TryGetFieldUninitialized("iscommlink", ref blnIsCommlinkLegacy);
+                objNode.TryGetBoolFieldQuickly("iscommlink", ref blnIsCommlinkLegacy);
                 // This is Commlink Functionality, which originally had Persona Firmware that would now make the Commlink Functionality item count as a commlink
                 if (blnIsCommlinkLegacy != IsCommlink)
                 {
@@ -3254,7 +3254,7 @@ namespace Chummer.Backend.Equipment
                                                            + ")]");
                 }
 
-                objReturn?.TryGetFieldUninitialized("id", ref _guiSourceID);
+                objReturn?.TryGetGuidFieldQuickly("id", ref _guiSourceID);
             }
 
             _objCachedMyXmlNode = objReturn;
@@ -3290,7 +3290,7 @@ namespace Chummer.Backend.Equipment
                                 ?? objDoc.SelectSingleNode("/chummer/gears/gear[contains(name, " + strNameCleaned
                                                            + ")]");
                 }
-                objReturn?.TryGetFieldUninitialized("id", ref _guiSourceID);
+                objReturn?.TryGetGuidFieldQuickly("id", ref _guiSourceID);
             }
 
             _objCachedMyXPathNode = objReturn;
@@ -4495,7 +4495,7 @@ namespace Chummer.Backend.Equipment
             get
             {
                 int intReturn = 0;
-                WeaponBonus?.TryGetFieldUninitialized("rangebonus", ref intReturn);
+                WeaponBonus?.TryGetInt32FieldQuickly("rangebonus", ref intReturn);
                 return intReturn;
             }
         }
@@ -4508,7 +4508,7 @@ namespace Chummer.Backend.Equipment
             get
             {
                 int intReturn = 0;
-                WeaponBonus?.TryGetFieldUninitialized("pool", ref intReturn);
+                WeaponBonus?.TryGetInt32FieldQuickly("pool", ref intReturn);
                 return intReturn;
             }
         }
@@ -4521,7 +4521,7 @@ namespace Chummer.Backend.Equipment
             get
             {
                 int intReturn = 0;
-                WeaponBonus?.TryGetFieldUninitialized("smartlinkpool", ref intReturn);
+                WeaponBonus?.TryGetInt32FieldQuickly("smartlinkpool", ref intReturn);
                 return intReturn;
             }
         }
@@ -4673,7 +4673,7 @@ namespace Chummer.Backend.Equipment
             get
             {
                 int intReturn = 0;
-                FlechetteWeaponBonus?.TryGetFieldUninitialized("rangebonus", ref intReturn);
+                FlechetteWeaponBonus?.TryGetInt32FieldQuickly("rangebonus", ref intReturn);
                 return intReturn;
             }
         }
@@ -4686,7 +4686,7 @@ namespace Chummer.Backend.Equipment
             get
             {
                 int intReturn = 0;
-                FlechetteWeaponBonus?.TryGetFieldUninitialized("pool", ref intReturn);
+                FlechetteWeaponBonus?.TryGetInt32FieldQuickly("pool", ref intReturn);
                 return intReturn;
             }
         }
@@ -4699,7 +4699,7 @@ namespace Chummer.Backend.Equipment
             get
             {
                 int intReturn = 0;
-                FlechetteWeaponBonus?.TryGetFieldUninitialized("smartlinkpool", ref intReturn);
+                FlechetteWeaponBonus?.TryGetInt32FieldQuickly("smartlinkpool", ref intReturn);
                 return intReturn;
             }
         }

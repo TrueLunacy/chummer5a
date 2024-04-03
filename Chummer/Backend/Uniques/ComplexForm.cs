@@ -75,12 +75,12 @@ namespace Chummer
         /// <param name="strExtra">Value to forcefully select for any ImprovementManager prompts.</param>
         public void Create(XmlNode objXmlComplexFormNode, string strExtra = "")
         {
-            if (!objXmlComplexFormNode.TryGetField("id", out _guiSourceID))
+            if (!objXmlComplexFormNode.TryGetField("id", Guid.TryParse, out _guiSourceID))
             {
                 Log.Warn(new object[] { "Missing id field for complex form xmlnode", objXmlComplexFormNode });
                 Utils.BreakIfDebug();
             }
-            objXmlComplexFormNode.TryGetField("id", out _guiSourceID);
+            objXmlComplexFormNode.TryGetField("id", Guid.TryParse, out _guiSourceID);
             objXmlComplexFormNode.TryGetStringFieldQuickly("name", ref _strName);
             objXmlComplexFormNode.TryGetStringFieldQuickly("target", ref _strTarget);
             objXmlComplexFormNode.TryGetStringFieldQuickly("source", ref _strSource);
@@ -127,12 +127,12 @@ namespace Chummer
         /// <param name="token">Cancellation token to listen to.</param>
         public async Task CreateAsync(XmlNode objXmlComplexFormNode, string strExtra = "", CancellationToken token = default)
         {
-            if (!objXmlComplexFormNode.TryGetField("id", out _guiSourceID))
+            if (!objXmlComplexFormNode.TryGetField("id", Guid.TryParse, out _guiSourceID))
             {
                 Log.Warn(new object[] { "Missing id field for complex form xmlnode", objXmlComplexFormNode });
                 Utils.BreakIfDebug();
             }
-            objXmlComplexFormNode.TryGetField("id", out _guiSourceID);
+            objXmlComplexFormNode.TryGetField("id", Guid.TryParse, out _guiSourceID);
             objXmlComplexFormNode.TryGetStringFieldQuickly("name", ref _strName);
             objXmlComplexFormNode.TryGetStringFieldQuickly("target", ref _strTarget);
             objXmlComplexFormNode.TryGetStringFieldQuickly("source", ref _strSource);
@@ -201,16 +201,16 @@ namespace Chummer
         /// <param name="objNode">XmlNode to load.</param>
         public void Load(XmlNode objNode)
         {
-            if (!objNode.TryGetField("guid", out _guiID))
+            if (!objNode.TryGetField("guid", Guid.TryParse, out _guiID))
             {
                 _guiID = Guid.NewGuid();
             }
             objNode.TryGetStringFieldQuickly("name", ref _strName);
             _objCachedMyXmlNode = null;
             _objCachedMyXPathNode = null;
-            if (!objNode.TryGetFieldUninitialized("sourceid", ref _guiSourceID))
+            if (!objNode.TryGetGuidFieldQuickly("sourceid", ref _guiSourceID))
             {
-                this.GetNodeXPath()?.TryGetFieldUninitialized("id", ref _guiSourceID);
+                this.GetNodeXPath()?.TryGetGuidFieldQuickly("id", ref _guiSourceID);
             }
 
             objNode.TryGetStringFieldQuickly("target", ref _strTarget);
@@ -225,7 +225,7 @@ namespace Chummer
             objNode.TryGetStringFieldQuickly("notesColor", ref sNotesColor);
             _colNotes = ColorTranslator.FromHtml(sNotesColor);
 
-            objNode.TryGetFieldUninitialized("grade", ref _intGrade);
+            objNode.TryGetInt32FieldQuickly("grade", ref _intGrade);
         }
 
         /// <summary>
@@ -888,7 +888,7 @@ namespace Chummer
             if (objReturn == null)
             {
                 objReturn = objDoc.TryGetNodeByNameOrId("/chummer/complexforms/complexform", Name);
-                objReturn?.TryGetFieldUninitialized("id", ref _guiSourceID);
+                objReturn?.TryGetGuidFieldQuickly("id", ref _guiSourceID);
             }
             _objCachedMyXmlNode = objReturn;
             _strCachedXmlNodeLanguage = strLanguage;
@@ -913,7 +913,7 @@ namespace Chummer
             if (objReturn == null)
             {
                 objReturn = objDoc.TryGetNodeByNameOrId("/chummer/complexforms/complexform", Name);
-                objReturn?.TryGetFieldUninitialized("id", ref _guiSourceID);
+                objReturn?.TryGetGuidFieldQuickly("id", ref _guiSourceID);
             }
             _objCachedMyXPathNode = objReturn;
             _strCachedXPathNodeLanguage = strLanguage;

@@ -292,7 +292,7 @@ namespace Chummer.Backend.Skills
                     return;
                 }
 
-                SkillId = xmlSkillNode.TryGetField("id", out Guid guidTemp)
+                SkillId = xmlSkillNode.TryGetField("id", Guid.TryParse, out Guid guidTemp)
                     ? guidTemp
                     : Guid.Empty;
 
@@ -330,7 +330,7 @@ namespace Chummer.Backend.Skills
                     return;
                 }
 
-                await SetSkillIdAsync(xmlSkillNode.TryGetField("id", out Guid guidTemp)
+                await SetSkillIdAsync(xmlSkillNode.TryGetField("id", Guid.TryParse, out Guid guidTemp)
                                           ? guidTemp
                                           : Guid.Empty, token).ConfigureAwait(false);
 
@@ -1381,13 +1381,13 @@ namespace Chummer.Backend.Skills
                 string strTemp = Name;
                 if (xmlNode.TryGetStringFieldQuickly("name", ref strTemp))
                     Name = strTemp;
-                if (xmlNode.TryGetField("id", out Guid guiTemp))
+                if (xmlNode.TryGetField("id", Guid.TryParse, out Guid guiTemp))
                     SkillId = guiTemp;
-                else if (xmlNode.TryGetField("suid", out Guid guiTemp2))
+                else if (xmlNode.TryGetField("suid", Guid.TryParse, out Guid guiTemp2))
                     SkillId = guiTemp2;
 
                 bool blnTemp = false;
-                if (xmlNode.TryGetFieldUninitialized("disableupgrades", ref blnTemp))
+                if (xmlNode.TryGetBoolFieldQuickly("disableupgrades", ref blnTemp))
                     _blnAllowUpgrade = !blnTemp;
 
                 // Legacy shim
@@ -1395,7 +1395,7 @@ namespace Chummer.Backend.Skills
                 {
                     XPathNavigator objDataNode = CharacterObject.LoadDataXPath("skills.xml")
                         .TryGetNodeByNameOrId("/chummer/knowledgeskills/skill", Name);
-                    if (objDataNode.TryGetField("id", out Guid guidTemp))
+                    if (objDataNode.TryGetField("id", Guid.TryParse, out Guid guidTemp))
                         SkillId = guidTemp;
                 }
 
@@ -1410,13 +1410,13 @@ namespace Chummer.Backend.Skills
 
                 // Legacy sweep for native language skills
                 blnTemp = false;
-                if (!xmlNode.TryGetFieldUninitialized("isnativelanguage", ref blnTemp) && IsLanguage &&
+                if (!xmlNode.TryGetBoolFieldQuickly("isnativelanguage", ref blnTemp) && IsLanguage &&
                     CharacterObject.LastSavedVersion <= new Version(5, 212, 72))
                 {
                     int intKarma = 0;
                     int intBase = 0;
-                    xmlNode.TryGetFieldUninitialized("karma", ref intKarma);
-                    xmlNode.TryGetFieldUninitialized("base", ref intBase);
+                    xmlNode.TryGetInt32FieldQuickly("karma", ref intKarma);
+                    xmlNode.TryGetInt32FieldQuickly("base", ref intBase);
                     if (intKarma == 0 && intBase == 0 &&
                         CharacterObject.SkillsSection.KnowledgeSkills.Count(x => x.IsNativeLanguage) < 1 +
                         ImprovementManager.ValueOf(CharacterObject, Improvement.ImprovementType.NativeLanguageLimit))
