@@ -39,8 +39,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SamplePlugin", "Plugins\Sam
 EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{8F9EEA5C-4856-4D5C-A46E-8971CE847880}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Chummer.Xml", "Chummer.Xml\Chummer.Xml.csproj", "{DFF70894-995F-46E9-A630-F51DF1959177}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Chummer.Benchmarks", "Chummer.Benchmarks\Chummer.Benchmarks.csproj", "{5056BC0D-F65B-4F5B-A4D3-31E48C9A58BA}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Chummer.Api", "Chummer.Api\Chummer.Api.csproj", "{83F29871-434B-4073-A520-08ABD2F4E900}"
