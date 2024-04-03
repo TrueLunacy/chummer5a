@@ -30,6 +30,7 @@
     <InformationalVersion>5.225.0.0</InformationalVersion>
     <ApplicationVersion>5.225.0.0</ApplicationVersion>
     <VersionPrefix>5.225.0.0</VersionPrefix>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="WindowsBase" />
@@ -40,6 +41,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Chummer.Api\Chummer.Api.csproj" />
     <ProjectReference Include="..\Chummer\Chummer.csproj" />
   </ItemGroup>
   <ItemGroup>

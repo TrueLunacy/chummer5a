@@ -26,7 +26,6 @@ using System.IO;
 using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Schema;
-using Chummer.Xml;
 using System.Threading;
 using Xunit;
 using Org.XmlUnit.Diff;
@@ -228,10 +227,10 @@ namespace Chummer.Tests
         public void Test04_SaveAsChum5lz()
         {
             output.WriteLine("Unit test initialized for: Test04_SaveAsChum5lz()");
-            CompressionHelper.CompressionLevel eOldSetting = GlobalSettings.Chum5lzCompressionLevel;
+            LzmaHelper.ChummerCompressionPreset eOldSetting = GlobalSettings.Chum5lzCompressionLevel;
             try
             {
-                GlobalSettings.Chum5lzCompressionLevel = CompressionHelper.CompressionLevel.Fast;
+                GlobalSettings.Chum5lzCompressionLevel = LzmaHelper.ChummerCompressionPreset.Fast;
                 foreach (Character objCharacter in GetTestCharacters())
                 {
                     string strFileName = Path.GetFileName(objCharacter.FileName)

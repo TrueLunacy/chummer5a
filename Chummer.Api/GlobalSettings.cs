@@ -58,7 +58,14 @@ namespace Chummer.Api
     }
 
     public record Update(bool ShouldAutoUpdate, bool PreferNightly);
-    public record CustomData(bool AllowLiveUpdates, IReadOnlyList<DirectoryInfo> CustomDataDirectories);
+    public record CustomData(bool AllowLiveUpdates, IReadOnlyList<DirectoryInfo> CustomDataDirectories)
+    {
+        public object Single()
+        {
+            throw new NotImplementedException();
+        }
+    }
+
     public record Pdf(FileInfo? ApplicationPath, PdfParametersStyle ParametersStyle, bool InsertPdfNotes);
     public record Print(bool PrintToFileFirst, bool PrintZeroRatingSkills, PrintExpenses PrintExpenses,
         bool PrintNotes, string DefaultPrintSheet);
@@ -359,7 +366,7 @@ namespace Chummer.Api
                     SerializePdf(globalSettings.Pdf, pdf);
                 using (var print = settings.OpenElement(nameof(GlobalSettings.Print)))
                     SerializePrint(globalSettings.Print, print);
-                using (var display = settings.OpenElement(nameof(GlobalSettings.UX)))
+                using (var display = settings.OpenElement(nameof(GlobalSettings.Display)))
                     SerializeDisplay(globalSettings.Display, display);
                 using (var ux = settings.OpenElement(nameof(GlobalSettings.UX)))
                     SerializeUx(globalSettings.UX, ux);
