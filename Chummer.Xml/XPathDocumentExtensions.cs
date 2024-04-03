@@ -25,6 +25,7 @@ using System.Xml;
 using System.Xml.XPath;
 using Chummer.Xml;
 using Microsoft.IO;
+using System;
 
 namespace Chummer.Xml
 {
@@ -62,7 +63,8 @@ namespace Chummer.Xml
         /// </summary>
         /// <param name="fileName">The file to use.</param>
         /// <param name="safe">Whether to check characters for validity while loading.</param>
-        /// <param name="token">Cancellation token to listen to.</param>        public static XPathDocument LoadStandardFromLzmaCompressedFile(string fileName, bool safe = true)
+        /// <param name="token">Cancellation token to listen to.</param>
+        public static XPathDocument LoadStandardFromLzmaCompressedFile(string fileName, bool safe = true)
         {
             using (FileStream objFileStream
                    = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.Read))
@@ -92,7 +94,8 @@ namespace Chummer.Xml
         /// </summary>
         /// <param name="strFileName">The file to use.</param>
         /// <param name="blnSafe">Whether to check characters for validity while loading.</param>
-        /// <param name="token">Cancellation token to listen to.</param>        public static Task<XPathDocument> LoadStandardFromLzmaCompressedFileAsync(string strFileName, bool blnSafe = true, CancellationToken token = default)
+        /// <param name="token">Cancellation token to listen to.</param>
+        public static Task<XPathDocument> LoadStandardFromLzmaCompressedFileAsync(string strFileName, bool blnSafe = true, CancellationToken token = default)
         {
             return Task.Run(async () =>
             {

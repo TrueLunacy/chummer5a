@@ -1,26 +1,22 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
-
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>net48</TargetFramework>
+    <TargetFramework>net8.0-windows</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
-
   <ItemGroup>
     <PackageReference Include="BenchmarkDotNet" Version="0.13.12" />
     <PackageReference Include="BenchmarkDotNet.Diagnostics.Windows" Version="0.13.12" />
   </ItemGroup>
-
   <ItemGroup>
+    <ProjectReference Include="..\Chummer.Api\Chummer.Api.csproj" />
     <ProjectReference Include="..\Chummer\Chummer.csproj" />
   </ItemGroup>
-
   <ItemGroup>
     <None Update="TestFiles\*.chum5">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
-
 </Project>

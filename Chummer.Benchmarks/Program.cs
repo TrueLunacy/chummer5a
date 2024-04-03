@@ -1,8 +1,6 @@
 using BenchmarkDotNet.Attributes;
-using BenchmarkDotNet.Diagnostics.Windows.Configs;
-using BenchmarkDotNet.Jobs;
 using BenchmarkDotNet.Running;
-using System.Diagnostics;
+using Chummer.Api;
 
 namespace Chummer.Benchmarks
 {
@@ -10,63 +8,51 @@ namespace Chummer.Benchmarks
     {
         static void Main(string[] args)
         {
-            var summary = BenchmarkRunner.Run<Benchmark>();
+            var gs = LegacySettingsManager.LoadLegacyRegistrySettings() ?? throw new InvalidOperationException();
+            MemoryStream ms = new();
+            var gsm = new GlobalSettingsManager();
+            gsm.SerializeGlobalSettings(gs, ms);
+            ms.Seek(0, SeekOrigin.Begin);
+            using StreamReader sr = new StreamReader(ms);
+            Console.WriteLine(sr.ReadToEnd());
+            //var summary = BenchmarkRunner.Run<GlobalSettingsDeserializeBenchmark>();
         }
     }
 
-    [SimpleJob(RuntimeMoniker.Net48, baseline: true)]
-
-    [MemoryDiagnoser]
-    [EtwProfiler]
-    public class Benchmark
+    // Benchmark.NET complains because the out of runner process is run as Net8.0, not Net8.0 windows
+    [InProcess]
+    public class GlobalSettingsDeserializeBenchmark
     {
-        public static IEnumerable<FileInfo> Characters { get; }
-        static Benchmark()
-        {
-            DirectoryInfo dir = new(AppDomain.CurrentDomain.BaseDirectory);
-            Characters = dir.GetDirectories()
-                .Single(d => d.Name == "TestFiles")
-                .EnumerateFiles("*.chum5")
-                .Take(1)
-                .ToArray();
-        }
-
         [GlobalSetup]
         public void GlobalSetup()
         {
-            Utils.IsUnitTest = true;
-            Utils.IsUnitTestForUI = false;
+            using var ms = new MemoryStream();
+            var gsm = new GlobalSettingsManager();
+            gsm.SerializeGlobalSettings(Api.GlobalSettings.DefaultSettings, ms);
+            byteArray = ms.ToArray();
+
+            settingsFile = new FileInfo(Path.GetTempFileName());
+            using var fs = settingsFile.OpenWrite();
+            gsm.SerializeGlobalSettings(Api.GlobalSettings.DefaultSettings, fs);
         }
 
+        private byte[] byteArray = default!;
+        private FileInfo settingsFile = default!;
+        private Stream MemoryStream => new MemoryStream(byteArray, false);
 
         [Benchmark]
-        [ArgumentsSource(nameof(Characters))]
-        public Character LoadSingleCharacter(FileInfo Character)
+        public Api.GlobalSettings DeserializeDefaultFromMemoryStream()
         {
-            Character character = new Character();
-            character.FileName = Character.FullName;
-            if (!character.Load())
-            {
-                throw new InvalidOperationException($"Character failed to load: {Character}");
-            }
-            return character;
+            GlobalSettingsManager manager = new();
+            return manager.LoadGlobalSettings(MemoryStream);
         }
 
-        //[Benchmark]
-        public List<Character> LoadAllCharacters()
+        [Benchmark]
+        public Api.GlobalSettings DeserializeDefaultFromFile()
         {
-            List<Character> characters = new List<Character>();
-            foreach (FileInfo file in Characters)
-            {
-                Character character = new Character();
-                character.FileName = file.FullName;
-                if (!character.Load())
-                {
-                    throw new InvalidOperationException($"Character failed to load: {file}");
-                }
-                characters.Add(character);
-            }
-            return characters;
+            GlobalSettingsManager manager = new();
+            using var fs = settingsFile.OpenRead();
+            return manager.LoadGlobalSettings(fs);
         }
     }
 }
