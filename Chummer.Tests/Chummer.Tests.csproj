@@ -41,7 +41,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Chummer.Api\Chummer.Api.csproj" />
     <ProjectReference Include="..\Chummer\Chummer.csproj" />
   </ItemGroup>
   <ItemGroup>

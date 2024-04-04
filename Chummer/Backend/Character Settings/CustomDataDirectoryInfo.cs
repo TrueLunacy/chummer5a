@@ -173,41 +173,6 @@ namespace Chummer
             #endregion Local Methods
         }
 
-        /* This is unused right now, but maybe we need it later for some reason.
-        /// <summary>
-        /// Calculates a combined SHA512 Hash from all files, that are not the manifest.xml and returns it as an int.
-        /// </summary>
-        /// <returns></returns>
-        private int CalculateHash()
-        {
-            string[] strFiles = Directory.GetFiles(Path);
-            byte[] allHashes = new byte[0];
-            byte[] achrCombinedHashes;
-
-            using (var sha512 = SHA512.Create())
-            {
-                foreach (var file in strFiles)
-                {
-                    if (file.Contains("manifest"))
-                       continue;
-
-                    using (var stream = File.OpenRead(file))
-                    {
-                        byte[] btyNewHash = sha512.ComputeHash(stream);
-                        allHashes = allHashes.Concat(btyNewHash).ToArray();
-                    }
-                }
-                achrCombinedHashes = sha512.ComputeHash(allHashes);
-            }
-
-            if (BitConverter.IsLittleEndian)
-                Array.Reverse(achrCombinedHashes);
-
-            int intHash = BitConverter.ToInt32(achrCombinedHashes, 0);
-
-            return intHash;
-        }*/
-
         /// <summary>
         /// Checks if any custom data is activated, that matches name and version of the dependent upon directory
         /// </summary>

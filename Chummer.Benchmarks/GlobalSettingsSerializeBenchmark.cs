@@ -12,7 +12,7 @@ namespace Chummer.Benchmarks
         {
             MemoryStream ms = new MemoryStream();
             GlobalSettingsManager gsm = new GlobalSettingsManager();
-            gsm.SerializeGlobalSettings(Api.GlobalSettings.DefaultSettings, ms);
+            gsm.SerializeGlobalSettings(Api.Models.GlobalSettings.GlobalSettings.DefaultSettings, ms);
             return ms;
         }
 
@@ -21,7 +21,7 @@ namespace Chummer.Benchmarks
         {
             FileStream fs = new FileStream(Path.GetTempFileName(), FileMode.Open);
             GlobalSettingsManager gsm = new GlobalSettingsManager();
-            gsm.SerializeGlobalSettings(Api.GlobalSettings.DefaultSettings, fs);
+            gsm.SerializeGlobalSettings(Api.Models.GlobalSettings.GlobalSettings.DefaultSettings, fs);
             fs.Flush();
             fs.Close();
             return fs;
@@ -36,7 +36,7 @@ namespace Chummer.Benchmarks
         {
             MemoryStream ms = new MemoryStream();
             GlobalSettingsManager gsm = new GlobalSettingsManager();
-            Api.GlobalSettings s = Api.GlobalSettings.DefaultSettings;
+            Api.Models.GlobalSettings.GlobalSettings s = Api.Models.GlobalSettings.GlobalSettings.DefaultSettings;
             s = s with
             {
                 CustomData = s.CustomData with

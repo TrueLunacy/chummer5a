@@ -28,12 +28,12 @@ namespace Chummer.Benchmarks
         {
             using var ms = new MemoryStream();
             var gsm = new GlobalSettingsManager();
-            gsm.SerializeGlobalSettings(Api.GlobalSettings.DefaultSettings, ms);
+            gsm.SerializeGlobalSettings(Api.Models.GlobalSettings.GlobalSettings.DefaultSettings, ms);
             byteArray = ms.ToArray();
 
             settingsFile = new FileInfo(Path.GetTempFileName());
             using var fs = settingsFile.OpenWrite();
-            gsm.SerializeGlobalSettings(Api.GlobalSettings.DefaultSettings, fs);
+            gsm.SerializeGlobalSettings(Api.Models.GlobalSettings.GlobalSettings.DefaultSettings, fs);
         }
 
         private byte[] byteArray = default!;
@@ -41,14 +41,14 @@ namespace Chummer.Benchmarks
         private Stream MemoryStream => new MemoryStream(byteArray, false);
 
         [Benchmark]
-        public Api.GlobalSettings DeserializeDefaultFromMemoryStream()
+        public Api.Models.GlobalSettings.GlobalSettings DeserializeDefaultFromMemoryStream()
         {
             GlobalSettingsManager manager = new();
             return manager.LoadGlobalSettings(MemoryStream);
         }
 
         [Benchmark]
-        public Api.GlobalSettings DeserializeDefaultFromFile()
+        public Api.Models.GlobalSettings.GlobalSettings DeserializeDefaultFromFile()
         {
             GlobalSettingsManager manager = new();
             using var fs = settingsFile.OpenRead();

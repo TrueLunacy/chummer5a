@@ -36,6 +36,9 @@ using System.IO.Compression;
 using Chummer.Api;
 using System.Linq;
 using Org.XmlUnit.Util;
+using Chummer.Api.Enums;
+using Chummer.Api.Models;
+using Chummer.Api.Models.GlobalSettings;
 
 namespace Chummer.Tests
 {
@@ -51,7 +54,7 @@ namespace Chummer.Tests
         [Fact]
         public void SerializeDeserializeDoesNotChangeContent()
         {
-            Api.GlobalSettings settings = new(
+            Api.Models.GlobalSettings.GlobalSettings settings = new(
                 new Update(ShouldAutoUpdate: true, PreferNightly: true),
                 new CustomData(AllowLiveUpdates: true, CustomDataDirectories: new List<DirectoryInfo>
                 { 
@@ -60,18 +63,20 @@ namespace Chummer.Tests
                 new Pdf(ApplicationPath: new FileInfo(Path.GetTempFileName()), ParametersStyle: PdfParametersStyle.UnixStyle, InsertPdfNotes: false),
                 new Print(PrintToFileFirst: true, PrintZeroRatingSkills: true, PrintExpenses: PrintExpenses.PrintAllExpenses,
                     PrintNotes: true, DefaultPrintSheet: "Shadowrun 7 (DO NOT LEAK)"),
-                new Display(StartInFullscreenMode: true, ColorMode: Api.ColorMode.Dark, DpiScalingMethod: Api.DpiScalingMethod.SmartZoom,
+                new Display(StartInFullscreenMode: true, ColorMode: Api.Enums.ColorMode.Dark, DpiScalingMethod: Api.Enums.DpiScalingMethod.SmartZoom,
                     CustomDateFormat: "mm dd yy", CustomTimeFormat: "tt:mm"),
                 new UX(SearchRestrictedToCurrentCategory: false, AskConfirmDelete: false, AskConfirmKarmaExpense: false,
-                    HideAvailabilityCreation: false, AllowEasterEggs: false, HideMasterIndex: true,
+                    HideItemsOverAvailabilityLimitInCreate: false, AllowEasterEggs: false, HideMasterIndex: true,
                     HideCharacterRoster: true, SingleDiceRoller: false, AllowScrollIncrement: true,
                     AllowScrollTabSwitch: true, AllowSkillDiceRolling: false, SetTimeWithDate: false,
                     DefaultMasterIndexSettingsFile: Guid.Parse("67e25032-9999-9999-97fa-69f7f608236c")),
-                new Saving(SaveCompressionLevel: Api.CompressionLevel.Fast, ImageCompressionLevel: ImageCompression.JpegExtraExtraLow),
+                new Saving(SaveCompressionLevel: Api.Enums.CompressionLevel.Fast,
+                    ImageCompressionLevel: ImageCompression.JpegExtraExtraLow,
+                    LastMugshotFolder: new DirectoryInfo(Path.GetTempPath())),
                 new Logging(LogLevel: LogLevel.Crashes, LoggingResetCountdown: 69),
-                new Api.Character(RosterPath: new DirectoryInfo(Path.GetTempPath()), CreateBackupOnCareer: false,
-                    DefaultSettingsFile: Guid.Parse("223a11ff-9999-9999-89a9-6ef1c243b8b6"), LiveRefresh: true,
-                    EnableLifeModules: true),
+                new Api.Models.GlobalSettings.Character(RosterPath: new DirectoryInfo(Path.GetTempPath()),
+                    CreateBackupOnCareer: false, DefaultSettingsFile: Guid.Parse("223a11ff-9999-9999-89a9-6ef1c243b8b6"),
+                    LiveRefresh: true, EnableLifeModules: true),
                 Language: CultureInfo.GetCultureInfo("da-dk"),
                 MostRecentlyUsed: new List<FileInfo>()
                 {
@@ -100,33 +105,20 @@ namespace Chummer.Tests
             var newSettings = gsm.LoadGlobalSettings(ms);
 
             Assert.Equal(settings.Update, newSettings.Update);
-            Assert.Equal(settings.CustomData.AllowLiveUpdates, newSettings.CustomData.AllowLiveUpdates);
-            Assert.Equal(settings.CustomData.CustomDataDirectories.Count, newSettings.CustomData.CustomDataDirectories.Count);
-            var di = Assert.Single(newSettings.CustomData.CustomDataDirectories);
-            Assert.Equal(settings.CustomData.CustomDataDirectories.Single().FullName, di.FullName);
-            // AppPath is probably done by reference comparision, so set it to null so it always succeeds
-            // so we don't have to check every other thing individually
-            Assert.Equal(settings.Pdf with { ApplicationPath = null },
-                newSettings.Pdf with { ApplicationPath = null });
-            Assert.Equal(settings.Pdf.ApplicationPath?.FullName, newSettings.Pdf.ApplicationPath?.FullName);
+            Assert.Equal(settings.CustomData, newSettings.CustomData);
+            Assert.Equal(settings.Pdf, newSettings.Pdf);
             Assert.Equal(settings.UX, newSettings.UX);
             Assert.Equal(settings.Saving, newSettings.Saving);
             Assert.Equal(settings.Logging, newSettings.Logging);
-            // second verse same as the first
-            Assert.Equal(settings.Character with { RosterPath = null }, 
-                newSettings.Character with { RosterPath = null });
-            Assert.Equal(settings.Character.RosterPath?.FullName, newSettings.Character.RosterPath?.FullName);
+            Assert.Equal(settings.Character, newSettings.Character);
             Assert.Equal(settings.Language, newSettings.Language);
-            var fi = Assert.Single(newSettings.MostRecentlyUsed);
-            Assert.Equal(settings.MostRecentlyUsed.Single().FullName, fi.FullName);
-            fi = Assert.Single(newSettings.FavoriteCharacters);
-            Assert.Equal(settings.FavoriteCharacters.Single().FullName, fi.FullName);
 
-            var sb = Assert.Single(settings.SourcebookInfo);
-            var sb_e = settings.SourcebookInfo.Single();
+            Assert.Equal(settings.MostRecentlyUsed.Select(m => m.FullName),
+                newSettings.MostRecentlyUsed.Select(m => m.FullName));
+            Assert.Equal(settings.FavoriteCharacters.Select(m => m.FullName),
+                newSettings.FavoriteCharacters.Select(m => m.FullName));
 
-            Assert.Equal(sb_e with { Path = null! }, sb with { Path = null! });
-            Assert.Equal(sb_e.Path.FullName, sb.Path.FullName);
+            Assert.Equal(settings.SourcebookInfo, newSettings.SourcebookInfo);
         }
 
     }

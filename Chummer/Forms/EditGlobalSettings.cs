@@ -30,6 +30,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml;
 using System.Xml.XPath;
+using Chummer.Api.Enums;
 using Chummer.Plugins;
 using iText.Kernel.Pdf;
 #if DEBUG
@@ -530,9 +531,6 @@ namespace Chummer
         {
             if (_intLoading > 0)
                 return;
-            bool blnShowQualitySelector = Equals(cboMugshotCompression.SelectedValue, "jpeg_manual");
-            lblMugshotCompressionQuality.Visible = blnShowQualitySelector;
-            nudMugshotCompressionQuality.Visible = blnShowQualitySelector;
             OptionsChanged(sender, e);
         }
 
@@ -1629,21 +1627,8 @@ namespace Chummer
                 = await chkAllowEasterEggs.DoThreadSafeFuncAsync(x => x.Checked, token).ConfigureAwait(false);
             GlobalSettings.PluginsEnabled
                 = await chkEnablePlugins.DoThreadSafeFuncAsync(x => x.Checked, token).ConfigureAwait(false);
-            switch (await cboMugshotCompression.DoThreadSafeFuncAsync(x => x.SelectedValue?.ToString(), token)
-                                               .ConfigureAwait(false))
-            {
-                case "jpeg_automatic":
-                    GlobalSettings.SavedImageQuality = -1;
-                    break;
-                case "jpeg_manual":
-                    GlobalSettings.SavedImageQuality = await nudMugshotCompressionQuality
-                                                             .DoThreadSafeFuncAsync(x => x.ValueAsInt, token)
-                                                             .ConfigureAwait(false);
-                    break;
-                default:
-                    GlobalSettings.SavedImageQuality = int.MaxValue;
-                    break;
-            }
+            GlobalSettings.ImageCompressionLevel = await cboMugshotCompression.DoThreadSafeFuncAsync(x => (ImageCompression?)x.SelectedValue, token)
+                                               .ConfigureAwait(false) ?? ImageCompression.Png;
 
             GlobalSettings.Chum5lzCompressionLevel = await cboChum5lzCompressionLevel.DoThreadSafeFuncAsync(
                 x => x.SelectedIndex >= 0
@@ -1789,67 +1774,34 @@ namespace Chummer
             using (new FetchSafelyFromPool<List<ListItem>>(Utils.ListItemListPool,
                                                            out List<ListItem> lstMugshotCompressionOptions))
             {
-                lstMugshotCompressionOptions.Add(
-                    new ListItem(
-                        "png",
-                        await LanguageManager.GetStringAsync("String_Lossless_Compression_Option", token: token)
-                                             .ConfigureAwait(false)));
-                lstMugshotCompressionOptions.Add(new ListItem("jpeg_automatic",
-                                                              await LanguageManager.GetStringAsync(
-                                                                  "String_Lossy_Automatic_Compression_Option",
-                                                                  token: token).ConfigureAwait(false)));
-                lstMugshotCompressionOptions.Add(new ListItem("jpeg_manual",
-                                                              await LanguageManager.GetStringAsync(
-                                                                  "String_Lossy_Manual_Compression_Option",
-                                                                  token: token).ConfigureAwait(false)));
-
-                string strOldSelected = await cboMugshotCompression
-                                              .DoThreadSafeFuncAsync(x => x.SelectedValue?.ToString(), token)
+                foreach (ImageCompression value in Enum.GetValues<ImageCompression>())
+                {
+                    lstMugshotCompressionOptions.Add(new ListItem(
+                        value,
+                        await LanguageManager.GetStringAsync($"String_ImageCompression_{value}", token: token)
+                    ));
+                }
+                ImageCompression? oldSelected = await cboMugshotCompression
+                                              .DoThreadSafeFuncAsync(x => (ImageCompression?)x.SelectedValue, token)
                                               .ConfigureAwait(false);
 
                 if (_intLoading > 0)
                 {
-                    int intQuality = GlobalSettings.SavedImageQuality;
-                    if (intQuality == int.MaxValue)
-                    {
-                        strOldSelected = "png";
-                        intQuality = 90;
-                    }
-                    else if (intQuality < 0)
-                    {
-                        strOldSelected = "jpeg_automatic";
-                        intQuality = 90;
-                    }
-                    else
-                    {
-                        strOldSelected = "jpeg_manual";
-                    }
-
-                    await nudMugshotCompressionQuality.DoThreadSafeAsync(x => x.ValueAsInt = intQuality, token)
-                                                      .ConfigureAwait(false);
+                    oldSelected = GlobalSettings.ImageCompressionLevel;
                 }
 
                 await cboMugshotCompression.PopulateWithListItemsAsync(lstMugshotCompressionOptions, token)
                                            .ConfigureAwait(false);
-                if (!string.IsNullOrEmpty(strOldSelected))
+                if (oldSelected is not null)
                 {
                     await cboMugshotCompression.DoThreadSafeAsync(x =>
                     {
-                        x.SelectedValue = strOldSelected;
+                        x.SelectedValue = oldSelected;
                         if (x.SelectedIndex == -1 && lstMugshotCompressionOptions.Count > 0)
                             x.SelectedIndex = 0;
                     }, token).ConfigureAwait(false);
                 }
             }
-
-            bool blnShowQualitySelector
-                = Equals(
-                    await cboMugshotCompression.DoThreadSafeFuncAsync(x => x.SelectedValue?.ToString(), token)
-                                               .ConfigureAwait(false), "jpeg_manual");
-            await lblMugshotCompressionQuality.DoThreadSafeAsync(x => x.Visible = blnShowQualitySelector, token)
-                                              .ConfigureAwait(false);
-            await nudMugshotCompressionQuality.DoThreadSafeAsync(x => x.Visible = blnShowQualitySelector, token)
-                                              .ConfigureAwait(false);
         }
 
         private async Task PopulatePdfParameters(CancellationToken token = default)
