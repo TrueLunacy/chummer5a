@@ -260,7 +260,7 @@ namespace Chummer
         public static Color ControlTextLight { get; } = SystemColors.ControlText;
         private static Color ControlTextDark { get; } = GenerateDarkModeColor(ControlTextLight);
 
-        public static Color ControlDarkest => IsLightMode ? ControlDarkestLight : ControlDarkestDark;
+        public static Color ControlDarkest => ControlDarkestLight; //IsLightMode ? ControlDarkestLight : ControlDarkestDark;
         public static Color ControlDarkestLight { get; } = SystemColors.ControlDarkDark;
         private static Color ControlDarkestDark { get; } = GenerateDarkModeColor(ControlDarkestLight);
 

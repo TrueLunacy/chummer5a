@@ -100,7 +100,7 @@ namespace Chummer
 
         // Need this as a Lazy, otherwise it won't fire properly in the designer if we just cache it, and the check itself is also quite expensive
         private static readonly Lazy<bool> s_BlnIsRunningInVisualStudio =
-            new Lazy<bool>(() => Program.MyProcess.ProcessName == "devenv");
+            new Lazy<bool>(() => Program.MyProcess.ProcessName == "devenv" || Program.MyProcess.ProcessName == "DesignToolsServer");
 
         /// <summary>
         /// Returns if we are running inside Visual Studio, e.g. if we are in the designer.

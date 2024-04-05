@@ -289,7 +289,10 @@ namespace Chummer
         static GlobalSettings()
         {
             if (Utils.IsDesignerMode)
+            {
+                settings = Api.Models.GlobalSettings.GlobalSettings.DefaultSettings;
                 return;
+            }
 
             cdl = new ChummerDataLoader(
                 new XmlFileProvider(new DirectoryInfo(Utils.GetDataFolderPath))
@@ -846,7 +849,7 @@ namespace Chummer
             get => settings.Print.PrintExpenses is Api.Enums.PrintExpenses.PrintAllExpenses;
             set
             {
-                Debug.Assert(!PrintExpenses, "Should never set PrintFreeExpenses while PrintExpenses is false");
+                if (!PrintExpenses) return;
                 settings = settings with
                 {
                     Print = settings.Print with
