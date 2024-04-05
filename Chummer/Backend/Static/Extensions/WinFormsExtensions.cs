@@ -112,6 +112,8 @@ namespace Chummer
             if (!Utils.IsUnitTest)
                 return Utils.RunOnMainThreadAsync(() => frmForm.ShowDialog(owner), token);
 
+            return Task.FromResult(ShowDialogSafe(frmForm, owner, token));
+
             TaskCompletionSource<DialogResult> objCompletionSource = new TaskCompletionSource<DialogResult>();
             using (token.Register(() => objCompletionSource.TrySetCanceled(token)))
             {

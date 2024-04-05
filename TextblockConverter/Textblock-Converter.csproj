@@ -1,18 +1,18 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net48</TargetFramework>
+    <TargetFramework>net6.0-windows</TargetFramework>
     <OutputType>WinExe</OutputType>
     <RootNamespace>Chummer.Utils</RootNamespace>
     <AssemblyName>Textblock Converter</AssemblyName>
     <GenerateAssemblyInfo>True</GenerateAssemblyInfo>
     <UseWPF>true</UseWPF>
     <ImportWindowsDesktopTargets>true</ImportWindowsDesktopTargets>
-	<Configurations>Debug;Release;Debuggable Release</Configurations>
-	<EnableNETAnalyzers>True</EnableNETAnalyzers>
-	<AnalysisLevel>latest-minimum</AnalysisLevel>
-	<PlatformTarget>AnyCPU</PlatformTarget>
-	<StartupObject>WpfApplication1.App</StartupObject>
-	<NeutralLanguage>en-US</NeutralLanguage>
+    <Configurations>Debug;Release;Debuggable Release</Configurations>
+    <EnableNETAnalyzers>True</EnableNETAnalyzers>
+    <AnalysisLevel>latest-minimum</AnalysisLevel>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <StartupObject>WpfApplication1.App</StartupObject>
+    <NeutralLanguage>en-US</NeutralLanguage>
     <EmbeddedResourceUseDependentUponConvention>true</EmbeddedResourceUseDependentUponConvention>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
   </PropertyGroup>

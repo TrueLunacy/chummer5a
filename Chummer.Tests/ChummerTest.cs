@@ -26,9 +26,12 @@ using System.IO;
 using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Schema;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Org.XmlUnit.Builder;
+using System.Threading;
+using Xunit;
 using Org.XmlUnit.Diff;
+using Org.XmlUnit.Builder;
+using Xunit.Sdk;
+using Xunit.Abstractions;
 
 namespace Chummer.Tests
 {
@@ -57,28 +60,25 @@ namespace Chummer.Tests
         public static Character[] Characters { get; }
     }
 
-    [TestClass]
     public class ChummerTest
     {
-        [AssemblyInitialize]
-        public static void Initialize(TestContext context)
+        private readonly ITestOutputHelper output;
+
+        public ChummerTest(ITestOutputHelper output)
         {
             Utils.IsUnitTest = true;
             Utils.IsUnitTestForUI = false;
-        }
-
-        public ChummerTest()
-        {
             Utils.CreateSynchronizationContext();
+            this.output = output;
         }
 
-        private static IEnumerable<Character> GetTestCharacters()
+        private IEnumerable<Character> GetTestCharacters()
         {
             for (int i = 0; i < CommonTestData.TestFileInfos.Length; ++i)
             {
 #if DEBUG
                 FileInfo objFileInfo = CommonTestData.TestFileInfos[i];
-                Debug.WriteLine("Loading " + objFileInfo.Name);
+                output.WriteLine("Loading " + objFileInfo.Name);
 #endif
                 Character objLoopCharacter = CommonTestData.Characters[i];
                 if (objLoopCharacter == null)
@@ -96,39 +96,39 @@ namespace Chummer.Tests
         }
 
         // Test methods have a number in their name so that by default they execute in the order of fastest to slowest
-        [TestMethod]
+        [WinFormsFact]
         public void Test00_ColorTest()
         {
-            Debug.WriteLine("Unit test initialized for: Test00_ColorTest()");
+            output.WriteLine("Unit test initialized for: Test00_ColorTest()");
             Color objColorLightGrayInDarkMode = ColorManager.GenerateDarkModeColor(Color.LightGray);
             float fltLightGrayLightness = Color.LightGray.GetBrightness();
             float fltLightGrayDarkModeLightness = objColorLightGrayInDarkMode.GetBrightness();
-            Assert.IsTrue(fltLightGrayDarkModeLightness < fltLightGrayLightness);
+            Assert.True(fltLightGrayDarkModeLightness < fltLightGrayLightness);
 
             Color objColorRedInvert = ColorManager.GenerateInverseDarkModeColor(Color.Red);
             Color objColorRedInvertDark = ColorManager.GenerateDarkModeColor(objColorRedInvert);
             float fltRedHue = Color.Red.GetHue();
             float fltRedInvertDarkHue = objColorRedInvertDark.GetHue();
-            Assert.IsTrue(Math.Abs(fltRedInvertDarkHue - fltRedHue) < 0.1f / 360.0f); // Only care if we're off by more than 0.1 degrees
+            Assert.True(Math.Abs(fltRedInvertDarkHue - fltRedHue) < 0.1f / 360.0f); // Only care if we're off by more than 0.1 degrees
             Color objColorRedInvertDarkInvert = ColorManager.GenerateInverseDarkModeColor(objColorRedInvertDark);
             Color objColorRedInvertDarkInvertDark = ColorManager.GenerateDarkModeColor(objColorRedInvertDarkInvert);
-            Assert.IsTrue(objColorRedInvertDark == objColorRedInvertDarkInvertDark);
+            Assert.True(objColorRedInvertDark == objColorRedInvertDarkInvertDark);
 
             Color objColorChocolateInvert = ColorManager.GenerateInverseDarkModeColor(Color.Chocolate);
             Color objColorChocolateInvertDark = ColorManager.GenerateDarkModeColor(objColorChocolateInvert);
             float fltChocolateHue = Color.Chocolate.GetHue();
             float fltChocolateInvertDarkHue = objColorChocolateInvertDark.GetHue();
-            Assert.IsTrue(Math.Abs(fltChocolateInvertDarkHue - fltChocolateHue) < 0.1f / 360.0f); // Only care if we're off by more than 0.1 degrees
+            Assert.True(Math.Abs(fltChocolateInvertDarkHue - fltChocolateHue) < 0.1f / 360.0f); // Only care if we're off by more than 0.1 degrees
             Color objColorChocolateInvertDarkInvert = ColorManager.GenerateInverseDarkModeColor(objColorChocolateInvertDark);
             Color objColorChocolateInvertDarkInvertDark = ColorManager.GenerateDarkModeColor(objColorChocolateInvertDarkInvert);
-            Assert.IsTrue(objColorChocolateInvertDark == objColorChocolateInvertDarkInvertDark);
+            Assert.True(objColorChocolateInvertDark == objColorChocolateInvertDarkInvertDark);
         }
 
         // Test methods have a number in their name so that by default they execute in the order of fastest to slowest
-        [TestMethod]
+        [WinFormsFact]
         public void Test01_LoadContent()
         {
-            Debug.WriteLine("Unit test initialized for: Test01_LoadContent()");
+            output.WriteLine("Unit test initialized for: Test01_LoadContent()");
             try
             {
                 // Attempt to cache all XML files that are used the most.
@@ -166,10 +166,10 @@ namespace Chummer.Tests
         }
 
         // Test methods have a number in their name so that by default they execute in the order of fastest to slowest
-        [TestMethod]
+        [WinFormsFact]
         public void Test02_BasicStartup()
         {
-            Debug.WriteLine("Unit test initialized for: Test02_BasicStartup()");
+            output.WriteLine("Unit test initialized for: Test02_BasicStartup()");
             ChummerMainForm frmOldMainForm = Program.MainForm;
             ChummerMainForm frmTestForm = null;
             // Try-finally pattern necessary in order prevent weird exceptions from disposal of MdiChildren
@@ -208,14 +208,14 @@ namespace Chummer.Tests
         }
 
         // Test methods have a number in their name so that by default they execute in the order of fastest to slowest
-        [TestMethod]
+        [WinFormsFact]
         public void Test03_LoadCharacters()
         {
-            Debug.WriteLine("Unit test initialized for: Test03_LoadCharacters()");
+            output.WriteLine("Unit test initialized for: Test03_LoadCharacters()");
             List<Character> lstCharacters = new List<Character>();
             foreach (Character objCharacter in GetTestCharacters())
             {
-                Debug.WriteLine("Finished loading " + objCharacter.FileName);
+                output.WriteLine("Finished loading " + objCharacter.FileName);
                 lstCharacters.Add(objCharacter);
             }
 
@@ -223,10 +223,10 @@ namespace Chummer.Tests
         }
 
         // Test methods have a number in their name so that by default they execute in the order of fastest to slowest
-        [TestMethod]
+        [WinFormsFact]
         public void Test04_SaveAsChum5lz()
         {
-            Debug.WriteLine("Unit test initialized for: Test04_SaveAsChum5lz()");
+            output.WriteLine("Unit test initialized for: Test04_SaveAsChum5lz()");
             LzmaHelper.ChummerCompressionPreset eOldSetting = GlobalSettings.Chum5lzCompressionLevel;
             try
             {
@@ -235,7 +235,7 @@ namespace Chummer.Tests
                 {
                     string strFileName = Path.GetFileName(objCharacter.FileName)
                                          ?? LanguageManager.GetString("String_Unknown");
-                    Debug.WriteLine("Checking " + strFileName);
+                    output.WriteLine("Checking " + strFileName);
                     string strDestination = Path.Combine(CommonTestData.TestPathInfo.FullName, "(Compressed) " + strFileName);
                     if (!strDestination.EndsWith(".chum5lz", StringComparison.OrdinalIgnoreCase))
                     {
@@ -258,20 +258,20 @@ namespace Chummer.Tests
         }
 
         // Test methods have a number in their name so that by default they execute in the order of fastest to slowest
-        [TestMethod]
+        [WinFormsFact]
         public void Test05_LoadThenSaveIsDeterministic()
         {
-            Debug.WriteLine("Unit test initialized for: Test05_LoadThenSaveIsDeterministic()");
+            output.WriteLine("Unit test initialized for: Test05_LoadThenSaveIsDeterministic()");
             DefaultNodeMatcher objDiffNodeMatcher = new DefaultNodeMatcher(ElementSelectors.ByNameAndText);
             foreach (Character objCharacterControl in GetTestCharacters())
             {
                 string strFileName = Path.GetFileName(objCharacterControl.FileName) ??
                                      LanguageManager.GetString("String_Unknown");
-                Debug.WriteLine("Saving Control for " + strFileName);
+                output.WriteLine("Saving Control for " + strFileName);
                 // First Load-Save cycle
                 string strDestinationControl = Path.Combine(CommonTestData.TestPathInfo.FullName, "(Control) " + strFileName);
                 SaveCharacter(objCharacterControl, strDestinationControl);
-                Debug.WriteLine("Checking " + strFileName);
+                output.WriteLine("Checking " + strFileName);
                 // Second Load-Save cycle
                 string strDestinationTest = Path.Combine(CommonTestData.TestPathInfo.FullName, "(Test) " + strFileName);
                 Character objCharacterTest = LoadCharacter(new FileInfo(strDestinationControl)); // No using here because we value execution time much more than memory usage
@@ -308,7 +308,7 @@ namespace Chummer.Tests
                             Console.WriteLine();
                         }
 
-                        Assert.IsFalse(myDiff.HasDifferences(), myDiff.ToString());
+                        Assert.False(myDiff.HasDifferences(), myDiff.ToString());
                     }
                 }
                 catch (XmlSchemaException e)
@@ -364,10 +364,10 @@ namespace Chummer.Tests
             }
         }
 
-        [TestMethod]
+        [WinFormsFact]
         public void Test06_LoadThenPrint()
         {
-            Debug.WriteLine("Unit test initialized for: Test06_LoadThenPrint()");
+            output.WriteLine("Unit test initialized for: Test06_LoadThenPrint()");
             List<string> lstExportLanguages = new List<string>();
             foreach (string strFilePath in Directory.EnumerateFiles(Path.Combine(Utils.GetStartupPath, "lang"), "*.xml"))
             {
@@ -378,19 +378,19 @@ namespace Chummer.Tests
 
             lstExportLanguages.Sort();
 
-            Debug.WriteLine("Started pre-loading language files");
-            Debug.WriteLine("Pre-loading language file: " + GlobalSettings.DefaultLanguage);
+            output.WriteLine("Started pre-loading language files");
+            output.WriteLine("Pre-loading language file: " + GlobalSettings.DefaultLanguage);
             LanguageManager.LoadLanguage(GlobalSettings.DefaultLanguage);
             foreach (string strExportLanguage in lstExportLanguages)
             {
-                Debug.WriteLine("Pre-loading language file: " + strExportLanguage);
+                output.WriteLine("Pre-loading language file: " + strExportLanguage);
                 LanguageManager.LoadLanguage(strExportLanguage);
             }
-            Debug.WriteLine("Finished pre-loading language files");
+            output.WriteLine("Finished pre-loading language files");
             int intLanguageIndex = 0;
             foreach (Character objCharacter in GetTestCharacters())
             {
-                Debug.WriteLine("Checking " + (Path.GetFileName(objCharacter.FileName)
+                output.WriteLine("Checking " + (Path.GetFileName(objCharacter.FileName)
                                                ?? LanguageManager.GetString("String_Unknown")));
                 // Always try to export in English because this will cover most export code
                 DoAndSaveExport(objCharacter, GlobalSettings.DefaultLanguage);
@@ -400,10 +400,10 @@ namespace Chummer.Tests
         }
 
         // Test methods have a number in their name so that by default they execute in the order of fastest to slowest
-        [TestMethod]
+        [WinFormsFact]
         public void Test07_LoadCharacterForms()
         {
-            Debug.WriteLine("Unit test initialized for: Test07_LoadCharacterForms()");
+            output.WriteLine("Unit test initialized for: Test07_LoadCharacterForms()");
             ChummerMainForm frmOldMainForm = Program.MainForm;
             ChummerMainForm frmTestForm = null;
             // Try-finally pattern necessary in order prevent weird exceptions from disposal of MdiChildren
@@ -427,11 +427,11 @@ namespace Chummer.Tests
                 {
                     Utils.SafeSleep();
                 }
-                Debug.WriteLine("Main form loaded");
+                output.WriteLine("Main form loaded");
                 foreach (Character objCharacter in GetTestCharacters())
                 {
                     string strFileName = Path.GetFileName(objCharacter.FileName) ?? LanguageManager.GetString("String_Unknown");
-                    Debug.WriteLine("Checking " + strFileName);
+                    output.WriteLine("Checking " + strFileName);
                     string strDummyFileName = Path.Combine(CommonTestData.TestPathInfo.FullName,
                                                            "(UnitTest07Dummy) "
                                                            + Path.GetFileNameWithoutExtension(objCharacter.FileName)
@@ -486,7 +486,7 @@ namespace Chummer.Tests
                                         = "Encountered (non-fatal) exception while disposing of character form."
                                           + Environment.NewLine
                                           + e.Message;
-                                    Debug.WriteLine(strErrorMessage);
+                                    output.WriteLine(strErrorMessage);
                                     Console.WriteLine(strErrorMessage);
                                     Program.OpenCharacters.Remove(objCharacter);
                                 }
@@ -496,7 +496,7 @@ namespace Chummer.Tests
                                         = "Encountered (non-fatal) exception while disposing of character form."
                                           + Environment.NewLine
                                           + e.Message;
-                                    Debug.WriteLine(strErrorMessage);
+                                    output.WriteLine(strErrorMessage);
                                     Console.WriteLine(strErrorMessage);
                                     Program.OpenCharacters.Remove(objCharacter);
                                 }
@@ -507,7 +507,7 @@ namespace Chummer.Tests
                             string strErrorMessage
                                 = "Exception while loading form for " + strFileName + ":";
                             strErrorMessage += Environment.NewLine + e;
-                            Debug.WriteLine(strErrorMessage);
+                            output.WriteLine(strErrorMessage);
                             Console.WriteLine(strErrorMessage);
                             Assert.Fail(strErrorMessage);
                         }
@@ -524,7 +524,7 @@ namespace Chummer.Tests
                 {
                     string strErrorMessage = "Encountered (non-fatal) exception while disposing of main form." + Environment.NewLine
                         + e.Message;
-                    Debug.WriteLine(strErrorMessage);
+                    output.WriteLine(strErrorMessage);
                     Console.WriteLine(strErrorMessage);
                     Utils.BreakIfDebug();
                 }
@@ -537,12 +537,12 @@ namespace Chummer.Tests
         /// Validate that a given list of Characters can be successfully loaded.
         /// </summary>
         // ReSharper disable once SuggestBaseTypeForParameter
-        private static Character LoadCharacter(FileInfo objFileInfo, Character objExistingCharacter = null)
+        private Character LoadCharacter(FileInfo objFileInfo, Character objExistingCharacter = null)
         {
             Character objCharacter = objExistingCharacter;
             try
             {
-                Debug.WriteLine("Loading: " + objFileInfo.Name);
+                output.WriteLine("Loading: " + objFileInfo.Name);
                 if (objExistingCharacter != null)
                     objCharacter.ResetCharacter();
                 else
@@ -550,10 +550,10 @@ namespace Chummer.Tests
                 objCharacter.FileName = objFileInfo.FullName;
 
                 bool blnSuccess = objCharacter.Load();
-                Assert.IsTrue(blnSuccess);
-                Debug.WriteLine("Character loaded: " + objCharacter.Name + ", " + objFileInfo.Name);
+                Assert.True(blnSuccess);
+                output.WriteLine("Character loaded: " + objCharacter.Name + ", " + objFileInfo.Name);
             }
-            catch (AssertFailedException e)
+            catch (XunitException e)
             {
                 if (objCharacter != null)
                 {
@@ -563,7 +563,7 @@ namespace Chummer.Tests
                 }
                 string strErrorMessage = "Could not load " + objFileInfo.FullName + '!';
                 strErrorMessage += Environment.NewLine + e;
-                Debug.WriteLine(strErrorMessage);
+                output.WriteLine(strErrorMessage);
                 Console.WriteLine(strErrorMessage);
                 Assert.Fail(strErrorMessage);
             }
@@ -577,7 +577,7 @@ namespace Chummer.Tests
                 }
                 string strErrorMessage = "Exception while loading " + objFileInfo.FullName + ':';
                 strErrorMessage += Environment.NewLine + e;
-                Debug.WriteLine(strErrorMessage);
+                output.WriteLine(strErrorMessage);
                 Console.WriteLine(strErrorMessage);
                 Assert.Fail(strErrorMessage);
             }
@@ -588,20 +588,20 @@ namespace Chummer.Tests
         /// <summary>
         /// Tests saving a given character.
         /// </summary>
-        private static void SaveCharacter(Character objCharacter, string strPath)
+        private void SaveCharacter(Character objCharacter, string strPath)
         {
-            Assert.IsNotNull(objCharacter);
+            Assert.NotNull(objCharacter);
             try
             {
-                Debug.WriteLine("Saving: " + objCharacter.Name + ", " + Path.GetFileName(strPath));
+                output.WriteLine("Saving: " + objCharacter.Name + ", " + Path.GetFileName(strPath));
                 objCharacter.Save(strPath, false, false);
-                Debug.WriteLine("Character saved: " + objCharacter.Name + " to " + Path.GetFileName(strPath));
+                output.WriteLine("Character saved: " + objCharacter.Name + " to " + Path.GetFileName(strPath));
             }
-            catch (AssertFailedException e)
+            catch (XunitException e)
             {
                 string strErrorMessage = "Could not save " + Path.GetFileName(strPath) + '!';
                 strErrorMessage += Environment.NewLine + e;
-                Debug.WriteLine(strErrorMessage);
+                output.WriteLine(strErrorMessage);
                 Console.WriteLine(strErrorMessage);
                 Assert.Fail(strErrorMessage);
             }
@@ -609,7 +609,7 @@ namespace Chummer.Tests
             {
                 string strErrorMessage = "Could not save to " + strPath + '!';
                 strErrorMessage += Environment.NewLine + e;
-                Debug.WriteLine(strErrorMessage);
+                output.WriteLine(strErrorMessage);
                 Console.WriteLine(strErrorMessage);
                 Assert.Fail(strErrorMessage);
             }
@@ -617,7 +617,7 @@ namespace Chummer.Tests
             {
                 string strErrorMessage = "Exception while saving " + Path.GetFileName(strPath) + ':';
                 strErrorMessage += Environment.NewLine + e;
-                Debug.WriteLine(strErrorMessage);
+                output.WriteLine(strErrorMessage);
                 Console.WriteLine(strErrorMessage);
                 Assert.Fail(strErrorMessage);
             }
@@ -626,13 +626,13 @@ namespace Chummer.Tests
         /// <summary>
         /// Tests exporting a given character.
         /// </summary>
-        private static void DoAndSaveExport(Character objCharacter, string strExportLanguage)
+        private void DoAndSaveExport(Character objCharacter, string strExportLanguage)
         {
-            Assert.IsNotNull(objCharacter);
+            Assert.NotNull(objCharacter);
             string strPath = Path.Combine(CommonTestData.TestPathInfo.FullName, strExportLanguage + ' ' + Path.GetFileNameWithoutExtension(objCharacter.FileName) + ".xml");
             try
             {
-                Debug.WriteLine("Exporting: " + objCharacter.Name + " to " + Path.GetFileName(strPath));
+                output.WriteLine("Exporting: " + objCharacter.Name + " to " + Path.GetFileName(strPath));
                 CultureInfo objExportCultureInfo;
                 try
                 {
@@ -650,14 +650,14 @@ namespace Chummer.Tests
                 using (FileStream objFileStream
                        = new FileStream(strPath, FileMode.Create, FileAccess.Write, FileShare.None))
                     xmlDocument.Save(objFileStream);
-                Debug.WriteLine("Character exported: " + objCharacter.Name + " to " + Path.GetFileName(strPath));
+                output.WriteLine("Character exported: " + objCharacter.Name + " to " + Path.GetFileName(strPath));
             }
-            catch (AssertFailedException e)
+            catch (XunitException e)
             {
                 string strErrorMessage = "Could not export " + Path.GetFileName(objCharacter.FileName) + " in "
                                          + strExportLanguage + '!';
                 strErrorMessage += Environment.NewLine + e;
-                Debug.WriteLine(strErrorMessage);
+                output.WriteLine(strErrorMessage);
                 Console.WriteLine(strErrorMessage);
                 Assert.Fail(strErrorMessage);
             }
@@ -665,7 +665,7 @@ namespace Chummer.Tests
             {
                 string strErrorMessage = "Could not export to " + strPath + '!';
                 strErrorMessage += Environment.NewLine + e;
-                Debug.WriteLine(strErrorMessage);
+                output.WriteLine(strErrorMessage);
                 Console.WriteLine(strErrorMessage);
                 Assert.Fail(strErrorMessage);
             }
@@ -674,7 +674,7 @@ namespace Chummer.Tests
                 string strErrorMessage = "Exception while exporting " + Path.GetFileName(objCharacter.FileName) + " in "
                                          + strExportLanguage + ':';
                 strErrorMessage += Environment.NewLine + e;
-                Debug.WriteLine(strErrorMessage);
+                output.WriteLine(strErrorMessage);
                 Console.WriteLine(strErrorMessage);
                 Assert.Fail(strErrorMessage);
             }

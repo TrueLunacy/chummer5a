@@ -57,7 +57,7 @@ namespace Chummer
         public static void BreakIfDebug()
         {
 #if DEBUG
-            if (Debugger.IsAttached)
+            if (Debugger.IsAttached && false)
                 Debugger.Break();
 #else
             // Method intentionally left empty.
@@ -100,7 +100,7 @@ namespace Chummer
 
         // Need this as a Lazy, otherwise it won't fire properly in the designer if we just cache it, and the check itself is also quite expensive
         private static readonly Lazy<bool> s_BlnIsRunningInVisualStudio =
-            new Lazy<bool>(() => Program.MyProcess.ProcessName == "devenv");
+            new Lazy<bool>(() => Program.MyProcess.ProcessName == "devenv" || Program.MyProcess.ProcessName == "DesignToolsServer");
 
         /// <summary>
         /// Returns if we are running inside Visual Studio, e.g. if we are in the designer.
@@ -479,7 +479,8 @@ namespace Chummer
             try
             {
                 WindowsPrincipal principal = new WindowsPrincipal(WindowsIdentity.GetCurrent());
-                DirectorySecurity security = Directory.GetAccessControl(Path.GetDirectoryName(strPath) ?? throw new ArgumentOutOfRangeException(nameof(strPath)));
+                DirectorySecurity security = new DirectorySecurity(Path.GetDirectoryName(strPath) ?? throw new ArgumentOutOfRangeException(nameof(strPath)),
+                    AccessControlSections.Access | AccessControlSections.Owner | AccessControlSections.Group);
                 foreach (FileSystemAccessRule accessRule in security.GetAccessRules(true, true, typeof(SecurityIdentifier)))
                 {
                     if (!(accessRule.IdentityReference is SecurityIdentifier objIdentifier) || !principal.IsInRole(objIdentifier))

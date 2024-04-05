@@ -103,11 +103,6 @@ namespace Chummer
             return MyForm.ShowDialogNonBlockingAsync(owner, token);
         }
 
-        public Task<DialogResult> ShowDialogNonBlockingSafeAsync(IWin32Window owner = null, CancellationToken token = default)
-        {
-            return MyForm.ShowDialogNonBlockingSafeAsync(owner, token);
-        }
-
         public Task<DialogResult> ShowDialogNonBlockingSafeAsync(Character objCharacter, CancellationToken token = default)
         {
             return MyForm.ShowDialogNonBlockingSafeAsync(objCharacter, token);
