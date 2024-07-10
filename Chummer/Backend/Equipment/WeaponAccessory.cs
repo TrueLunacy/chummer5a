@@ -1249,6 +1249,38 @@ namespace Chummer.Backend.Equipment
         }
 
         /// <summary>
+        /// Whether this Accessory is installed and contributing towards the Weapon's stats.
+        /// </summary>
+        public async Task SetEquippedAsync(bool value, CancellationToken token = default)
+        {
+            if (_blnEquipped == value)
+                return;
+            _blnEquipped = value;
+            Weapon objParent = Parent;
+            if (objParent.Equipped && objParent.ParentVehicle == null)
+            {
+                await GearChildren.ForEachWithSideEffectsAsync(async objGear =>
+                {
+                    if (objGear.Equipped)
+                    {
+                        await objGear.ChangeEquippedStatusAsync(value, true, token).ConfigureAwait(false);
+                    }
+                }, token).ConfigureAwait(false);
+
+                if (_objCharacter?.IsLoading == false && (!string.IsNullOrEmpty(Weight)
+                                                          || await GearChildren.DeepAnyAsync(
+                                                              x => x.Children,
+                                                              x => x.Equipped && !string.IsNullOrEmpty(x.Weight), token: token).ConfigureAwait(false)))
+                    await _objCharacter.OnPropertyChangedAsync(nameof(Character.TotalCarriedWeight), token).ConfigureAwait(false);
+            }
+            else
+            {
+                await GearChildren.ForEachWithSideEffectsAsync(objGear =>
+                    objGear.ChangeEquippedStatusAsync(false, token: token), token: token).ConfigureAwait(false);
+            }
+        }
+
+        /// <summary>
         /// Notes.
         /// </summary>
         public string Notes
@@ -2220,31 +2252,38 @@ namespace Chummer.Backend.Equipment
             await (await GetSourceDetailAsync(token).ConfigureAwait(false)).SetControlAsync(sourceControl, token).ConfigureAwait(false);
         }
 
-        public bool AllowPasteXml
+        public async Task<bool> AllowPasteXml(CancellationToken token = default)
         {
-            get
+            token.ThrowIfCancellationRequested();
+            IAsyncDisposable objLocker = await GlobalSettings.EnterClipboardReadLockAsync(token).ConfigureAwait(false);
+            try
             {
-                switch (GlobalSettings.ClipboardContentType)
+                token.ThrowIfCancellationRequested();
+                switch (await GlobalSettings.GetClipboardContentTypeAsync(token).ConfigureAwait(false))
                 {
                     case ClipboardContentType.Gear:
-                        XPathNavigator checkNode = GlobalSettings.Clipboard.SelectSingleNodeAndCacheExpressionAsNavigator("/character/gears/gear");
+                        XPathNavigator checkNode =
+                            (await GlobalSettings.GetClipboardAsync(token).ConfigureAwait(false)).SelectSingleNodeAndCacheExpressionAsNavigator(
+                                "/character/gears/gear", token);
                         if (checkNode == null)
                             return false;
-                        string strCheckValue = checkNode.SelectSingleNodeAndCacheExpression("category")?.Value;
+                        string strCheckValue = checkNode.SelectSingleNodeAndCacheExpression("category", token)?.Value;
                         if (!string.IsNullOrEmpty(strCheckValue))
                         {
                             XmlNodeList xmlGearCategoryList = AllowGear?.SelectNodes("gearcategory");
-                            if (xmlGearCategoryList?.Count > 0 && xmlGearCategoryList.Cast<XmlNode>().Any(objAllowed => objAllowed.InnerText == strCheckValue))
+                            if (xmlGearCategoryList?.Count > 0 && xmlGearCategoryList.Cast<XmlNode>()
+                                    .Any(objAllowed => objAllowed.InnerText == strCheckValue))
                             {
                                 return true;
                             }
                         }
 
-                        strCheckValue = checkNode.SelectSingleNodeAndCacheExpression("name")?.Value;
+                        strCheckValue = checkNode.SelectSingleNodeAndCacheExpression("name", token)?.Value;
                         if (!string.IsNullOrEmpty(strCheckValue))
                         {
                             XmlNodeList xmlGearNameList = AllowGear?.SelectNodes("gearname");
-                            if (xmlGearNameList?.Count > 0 && xmlGearNameList.Cast<XmlNode>().Any(objAllowed => objAllowed.InnerText == strCheckValue))
+                            if (xmlGearNameList?.Count > 0 && xmlGearNameList.Cast<XmlNode>()
+                                    .Any(objAllowed => objAllowed.InnerText == strCheckValue))
                             {
                                 return true;
                             }
@@ -2256,10 +2295,15 @@ namespace Chummer.Backend.Equipment
                         return false;
                 }
             }
+            finally
+            {
+                await objLocker.DisposeAsync().ConfigureAwait(false);
+            }
         }
 
-        public bool AllowPasteObject(object input)
+        public Task<bool> AllowPasteObject(object input, CancellationToken token = default)
         {
+            token.ThrowIfCancellationRequested();
             throw new NotImplementedException();
         }
 

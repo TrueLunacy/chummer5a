@@ -52,14 +52,14 @@ namespace Chummer
             string strName = await txtName.DoThreadSafeFuncAsync(x => x.Text).ConfigureAwait(false);
             if (string.IsNullOrEmpty(strName))
             {
-                Program.ShowScrollableMessageBox(this, await LanguageManager.GetStringAsync("Message_CreatePACKSKit_KitName").ConfigureAwait(false), await LanguageManager.GetStringAsync("MessageTitle_CreatePACKSKit_KitName").ConfigureAwait(false), MessageBoxButtons.OK, MessageBoxIcon.Information);
+                await Program.ShowScrollableMessageBoxAsync(this, await LanguageManager.GetStringAsync("Message_CreatePACKSKit_KitName").ConfigureAwait(false), await LanguageManager.GetStringAsync("MessageTitle_CreatePACKSKit_KitName").ConfigureAwait(false), MessageBoxButtons.OK, MessageBoxIcon.Information).ConfigureAwait(false);
                 return;
             }
 
             string strFileName = await txtFileName.DoThreadSafeFuncAsync(x => x.Text).ConfigureAwait(false);
             if (string.IsNullOrEmpty(strFileName))
             {
-                Program.ShowScrollableMessageBox(this, await LanguageManager.GetStringAsync("Message_CreatePACKSKit_FileName").ConfigureAwait(false), await LanguageManager.GetStringAsync("MessageTitle_CreatePACKSKit_FileName").ConfigureAwait(false), MessageBoxButtons.OK, MessageBoxIcon.Information);
+                await Program.ShowScrollableMessageBoxAsync(this, await LanguageManager.GetStringAsync("Message_CreatePACKSKit_FileName").ConfigureAwait(false), await LanguageManager.GetStringAsync("MessageTitle_CreatePACKSKit_FileName").ConfigureAwait(false), MessageBoxButtons.OK, MessageBoxIcon.Information).ConfigureAwait(false);
                 return;
             }
 
@@ -79,13 +79,13 @@ namespace Chummer
                 .TryGetNodeByNameOrId("/chummer/packs/pack", strName, "category = \"Custom\"]")
                 != null)
             {
-                Program.ShowScrollableMessageBox(
+                await Program.ShowScrollableMessageBoxAsync(
                     this,
                     string.Format(GlobalSettings.CultureInfo,
-                                  await LanguageManager.GetStringAsync("Message_CreatePACKSKit_DuplicateName")
-                                                       .ConfigureAwait(false), strName),
+                        await LanguageManager.GetStringAsync("Message_CreatePACKSKit_DuplicateName")
+                            .ConfigureAwait(false), strName),
                     await LanguageManager.GetStringAsync("MessageTitle_CreatePACKSKit_DuplicateName")
-                                         .ConfigureAwait(false), MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        .ConfigureAwait(false), MessageBoxButtons.OK, MessageBoxIcon.Information).ConfigureAwait(false);
                 return;
             }
 
@@ -97,9 +97,9 @@ namespace Chummer
                 }
                 catch (UnauthorizedAccessException)
                 {
-                    Program.ShowScrollableMessageBox(await LanguageManager
-                                                           .GetStringAsync("Message_Insufficient_Permissions_Warning")
-                                                           .ConfigureAwait(false));
+                    await Program.ShowScrollableMessageBoxAsync(await LanguageManager
+                        .GetStringAsync("Message_Insufficient_Permissions_Warning")
+                        .ConfigureAwait(false)).ConfigureAwait(false);
                     return;
                 }
             }
@@ -117,12 +117,12 @@ namespace Chummer
                 }
                 catch (IOException ex)
                 {
-                    Program.ShowScrollableMessageBox(this, ex.ToString());
+                    await Program.ShowScrollableMessageBoxAsync(this, ex.ToString()).ConfigureAwait(false);
                     return;
                 }
                 catch (XmlException ex)
                 {
-                    Program.ShowScrollableMessageBox(this, ex.ToString());
+                    await Program.ShowScrollableMessageBoxAsync(this, ex.ToString()).ConfigureAwait(false);
                     return;
                 }
             }
@@ -436,14 +436,14 @@ namespace Chummer
                         {
                             case Improvement.ImprovementSource.Bioware:
                                 blnBioware = true;
-                                break;
+                                return blnCyberware;
 
                             case Improvement.ImprovementSource.Cyberware:
                                 blnCyberware = true;
-                                break;
+                                return blnBioware;
                         }
 
-                        return !blnCyberware || !blnBioware;
+                        return true;
                     }).ConfigureAwait(false);
 
                     if (blnCyberware)
@@ -636,7 +636,7 @@ namespace Chummer
                                         GlobalSettings.CultureInfo)).ConfigureAwait(false);
                             await objWriter.WriteElementStringAsync("baselifestyle", objLifestyle.BaseLifestyle)
                                 .ConfigureAwait(false);
-                            if (objLifestyle.LifestyleQualities.Count > 0)
+                            if (await objLifestyle.LifestyleQualities.GetCountAsync().ConfigureAwait(false) > 0)
                             {
                                 // <qualities>
                                 await objWriter.WriteStartElementAsync("qualities").ConfigureAwait(false);
@@ -690,7 +690,7 @@ namespace Chummer
                             await objWriter.WriteEndElementAsync().ConfigureAwait(false);
                         }
 
-                        if (objArmor.GearChildren.Count > 0)
+                        if (await objArmor.GearChildren.GetCountAsync().ConfigureAwait(false) > 0)
                             await WriteGear(objWriter, objArmor.GearChildren).ConfigureAwait(false);
 
                         // </armor>
@@ -719,7 +719,7 @@ namespace Chummer
                             await objWriter.WriteElementStringAsync("name", objWeapon.Name).ConfigureAwait(false);
 
                             // Weapon Accessories.
-                            if (objWeapon.WeaponAccessories.Count > 0)
+                            if (await objWeapon.WeaponAccessories.GetCountAsync().ConfigureAwait(false) > 0)
                             {
                                 // <accessories>
                                 await objWriter.WriteStartElementAsync("accessories").ConfigureAwait(false);
@@ -789,7 +789,7 @@ namespace Chummer
                         // <vehicle>
                         await objWriter.WriteStartElementAsync("vehicle").ConfigureAwait(false);
                         await objWriter.WriteElementStringAsync("name", objVehicle.Name).ConfigureAwait(false);
-                        if (objVehicle.Mods.Count > 0)
+                        if (await objVehicle.Mods.GetCountAsync().ConfigureAwait(false) > 0)
                         {
                             // <mods>
                             await objWriter.WriteStartElementAsync("mods").ConfigureAwait(false);
@@ -813,13 +813,13 @@ namespace Chummer
                                     await objWriter.WriteEndElementAsync().ConfigureAwait(false);
 
                                     // See if this is a Weapon Mount with Weapons.
-                                    if (objVehicleMod.Weapons.Count > 0)
+                                    if (await objVehicleMod.Weapons.GetCountAsync().ConfigureAwait(false) > 0)
                                         blnWeapons = true;
                                 }
                                 else
                                 {
                                     // See if this is a Weapon Mount with Weapons.
-                                    if (objVehicleMod.Weapons.Count > 0)
+                                    if (await objVehicleMod.Weapons.GetCountAsync().ConfigureAwait(false) > 0)
                                         blnWeapons = true;
                                 }
                             }).ConfigureAwait(false);
@@ -915,13 +915,13 @@ namespace Chummer
                 await objWriter.WriteEndDocumentAsync().ConfigureAwait(false);
             }
 
-            Program.ShowScrollableMessageBox(
+            await Program.ShowScrollableMessageBoxAsync(
                 this,
                 string.Format(GlobalSettings.CultureInfo,
-                              await LanguageManager.GetStringAsync("Message_CreatePACKSKit_SuiteCreated")
-                                                   .ConfigureAwait(false), strName),
+                    await LanguageManager.GetStringAsync("Message_CreatePACKSKit_SuiteCreated")
+                        .ConfigureAwait(false), strName),
                 await LanguageManager.GetStringAsync("MessageTitle_CreatePACKSKit_SuiteCreated").ConfigureAwait(false),
-                MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBoxButtons.OK, MessageBoxIcon.Information).ConfigureAwait(false);
             await this.DoThreadSafeAsync(x =>
             {
                 x.DialogResult = DialogResult.OK;
@@ -966,7 +966,7 @@ namespace Chummer
                     await objWriter.WriteElementStringAsync("rating", intRating.ToString(GlobalSettings.InvariantCultureInfo), token: token).ConfigureAwait(false);
                 if (objGear.Quantity != 1)
                     await objWriter.WriteElementStringAsync("qty", objGear.Quantity.ToString(GlobalSettings.InvariantCultureInfo), token: token).ConfigureAwait(false);
-                if (objGear.Children.Count > 0)
+                if (await objGear.Children.GetCountAsync(token).ConfigureAwait(false) > 0)
                     await WriteGear(objWriter, objGear.Children, token).ConfigureAwait(false);
                 // </gear>
                 await objWriter.WriteEndElementAsync().ConfigureAwait(false);

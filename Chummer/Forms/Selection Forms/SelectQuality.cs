@@ -248,7 +248,7 @@ namespace Chummer
 
                         break;
                     }
-                case Keys.Up when lstQualities.SelectedIndex - 1 >= 0:
+                case Keys.Up when lstQualities.SelectedIndex >= 1:
                     --lstQualities.SelectedIndex;
                     break;
 
@@ -331,7 +331,7 @@ namespace Chummer
         {
             set
             {
-                if (_lstCategory.Any(x => x.Value.ToString() == value))
+                if (_lstCategory.Exists(x => string.Equals(x.Value.ToString(), value, StringComparison.OrdinalIgnoreCase)))
                 {
                     cboCategory.BeginUpdate();
                     try
@@ -425,7 +425,7 @@ namespace Chummer
                             }
                         }
 
-                        if (await _objCharacter.GetCreatedAsync(token) && !await _objCharacter.Settings.GetDontDoubleQualityPurchasesAsync(token))
+                        if (await _objCharacter.GetCreatedAsync(token).ConfigureAwait(false) && !await _objCharacter.Settings.GetDontDoubleQualityPurchasesAsync(token).ConfigureAwait(false))
                         {
                             string strDoubleCostCareer = xmlQuality.SelectSingleNodeAndCacheExpression("doublecareer", token)?.Value;
                             if (string.IsNullOrEmpty(strDoubleCostCareer) || strDoubleCostCareer != bool.FalseString)

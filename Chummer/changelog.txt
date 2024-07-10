@@ -65,6 +65,11 @@ Application Changes:
 - Character settings can now also alter the maximum amount of nuyen that a character can carry over from Create mode into Career mode.
 - Fixed custom category spells not presenting as a treenode.
 - Standardized curly brackets notation to all uses of attributes in computable expressions. This means that all data expressions that can be computed with attribute values (e.g. damage codes, cyberware rating limits) can now also use attribute maxima and minima via `{[Abbreviation]Maximum}` and `{[Abbreviation]Minimum}` (replacing [Abbreviation] with the appropriate attribute's three-letter abbreviation), and all such fields now specifically always require attribute abbreviations and codes to be enclosed in curly brackets.
+- Added two new compression settings for compressed saves: Fastest and Ultra. Fastest offers minimal compression and has negligible memory requirements, while Ultra offers near-maximum compression, but at slow speeds and with a large memory footprint of ca. 1 GB (that's in addition to the usual memory requirements of the program).
+- Autosaves are now saved uncompressed to make them as seamless as possible. Autosaving now also automatically times out after a minute, and after three attempts time out in this manner, the program will no longer attempt to autosave the character.
+- The skillgroupdisablechoice bonus node now allows the user to select any of the character's skill groups if it is empty.
+- After selecting an extended Detection spell in the spell selection screen, the program no longer incorrectly claims that all other spells are also extended. Fixes #5126
+- Adept Way discounts now properly only take Magic rating into account and do not factor in Power Point metamagics. Fixes #5145.
 
 Data Changes:
 - Corrected the categories (and therefore also mounts, concealabilities, and ranges) for the Krime AKM-SU97, the Krime Ditch, the Krime Stopper-II, the Krime Soldier, and the Krime Ripper as per forum errata found here: https://forums.shadowruntabletop.com/index.php?topic=31750.msg544923#msg544923.
@@ -93,6 +98,10 @@ Data Changes:
 - Removed power and quality requirements from Psychometry art. Any awakened should now have access to this metamagic provided they have the Art or the relevant optional rule enabled to ignore arts.
 - Fixed the underbarrel grenade launcher not properly using requirements to be available onlty to rifle-sized weapons.
 - Marked the Changeling qualities as not doubling cost in career mode. Closes #5118
+- City Slicker properly gives +1 dice for Survival (Urban) instead of -2.
+- Strike the Darkness can now properly be learned with Alpine Wrestling, German Jujitsu, Esdo, Urban Brawl Parkour, and/or Sternschutz Tactical. Closes #5140
+- Fancy Blocks, Text-Only, and Formatted Text-Only sheets no longer show priority entries for characters made with Point Buy or Life Modules.
+- Incompetent now properly sets all skills in the chosen skill group to Unaware, meaning they can also not be learned until the quality is bought off. Existing characters with the quality will need to re-apply improvements to see the change reflected on their sheets. Fixes #5111.
 
 Changed/New Strings:
 - LimitCondition_SkillsActiveLeadership
@@ -119,6 +128,8 @@ Changed/New Strings:
 - Node_UnequippedModularBioware
 - String_MinimumAttribute
 - String_MaximumAttribute
+- String_Fastest_Option
+- String_Ultra_Option
 
 Removed Strings:
 - Label_SelectMetamagic_Disadvantage

@@ -613,11 +613,10 @@ namespace Chummer.Backend.Skills
         {
             if (value == 0)
                 return;
-            IAsyncDisposable objLocker = await LockObject.EnterUpgradeableReadLockAsync(token).ConfigureAwait(false);
+            IAsyncDisposable objLocker = await LockObject.EnterWriteLockAsync(token).ConfigureAwait(false);
             try
             {
                 token.ThrowIfCancellationRequested();
-                // No need to write lock because interlocked guarantees safety
                 Interlocked.Add(ref _intSkillFromSp, value);
                 await OnPropertyChangedAsync(nameof(BasePoints), token).ConfigureAwait(false);
             }
@@ -693,11 +692,10 @@ namespace Chummer.Backend.Skills
         {
             if (value == 0)
                 return;
-            IAsyncDisposable objLocker = await LockObject.EnterUpgradeableReadLockAsync(token).ConfigureAwait(false);
+            IAsyncDisposable objLocker = await LockObject.EnterWriteLockAsync(token).ConfigureAwait(false);
             try
             {
                 token.ThrowIfCancellationRequested();
-                // No need to write lock because interlocked guarantees safety
                 Interlocked.Add(ref _intSkillFromKarma, value);
                 await OnPropertyChangedAsync(nameof(KarmaPoints), token).ConfigureAwait(false);
             }
@@ -1066,8 +1064,10 @@ namespace Chummer.Backend.Skills
                     if (_blnIsBroken == value)
                         return;
                     using (LockObject.EnterWriteLock())
+                    {
                         _blnIsBroken = value;
-                    OnPropertyChanged();
+                        OnPropertyChanged();
+                    }
                 }
             }
         }
@@ -1105,13 +1105,12 @@ namespace Chummer.Backend.Skills
                 {
                     token.ThrowIfCancellationRequested();
                     _blnIsBroken = value;
+                    await OnPropertyChangedAsync(nameof(IsBroken), token).ConfigureAwait(false);
                 }
                 finally
                 {
                     await objLocker2.DisposeAsync().ConfigureAwait(false);
                 }
-
-                await OnPropertyChangedAsync(nameof(IsBroken), token).ConfigureAwait(false);
             }
             finally
             {
@@ -1917,7 +1916,8 @@ namespace Chummer.Backend.Skills
                         new DependencyGraphNode<string, SkillGroup>(nameof(Name))
                     ),
                     new DependencyGraphNode<string, SkillGroup>(nameof(IsBroken),
-                        new DependencyGraphNode<string, SkillGroup>(nameof(HasAnyBreakingSkills), x => !x.IsBroken || x.CharacterObject.Settings.AllowSkillRegrouping,
+                        new DependencyGraphNode<string, SkillGroup>(nameof(HasAnyBreakingSkills), x => !x.IsBroken || x.CharacterObject.Settings.AllowSkillRegrouping, async (x, t) => !await x.GetIsBrokenAsync(t).ConfigureAwait(false) || await
+                                (await x.CharacterObject.GetSettingsAsync(t).ConfigureAwait(false)).GetAllowSkillRegroupingAsync(t).ConfigureAwait(false),
                             new DependencyGraphNode<string, SkillGroup>(nameof(SkillList))
                         )
                     ),
@@ -1961,7 +1961,7 @@ namespace Chummer.Backend.Skills
                 new DependencyGraphNode<string, SkillGroup>(nameof(BaseUnbroken),
                     new DependencyGraphNode<string, SkillGroup>(nameof(IsDisabled)),
                     new DependencyGraphNode<string, SkillGroup>(nameof(SkillList)),
-                    new DependencyGraphNode<string, SkillGroup>(nameof(KarmaUnbroken), x => x._objCharacter.Settings.UsePointsOnBrokenGroups)
+                    new DependencyGraphNode<string, SkillGroup>(nameof(KarmaUnbroken), x => x._objCharacter.Settings.UsePointsOnBrokenGroups, async (x, t) => await (await x._objCharacter.GetSettingsAsync(t).ConfigureAwait(false)).GetUsePointsOnBrokenGroupsAsync(t).ConfigureAwait(false))
                 ),
                 new DependencyGraphNode<string, SkillGroup>(nameof(ToolTip),
                     new DependencyGraphNode<string, SkillGroup>(nameof(SkillList)),
@@ -1989,22 +1989,53 @@ namespace Chummer.Backend.Skills
             List<string> lstProperties = new List<string>();
             if (e.PropertyNames.Contains(nameof(Skill.BasePoints)) || e.PropertyNames.Contains(nameof(Skill.FreeBase)))
             {
-                lstProperties.Add(nameof(BaseUnbroken));
-                lstProperties.Add(nameof(KarmaUnbroken));
+                if (!await GetIsDisabledAsync(token).ConfigureAwait(false) && SkillList.Count != 0)
+                {
+                    if (await _objCharacter.GetEffectiveBuildMethodUsesPriorityTablesAsync(token).ConfigureAwait(false))
+                    {
+                        CharacterSettings objSettings = await _objCharacter.GetSettingsAsync(token).ConfigureAwait(false);
+                        if ((await objSettings.GetStrictSkillGroupsInCreateModeAsync(token).ConfigureAwait(false)
+                             && !await _objCharacter.GetCreatedAsync(token).ConfigureAwait(false))
+                            || !await objSettings.GetUsePointsOnBrokenGroupsAsync(token).ConfigureAwait(false))
+                            lstProperties.Add(nameof(BaseUnbroken));
+                    }
+
+                    lstProperties.Add(nameof(KarmaUnbroken));
+                }
             }
             else if (e.PropertyNames.Contains(nameof(Skill.KarmaPoints)) || e.PropertyNames.Contains(nameof(Skill.FreeKarma)))
-                lstProperties.Add(nameof(KarmaUnbroken));
-
-            if (e.PropertyNames.Contains(nameof(Skill.Specializations)) && await CharacterObject.Settings.GetSpecializationsBreakSkillGroupsAsync(token).ConfigureAwait(false))
-                lstProperties.Add(nameof(HasAnyBreakingSkills));
+            {
+                if (!await GetIsDisabledAsync(token).ConfigureAwait(false) && SkillList.Count != 0)
+                    lstProperties.Add(nameof(KarmaUnbroken));
+            }
 
             if (e.PropertyNames.Contains(nameof(Skill.TotalBaseRating)) || e.PropertyNames.Contains(nameof(Skill.Enabled)))
             {
-                lstProperties.Add(nameof(HasAnyBreakingSkills));
+                if (e.PropertyNames.Contains(nameof(Skill.Enabled)))
+                {
+                    lstProperties.Add(nameof(HasAnyBreakingSkills));
+                }
+                else if (SkillList.Count > 1)
+                {
+                    Skill objFirstEnabledSkill = await SkillList.FirstOrDefaultAsync(x => x.GetEnabledAsync(token), token: token).ConfigureAwait(false);
+                    if (objFirstEnabledSkill != null && await SkillList.AllAsync(async x => x == objFirstEnabledSkill || !await x.GetEnabledAsync(token).ConfigureAwait(false), token: token).ConfigureAwait(false))
+                    {
+                        lstProperties.Add(nameof(HasAnyBreakingSkills));
+                    }
+                }
                 lstProperties.Add(nameof(DisplayRating));
                 lstProperties.Add(nameof(UpgradeToolTip));
                 lstProperties.Add(nameof(CurrentKarmaCost));
                 lstProperties.Add(nameof(UpgradeKarmaCost));
+            }
+            else if (e.PropertyNames.Contains(nameof(Skill.Specializations)) && await CharacterObject.Settings.GetSpecializationsBreakSkillGroupsAsync(token).ConfigureAwait(false))
+            {
+                if (SkillList.Count > 1)
+                {
+                    Skill objFirstEnabledSkill = await SkillList.FirstOrDefaultAsync(x => x.GetEnabledAsync(token), token: token).ConfigureAwait(false);
+                    if (objFirstEnabledSkill != null && await SkillList.AllAsync(async x => x == objFirstEnabledSkill || !await x.GetEnabledAsync(token).ConfigureAwait(false), token: token).ConfigureAwait(false))
+                        lstProperties.Add(nameof(HasAnyBreakingSkills));
+                }
             }
 
             if (lstProperties.Count > 0)
@@ -2579,11 +2610,11 @@ namespace Chummer.Backend.Skills
                     {
                         if (setNamesOfChangedProperties == null)
                             setNamesOfChangedProperties
-                                = s_SkillGroupDependencyGraph.GetWithAllDependents(this, strPropertyName, true);
+                                = await s_SkillGroupDependencyGraph.GetWithAllDependentsAsync(this, strPropertyName, true, token).ConfigureAwait(false);
                         else
                         {
-                            foreach (string strLoopChangedProperty in s_SkillGroupDependencyGraph
-                                         .GetWithAllDependentsEnumerable(this, strPropertyName))
+                            foreach (string strLoopChangedProperty in await s_SkillGroupDependencyGraph
+                                         .GetWithAllDependentsEnumerableAsync(this, strPropertyName, token).ConfigureAwait(false))
                                 setNamesOfChangedProperties.Add(strLoopChangedProperty);
                         }
                     }

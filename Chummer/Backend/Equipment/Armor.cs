@@ -1701,6 +1701,70 @@ namespace Chummer.Backend.Equipment
         }
 
         /// <summary>
+        /// Whether the Armor is equipped and should be considered for highest Armor Rating or Armor Encumbrance.
+        /// </summary>
+        public async Task SetEquippedAsync(bool value, CancellationToken token = default)
+        {
+            if (_blnEquipped == value)
+                return;
+            _blnEquipped = value;
+            if (value)
+            {
+                // Add the Armor's Improvements to the character.
+                await ImprovementManager.EnableImprovementsAsync(_objCharacter, _objCharacter.Improvements.Where(x => x.ImproveSource == Improvement.ImprovementSource.Armor && x.SourceName == InternalId), token).ConfigureAwait(false);
+                // Add the Improvements from any Armor Mods in the Armor.
+                await ArmorMods.ForEachWithSideEffectsAsync(async objMod =>
+                {
+                    if (objMod.Equipped)
+                    {
+                        await ImprovementManager.EnableImprovementsAsync(_objCharacter,
+                            _objCharacter.Improvements.Where(x =>
+                                x.ImproveSource == Improvement.ImprovementSource.ArmorMod &&
+                                x.SourceName == InternalId), token).ConfigureAwait(false);
+                        // Add the Improvements from any Gear in the Armor.
+                        await objMod.GearChildren.ForEachWithSideEffectsAsync(async objGear =>
+                        {
+                            if (objGear.Equipped)
+                            {
+                                await objGear.ChangeEquippedStatusAsync(true, true, token).ConfigureAwait(false);
+                            }
+                        }, token).ConfigureAwait(false);
+                    }
+                }, token).ConfigureAwait(false);
+                // Add the Improvements from any Gear in the Armor.
+                await GearChildren.ForEachWithSideEffectsAsync(objGear => objGear.ChangeEquippedStatusAsync(true, true, token), token).ConfigureAwait(false);
+            }
+            else
+            {
+                // Add the Armor's Improvements to the character.
+                await ImprovementManager.DisableImprovementsAsync(_objCharacter,
+                    _objCharacter.Improvements.Where(
+                        x => x.ImproveSource
+                             == Improvement.ImprovementSource.Armor
+                             && x.SourceName == InternalId), token).ConfigureAwait(false);
+                // Add the Improvements from any Armor Mods in the Armor.
+                await ArmorMods.ForEachWithSideEffectsAsync(async objMod =>
+                {
+                    await ImprovementManager.DisableImprovementsAsync(_objCharacter,
+                        _objCharacter.Improvements.Where(
+                            x => x.ImproveSource
+                                 == Improvement.ImprovementSource.ArmorMod
+                                 && x.SourceName == InternalId), token).ConfigureAwait(false);
+                    // Add the Improvements from any Gear in the Armor.
+                    await objMod.GearChildren.ForEachWithSideEffectsAsync(
+                        objGear => objGear.ChangeEquippedStatusAsync(false, true, token), token).ConfigureAwait(false);
+                }, token).ConfigureAwait(false);
+                // Add the Improvements from any Gear in the Armor.
+                await GearChildren.ForEachWithSideEffectsAsync(objGear => objGear.ChangeEquippedStatusAsync(false, true, token), token).ConfigureAwait(false);
+            }
+
+            if (_objCharacter?.IsLoading == false)
+                await _objCharacter.OnMultiplePropertyChangedAsync(token, nameof(Character.ArmorEncumbrance),
+                    nameof(Character.TotalCarriedWeight),
+                    nameof(Character.TotalArmorRating)).ConfigureAwait(false);
+        }
+
+        /// <summary>
         /// Whether Wireless is turned on for this armor
         /// </summary>
         public bool WirelessOn
@@ -3478,45 +3542,57 @@ namespace Chummer.Backend.Equipment
             return intRestrictedCount;
         }
 
-        public bool AllowPasteXml
+        public async Task<bool> AllowPasteXml(CancellationToken token = default)
         {
-            get
+            token.ThrowIfCancellationRequested();
+            string strCapacity = await CalculatedCapacityAsync(GlobalSettings.InvariantCultureInfo, token)
+                .ConfigureAwait(false);
+            if (string.IsNullOrEmpty(strCapacity) || strCapacity == "0")
+                return false;
+            IAsyncDisposable objLocker = await GlobalSettings.EnterClipboardReadLockAsync(token).ConfigureAwait(false);
+            try
             {
-                string strCapacity = CalculatedCapacity(GlobalSettings.InvariantCultureInfo);
-                if (string.IsNullOrEmpty(strCapacity) || strCapacity == "0")
-                    return false;
-                string strPasteCategory = GlobalSettings.Clipboard["category"]?.InnerText ?? string.Empty;
-                switch (GlobalSettings.ClipboardContentType)
+                token.ThrowIfCancellationRequested();
+                string strPasteCategory = (await GlobalSettings.GetClipboardAsync(token).ConfigureAwait(false)).SelectSingleNodeAndCacheExpressionAsNavigator("category", token)?.Value ?? string.Empty;
+                switch (await GlobalSettings.GetClipboardContentTypeAsync(token).ConfigureAwait(false))
                 {
                     case ClipboardContentType.ArmorMod:
-                        {
-                            XPathNavigator xmlNode = this.GetNodeXPath();
-                            if (xmlNode == null)
-                                return strPasteCategory == "General";
-                            XPathNavigator xmlForceModCategory = xmlNode.SelectSingleNodeAndCacheExpression("forcemodcategory");
-                            if (xmlForceModCategory != null)
-                                return xmlForceModCategory.Value == strPasteCategory;
-                            if (strPasteCategory == "General")
-                                return true;
-                            XPathNodeIterator xmlAddonCategoryList = xmlNode.SelectAndCacheExpression("addoncategory");
-                            return xmlAddonCategoryList.Count <= 0 || xmlAddonCategoryList.Cast<XPathNavigator>().Any(xmlCategory => xmlCategory.Value == strPasteCategory);
-                        }
+                    {
+                        XPathNavigator xmlNode = await this.GetNodeXPathAsync(token: token).ConfigureAwait(false);
+                        if (xmlNode == null)
+                            return strPasteCategory == "General";
+                        XPathNavigator xmlForceModCategory =
+                            xmlNode.SelectSingleNodeAndCacheExpression("forcemodcategory", token);
+                        if (xmlForceModCategory != null)
+                            return xmlForceModCategory.Value == strPasteCategory;
+                        if (strPasteCategory == "General")
+                            return true;
+                        XPathNodeIterator xmlAddonCategoryList = xmlNode.SelectAndCacheExpression("addoncategory", token);
+                        return xmlAddonCategoryList.Count <= 0 || xmlAddonCategoryList.Cast<XPathNavigator>()
+                            .Any(xmlCategory => xmlCategory.Value == strPasteCategory);
+                    }
                     case ClipboardContentType.Gear:
-                        {
-                            XPathNavigator xmlNode = this.GetNodeXPath();
-                            if (xmlNode == null)
-                                return false;
-                            XPathNodeIterator xmlAddonCategoryList = xmlNode.SelectAndCacheExpression("addoncategory");
-                            return xmlAddonCategoryList.Count <= 0 || xmlAddonCategoryList.Cast<XPathNavigator>().Any(xmlCategory => xmlCategory.Value == strPasteCategory);
-                        }
+                    {
+                        XPathNavigator xmlNode = await this.GetNodeXPathAsync(token: token).ConfigureAwait(false);
+                        if (xmlNode == null)
+                            return false;
+                        XPathNodeIterator xmlAddonCategoryList = xmlNode.SelectAndCacheExpression("addoncategory", token);
+                        return xmlAddonCategoryList.Count <= 0 || xmlAddonCategoryList.Cast<XPathNavigator>()
+                            .Any(xmlCategory => xmlCategory.Value == strPasteCategory);
+                    }
                     default:
                         return false;
                 }
             }
+            finally
+            {
+                await objLocker.DisposeAsync().ConfigureAwait(false);
+            }
         }
 
-        public bool AllowPasteObject(object input)
+        public Task<bool> AllowPasteObject(object input, CancellationToken token = default)
         {
+            token.ThrowIfCancellationRequested();
             throw new NotImplementedException();
         }
 

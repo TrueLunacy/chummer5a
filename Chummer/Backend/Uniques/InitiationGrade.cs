@@ -170,7 +170,7 @@ namespace Chummer
                                 : Math.Floor(await _objCharacter.GetCyberwareEssenceAsync(token).ConfigureAwait(false))));
                         // Cannot increase RES to be more than what it would be without any Essence loss.
                         CharacterAttrib objRes = await _objCharacter.GetAttributeAsync("RES", token: token).ConfigureAwait(false);
-                        intResonanceRecovered = _objCharacter.Settings.ESSLossReducesMaximumOnly
+                        intResonanceRecovered = await _objCharacter.Settings.GetESSLossReducesMaximumOnlyAsync(token).ConfigureAwait(false)
                             ? Math.Min(intResonanceRecovered,
                                 await objRes.MaximumNoEssenceLossAsync(token: token).ConfigureAwait(false) - intGrade -
                                 await objRes.GetTotalMaximumAsync(token).ConfigureAwait(false))
@@ -583,12 +583,12 @@ namespace Chummer
                     if (Grade != await _objCharacter.GetInitiateGradeAsync(token).ConfigureAwait(false)
                         && blnPerformGradeCheck)
                     {
-                        Program.ShowScrollableMessageBox(
+                        await Program.ShowScrollableMessageBoxAsync(
                             await LanguageManager.GetStringAsync("Message_DeleteGrade", token: token)
                                 .ConfigureAwait(false),
                             await LanguageManager.GetStringAsync("MessageTitle_DeleteGrade", token: token)
                                 .ConfigureAwait(false), MessageBoxButtons.OK,
-                            MessageBoxIcon.Error);
+                            MessageBoxIcon.Error, token: token).ConfigureAwait(false);
                         return false;
                     }
 
@@ -604,12 +604,12 @@ namespace Chummer
                     if (Grade != await _objCharacter.GetSubmersionGradeAsync(token).ConfigureAwait(false)
                         && blnPerformGradeCheck)
                     {
-                        Program.ShowScrollableMessageBox(
+                        await Program.ShowScrollableMessageBoxAsync(
                             await LanguageManager.GetStringAsync("Message_DeleteGrade", token: token)
                                 .ConfigureAwait(false),
                             await LanguageManager.GetStringAsync("MessageTitle_DeleteGrade", token: token)
                                 .ConfigureAwait(false), MessageBoxButtons.OK,
-                            MessageBoxIcon.Error);
+                            MessageBoxIcon.Error, token: token).ConfigureAwait(false);
                         return false;
                     }
 

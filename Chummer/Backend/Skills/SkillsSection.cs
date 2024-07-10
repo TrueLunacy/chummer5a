@@ -332,6 +332,8 @@ namespace Chummer.Backend.Skills
 
         public void OnMultiplePropertiesChanged(IReadOnlyCollection<string> lstPropertyNames)
         {
+            if (IsLoading)
+                return;
             using (LockObject.EnterUpgradeableReadLock())
             {
                 HashSet<string> setNamesOfChangedProperties = null;
@@ -442,6 +444,8 @@ namespace Chummer.Backend.Skills
         public async Task OnMultiplePropertiesChangedAsync(IReadOnlyCollection<string> lstPropertyNames, CancellationToken token = default)
         {
             token.ThrowIfCancellationRequested();
+            if (IsLoading)
+                return;
             IAsyncDisposable objLocker = await LockObject.EnterUpgradeableReadLockAsync(token).ConfigureAwait(false);
             try
             {
@@ -453,11 +457,11 @@ namespace Chummer.Backend.Skills
                     {
                         if (setNamesOfChangedProperties == null)
                             setNamesOfChangedProperties
-                                = s_SkillSectionDependencyGraph.GetWithAllDependents(this, strPropertyName, true);
+                                = await s_SkillSectionDependencyGraph.GetWithAllDependentsAsync(this, strPropertyName, true, token).ConfigureAwait(false);
                         else
                         {
-                            foreach (string strLoopChangedProperty in s_SkillSectionDependencyGraph
-                                         .GetWithAllDependentsEnumerable(this, strPropertyName))
+                            foreach (string strLoopChangedProperty in await s_SkillSectionDependencyGraph
+                                         .GetWithAllDependentsEnumerableAsync(this, strPropertyName, token).ConfigureAwait(false))
                                 setNamesOfChangedProperties.Add(strLoopChangedProperty);
                         }
                     }
@@ -1968,7 +1972,7 @@ namespace Chummer.Backend.Skills
                             else if (!await _objCharacter.GetCreatedAsync(token).ConfigureAwait(false))
                             {
                                 // zero out any skillgroups whose skills did not make the final cut
-                                foreach (SkillGroup objSkillGroup in await SkillGroups.ToListAsync(token)
+                                foreach (SkillGroup objSkillGroup in await (await GetSkillGroupsAsync(token).ConfigureAwait(false)).ToListAsync(token)
                                              .ConfigureAwait(false))
                                 {
                                     token.ThrowIfCancellationRequested();
@@ -1992,7 +1996,7 @@ namespace Chummer.Backend.Skills
                             else
                             {
                                 // TODO: Skill groups don't refresh their CanIncrease property correctly when the last of their skills is being added, as the total base rating will be zero. Call this here to force a refresh.
-                                foreach (SkillGroup objSkillGroup in await SkillGroups.ToListAsync(token)
+                                foreach (SkillGroup objSkillGroup in await (await GetSkillGroupsAsync(token).ConfigureAwait(false)).ToListAsync(token)
                                              .ConfigureAwait(false))
                                 {
                                     token.ThrowIfCancellationRequested();
@@ -2583,7 +2587,7 @@ namespace Chummer.Backend.Skills
                         objSkill.MultiplePropertiesChangedAsync -= OnKnowledgeSkillPropertyChanged;
                         return objSkill.RemoveAsync(token);
                     }, token).ConfigureAwait(false);
-                    await SkillGroups.ForEachAsync(async x => await x.DisposeAsync().ConfigureAwait(false), token).ConfigureAwait(false);
+                    await SkillGroups.ForEachWithSideEffectsAsync(async x => await x.DisposeAsync().ConfigureAwait(false), token).ConfigureAwait(false);
                     _dicSkillBackups.Clear();
                     _dicSkills.Clear();
                     await _lstSkills.ClearAsync(token).ConfigureAwait(false);
@@ -4002,9 +4006,8 @@ namespace Chummer.Backend.Skills
                                                                return objLoopSkill.DisplayName(strLanguage)
                                                                       + string.Format(
                                                                           objCultureInfo, strFormat,
-                                                                          dicValueOverrides?.ContainsKey(strSkillKey)
-                                                                          == true
-                                                                              ? dicValueOverrides[strSkillKey]
+                                                                          dicValueOverrides != null && dicValueOverrides.TryGetValue(strSkillKey, out int intOverride)
+                                                                              ? intOverride
                                                                               : objLoopSkill.PoolOtherAttribute(
                                                                                   objLoopSkill.Attribute,
                                                                                   intAttributeOverrideValue:
@@ -4051,9 +4054,8 @@ namespace Chummer.Backend.Skills
                                                   return objLoopSkill.DisplayName(strLanguage)
                                                          + string.Format(
                                                              objCultureInfo, strFormat,
-                                                             dicValueOverrides?.ContainsKey(strSkillKey)
-                                                             == true
-                                                                 ? dicValueOverrides[strSkillKey]
+                                                             dicValueOverrides != null && dicValueOverrides.TryGetValue(strSkillKey, out int intOverride)
+                                                                 ? intOverride
                                                                  : objLoopSkill.PoolOtherAttribute(
                                                                      objLoopSkill.Attribute,
                                                                      intAttributeOverrideValue:
@@ -4146,13 +4148,13 @@ namespace Chummer.Backend.Skills
                 {
                     //swallow this
                 }
-                await _lstSkillGroups.ForEachAsync(async x => await x.DisposeAsync().ConfigureAwait(false)).ConfigureAwait(false);
+                await _lstSkillGroups.ForEachWithSideEffectsAsync(async x => await x.DisposeAsync().ConfigureAwait(false)).ConfigureAwait(false);
                 foreach (Skill objSkill in _dicSkillBackups.Values)
                     await objSkill.DisposeAsync().ConfigureAwait(false);
                 _dicSkillBackups.Clear();
-                await _lstSkills.ForEachAsync(async x => await x.DisposeAsync().ConfigureAwait(false)).ConfigureAwait(false);
+                await _lstSkills.ForEachWithSideEffectsAsync(async x => await x.DisposeAsync().ConfigureAwait(false)).ConfigureAwait(false);
                 await _lstSkills.DisposeAsync().ConfigureAwait(false);
-                await _lstKnowledgeSkills.ForEachAsync(async x => await x.DisposeAsync().ConfigureAwait(false)).ConfigureAwait(false);
+                await _lstKnowledgeSkills.ForEachWithSideEffectsAsync(async x => await x.DisposeAsync().ConfigureAwait(false)).ConfigureAwait(false);
                 await _lstKnowledgeSkills.DisposeAsync().ConfigureAwait(false);
                 await _lstKnowsoftSkills.ClearAsync().ConfigureAwait(false);
                 await _lstKnowsoftSkills.DisposeAsync().ConfigureAwait(false);

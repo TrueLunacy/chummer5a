@@ -270,7 +270,8 @@ namespace Chummer.UI.Attributes
                             }, token)
                             .ConfigureAwait(false);
                     }
-                    await nudBase.DoThreadSafeAsync(x => x.Maximum = intPriorityMaximum, token)
+                    else
+                        await nudBase.DoThreadSafeAsync(x => x.Maximum = intPriorityMaximum, token)
                             .ConfigureAwait(false);
                 }
                 else if (e.PropertyNames.Contains(nameof(CharacterAttrib.BaseUnlocked)))
@@ -351,22 +352,27 @@ namespace Chummer.UI.Attributes
                         string strName = await objAttrib.GetDisplayNameFormattedAsync(_objMyToken).ConfigureAwait(false);
                         await lblName.DoThreadSafeAsync(x => x.Text = strName, _objMyToken).ConfigureAwait(false);
                         string strValue = await objAttrib.GetDisplayValueAsync(_objMyToken).ConfigureAwait(false);
-                        await lblValue.DoThreadSafeAsync(x => x.Text = strValue, _objMyToken).ConfigureAwait(false);
                         string strAugmentedMetatypeLimits =
                             await objAttrib.GetAugmentedMetatypeLimitsAsync(_objMyToken).ConfigureAwait(false);
                         await lblLimits.DoThreadSafeAsync(x => x.Text = strAugmentedMetatypeLimits, _objMyToken)
                             .ConfigureAwait(false);
                         string strToolTip = await objAttrib.GetToolTipAsync(_objMyToken).ConfigureAwait(false);
-                        await lblValue.DoThreadSafeAsync(x => x.ToolTipText = strToolTip, _objMyToken).ConfigureAwait(false);
+                        await lblValue.DoThreadSafeAsync(x =>
+                        {
+                            x.Text = strValue;
+                            x.ToolTipText = strToolTip;
+                        }, _objMyToken).ConfigureAwait(false);
                         if (await _objCharacter.GetCreatedAsync(_objMyToken).ConfigureAwait(false))
                         {
                             string strUpgradeToolTip =
                                 await objAttrib.GetUpgradeToolTipAsync(_objMyToken).ConfigureAwait(false);
-                            await cmdImproveATT.DoThreadSafeAsync(x => x.ToolTipText = strUpgradeToolTip, _objMyToken)
-                                .ConfigureAwait(false);
                             bool blnCanUpgradeCareer =
                                 await objAttrib.GetCanUpgradeCareerAsync(_objMyToken).ConfigureAwait(false);
-                            await cmdImproveATT.DoThreadSafeAsync(x => x.Enabled = blnCanUpgradeCareer, _objMyToken)
+                            await cmdImproveATT.DoThreadSafeAsync(x =>
+                                {
+                                    x.ToolTipText = strUpgradeToolTip;
+                                    x.Enabled = blnCanUpgradeCareer;
+                                }, _objMyToken)
                                 .ConfigureAwait(false);
                         }
                         else
@@ -375,24 +381,29 @@ namespace Chummer.UI.Attributes
                                 await objAttrib.GetKarmaMaximumAsync(_objMyToken).ConfigureAwait(false);
                             int intPriorityMaximum =
                                 await objAttrib.GetPriorityMaximumAsync(_objMyToken).ConfigureAwait(false);
-                            await nudBase.DoThreadSafeAsync(x => x.Maximum = intPriorityMaximum, _objMyToken)
-                                .ConfigureAwait(false);
                             bool blnBaseUnlocked =
                                 await objAttrib.GetBaseUnlockedAsync(_objMyToken).ConfigureAwait(false);
-                            await nudBase.DoThreadSafeAsync(x => x.Enabled = blnBaseUnlocked, _objMyToken)
-                                .ConfigureAwait(false);
-                            await nudBase.RegisterOneWayAsyncDataBindingAsync((x, y) => x.Visible = y, _objCharacter,
-                                nameof(Character.EffectiveBuildMethodUsesPriorityTables),
-                                x => x.GetEffectiveBuildMethodUsesPriorityTablesAsync(_objMyToken), token: _objMyToken).ConfigureAwait(false);
-                            await nudKarma.DoThreadSafeAsync(x => x.Maximum = intKarmaMaximum, _objMyToken)
-                                .ConfigureAwait(false);
                             int intBase =
                                 await objAttrib.GetBaseAsync(_objMyToken).ConfigureAwait(false);
-                            await nudBase.DoThreadSafeAsync(x => x.Value = intBase, _objMyToken)
-                                .ConfigureAwait(false);
                             int intKarma =
                                 await objAttrib.GetKarmaAsync(_objMyToken).ConfigureAwait(false);
-                            await nudKarma.DoThreadSafeAsync(x => x.Value = intKarma, _objMyToken)
+                            await nudKarma.DoThreadSafeAsync(x =>
+                                {
+                                    x.Maximum = intKarmaMaximum;
+                                    x.Value = intKarma;
+                                }, _objMyToken)
+                                .ConfigureAwait(false);
+                            await nudBase.DoThreadSafeAsync(x =>
+                                {
+                                    x.Enabled = blnBaseUnlocked;
+                                    x.Maximum = intPriorityMaximum;
+                                    x.Value = intBase;
+                                }, _objMyToken)
+                                .ConfigureAwait(false);
+                            await nudBase.RegisterOneWayAsyncDataBindingAsync((x, y) => x.Visible = y, _objCharacter,
+                                    nameof(Character.EffectiveBuildMethodUsesPriorityTables),
+                                    x => x.GetEffectiveBuildMethodUsesPriorityTablesAsync(_objMyToken),
+                                    token: _objMyToken)
                                 .ConfigureAwait(false);
                         }
 
@@ -510,12 +521,12 @@ namespace Chummer.UI.Attributes
                         if (intUpgradeKarmaCost == -1) return; //TODO: more descriptive
                         if (intUpgradeKarmaCost > await _objCharacter.GetKarmaAsync(_objMyToken).ConfigureAwait(false))
                         {
-                            Program.ShowScrollableMessageBox(
+                            await Program.ShowScrollableMessageBoxAsync(
                                 await LanguageManager.GetStringAsync("Message_NotEnoughKarma", token: _objMyToken)
                                     .ConfigureAwait(false),
                                 await LanguageManager.GetStringAsync("MessageTitle_NotEnoughKarma", token: _objMyToken)
                                     .ConfigureAwait(false),
-                                MessageBoxButtons.OK, MessageBoxIcon.Information);
+                                MessageBoxButtons.OK, MessageBoxIcon.Information, token: _objMyToken).ConfigureAwait(false);
                             return;
                         }
 
@@ -765,14 +776,14 @@ namespace Chummer.UI.Attributes
                         .ConfigureAwait(false))
                     return true;
 
-                Program.ShowScrollableMessageBox(
+                await Program.ShowScrollableMessageBoxAsync(
                     string.Format(GlobalSettings.CultureInfo,
                         await LanguageManager.GetStringAsync("Message_AttributeMaximum", token: token)
                             .ConfigureAwait(false),
-                        _objCharacter.Settings.MaxNumberMaxAttributesCreate),
+                        await _objCharacter.Settings.GetMaxNumberMaxAttributesCreateAsync(token).ConfigureAwait(false)),
                     await LanguageManager.GetStringAsync("MessageTitle_Attribute", token: token).ConfigureAwait(false),
                     MessageBoxButtons.OK,
-                    MessageBoxIcon.Information);
+                    MessageBoxIcon.Information, token: token).ConfigureAwait(false);
                 return false;
             }
             finally
@@ -810,24 +821,24 @@ namespace Chummer.UI.Attributes
                         _objMyToken.ThrowIfCancellationRequested();
                         if (await objAttribute.GetValueAsync(_objMyToken).ConfigureAwait(false) <= 0)
                         {
-                            Program.ShowScrollableMessageBox(
+                            await Program.ShowScrollableMessageBoxAsync(
                                 await LanguageManager.GetStringAsync("Message_CannotBurnEdge", token: _objMyToken)
                                     .ConfigureAwait(false),
                                 await LanguageManager.GetStringAsync("MessageTitle_CannotBurnEdge", token: _objMyToken)
                                     .ConfigureAwait(false),
                                 MessageBoxButtons.OK,
-                                MessageBoxIcon.Exclamation);
+                                MessageBoxIcon.Exclamation, token: _objMyToken).ConfigureAwait(false);
                             return;
                         }
 
                         // Verify that the user wants to Burn a point of Edge.
-                        if (Program.ShowScrollableMessageBox(
+                        if (await Program.ShowScrollableMessageBoxAsync(
                                 await LanguageManager.GetStringAsync("Message_BurnEdge", token: _objMyToken)
                                     .ConfigureAwait(false),
                                 await LanguageManager.GetStringAsync("MessageTitle_BurnEdge", token: _objMyToken)
                                     .ConfigureAwait(false),
                                 MessageBoxButtons.YesNo,
-                                MessageBoxIcon.Question) == DialogResult.No)
+                                MessageBoxIcon.Question, token: _objMyToken).ConfigureAwait(false) == DialogResult.No)
                             return;
 
                         await objAttribute.Degrade(1, _objMyToken).ConfigureAwait(false);

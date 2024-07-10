@@ -189,11 +189,11 @@ namespace Chummer.Backend.Attributes
                     {
                         if (setNamesOfChangedProperties == null)
                             setNamesOfChangedProperties
-                                = s_AttributeSectionDependencyGraph.GetWithAllDependents(this, strPropertyName, true);
+                                = await s_AttributeSectionDependencyGraph.GetWithAllDependentsAsync(this, strPropertyName, true, token).ConfigureAwait(false);
                         else
                         {
-                            foreach (string strLoopChangedProperty in s_AttributeSectionDependencyGraph
-                                         .GetWithAllDependentsEnumerable(this, strPropertyName))
+                            foreach (string strLoopChangedProperty in await s_AttributeSectionDependencyGraph
+                                         .GetWithAllDependentsEnumerableAsync(this, strPropertyName, token).ConfigureAwait(false))
                                 setNamesOfChangedProperties.Add(strLoopChangedProperty);
                         }
                     }
@@ -1451,8 +1451,7 @@ namespace Chummer.Backend.Attributes
                                                               ']');
                         // Couldn't find the appropriate attribute in the loaded file, so regenerate it from scratch.
                         if (lstAttributeNodes == null || lstAttributeNodes.Count == 0 || xmlCharNodeAnimalForm != null
-                            &&
-                            _objCharacter.LastSavedVersion < new Version(5, 200, 25))
+                            && _objCharacter.LastSavedVersion < new Version(5, 200, 25))
                         {
                             CharacterAttrib objAttribute;
                             switch (CharacterAttrib.ConvertToAttributeCategory(strAttribute))
@@ -2308,113 +2307,113 @@ namespace Chummer.Backend.Attributes
             {
                 if (token.IsCancellationRequested)
                     return Task.FromCanceled(token);
-                if (_dicUIPropertyChangers.TryGetValue("BOD", out UiPropertyChangerTracker objEvents))
-                    return CommonCode(objEvents, e, token);
-                return Task.CompletedTask;
+                return _dicUIPropertyChangers.TryGetValue("BOD", out UiPropertyChangerTracker objEvents)
+                    ? CommonCode(objEvents, e, token)
+                    : Task.CompletedTask;
             }
             Task AGIVariant(object sender, MultiplePropertiesChangedEventArgs e, CancellationToken token = default)
             {
                 if (token.IsCancellationRequested)
                     return Task.FromCanceled(token);
-                if (_dicUIPropertyChangers.TryGetValue("AGI", out UiPropertyChangerTracker objEvents))
-                    return CommonCode(objEvents, e, token);
-                return Task.CompletedTask;
+                return _dicUIPropertyChangers.TryGetValue("AGI", out UiPropertyChangerTracker objEvents)
+                    ? CommonCode(objEvents, e, token)
+                    : Task.CompletedTask;
             }
             Task REAVariant(object sender, MultiplePropertiesChangedEventArgs e, CancellationToken token = default)
             {
                 if (token.IsCancellationRequested)
                     return Task.FromCanceled(token);
-                if (_dicUIPropertyChangers.TryGetValue("REA", out UiPropertyChangerTracker objEvents))
-                    return CommonCode(objEvents, e, token);
-                return Task.CompletedTask;
+                return _dicUIPropertyChangers.TryGetValue("REA", out UiPropertyChangerTracker objEvents)
+                    ? CommonCode(objEvents, e, token)
+                    : Task.CompletedTask;
             }
             Task STRVariant(object sender, MultiplePropertiesChangedEventArgs e, CancellationToken token = default)
             {
                 if (token.IsCancellationRequested)
                     return Task.FromCanceled(token);
-                if (_dicUIPropertyChangers.TryGetValue("STR", out UiPropertyChangerTracker objEvents))
-                    return CommonCode(objEvents, e, token);
-                return Task.CompletedTask;
+                return _dicUIPropertyChangers.TryGetValue("STR", out UiPropertyChangerTracker objEvents)
+                    ? CommonCode(objEvents, e, token)
+                    : Task.CompletedTask;
             }
             Task CHAVariant(object sender, MultiplePropertiesChangedEventArgs e, CancellationToken token = default)
             {
                 if (token.IsCancellationRequested)
                     return Task.FromCanceled(token);
-                if (_dicUIPropertyChangers.TryGetValue("CHA", out UiPropertyChangerTracker objEvents))
-                    return CommonCode(objEvents, e, token);
-                return Task.CompletedTask;
+                return _dicUIPropertyChangers.TryGetValue("CHA", out UiPropertyChangerTracker objEvents)
+                    ? CommonCode(objEvents, e, token)
+                    : Task.CompletedTask;
             }
             Task INTVariant(object sender, MultiplePropertiesChangedEventArgs e, CancellationToken token = default)
             {
                 if (token.IsCancellationRequested)
                     return Task.FromCanceled(token);
-                if (_dicUIPropertyChangers.TryGetValue("INT", out UiPropertyChangerTracker objEvents))
-                    return CommonCode(objEvents, e, token);
-                return Task.CompletedTask;
+                return _dicUIPropertyChangers.TryGetValue("INT", out UiPropertyChangerTracker objEvents)
+                    ? CommonCode(objEvents, e, token)
+                    : Task.CompletedTask;
             }
             Task LOGVariant(object sender, MultiplePropertiesChangedEventArgs e, CancellationToken token = default)
             {
                 if (token.IsCancellationRequested)
                     return Task.FromCanceled(token);
-                if (_dicUIPropertyChangers.TryGetValue("LOG", out UiPropertyChangerTracker objEvents))
-                    return CommonCode(objEvents, e, token);
-                return Task.CompletedTask;
+                return _dicUIPropertyChangers.TryGetValue("LOG", out UiPropertyChangerTracker objEvents)
+                    ? CommonCode(objEvents, e, token)
+                    : Task.CompletedTask;
             }
             Task WILVariant(object sender, MultiplePropertiesChangedEventArgs e, CancellationToken token = default)
             {
                 if (token.IsCancellationRequested)
                     return Task.FromCanceled(token);
-                if (_dicUIPropertyChangers.TryGetValue("WIL", out UiPropertyChangerTracker objEvents))
-                    return CommonCode(objEvents, e, token);
-                return Task.CompletedTask;
+                return _dicUIPropertyChangers.TryGetValue("WIL", out UiPropertyChangerTracker objEvents)
+                    ? CommonCode(objEvents, e, token)
+                    : Task.CompletedTask;
             }
             Task EDGVariant(object sender, MultiplePropertiesChangedEventArgs e, CancellationToken token = default)
             {
                 if (token.IsCancellationRequested)
                     return Task.FromCanceled(token);
-                if (_dicUIPropertyChangers.TryGetValue("EDG", out UiPropertyChangerTracker objEvents))
-                    return CommonCode(objEvents, e, token);
-                return Task.CompletedTask;
+                return _dicUIPropertyChangers.TryGetValue("EDG", out UiPropertyChangerTracker objEvents)
+                    ? CommonCode(objEvents, e, token)
+                    : Task.CompletedTask;
             }
             Task ESSVariant(object sender, MultiplePropertiesChangedEventArgs e, CancellationToken token = default)
             {
                 if (token.IsCancellationRequested)
                     return Task.FromCanceled(token);
-                if (_dicUIPropertyChangers.TryGetValue("ESS", out UiPropertyChangerTracker objEvents))
-                    return CommonCode(objEvents, e, token);
-                return Task.CompletedTask;
+                return _dicUIPropertyChangers.TryGetValue("ESS", out UiPropertyChangerTracker objEvents)
+                    ? CommonCode(objEvents, e, token)
+                    : Task.CompletedTask;
             }
             Task MAGVariant(object sender, MultiplePropertiesChangedEventArgs e, CancellationToken token = default)
             {
                 if (token.IsCancellationRequested)
                     return Task.FromCanceled(token);
-                if (_dicUIPropertyChangers.TryGetValue("MAG", out UiPropertyChangerTracker objEvents))
-                    return CommonCode(objEvents, e, token);
-                return Task.CompletedTask;
+                return _dicUIPropertyChangers.TryGetValue("MAG", out UiPropertyChangerTracker objEvents)
+                    ? CommonCode(objEvents, e, token)
+                    : Task.CompletedTask;
             }
             Task MAGAdeptVariant(object sender, MultiplePropertiesChangedEventArgs e, CancellationToken token = default)
             {
                 if (token.IsCancellationRequested)
                     return Task.FromCanceled(token);
-                if (_dicUIPropertyChangers.TryGetValue("MAGAdept", out UiPropertyChangerTracker objEvents))
-                    return CommonCode(objEvents, e, token);
-                return Task.CompletedTask;
+                return _dicUIPropertyChangers.TryGetValue("MAGAdept", out UiPropertyChangerTracker objEvents)
+                    ? CommonCode(objEvents, e, token)
+                    : Task.CompletedTask;
             }
             Task RESVariant(object sender, MultiplePropertiesChangedEventArgs e, CancellationToken token = default)
             {
                 if (token.IsCancellationRequested)
                     return Task.FromCanceled(token);
-                if (_dicUIPropertyChangers.TryGetValue("RES", out UiPropertyChangerTracker objEvents))
-                    return CommonCode(objEvents, e, token);
-                return Task.CompletedTask;
+                return _dicUIPropertyChangers.TryGetValue("RES", out UiPropertyChangerTracker objEvents)
+                    ? CommonCode(objEvents, e, token)
+                    : Task.CompletedTask;
             }
             Task DEPVariant(object sender, MultiplePropertiesChangedEventArgs e, CancellationToken token = default)
             {
                 if (token.IsCancellationRequested)
                     return Task.FromCanceled(token);
-                if (_dicUIPropertyChangers.TryGetValue("DEP", out UiPropertyChangerTracker objEvents))
-                    return CommonCode(objEvents, e, token);
-                return Task.CompletedTask;
+                return _dicUIPropertyChangers.TryGetValue("DEP", out UiPropertyChangerTracker objEvents)
+                    ? CommonCode(objEvents, e, token)
+                    : Task.CompletedTask;
             }
         }
 
@@ -2426,59 +2425,110 @@ namespace Chummer.Backend.Attributes
             }
         }
 
+        internal Task ForceAttributePropertyChangedNotificationAllAsync(params string[] lstNames)
+        {
+            return ForceAttributePropertyChangedNotificationAllAsync(default, lstNames);
+        }
+
+        internal Task ForceAttributePropertyChangedNotificationAllAsync(CancellationToken token, params string[] lstNames)
+        {
+            ReadOnlyCollection<string> lstNamesToUse = Array.AsReadOnly(lstNames);
+            return AttributeList.ForEachWithSideEffectsAsync(
+                att => att.OnMultiplePropertiesChangedAsync(lstNamesToUse, token), token);
+        }
+
         public static void CopyAttribute(CharacterAttrib objSource, CharacterAttrib objTarget, string strMetavariantXPath, XPathNavigator xmlDoc)
         {
             if (objSource == null || objTarget == null)
                 return;
-            using (objSource.LockObject.EnterReadLock())
+            using (objTarget.LockObject.EnterUpgradeableReadLock())
             {
-                string strSourceAbbrev = objSource.Abbrev.ToLowerInvariant();
-                if (strSourceAbbrev == "magadept")
-                    strSourceAbbrev = "mag";
-                XPathNavigator node = !string.IsNullOrEmpty(strMetavariantXPath)
-                    ? xmlDoc?.SelectSingleNode(strMetavariantXPath)
-                    : null;
-                if (node != null)
+                int intBase;
+                int intKarma;
+                int intMinimum = 0;
+                int intMaximum = 0;
+                int intAugmentedMaximum = 0;
+                using (objSource.LockObject.EnterReadLock())
                 {
-                    int.TryParse(node.SelectSingleNodeAndCacheExpression(strSourceAbbrev + "min")?.Value, NumberStyles.Any,
-                                 GlobalSettings.InvariantCultureInfo, out int intMinimum);
-                    int.TryParse(node.SelectSingleNodeAndCacheExpression(strSourceAbbrev + "max")?.Value, NumberStyles.Any,
-                                 GlobalSettings.InvariantCultureInfo, out int intMaximum);
-                    int.TryParse(node.SelectSingleNodeAndCacheExpression(strSourceAbbrev + "aug")?.Value, NumberStyles.Any,
-                                 GlobalSettings.InvariantCultureInfo, out int intAugmentedMaximum);
-                    intMaximum = Math.Max(intMaximum, intMinimum);
-                    intAugmentedMaximum = Math.Max(intAugmentedMaximum, intMaximum);
-                    objTarget.AssignBaseKarmaLimits(objSource.Base, objSource.Karma, intMinimum, intMaximum, intAugmentedMaximum);
+                    intBase = objSource.Base;
+                    intKarma = objSource.Karma;
+                    string strSourceAbbrev = objSource.Abbrev.ToLowerInvariant();
+                    if (strSourceAbbrev == "magadept")
+                        strSourceAbbrev = "mag";
+                    XPathNavigator node = !string.IsNullOrEmpty(strMetavariantXPath)
+                        ? xmlDoc?.SelectSingleNode(strMetavariantXPath)
+                        : null;
+                    if (node != null)
+                    {
+                        int.TryParse(node.SelectSingleNodeAndCacheExpression(strSourceAbbrev + "min")?.Value,
+                            NumberStyles.Any,
+                            GlobalSettings.InvariantCultureInfo, out intMinimum);
+                        int.TryParse(node.SelectSingleNodeAndCacheExpression(strSourceAbbrev + "max")?.Value,
+                            NumberStyles.Any,
+                            GlobalSettings.InvariantCultureInfo, out intMaximum);
+                        int.TryParse(node.SelectSingleNodeAndCacheExpression(strSourceAbbrev + "aug")?.Value,
+                            NumberStyles.Any,
+                            GlobalSettings.InvariantCultureInfo, out intAugmentedMaximum);
+                        intMaximum = Math.Max(intMaximum, intMinimum);
+                        intAugmentedMaximum = Math.Max(intAugmentedMaximum, intMaximum);
+                    }
                 }
+
+                objTarget.AssignBaseKarmaLimits(intBase, intKarma, intMinimum, intMaximum, intAugmentedMaximum);
             }
         }
 
-        public static async Task CopyAttributeAsync(CharacterAttrib objSource, CharacterAttrib objTarget, string strMetavariantXPath, XPathNavigator xmlDoc, CancellationToken token = default)
+        public static async Task CopyAttributeAsync(CharacterAttrib objSource, CharacterAttrib objTarget,
+            string strMetavariantXPath, XPathNavigator xmlDoc, CancellationToken token = default)
         {
             if (objSource == null || objTarget == null)
                 return;
-            IAsyncDisposable objLocker = await objSource.LockObject.EnterReadLockAsync(token).ConfigureAwait(false);
+            IAsyncDisposable objLocker =
+                await objTarget.LockObject.EnterUpgradeableReadLockAsync(token).ConfigureAwait(false);
             try
             {
                 token.ThrowIfCancellationRequested();
-                string strSourceAbbrev = objSource.Abbrev.ToLowerInvariant();
-                if (strSourceAbbrev == "magadept")
-                    strSourceAbbrev = "mag";
-                XPathNavigator node = !string.IsNullOrEmpty(strMetavariantXPath)
-                    ? xmlDoc?.SelectSingleNode(strMetavariantXPath)
-                    : null;
-                if (node != null)
+                int intBase;
+                int intKarma;
+                int intMinimum = 0;
+                int intMaximum = 0;
+                int intAugmentedMaximum = 0;
+                IAsyncDisposable objLocker2 =
+                    await objSource.LockObject.EnterReadLockAsync(token).ConfigureAwait(false);
+                try
                 {
-                    int.TryParse(node.SelectSingleNodeAndCacheExpression(strSourceAbbrev + "min", token)?.Value, NumberStyles.Any,
-                                 GlobalSettings.InvariantCultureInfo, out int intMinimum);
-                    int.TryParse(node.SelectSingleNodeAndCacheExpression(strSourceAbbrev + "max", token)?.Value, NumberStyles.Any,
-                                 GlobalSettings.InvariantCultureInfo, out int intMaximum);
-                    int.TryParse(node.SelectSingleNodeAndCacheExpression(strSourceAbbrev + "aug", token)?.Value, NumberStyles.Any,
-                                 GlobalSettings.InvariantCultureInfo, out int intAugmentedMaximum);
-                    intMaximum = Math.Max(intMaximum, intMinimum);
-                    intAugmentedMaximum = Math.Max(intAugmentedMaximum, intMaximum);
-                    await objTarget.AssignBaseKarmaLimitsAsync(objSource.Base, objSource.Karma, intMinimum, intMaximum, intAugmentedMaximum, token).ConfigureAwait(false);
+                    token.ThrowIfCancellationRequested();
+                    intBase = await objSource.GetBaseAsync(token).ConfigureAwait(false);
+                    intKarma = await objSource.GetKarmaAsync(token).ConfigureAwait(false);
+                    string strSourceAbbrev = objSource.Abbrev.ToLowerInvariant();
+                    if (strSourceAbbrev == "magadept")
+                        strSourceAbbrev = "mag";
+                    XPathNavigator node = !string.IsNullOrEmpty(strMetavariantXPath)
+                        ? xmlDoc?.SelectSingleNode(strMetavariantXPath)
+                        : null;
+                    if (node != null)
+                    {
+                        int.TryParse(node.SelectSingleNodeAndCacheExpression(strSourceAbbrev + "min", token)?.Value,
+                            NumberStyles.Any,
+                            GlobalSettings.InvariantCultureInfo, out intMinimum);
+                        int.TryParse(node.SelectSingleNodeAndCacheExpression(strSourceAbbrev + "max", token)?.Value,
+                            NumberStyles.Any,
+                            GlobalSettings.InvariantCultureInfo, out intMaximum);
+                        int.TryParse(node.SelectSingleNodeAndCacheExpression(strSourceAbbrev + "aug", token)?.Value,
+                            NumberStyles.Any,
+                            GlobalSettings.InvariantCultureInfo, out intAugmentedMaximum);
+                        intMaximum = Math.Max(intMaximum, intMinimum);
+                        intAugmentedMaximum = Math.Max(intAugmentedMaximum, intMaximum);
+                    }
                 }
+                finally
+                {
+                    await objLocker2.DisposeAsync().ConfigureAwait(false);
+                }
+
+                await objTarget
+                    .AssignBaseKarmaLimitsAsync(intBase, intKarma, intMinimum, intMaximum, intAugmentedMaximum, token)
+                    .ConfigureAwait(false);
             }
             finally
             {
@@ -2497,29 +2547,28 @@ namespace Chummer.Backend.Attributes
                 {
                     strReturn = strReturn
                                 .CheapReplace('{' + strCharAttributeName + '}', () =>
-                                                  (dicValueOverrides?.ContainsKey(strCharAttributeName) == true
-                                                      ? dicValueOverrides[strCharAttributeName]
+                                                  (dicValueOverrides != null && dicValueOverrides.TryGetValue(strCharAttributeName, out int intOverride)
+                                                      ? intOverride
                                                       : _objCharacter.GetAttribute(strCharAttributeName, token: token).TotalValue)
                                                   .ToString(GlobalSettings.InvariantCultureInfo))
                                 .CheapReplace('{' + strCharAttributeName + "Unaug}", () =>
-                                                  (dicValueOverrides?.ContainsKey(strCharAttributeName + "Unaug")
-                                                   == true
-                                                      ? dicValueOverrides[strCharAttributeName + "Unaug"]
+                                                  (dicValueOverrides != null && dicValueOverrides.TryGetValue(strCharAttributeName + "Unaug", out int intOverride)
+                                                      ? intOverride
                                                       : _objCharacter.GetAttribute(strCharAttributeName, token: token).Value)
                                                   .ToString(GlobalSettings.InvariantCultureInfo))
                                 .CheapReplace('{' + strCharAttributeName + "Base}", () =>
-                                                  (dicValueOverrides?.ContainsKey(strCharAttributeName + "Base") == true
-                                                      ? dicValueOverrides[strCharAttributeName + "Base"]
+                                                  (dicValueOverrides != null && dicValueOverrides.TryGetValue(strCharAttributeName + "Base", out int intOverride)
+                                                      ? intOverride
                                                       : _objCharacter.GetAttribute(strCharAttributeName, token: token).TotalBase)
                                                   .ToString(GlobalSettings.InvariantCultureInfo))
                                 .CheapReplace('{' + strCharAttributeName + "Minimum}", () =>
-                                    (dicValueOverrides?.ContainsKey(strCharAttributeName + "Minimum") == true
-                                        ? dicValueOverrides[strCharAttributeName + "Minimum"]
+                                    (dicValueOverrides != null && dicValueOverrides.TryGetValue(strCharAttributeName + "Minimum", out int intOverride)
+                                        ? intOverride
                                         : _objCharacter.GetAttribute(strCharAttributeName, token: token).TotalMinimum)
                                     .ToString(GlobalSettings.InvariantCultureInfo))
                                 .CheapReplace('{' + strCharAttributeName + "Maximum}", () =>
-                                    (dicValueOverrides?.ContainsKey(strCharAttributeName + "Maximum") == true
-                                        ? dicValueOverrides[strCharAttributeName + "Maximum"]
+                                    (dicValueOverrides != null && dicValueOverrides.TryGetValue(strCharAttributeName + "Maximum", out int intOverride)
+                                        ? intOverride
                                         : _objCharacter.GetAttribute(strCharAttributeName, token: token).TotalMaximum)
                                     .ToString(GlobalSettings.InvariantCultureInfo));
                 }
@@ -2539,28 +2588,28 @@ namespace Chummer.Backend.Attributes
                 foreach (string strCharAttributeName in AttributeStrings)
                 {
                     sbdInput.CheapReplace(strOriginal, '{' + strCharAttributeName + '}', () =>
-                        (dicValueOverrides?.ContainsKey(strCharAttributeName) == true
-                            ? dicValueOverrides[strCharAttributeName]
+                        (dicValueOverrides != null && dicValueOverrides.TryGetValue(strCharAttributeName, out int intOverride)
+                            ? intOverride
                             : _objCharacter.GetAttribute(strCharAttributeName, token: token).TotalValue)
                         .ToString(GlobalSettings.InvariantCultureInfo));
                     sbdInput.CheapReplace(strOriginal, '{' + strCharAttributeName + "Unaug}", () =>
-                        (dicValueOverrides?.ContainsKey(strCharAttributeName + "Unaug") == true
-                            ? dicValueOverrides[strCharAttributeName + "Unaug"]
+                        (dicValueOverrides != null && dicValueOverrides.TryGetValue(strCharAttributeName + "Unaug", out int intOverride)
+                            ? intOverride
                             : _objCharacter.GetAttribute(strCharAttributeName, token: token).Value)
                         .ToString(GlobalSettings.InvariantCultureInfo));
                     sbdInput.CheapReplace(strOriginal, '{' + strCharAttributeName + "Base}", () =>
-                        (dicValueOverrides?.ContainsKey(strCharAttributeName + "Base") == true
-                            ? dicValueOverrides[strCharAttributeName + "Base"]
+                        (dicValueOverrides != null && dicValueOverrides.TryGetValue(strCharAttributeName + "Base", out int intOverride)
+                            ? intOverride
                             : _objCharacter.GetAttribute(strCharAttributeName, token: token).TotalBase)
                         .ToString(GlobalSettings.InvariantCultureInfo));
                     sbdInput.CheapReplace(strOriginal, '{' + strCharAttributeName + "Minimum}", () =>
-                        (dicValueOverrides?.ContainsKey(strCharAttributeName + "Minimum") == true
-                            ? dicValueOverrides[strCharAttributeName + "Minimum"]
+                        (dicValueOverrides != null && dicValueOverrides.TryGetValue(strCharAttributeName + "Minimum", out int intOverride)
+                            ? intOverride
                             : _objCharacter.GetAttribute(strCharAttributeName, token: token).TotalMinimum)
                         .ToString(GlobalSettings.InvariantCultureInfo));
                     sbdInput.CheapReplace(strOriginal, '{' + strCharAttributeName + "Maximum}", () =>
-                        (dicValueOverrides?.ContainsKey(strCharAttributeName + "Maximum") == true
-                            ? dicValueOverrides[strCharAttributeName + "Maximum"]
+                        (dicValueOverrides != null && dicValueOverrides.TryGetValue(strCharAttributeName + "Maximum", out int intOverride)
+                            ? intOverride
                             : _objCharacter.GetAttribute(strCharAttributeName, token: token).TotalMaximum)
                         .ToString(GlobalSettings.InvariantCultureInfo));
                 }
@@ -2582,31 +2631,30 @@ namespace Chummer.Backend.Attributes
                         .GetAttributeAsync(strCharAttributeName, token: token).ConfigureAwait(false);
                     strReturn = await (await (await (await (await strReturn
                                         .CheapReplaceAsync('{' + strCharAttributeName + '}', async () =>
-                                            (dicValueOverrides?.ContainsKey(strCharAttributeName) == true
-                                                ? dicValueOverrides[strCharAttributeName]
+                                            (dicValueOverrides != null && dicValueOverrides.TryGetValue(strCharAttributeName, out int intOverride)
+                                                ? intOverride
                                                 : await objAttribute.GetTotalValueAsync(token).ConfigureAwait(false))
                                             .ToString(GlobalSettings.InvariantCultureInfo), token: token)
                                         .ConfigureAwait(false))
                                     .CheapReplaceAsync('{' + strCharAttributeName + "Unaug}", async () =>
-                                        (dicValueOverrides?.ContainsKey(strCharAttributeName + "Unaug")
-                                         == true
-                                            ? dicValueOverrides[strCharAttributeName + "Unaug"]
+                                        (dicValueOverrides != null && dicValueOverrides.TryGetValue(strCharAttributeName + "Unaug", out int intOverride)
+                                            ? intOverride
                                             : await objAttribute.GetValueAsync(token).ConfigureAwait(false))
                                         .ToString(GlobalSettings.InvariantCultureInfo), token: token)
                                     .ConfigureAwait(false))
                                 .CheapReplaceAsync('{' + strCharAttributeName + "Base}", async () =>
-                                    (dicValueOverrides?.ContainsKey(strCharAttributeName + "Base") == true
-                                        ? dicValueOverrides[strCharAttributeName + "Base"]
+                                    (dicValueOverrides != null && dicValueOverrides.TryGetValue(strCharAttributeName + "Base", out int intOverride)
+                                        ? intOverride
                                         : await objAttribute.GetTotalBaseAsync(token).ConfigureAwait(false))
                                     .ToString(GlobalSettings.InvariantCultureInfo), token: token).ConfigureAwait(false))
                             .CheapReplaceAsync('{' + strCharAttributeName + "Minimum}", async () =>
-                                (dicValueOverrides?.ContainsKey(strCharAttributeName + "Minimum") == true
-                                    ? dicValueOverrides[strCharAttributeName + "Minimum"]
+                                (dicValueOverrides != null && dicValueOverrides.TryGetValue(strCharAttributeName + "Minimum", out int intOverride)
+                                    ? intOverride
                                     : await objAttribute.GetTotalMinimumAsync(token).ConfigureAwait(false))
                                 .ToString(GlobalSettings.InvariantCultureInfo), token: token).ConfigureAwait(false))
                         .CheapReplaceAsync('{' + strCharAttributeName + "Maximum}", async () =>
-                            (dicValueOverrides?.ContainsKey(strCharAttributeName + "Maximum") == true
-                                ? dicValueOverrides[strCharAttributeName + "Maximum"]
+                            (dicValueOverrides != null && dicValueOverrides.TryGetValue(strCharAttributeName + "Maximum", out int intOverride)
+                                ? intOverride
                                 : await objAttribute.GetTotalMaximumAsync(token).ConfigureAwait(false))
                             .ToString(GlobalSettings.InvariantCultureInfo), token: token).ConfigureAwait(false);
                 }
@@ -2634,28 +2682,28 @@ namespace Chummer.Backend.Attributes
                     CharacterAttrib objAttribute = await _objCharacter
                         .GetAttributeAsync(strCharAttributeName, token: token).ConfigureAwait(false);
                     await sbdInput.CheapReplaceAsync(strOriginal, '{' + strCharAttributeName + '}', async () =>
-                        (dicValueOverrides?.ContainsKey(strCharAttributeName) == true
-                            ? dicValueOverrides[strCharAttributeName]
+                        (dicValueOverrides != null && dicValueOverrides.TryGetValue(strCharAttributeName, out int intOverride)
+                            ? intOverride
                             : await objAttribute.GetTotalValueAsync(token).ConfigureAwait(false))
                         .ToString(GlobalSettings.InvariantCultureInfo), token: token).ConfigureAwait(false);
                     await sbdInput.CheapReplaceAsync(strOriginal, '{' + strCharAttributeName + "Unaug}", async () =>
-                        (dicValueOverrides?.ContainsKey(strCharAttributeName + "Unaug") == true
-                            ? dicValueOverrides[strCharAttributeName + "Unaug"]
+                        (dicValueOverrides != null && dicValueOverrides.TryGetValue(strCharAttributeName + "Unaug", out int intOverride)
+                            ? intOverride
                             : await objAttribute.GetValueAsync(token).ConfigureAwait(false))
                         .ToString(GlobalSettings.InvariantCultureInfo), token: token).ConfigureAwait(false);
                     await sbdInput.CheapReplaceAsync(strOriginal, '{' + strCharAttributeName + "Base}", async () =>
-                        (dicValueOverrides?.ContainsKey(strCharAttributeName + "Base") == true
-                            ? dicValueOverrides[strCharAttributeName + "Base"]
+                        (dicValueOverrides != null && dicValueOverrides.TryGetValue(strCharAttributeName + "Base", out int intOverride)
+                            ? intOverride
                             : await objAttribute.GetTotalBaseAsync(token).ConfigureAwait(false))
                         .ToString(GlobalSettings.InvariantCultureInfo), token: token).ConfigureAwait(false);
                     await sbdInput.CheapReplaceAsync(strOriginal, '{' + strCharAttributeName + "Minimum}", async () =>
-                        (dicValueOverrides?.ContainsKey(strCharAttributeName + "Minimum") == true
-                            ? dicValueOverrides[strCharAttributeName + "Minimum"]
+                        (dicValueOverrides != null && dicValueOverrides.TryGetValue(strCharAttributeName + "Minimum", out int intOverride)
+                            ? intOverride
                             : await objAttribute.GetTotalMinimumAsync(token).ConfigureAwait(false))
                         .ToString(GlobalSettings.InvariantCultureInfo), token: token).ConfigureAwait(false);
                     await sbdInput.CheapReplaceAsync(strOriginal, '{' + strCharAttributeName + "Maximum}", async () =>
-                        (dicValueOverrides?.ContainsKey(strCharAttributeName + "Maximum") == true
-                            ? dicValueOverrides[strCharAttributeName + "Maximum"]
+                        (dicValueOverrides != null && dicValueOverrides.TryGetValue(strCharAttributeName + "Maximum", out int intOverride)
+                            ? intOverride
                             : await objAttribute.GetTotalMaximumAsync(token).ConfigureAwait(false))
                         .ToString(GlobalSettings.InvariantCultureInfo), token: token).ConfigureAwait(false);
                 }
@@ -3544,6 +3592,32 @@ namespace Chummer.Backend.Attributes
             {
                 token.ThrowIfCancellationRequested();
                 return _eAttributeCategory;
+            }
+            finally
+            {
+                await objLocker.DisposeAsync().ConfigureAwait(false);
+            }
+        }
+
+        public async Task SetAttributeCategoryAsync(CharacterAttrib.AttributeCategory value, CancellationToken token = default)
+        {
+            IAsyncDisposable objLocker = await LockObject.EnterUpgradeableReadLockAsync(token).ConfigureAwait(false);
+            try
+            {
+                token.ThrowIfCancellationRequested();
+                // No need to write lock because interlocked guarantees safety
+                if (InterlockedExtensions.Exchange(ref _eAttributeCategory, value) == value)
+                    return;
+
+                if (await _objCharacter.GetCreatedAsync(token).ConfigureAwait(false))
+                {
+                    await ResetBindingsAsync(token).ConfigureAwait(false);
+                    await ForceAttributePropertyChangedNotificationAllAsync(token,
+                        nameof(CharacterAttrib.MetatypeMaximum),
+                        nameof(CharacterAttrib.MetatypeMinimum)).ConfigureAwait(false);
+                }
+
+                await OnPropertyChangedAsync(nameof(AttributeCategory), token).ConfigureAwait(false);
             }
             finally
             {

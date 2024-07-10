@@ -1352,11 +1352,13 @@ namespace Chummer
                             HashSet<string> strTemp = Utils.StringHashSetPool.Get();
                             strTemp.Add(nameof(PowerPointsUsed));
                             dicChangedProperties.Add(this, strTemp);
-                            IAsyncDisposable objLocker = await LockObject.EnterReadLockAsync(token).ConfigureAwait(false);
+                            IAsyncDisposable objLocker =
+                                await LockObject.EnterReadLockAsync(token).ConfigureAwait(false);
                             try
-                                {
+                            {
                                 token.ThrowIfCancellationRequested();
-                                Power objNewPower = await Powers.GetValueAtAsync(e.NewIndex, token).ConfigureAwait(false);
+                                Power objNewPower =
+                                    await Powers.GetValueAtAsync(e.NewIndex, token).ConfigureAwait(false);
                                 if (!IsLoading)
                                 {
                                     // Needed in order to properly process named sources where
@@ -1367,7 +1369,7 @@ namespace Chummer
                                             || !objImprovement.Enabled)
                                             continue;
                                         foreach ((INotifyMultiplePropertiesChangedAsync objItemToUpdate,
-                                                  string strPropertyToUpdate) in
+                                                     string strPropertyToUpdate) in
                                                  objImprovement.GetRelevantPropertyChangers())
                                         {
                                             if (!dicChangedProperties.TryGetValue(objItemToUpdate,
@@ -1393,7 +1395,7 @@ namespace Chummer
                                 await objLocker.DisposeAsync().ConfigureAwait(false);
                             }
 
-                                break;
+                            break;
                         }
                         case ListChangedType.ItemDeleted:
                         {
@@ -1426,9 +1428,10 @@ namespace Chummer
                                     strTemp.Add(nameof(AnyPowerAdeptWayDiscountEnabled));
                                     strTemp.Add(nameof(AllowAdeptWayPowerDiscount));
                                     dicChangedProperties.Add(this, strTemp);
-                                    IAsyncDisposable objLocker = await LockObject.EnterReadLockAsync(token).ConfigureAwait(false);
+                                    IAsyncDisposable objLocker =
+                                        await LockObject.EnterReadLockAsync(token).ConfigureAwait(false);
                                     try
-                                            {
+                                    {
                                         token.ThrowIfCancellationRequested();
                                         foreach (Power objPower in Powers)
                                         {
@@ -1447,7 +1450,7 @@ namespace Chummer
                                         await objLocker.DisposeAsync().ConfigureAwait(false);
                                     }
 
-                                            break;
+                                    break;
                                 }
                                 case nameof(Power.PowerPoints):
                                 {
@@ -2462,9 +2465,10 @@ namespace Chummer
                                 if (objNewItem.IsModularCurrentlyEquipped)
                                     blnDoEncumbranceRefresh = true;
                                 dicChangedProperties[this].Add(objNewItem.EssencePropertyName);
-                                IAsyncDisposable objLocker = await LockObject.EnterReadLockAsync(token).ConfigureAwait(false);
+                                IAsyncDisposable objLocker =
+                                    await LockObject.EnterReadLockAsync(token).ConfigureAwait(false);
                                 try
-                                    {
+                                {
                                     token.ThrowIfCancellationRequested();
                                     if (!IsLoading)
                                     {
@@ -2477,7 +2481,7 @@ namespace Chummer
                                                 objNewItem.InternalId && objImprovement.Enabled)
                                             {
                                                 foreach ((INotifyMultiplePropertiesChangedAsync objItemToUpdate,
-                                                          string strPropertyToUpdate) in
+                                                             string strPropertyToUpdate) in
                                                          objImprovement.GetRelevantPropertyChangers())
                                                 {
                                                     token.ThrowIfCancellationRequested();
@@ -2507,7 +2511,7 @@ namespace Chummer
                                 {
                                     await objLocker.DisposeAsync().ConfigureAwait(false);
                                 }
-                                }
+                            }
 
                             break;
                         }
@@ -2522,9 +2526,10 @@ namespace Chummer
                                 if (objOldItem.IsModularCurrentlyEquipped)
                                     blnDoEncumbranceRefresh = true;
                                 dicChangedProperties[this].Add(objOldItem.EssencePropertyName);
-                                IAsyncDisposable objLocker = await LockObject.EnterReadLockAsync(token).ConfigureAwait(false);
+                                IAsyncDisposable objLocker =
+                                    await LockObject.EnterReadLockAsync(token).ConfigureAwait(false);
                                 try
-                                    {
+                                {
                                     token.ThrowIfCancellationRequested();
                                     if (!blnDoCyberlimbAttributesRefresh
                                         && !Settings.DontUseCyberlimbCalculation && objOldItem.Parent == null
@@ -2539,7 +2544,7 @@ namespace Chummer
                                 {
                                     await objLocker.DisposeAsync().ConfigureAwait(false);
                                 }
-                                }
+                            }
 
                             break;
                         }
@@ -2548,9 +2553,10 @@ namespace Chummer
                             HashSet<string> strTemp = Utils.StringHashSetPool.Get();
                             strTemp.Add(nameof(RedlinerBonus));
                             dicChangedProperties.Add(this, strTemp);
-                            IAsyncDisposable objLocker = await LockObject.EnterReadLockAsync(token).ConfigureAwait(false);
+                            IAsyncDisposable objLocker =
+                                await LockObject.EnterReadLockAsync(token).ConfigureAwait(false);
                             try
-                                {
+                            {
                                 token.ThrowIfCancellationRequested();
                                 if (!Settings.DontUseCyberlimbCalculation)
                                 {
@@ -2592,14 +2598,15 @@ namespace Chummer
                                 await objLocker.DisposeAsync().ConfigureAwait(false);
                             }
 
-                                break;
+                            break;
                         }
                         case NotifyCollectionChangedAction.Reset:
                         {
                             blnDoEncumbranceRefresh = true;
-                            IAsyncDisposable objLocker = await LockObject.EnterReadLockAsync(token).ConfigureAwait(false);
+                            IAsyncDisposable objLocker =
+                                await LockObject.EnterReadLockAsync(token).ConfigureAwait(false);
                             try
-                                {
+                            {
                                 token.ThrowIfCancellationRequested();
                                 blnDoCyberlimbAttributesRefresh = !Settings.DontUseCyberlimbCalculation;
                             }
@@ -2608,12 +2615,13 @@ namespace Chummer
                                 await objLocker.DisposeAsync().ConfigureAwait(false);
                             }
 
-                                if (!dicChangedProperties.TryGetValue(this,
+                            if (!dicChangedProperties.TryGetValue(this,
                                     out HashSet<string> setChangedProperties))
                             {
                                 setChangedProperties = Utils.StringHashSetPool.Get();
                                 dicChangedProperties.Add(this, setChangedProperties);
                             }
+
                             setChangedProperties.Add(nameof(RedlinerBonus));
                             setChangedProperties.Add(nameof(PrototypeTranshumanEssenceUsed));
                             setChangedProperties.Add(nameof(BiowareEssence));
@@ -4184,23 +4192,23 @@ namespace Chummer
         /// <summary>
         /// Save the Character to an XML file. Returns true if successful.
         /// </summary>
-        public bool Save(string strFileName = "", bool addToMRU = true, bool callOnSaveCallBack = true, CancellationToken token = default)
+        public bool Save(string strFileName = "", bool addToMRU = true, bool callOnSaveCallBack = true, LzmaHelper.ChummerCompressionPreset eOverrideCompressionLevel = LzmaHelper.ChummerCompressionPreset.None, CancellationToken token = default)
         {
-            return Utils.SafelyRunSynchronously(() => SaveCoreAsync(true, strFileName, addToMRU, callOnSaveCallBack, token), token);
+            return Utils.SafelyRunSynchronously(() => SaveCoreAsync(true, strFileName, addToMRU, callOnSaveCallBack, eOverrideCompressionLevel, token), token);
         }
 
         /// <summary>
         /// Save the Character to an XML file. Returns true if successful.
         /// </summary>
-        public Task<bool> SaveAsync(string strFileName = "", bool addToMRU = true, bool callOnSaveCallBack = true, CancellationToken token = default)
+        public Task<bool> SaveAsync(string strFileName = "", bool addToMRU = true, bool callOnSaveCallBack = true, LzmaHelper.ChummerCompressionPreset eOverrideCompressionLevel = LzmaHelper.ChummerCompressionPreset.None, CancellationToken token = default)
         {
-            return SaveCoreAsync(false, strFileName, addToMRU, callOnSaveCallBack, token);
+            return SaveCoreAsync(false, strFileName, addToMRU, callOnSaveCallBack, eOverrideCompressionLevel, token);
         }
 
         /// <summary>
         /// Save the Character to an XML file. Returns true if successful.
         /// </summary>
-        private async Task<bool> SaveCoreAsync(bool blnSync, string strFileName, bool addToMRU, bool callOnSaveCallBack,
+        private async Task<bool> SaveCoreAsync(bool blnSync, string strFileName, bool addToMRU, bool callOnSaveCallBack, LzmaHelper.ChummerCompressionPreset eOverrideCompressionLevel = LzmaHelper.ChummerCompressionPreset.None,
                                                CancellationToken token = default)
         {
             token.ThrowIfCancellationRequested();
@@ -4833,57 +4841,6 @@ namespace Chummer
                             objWriter.WriteEndDocument();
                             objWriter.Flush();
                             // ReSharper restore AccessToDisposedClosure
-
-                            objStream.Seek(0, SeekOrigin.Begin);
-
-                            // Validate that the character can save properly. If there's no error, save the file to the listed file location.
-                            try
-                            {
-                                token.ThrowIfCancellationRequested();
-                                XmlDocument objDoc = new XmlDocument { XmlResolver = null };
-                                using (XmlReader objXmlReader
-                                       = XmlReader.Create(objStream, GlobalSettings.SafeXmlReaderSettings))
-                                    objDoc.Load(objXmlReader);
-                                using (FileStream objFileStream
-                                       = new FileStream(strFileName, FileMode.Create, FileAccess.Write, FileShare.None))
-                                {
-                                    if (strFileName.EndsWith(".chum5", StringComparison.OrdinalIgnoreCase))
-                                        objDoc.Save(objFileStream);
-                                    else
-                                    {
-                                        objStream.Seek(0, SeekOrigin.Begin);
-                                        objStream.CompressToLzmaFile(objFileStream,
-                                            GlobalSettings.Chum5lzCompressionLevel);
-                                    }
-                                }
-                            }
-                            catch (IOException e)
-                            {
-                                Log.Error(e);
-                                if (Utils.IsUnitTest)
-                                    throw;
-                                // ReSharper disable once MethodHasAsyncOverload
-                                Program.ShowScrollableMessageBox(
-                                    LanguageManager.GetString("Message_Save_Error_Warning", token: token));
-                                blnErrorFree = false;
-                            }
-                            catch (XmlException ex)
-                            {
-                                Log.Warn(ex);
-                                if (Utils.IsUnitTest)
-                                    throw;
-                                // ReSharper disable once MethodHasAsyncOverload
-                                Program.ShowScrollableMessageBox(
-                                    LanguageManager.GetString("Message_Save_Error_Warning", token: token));
-                                blnErrorFree = false;
-                            }
-                            catch (UnauthorizedAccessException) when (!Utils.IsUnitTest)
-                            {
-                                // ReSharper disable once MethodHasAsyncOverload
-                                Program.ShowScrollableMessageBox(
-                                    LanguageManager.GetString("Message_Save_Error_Warning", token: token));
-                                blnErrorFree = false;
-                            }
                         }
 
                         async Task DoSaveAsync()
@@ -5688,10 +5645,20 @@ namespace Chummer
                         else
                         {
                             objStream.Seek(0, SeekOrigin.Begin);
-                            await objStream.CompressToLzmaFileAsync(
-                                    objFileStream, GlobalSettings.Chum5lzCompressionLevel,
-                                    token: token)
-                                .ConfigureAwait(false);
+                            if (blnSync)
+                                objStream.CompressToLzmaFile(
+                                    objFileStream,
+                                    eOverrideCompressionLevel == LzmaHelper.ChummerCompressionPreset.None
+                                        ? GlobalSettings.Chum5lzCompressionLevel
+                                        : eOverrideCompressionLevel);
+                            else
+                                await objStream.CompressToLzmaFileAsync(
+                                        objFileStream,
+                                        eOverrideCompressionLevel == LzmaHelper.ChummerCompressionPreset.None
+                                            ? GlobalSettings.Chum5lzCompressionLevel
+                                            : eOverrideCompressionLevel,
+                                        token: token)
+                                    .ConfigureAwait(false);
                         }
                     }
                 }
@@ -5700,10 +5667,16 @@ namespace Chummer
                     Log.Error(e);
                     if (Utils.IsUnitTest)
                         throw;
-                    Program.ShowScrollableMessageBox(await LanguageManager
-                        .GetStringAsync(
-                            "Message_Save_Error_Warning", token: token)
-                        .ConfigureAwait(false));
+                    if (blnSync)
+                        // ReSharper disable once MethodHasAsyncOverloadWithCancellation
+                        // ReSharper disable once MethodHasAsyncOverload
+                        Program.ShowScrollableMessageBox(LanguageManager.GetString("Message_Save_Error_Warning",
+                            token: token));
+                    else
+                        await Program.ShowScrollableMessageBoxAsync(await LanguageManager
+                            .GetStringAsync(
+                                "Message_Save_Error_Warning", token: token)
+                            .ConfigureAwait(false), token: token).ConfigureAwait(false);
                     blnErrorFree = false;
                 }
                 catch (XmlException ex)
@@ -5711,18 +5684,30 @@ namespace Chummer
                     Log.Warn(ex);
                     if (Utils.IsUnitTest)
                         throw;
-                    Program.ShowScrollableMessageBox(await LanguageManager
-                        .GetStringAsync(
-                            "Message_Save_Error_Warning", token: token)
-                        .ConfigureAwait(false));
+                    if (blnSync)
+                        // ReSharper disable once MethodHasAsyncOverloadWithCancellation
+                        // ReSharper disable once MethodHasAsyncOverload
+                        Program.ShowScrollableMessageBox(LanguageManager.GetString("Message_Save_Error_Warning",
+                            token: token));
+                    else
+                        await Program.ShowScrollableMessageBoxAsync(await LanguageManager
+                            .GetStringAsync(
+                                "Message_Save_Error_Warning", token: token)
+                            .ConfigureAwait(false), token: token).ConfigureAwait(false);
                     blnErrorFree = false;
                 }
                 catch (UnauthorizedAccessException) when (!Utils.IsUnitTest)
                 {
-                    Program.ShowScrollableMessageBox(await LanguageManager
-                        .GetStringAsync(
-                            "Message_Save_Error_Warning", token: token)
-                        .ConfigureAwait(false));
+                    if (blnSync)
+                        // ReSharper disable once MethodHasAsyncOverloadWithCancellation
+                        // ReSharper disable once MethodHasAsyncOverload
+                        Program.ShowScrollableMessageBox(LanguageManager.GetString("Message_Save_Error_Warning",
+                            token: token));
+                    else
+                        await Program.ShowScrollableMessageBoxAsync(await LanguageManager
+                            .GetStringAsync(
+                                "Message_Save_Error_Warning", token: token)
+                            .ConfigureAwait(false), token: token).ConfigureAwait(false);
                     blnErrorFree = false;
                 }
             }
@@ -5730,13 +5715,10 @@ namespace Chummer
             if (addToMRU)
             {
                 if (blnSync)
-                    // ReSharper disable once MethodHasAsyncOverload
                     // ReSharper disable once MethodHasAsyncOverloadWithCancellation
-                    GlobalSettings.MostRecentlyUsedCharacters.Insert(0, FileName);
+                    GlobalSettings.MostRecentlyUsedCharacters.Insert(0, strFileName);
                 else
-                    await GlobalSettings.MostRecentlyUsedCharacters
-                        .InsertAsync(0, await GetFileNameAsync(token).ConfigureAwait(false), token)
-                        .ConfigureAwait(false);
+                    await GlobalSettings.MostRecentlyUsedCharacters.InsertAsync(0, strFileName, token).ConfigureAwait(false);
             }
 
             if (callOnSaveCallBack)
@@ -6247,15 +6229,15 @@ namespace Chummer
                                             being loaded (Expected to be notes ingested from PDF mostly) prompt the user whether to use unsafe methods.
                                             If yes, restart the load, explicitly ignoring invalid characters.*/
 
-                                            if (Program.ShowScrollableMessageBox(
+                                            if (await Program.ShowScrollableMessageBoxAsync(
                                                     await LanguageManager
-                                                          .GetStringAsync("Message_InvalidTextFound", token: token)
-                                                          .ConfigureAwait(false),
+                                                        .GetStringAsync("Message_InvalidTextFound", token: token)
+                                                        .ConfigureAwait(false),
                                                     await LanguageManager
-                                                          .GetStringAsync(
-                                                              "Message_InvalidTextFound_Title", token: token)
-                                                          .ConfigureAwait(false),
-                                                    MessageBoxButtons.YesNo, MessageBoxIcon.Warning) ==
+                                                        .GetStringAsync(
+                                                            "Message_InvalidTextFound_Title", token: token)
+                                                        .ConfigureAwait(false),
+                                                    MessageBoxButtons.YesNo, MessageBoxIcon.Warning, token: token).ConfigureAwait(false) ==
                                                 DialogResult.No)
                                             {
                                                 return false;
@@ -6267,20 +6249,20 @@ namespace Chummer
                                         {
                                             if (showWarnings)
                                             {
-                                                Program.ShowScrollableMessageBox(
+                                                await Program.ShowScrollableMessageBoxAsync(
                                                     string.Format(GlobalSettings.CultureInfo,
-                                                                  await LanguageManager
-                                                                        .GetStringAsync(
-                                                                            "Message_FailedLoad", token: token)
-                                                                        .ConfigureAwait(false),
-                                                                  ex.Message),
+                                                        await LanguageManager
+                                                            .GetStringAsync(
+                                                                "Message_FailedLoad", token: token)
+                                                            .ConfigureAwait(false),
+                                                        ex.Message),
                                                     string.Format(GlobalSettings.CultureInfo,
-                                                                  await LanguageManager
-                                                                        .GetStringAsync(
-                                                                            "MessageTitle_FailedLoad", token: token)
-                                                                        .ConfigureAwait(false),
-                                                                  ex.Message),
-                                                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                                        await LanguageManager
+                                                            .GetStringAsync(
+                                                                "MessageTitle_FailedLoad", token: token)
+                                                            .ConfigureAwait(false),
+                                                        ex.Message),
+                                                    MessageBoxButtons.OK, MessageBoxIcon.Error, token: token).ConfigureAwait(false);
                                             }
 
                                             return false;
@@ -6342,23 +6324,28 @@ namespace Chummer
                                     showWarnings &&
                                     !Utils.IsUnitTest)
                                 {
-                                    Program.ShowScrollableMessageBox(
-                                        blnSync
+                                    if (blnSync)
+                                        // ReSharper disable once MethodHasAsyncOverloadWithCancellation
+                                        Program.ShowScrollableMessageBox(
                                             // ReSharper disable once MethodHasAsyncOverload
-                                            ? LanguageManager.GetString("Message_IncorrectGameVersion_SR4",
-                                                                        token: token)
-                                            : await LanguageManager.GetStringAsync(
-                                                "Message_IncorrectGameVersion_SR4", token: token).ConfigureAwait(false),
-                                        blnSync
+                                            LanguageManager.GetString(
+                                                "Message_IncorrectGameVersion_SR4",
+                                                token: token),
                                             // ReSharper disable once MethodHasAsyncOverload
-                                            ? LanguageManager.GetString("MessageTitle_IncorrectGameVersion",
-                                                                        token: token)
-                                            : await LanguageManager.GetStringAsync(
-                                                                       "MessageTitle_IncorrectGameVersion",
-                                                                       token: token)
-                                                                   .ConfigureAwait(false),
-                                        MessageBoxButtons.YesNo,
-                                        MessageBoxIcon.Error);
+                                            LanguageManager.GetString(
+                                                "MessageTitle_IncorrectGameVersion",
+                                                token: token),
+                                            MessageBoxButtons.YesNo, MessageBoxIcon.Error);
+                                    else
+                                        await Program.ShowScrollableMessageBoxAsync(
+                                            await LanguageManager.GetStringAsync(
+                                                "Message_IncorrectGameVersion_SR4",
+                                                token: token).ConfigureAwait(false),
+                                            await LanguageManager.GetStringAsync(
+                                                "MessageTitle_IncorrectGameVersion",
+                                                token: token).ConfigureAwait(false),
+                                            MessageBoxButtons.YesNo, MessageBoxIcon.Error,
+                                            token: token).ConfigureAwait(false);
                                     return false;
                                 }
 
@@ -6758,26 +6745,33 @@ namespace Chummer
                                         // Prompt if we want to switch options or leave
                                         if (!Utils.IsUnitTest && showWarnings)
                                         {
-                                            if (Program.ShowScrollableMessageBox(
-                                                    string.Format(GlobalSettings.CultureInfo,
-                                                                  blnSync
-                                                                      // ReSharper disable once MethodHasAsyncOverload
-                                                                      ? LanguageManager.GetString(
-                                                                          "Message_CharacterOptions_CannotLoadSetting",
-                                                                          token: token)
-                                                                      : await LanguageManager.GetStringAsync(
-                                                                          "Message_CharacterOptions_CannotLoadSetting",
-                                                                          token: token).ConfigureAwait(false),
-                                                                  Path.GetFileNameWithoutExtension(_strSettingsKey)),
-                                                    blnSync
+                                            if ((blnSync
+                                                    // ReSharper disable once MethodHasAsyncOverloadWithCancellation
+                                                    ? Program.ShowScrollableMessageBox(
+                                                        string.Format(
+                                                            GlobalSettings.CultureInfo,
+                                                            // ReSharper disable once MethodHasAsyncOverload
+                                                            LanguageManager.GetString(
+                                                                "Message_CharacterOptions_CannotLoadSetting",
+                                                                token: token),
+                                                            Path.GetFileNameWithoutExtension(_strSettingsKey)),
                                                         // ReSharper disable once MethodHasAsyncOverload
-                                                        ? LanguageManager.GetString(
+                                                        LanguageManager.GetString(
                                                             "MessageTitle_CharacterOptions_CannotLoadSetting",
-                                                            token: token)
-                                                        : await LanguageManager.GetStringAsync(
+                                                            token: token),
+                                                        MessageBoxButtons.YesNo, MessageBoxIcon.Error)
+                                                    : await Program.ShowScrollableMessageBoxAsync(
+                                                        string.Format(
+                                                            GlobalSettings.CultureInfo,
+                                                            await LanguageManager.GetStringAsync(
+                                                                "Message_CharacterOptions_CannotLoadSetting",
+                                                                token: token).ConfigureAwait(false),
+                                                            Path.GetFileNameWithoutExtension(_strSettingsKey)),
+                                                        await LanguageManager.GetStringAsync(
                                                             "MessageTitle_CharacterOptions_CannotLoadSetting",
                                                             token: token).ConfigureAwait(false),
-                                                    MessageBoxButtons.YesNo, MessageBoxIcon.Error) == DialogResult.No)
+                                                        MessageBoxButtons.YesNo, MessageBoxIcon.Error,
+                                                        token: token).ConfigureAwait(false)) == DialogResult.No)
                                             {
                                                 return false;
                                             }
@@ -6845,43 +6839,48 @@ namespace Chummer
                                         // Prompt if we want to switch options or leave
                                         if (!Utils.IsUnitTest && showWarnings)
                                         {
-                                            if (Program.ShowScrollableMessageBox(
-                                                    string.Format(GlobalSettings.CultureInfo,
-                                                                  blnSync
-                                                                      // ReSharper disable once MethodHasAsyncOverload
-                                                                      ? LanguageManager.GetString(
-                                                                          "Message_CharacterOptions_DesyncBuildMethod",
-                                                                          token: token)
-                                                                      : await LanguageManager.GetStringAsync(
-                                                                          "Message_CharacterOptions_DesyncBuildMethod",
-                                                                          token: token).ConfigureAwait(false),
-                                                                  Path.GetFileNameWithoutExtension(_strSettingsKey),
-                                                                  blnSync
-                                                                      // ReSharper disable once MethodHasAsyncOverload
-                                                                      ? LanguageManager.GetString(
-                                                                          "String_" + objProspectiveSettings
-                                                                              .BuildMethod, token: token)
-                                                                      : await LanguageManager.GetStringAsync(
-                                                                              "String_" + objProspectiveSettings
-                                                                                  .BuildMethod, token: token)
-                                                                          .ConfigureAwait(false),
-                                                                  blnSync
-                                                                      // ReSharper disable once MethodHasAsyncOverload
-                                                                      ? LanguageManager.GetString(
-                                                                          "String_" + eSavedBuildMethod, token: token)
-                                                                      : await LanguageManager.GetStringAsync(
-                                                                              "String_" + eSavedBuildMethod,
-                                                                              token: token)
-                                                                          .ConfigureAwait(false)),
-                                                    blnSync
+                                            if ((blnSync
+                                                    // ReSharper disable once MethodHasAsyncOverloadWithCancellation
+                                                    ? Program.ShowScrollableMessageBox(
+                                                        string.Format(
+                                                            GlobalSettings.CultureInfo,
+                                                            // ReSharper disable once MethodHasAsyncOverload
+                                                            LanguageManager.GetString(
+                                                                "Message_CharacterOptions_DesyncBuildMethod",
+                                                                token: token),
+                                                            Path.GetFileNameWithoutExtension(_strSettingsKey),
+                                                            // ReSharper disable once MethodHasAsyncOverload
+                                                            LanguageManager.GetString(
+                                                                "String_" + objProspectiveSettings
+                                                                    .BuildMethod, token: token),
+                                                            // ReSharper disable once MethodHasAsyncOverload
+                                                            LanguageManager.GetString(
+                                                                "String_" + eSavedBuildMethod, token: token)),
                                                         // ReSharper disable once MethodHasAsyncOverload
-                                                        ? LanguageManager.GetString(
+                                                        LanguageManager.GetString(
                                                             "MessageTitle_CharacterOptions_DesyncBuildMethod",
-                                                            token: token)
-                                                        : await LanguageManager.GetStringAsync(
+                                                            token: token),
+                                                        MessageBoxButtons.YesNo, MessageBoxIcon.Error)
+                                                    : await Program.ShowScrollableMessageBoxAsync(
+                                                        string.Format(
+                                                            GlobalSettings.CultureInfo,
+                                                            await LanguageManager.GetStringAsync(
+                                                                "Message_CharacterOptions_DesyncBuildMethod",
+                                                                token: token).ConfigureAwait(false),
+                                                            Path.GetFileNameWithoutExtension(_strSettingsKey),
+                                                            await LanguageManager.GetStringAsync(
+                                                                    "String_" + objProspectiveSettings
+                                                                        .BuildMethod, token: token)
+                                                                .ConfigureAwait(false),
+                                                            await LanguageManager.GetStringAsync(
+                                                                    "String_" + eSavedBuildMethod,
+                                                                    token: token)
+                                                                .ConfigureAwait(false)),
+                                                        await LanguageManager.GetStringAsync(
                                                             "MessageTitle_CharacterOptions_DesyncBuildMethod",
                                                             token: token).ConfigureAwait(false),
-                                                    MessageBoxButtons.YesNo, MessageBoxIcon.Error) == DialogResult.No)
+                                                        MessageBoxButtons.YesNo, MessageBoxIcon.Error,
+                                                        token: token).ConfigureAwait(false)) == DialogResult.No)
                                             {
                                                 return false;
                                             }
@@ -6977,27 +6976,33 @@ namespace Chummer
 
                                             if (blnPromptConfirmSetting)
                                             {
-                                                DialogResult eShowBPResult = Program.ShowScrollableMessageBox(
-                                                    string.Format(
-                                                        GlobalSettings.CultureInfo,
-                                                        blnSync
+                                                DialogResult eShowBPResult = blnSync
+                                                    // ReSharper disable once MethodHasAsyncOverloadWithCancellation
+                                                    ? Program.ShowScrollableMessageBox(
+                                                        string.Format(
+                                                            GlobalSettings.CultureInfo,
                                                             // ReSharper disable once MethodHasAsyncOverload
-                                                            ? LanguageManager.GetString(
+                                                            LanguageManager.GetString(
                                                                 "Message_CharacterOptions_DesyncBooksOrCustomData",
-                                                                token: token)
-                                                            : await LanguageManager.GetStringAsync(
+                                                                token: token),
+                                                            objProspectiveSettings.Name),
+                                                        // ReSharper disable once MethodHasAsyncOverload
+                                                        LanguageManager.GetString(
+                                                            "MessageTitle_CharacterOptions_DesyncBooksOrCustomData",
+                                                            token: token),
+                                                        MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning)
+                                                    : await Program.ShowScrollableMessageBoxAsync(
+                                                        string.Format(
+                                                            GlobalSettings.CultureInfo,
+                                                            await LanguageManager.GetStringAsync(
                                                                 "Message_CharacterOptions_DesyncBooksOrCustomData",
                                                                 token: token).ConfigureAwait(false),
-                                                        objProspectiveSettings.Name),
-                                                    blnSync
-                                                        // ReSharper disable once MethodHasAsyncOverload
-                                                        ? LanguageManager.GetString(
-                                                            "MessageTitle_CharacterOptions_DesyncBooksOrCustomData",
-                                                            token: token)
-                                                        : await LanguageManager.GetStringAsync(
+                                                            objProspectiveSettings.Name),
+                                                        await LanguageManager.GetStringAsync(
                                                             "MessageTitle_CharacterOptions_DesyncBooksOrCustomData",
                                                             token: token).ConfigureAwait(false),
-                                                    MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning);
+                                                        MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning,
+                                                        token: token).ConfigureAwait(false);
                                                 if (eShowBPResult == DialogResult.Cancel)
                                                 {
                                                     return false;
@@ -7020,27 +7025,33 @@ namespace Chummer
                                                          token).ConfigureAwait(false))
                                                  != intSettingsHashCode)
                                         {
-                                            DialogResult eShowBPResult = Program.ShowScrollableMessageBox(
-                                                string.Format(
-                                                    GlobalSettings.CultureInfo,
-                                                    blnSync
+                                            DialogResult eShowBPResult = blnSync
+                                                // ReSharper disable once MethodHasAsyncOverloadWithCancellation
+                                                ? Program.ShowScrollableMessageBox(
+                                                    string.Format(
+                                                        GlobalSettings.CultureInfo,
                                                         // ReSharper disable once MethodHasAsyncOverload
-                                                        ? LanguageManager.GetString(
+                                                        LanguageManager.GetString(
                                                             "Message_CharacterOptions_DesyncFromHashCode",
-                                                            token: token)
-                                                        : await LanguageManager.GetStringAsync(
+                                                            token: token),
+                                                        objProspectiveSettings.Name),
+                                                    // ReSharper disable once MethodHasAsyncOverload
+                                                    LanguageManager.GetString(
+                                                        "MessageTitle_CharacterOptions_DesyncFromHashCode",
+                                                        token: token),
+                                                    MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning)
+                                                : await Program.ShowScrollableMessageBoxAsync(
+                                                    string.Format(
+                                                        GlobalSettings.CultureInfo,
+                                                        await LanguageManager.GetStringAsync(
                                                             "Message_CharacterOptions_DesyncFromHashCode",
                                                             token: token).ConfigureAwait(false),
-                                                    objProspectiveSettings.Name),
-                                                blnSync
-                                                    // ReSharper disable once MethodHasAsyncOverload
-                                                    ? LanguageManager.GetString(
-                                                        "MessageTitle_CharacterOptions_DesyncFromHashCode",
-                                                        token: token)
-                                                    : await LanguageManager.GetStringAsync(
+                                                        objProspectiveSettings.Name),
+                                                    await LanguageManager.GetStringAsync(
                                                         "MessageTitle_CharacterOptions_DesyncFromHashCode",
                                                         token: token).ConfigureAwait(false),
-                                                MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning);
+                                                    MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning,
+                                                    token: token).ConfigureAwait(false);
                                             if (eShowBPResult == DialogResult.Cancel)
                                             {
                                                 return false;
@@ -7447,39 +7458,102 @@ namespace Chummer
                                             break;
                                     }
 
-                                    if ((blnRemoveImprovements || showWarnings) && objXmlImprovement["custom"]?.InnerText != bool.TrueString)
+                                    if ((blnRemoveImprovements || showWarnings) && objXmlImprovement["custom"]?.InnerText != bool.TrueString && !string.IsNullOrEmpty(strCharacterInnerXml))
                                     {
                                         string strLoopSourceName = objXmlImprovement["sourcename"]?.InnerText;
                                         if (!string.IsNullOrEmpty(strLoopSourceName)
                                             && strLoopSourceName.IsGuid())
                                         {
-                                            string[] astrToCheck =
+                                            // Specialized version of ContainsAny that has been optimized for this specific case because it's a bottleneck
+                                            bool ContainsAnySourceId(string strHaystack, string strId)
                                             {
-                                                "<guid>" + strLoopSourceName + "</guid>",
-                                                "<metatypeid>" + strLoopSourceName + "</metatypeid>",
-                                                "<metavariantid>" + strLoopSourceName + "</metavariantid>"
-                                            };
-                                            if (!strCharacterInnerXml.ContainsAnyParallel(astrToCheck, StringComparison.OrdinalIgnoreCase))
+                                                int intHaystackLength = strHaystack.Length;
+                                                if (intHaystackLength < strId.Length + 13)
+                                                    return false;
+
+                                                string strCommonNeedle = "id>" + strId + "</";
+                                                string strNeedle1 = "<guid>" + strId + "</guid>";
+                                                int intNeedle1Length = strNeedle1.Length;
+                                                string strNeedle2 = "<metatypeid>" + strId + "</metatypeid>";
+                                                int intNeedle2Length = strNeedle2.Length;
+                                                string strNeedle3 = "<metavariantid>" + strId + "</metavariantid>";
+                                                int intNeedle3Length = strNeedle3.Length;
+                                                unsafe
+                                                {
+                                                    fixed (char* pchrLoop = strHaystack)
+                                                    {
+                                                        for (int intLoopIndex = strHaystack.IndexOf(strCommonNeedle, 3,
+                                                                 StringComparison.OrdinalIgnoreCase);
+                                                             intLoopIndex >= 3 && intHaystackLength - intLoopIndex + 3 >
+                                                             intNeedle1Length;
+                                                             intLoopIndex = strHaystack.IndexOf(strCommonNeedle,
+                                                                 intLoopIndex + 1, StringComparison.OrdinalIgnoreCase))
+                                                        {
+                                                            if (*(pchrLoop + intLoopIndex - 3) == '<'
+                                                                && string.Equals(
+                                                                    strHaystack.Substring(intLoopIndex - 3,
+                                                                        intNeedle1Length), strNeedle1,
+                                                                    StringComparison.OrdinalIgnoreCase))
+                                                                return true;
+                                                            if (intLoopIndex < 9 ||
+                                                                intHaystackLength - intLoopIndex + 9 <
+                                                                intNeedle2Length)
+                                                                continue;
+                                                            if (*(pchrLoop + intLoopIndex - 9) == '<'
+                                                                && string.Equals(
+                                                                    strHaystack.Substring(intLoopIndex - 9,
+                                                                        intNeedle2Length), strNeedle2,
+                                                                    StringComparison.OrdinalIgnoreCase))
+                                                                return true;
+                                                            if (intLoopIndex < 12 ||
+                                                                intHaystackLength - intLoopIndex + 12 <
+                                                                intNeedle3Length)
+                                                                continue;
+                                                            if (*(pchrLoop + intLoopIndex - 12) == '<'
+                                                                && string.Equals(
+                                                                    strHaystack.Substring(intLoopIndex - 12,
+                                                                        intNeedle3Length), strNeedle3,
+                                                                    StringComparison.OrdinalIgnoreCase))
+                                                                return true;
+                                                        }
+                                                    }
+                                                }
+
+                                                return false;
+                                            }
+
+                                            if (!ContainsAnySourceId(strCharacterInnerXml, strLoopSourceName))
                                             {
                                                 //Utils.BreakIfDebug();
-                                                if (blnRemoveImprovements
-                                                    || Program.ShowScrollableMessageBox(
-                                                        blnSync
+                                                if (blnRemoveImprovements)
+                                                    continue;
+
+                                                if (blnSync)
+                                                {
+                                                    // ReSharper disable once MethodHasAsyncOverloadWithCancellation
+                                                    if (Program.ShowScrollableMessageBox(
                                                             // ReSharper disable once MethodHasAsyncOverload
-                                                            ? LanguageManager.GetString(
-                                                                "Message_OrphanedImprovements", token: token)
-                                                            : await LanguageManager.GetStringAsync(
-                                                                    "Message_OrphanedImprovements", token: token)
-                                                                .ConfigureAwait(false),
-                                                        blnSync
+                                                            LanguageManager.GetString(
+                                                                "Message_OrphanedImprovements", token: token),
                                                             // ReSharper disable once MethodHasAsyncOverload
-                                                            ? LanguageManager.GetString(
-                                                                "MessageTitle_OrphanedImprovements", token: token)
-                                                            : await LanguageManager.GetStringAsync(
-                                                                    "MessageTitle_OrphanedImprovements", token: token)
-                                                                .ConfigureAwait(false),
-                                                        MessageBoxButtons.YesNo, MessageBoxIcon.Error) ==
-                                                    DialogResult.Yes)
+                                                            LanguageManager.GetString(
+                                                                "MessageTitle_OrphanedImprovements", token: token),
+                                                            MessageBoxButtons.YesNo, MessageBoxIcon.Error) ==
+                                                        DialogResult.Yes)
+                                                    {
+                                                        blnRemoveImprovements = true;
+                                                        continue;
+                                                    }
+                                                }
+                                                else if (await Program.ShowScrollableMessageBoxAsync(
+                                                             await LanguageManager.GetStringAsync(
+                                                                     "Message_OrphanedImprovements", token: token)
+                                                                 .ConfigureAwait(false),
+                                                             await LanguageManager.GetStringAsync(
+                                                                     "MessageTitle_OrphanedImprovements", token: token)
+                                                                 .ConfigureAwait(false),
+                                                             MessageBoxButtons.YesNo, MessageBoxIcon.Error, token: token).ConfigureAwait(false) ==
+                                                         DialogResult.Yes)
                                                 {
                                                     blnRemoveImprovements = true;
                                                     continue;
@@ -8623,12 +8697,19 @@ namespace Chummer
                                 foreach (XmlNode objXmlCyberware in objXmlNodeList)
                                 {
                                     Cyberware objCyberware = new Cyberware(this);
-                                    objCyberware.Load(objXmlCyberware);
                                     if (blnSync)
+                                    {
+                                        // ReSharper disable once MethodHasAsyncOverload
+                                        objCyberware.Load(objXmlCyberware, token: token);
                                         // ReSharper disable once MethodHasAsyncOverloadWithCancellation
                                         _lstCyberware.Add(objCyberware);
+                                    }
                                     else
+                                    {
+                                        await objCyberware.LoadAsync(objXmlCyberware, token: token).ConfigureAwait(false);
                                         await _lstCyberware.AddAsync(objCyberware, token).ConfigureAwait(false);
+                                    }
+
                                     // Legacy shim #1
                                     if (objCyberware.Name == "Myostatin Inhibitor" &&
                                         LastSavedVersion <= new Version(5, 195, 1) &&
@@ -9072,12 +9153,18 @@ namespace Chummer
                                             else
                                             {
                                                 Power objPower = new Power(this);
-                                                objPower.Load(xmlPower);
                                                 if (blnSync)
+                                                {
+                                                    // ReSharper disable once MethodHasAsyncOverload
+                                                    objPower.Load(xmlPower, token);
                                                     // ReSharper disable once MethodHasAsyncOverloadWithCancellation
                                                     _lstPowers.Add(objPower);
+                                                }
                                                 else
+                                                {
+                                                    await objPower.LoadAsync(xmlPower, token).ConfigureAwait(false);
                                                     await _lstPowers.AddAsync(objPower, token).ConfigureAwait(false);
+                                                }
                                             }
                                         }
 
@@ -9092,12 +9179,18 @@ namespace Chummer
                                             if (objNode != null)
                                             {
                                                 Power objPower = new Power(this);
-                                                objPower.Load(objNode);
                                                 if (blnSync)
+                                                {
+                                                    // ReSharper disable once MethodHasAsyncOverload
+                                                    objPower.Load(objNode, token);
                                                     // ReSharper disable once MethodHasAsyncOverloadWithCancellation
                                                     _lstPowers.Add(objPower);
+                                                }
                                                 else
+                                                {
+                                                    await objPower.LoadAsync(objNode, token).ConfigureAwait(false);
                                                     await _lstPowers.AddAsync(objPower, token).ConfigureAwait(false);
+                                                }
                                             }
                                         }
                                     }
@@ -9715,12 +9808,18 @@ namespace Chummer
                                 foreach (XmlNode objXmlFocus in objXmlNodeList)
                                 {
                                     Focus objFocus = new Focus(this);
-                                    objFocus.Load(objXmlFocus);
                                     if (blnSync)
+                                    {
+                                        // ReSharper disable once MethodHasAsyncOverloadWithCancellation
+                                        objFocus.Load(objXmlFocus);
                                         // ReSharper disable once MethodHasAsyncOverloadWithCancellation
                                         _lstFoci.Add(objFocus);
+                                    }
                                     else
+                                    {
+                                        await objFocus.LoadAsync(objXmlFocus, token).ConfigureAwait(false);
                                         await _lstFoci.AddAsync(objFocus, token).ConfigureAwait(false);
+                                    }
                                 }
 
                                 //Timekeeper.Finish("load_char_foci");
@@ -10174,6 +10273,72 @@ namespace Chummer
                                 }
                             }
 
+                            // Fix legacy cases where characters have more attribute points assigned than allowed
+                            using (Timekeeper.StartSyncron("load_char_badattributesfix", loadActivity))
+                            {
+                                if (blnSync)
+                                {
+                                    if (!Created)
+                                    {
+                                        // ReSharper disable once MethodHasAsyncOverloadWithCancellation
+                                        AttributeSection.AllAttributes.ForEach(x => x.DoBaseFix(), token);
+                                    }
+                                }
+                                else if (!await GetCreatedAsync(token).ConfigureAwait(false))
+                                {
+                                    await AttributeSection.AllAttributes
+                                        .ForEachAsync(async x => await x.DoBaseFixAsync(token: token).ConfigureAwait(false),
+                                            token).ConfigureAwait(false);
+                                }
+                            }
+
+                            // Fix skills that shouldn't be allowed to have specializations having them anyway (needed at the last step because improvements and skill groups can affect this)
+                            using (Timekeeper.StartSyncron("load_char_badskillspecsfix", loadActivity))
+                            {
+                                if (blnSync)
+                                {
+                                    if (!Created)
+                                    {
+                                        // ReSharper disable once MethodHasAsyncOverloadWithCancellation
+                                        SkillsSection.Skills.ForEach(x =>
+                                        {
+                                            if (x.Specializations.Count > 0 && !x.CanHaveSpecs)
+                                                x.Specializations.Clear();
+                                        }, token);
+                                        // ReSharper disable once MethodHasAsyncOverloadWithCancellation
+                                        SkillsSection.KnowledgeSkills.ForEach(x =>
+                                        {
+                                            if (x.Specializations.Count > 0 && !x.CanHaveSpecs)
+                                                x.Specializations.Clear();
+                                        }, token);
+                                    }
+                                }
+                                else if (!await GetCreatedAsync(token).ConfigureAwait(false))
+                                {
+                                    SkillsSection objSkillsSection = await GetSkillsSectionAsync(token).ConfigureAwait(false);
+                                    await (await objSkillsSection.GetSkillsAsync(token).ConfigureAwait(false))
+                                        .ForEachWithSideEffectsAsync(
+                                            async x =>
+                                            {
+                                                ThreadSafeObservableCollection<SkillSpecialization> lstSpecs =
+                                                    await x.GetSpecializationsAsync(token).ConfigureAwait(false);
+                                                if (await lstSpecs.GetCountAsync(token).ConfigureAwait(false) > 0 &&
+                                                    !await x.GetCanHaveSpecsAsync(token).ConfigureAwait(false))
+                                                    await lstSpecs.ClearAsync(token).ConfigureAwait(false);
+                                            }, token).ConfigureAwait(false);
+                                    await (await objSkillsSection.GetKnowledgeSkillsAsync(token).ConfigureAwait(false))
+                                        .ForEachWithSideEffectsAsync(
+                                            async x =>
+                                            {
+                                                ThreadSafeObservableCollection<SkillSpecialization> lstSpecs =
+                                                    await x.GetSpecializationsAsync(token).ConfigureAwait(false);
+                                                if (await lstSpecs.GetCountAsync(token).ConfigureAwait(false) > 0 &&
+                                                    !await x.GetCanHaveSpecsAsync(token).ConfigureAwait(false))
+                                                    await lstSpecs.ClearAsync(token).ConfigureAwait(false);
+                                            }, token).ConfigureAwait(false);
+                                }
+                            }
+
                             if (frmLoadingForm != null)
                             {
                                 if (blnSync)
@@ -10316,14 +10481,16 @@ namespace Chummer
                                 }
                             }
 
-                            if (!InitiationEnabled || !(blnSync ? AddInitiationsAllowed : await GetAddInitiationsAllowedAsync(token).ConfigureAwait(false)))
+                            if (blnSync)
                             {
-                                if (blnSync)
+                                if (!InitiationEnabled || !AddInitiationsAllowed)
+                                {
                                     // ReSharper disable once MethodHasAsyncOverload
                                     ClearInitiations(token);
-                                else
-                                    await ClearInitiationsAsync(token).ConfigureAwait(false);
+                                }
                             }
+                            else if (!await GetInitiationEnabledAsync(token).ConfigureAwait(false) || !await GetAddInitiationsAllowedAsync(token).ConfigureAwait(false))
+                                await ClearInitiationsAsync(token).ConfigureAwait(false);
 
                             // Very rough fix for when Karma values somehow exceed KarmaMaximum after loading in. This shouldn't happen in the first place, but this ad-hoc patch will help fix crashes.
                             if (blnSync)
@@ -10830,52 +10997,53 @@ namespace Chummer
                         .ConfigureAwait(false);
                     // <created />
                     await objWriter.WriteElementStringAsync(
-                            "created", Created.ToString(GlobalSettings.InvariantCultureInfo), token: token)
+                            "created", (await GetCreatedAsync(token).ConfigureAwait(false)).ToString(GlobalSettings.InvariantCultureInfo), token: token)
                         .ConfigureAwait(false);
                     // <nuyen />
                     await objWriter
-                        .WriteElementStringAsync("nuyen", Nuyen.ToString(Settings.NuyenFormat, objCulture),
+                        .WriteElementStringAsync("nuyen", (await GetNuyenAsync(token).ConfigureAwait(false)).ToString(Settings.NuyenFormat, objCulture),
                             token: token).ConfigureAwait(false);
                     // <adept />
                     await objWriter.WriteElementStringAsync(
-                            "adept", AdeptEnabled.ToString(GlobalSettings.InvariantCultureInfo),
+                            "adept", (await GetAdeptEnabledAsync(token).ConfigureAwait(false)).ToString(GlobalSettings.InvariantCultureInfo),
                             token: token)
                         .ConfigureAwait(false);
                     // <magician />
                     await objWriter.WriteElementStringAsync(
-                            "magician", MagicianEnabled.ToString(GlobalSettings.InvariantCultureInfo),
+                            "magician", (await GetMagicianEnabledAsync(token).ConfigureAwait(false)).ToString(GlobalSettings.InvariantCultureInfo),
                             token: token)
                         .ConfigureAwait(false);
                     // <technomancer />
                     await objWriter.WriteElementStringAsync("technomancer",
-                            TechnomancerEnabled.ToString(
+                            (await GetTechnomancerEnabledAsync(token).ConfigureAwait(false)).ToString(
                                 GlobalSettings.InvariantCultureInfo), token: token)
                         .ConfigureAwait(false);
                     // <ai />
                     await objWriter.WriteElementStringAsync("ai",
-                            AdvancedProgramsEnabled.ToString(
+                            (await GetAdvancedProgramsEnabledAsync(token).ConfigureAwait(false)).ToString(
                                 GlobalSettings.InvariantCultureInfo), token: token)
                         .ConfigureAwait(false);
                     // <cyberwaredisabled />
                     await objWriter.WriteElementStringAsync("cyberwaredisabled",
-                            CyberwareDisabled.ToString(
+                            (await GetCyberwareDisabledAsync(token).ConfigureAwait(false)).ToString(
                                 GlobalSettings.InvariantCultureInfo), token: token)
                         .ConfigureAwait(false);
                     // <critter />
                     await objWriter.WriteElementStringAsync(
-                            "critter", CritterEnabled.ToString(GlobalSettings.InvariantCultureInfo),
+                            "critter", (await GetCritterEnabledAsync(token).ConfigureAwait(false)).ToString(GlobalSettings.InvariantCultureInfo),
                             token: token)
                         .ConfigureAwait(false);
 
                     await objWriter.WriteElementStringAsync(
                         "totaless",
                         (await EssenceAsync(token: token).ConfigureAwait(false)).ToString(
-                            Settings.EssenceFormat, objCulture), token: token).ConfigureAwait(false);
+                            await (await GetSettingsAsync(token).ConfigureAwait(false)).GetEssenceFormatAsync(token).ConfigureAwait(false), objCulture), token: token).ConfigureAwait(false);
 
                     // <tradition />
-                    if (MagicTradition.Type != TraditionType.None)
+                    Tradition objTradition = await GetMagicTraditionAsync(token).ConfigureAwait(false);
+                    if (objTradition.Type != TraditionType.None)
                     {
-                        await MagicTradition.Print(objWriter, objCulture, strLanguageToPrint, token)
+                        await objTradition.Print(objWriter, objCulture, strLanguageToPrint, token)
                             .ConfigureAwait(false);
                     }
 
@@ -12278,43 +12446,43 @@ namespace Chummer
                 ImprovementManager.ClearCachedValues(this);
                 _lstLinkedCharacters.Clear(); // Clear this list because it relates to Contacts and Spirits disposal
                 await _lstMugshots.ForEachAsync(x => x.Dispose()).ConfigureAwait(false);
-                await _lstContacts.ForEachAsync(async x => await x.DisposeAsync().ConfigureAwait(false)).ConfigureAwait(false);
-                await _lstSpirits.ForEachAsync(async x => await x.DisposeAsync().ConfigureAwait(false)).ConfigureAwait(false);
-                await _lstArmor.ForEachAsync(async x => await x.DisposeAsync().ConfigureAwait(false)).ConfigureAwait(false);
-                await _lstWeapons.ForEachAsync(async x => await x.DisposeAsync().ConfigureAwait(false)).ConfigureAwait(false);
-                await _lstGear.ForEachAsync(async x => await x.DisposeAsync().ConfigureAwait(false)).ConfigureAwait(false);
-                await _lstCyberware.ForEachAsync(async x => await x.DisposeAsync().ConfigureAwait(false)).ConfigureAwait(false);
-                await _lstVehicles.ForEachAsync(async x => await x.DisposeAsync().ConfigureAwait(false)).ConfigureAwait(false);
-                await _lstLifestyles.ForEachAsync(async x => await x.DisposeAsync().ConfigureAwait(false)).ConfigureAwait(false);
-                await _lstSpells.ForEachAsync(async x => await x.DisposeAsync().ConfigureAwait(false)).ConfigureAwait(false);
-                await _lstMartialArts.ForEachAsync(async x => await x.DisposeAsync().ConfigureAwait(false)).ConfigureAwait(false);
+                await _lstContacts.ForEachWithSideEffectsAsync(async x => await x.DisposeAsync().ConfigureAwait(false)).ConfigureAwait(false);
+                await _lstSpirits.ForEachWithSideEffectsAsync(async x => await x.DisposeAsync().ConfigureAwait(false)).ConfigureAwait(false);
+                await _lstArmor.ForEachWithSideEffectsAsync(async x => await x.DisposeAsync().ConfigureAwait(false)).ConfigureAwait(false);
+                await _lstWeapons.ForEachWithSideEffectsAsync(async x => await x.DisposeAsync().ConfigureAwait(false)).ConfigureAwait(false);
+                await _lstGear.ForEachWithSideEffectsAsync(async x => await x.DisposeAsync().ConfigureAwait(false)).ConfigureAwait(false);
+                await _lstCyberware.ForEachWithSideEffectsAsync(async x => await x.DisposeAsync().ConfigureAwait(false)).ConfigureAwait(false);
+                await _lstVehicles.ForEachWithSideEffectsAsync(async x => await x.DisposeAsync().ConfigureAwait(false)).ConfigureAwait(false);
+                await _lstLifestyles.ForEachWithSideEffectsAsync(async x => await x.DisposeAsync().ConfigureAwait(false)).ConfigureAwait(false);
+                await _lstSpells.ForEachWithSideEffectsAsync(async x => await x.DisposeAsync().ConfigureAwait(false)).ConfigureAwait(false);
+                await _lstMartialArts.ForEachWithSideEffectsAsync(async x => await x.DisposeAsync().ConfigureAwait(false)).ConfigureAwait(false);
                 await _lstMartialArts.DisposeAsync().ConfigureAwait(false);
                 await _lstComplexForms.DisposeAsync().ConfigureAwait(false);
                 await _lstAIPrograms.DisposeAsync().ConfigureAwait(false);
-                await _lstPowers.ForEachAsync(async x => await x.DisposeAsync().ConfigureAwait(false)).ConfigureAwait(false);
+                await _lstPowers.ForEachWithSideEffectsAsync(async x => await x.DisposeAsync().ConfigureAwait(false)).ConfigureAwait(false);
                 await _lstPowers.DisposeAsync().ConfigureAwait(false);
                 await _lstCritterPowers.DisposeAsync().ConfigureAwait(false);
                 await _lstFoci.DisposeAsync().ConfigureAwait(false);
-                await _lstStackedFoci.ForEachAsync(async x => await x.DisposeAsync().ConfigureAwait(false)).ConfigureAwait(false);
+                await _lstStackedFoci.ForEachWithSideEffectsAsync(async x => await x.DisposeAsync().ConfigureAwait(false)).ConfigureAwait(false);
                 await _lstStackedFoci.DisposeAsync().ConfigureAwait(false);
                 await _lstMetamagics.DisposeAsync().ConfigureAwait(false);
                 await _lstArts.DisposeAsync().ConfigureAwait(false);
                 await _lstEnhancements.DisposeAsync().ConfigureAwait(false);
                 await _lstImprovements.DisposeAsync().ConfigureAwait(false);
                 await _lstInitiationGrades.DisposeAsync().ConfigureAwait(false);
-                await _lstQualities.ForEachAsync(async x => await x.DisposeAsync().ConfigureAwait(false)).ConfigureAwait(false);
+                await _lstQualities.ForEachWithSideEffectsAsync(async x => await x.DisposeAsync().ConfigureAwait(false)).ConfigureAwait(false);
                 await _lstQualities.DisposeAsync().ConfigureAwait(false);
-                await _lstCalendar.ForEachAsync(async x => await x.DisposeAsync().ConfigureAwait(false)).ConfigureAwait(false);
+                await _lstCalendar.ForEachWithSideEffectsAsync(async x => await x.DisposeAsync().ConfigureAwait(false)).ConfigureAwait(false);
                 await _lstCalendar.DisposeAsync().ConfigureAwait(false);
-                await _lstDrugs.ForEachAsync(async x => await x.DisposeAsync().ConfigureAwait(false)).ConfigureAwait(false);
+                await _lstDrugs.ForEachWithSideEffectsAsync(async x => await x.DisposeAsync().ConfigureAwait(false)).ConfigureAwait(false);
                 await _lstDrugs.DisposeAsync().ConfigureAwait(false);
-                await _lstMentorSpirits.ForEachAsync(async x => await x.DisposeAsync().ConfigureAwait(false)).ConfigureAwait(false);
+                await _lstMentorSpirits.ForEachWithSideEffectsAsync(async x => await x.DisposeAsync().ConfigureAwait(false)).ConfigureAwait(false);
                 await _lstMentorSpirits.DisposeAsync().ConfigureAwait(false);
                 await _lstExpenseLog.DisposeAsync().ConfigureAwait(false);
-                await _lstArmorLocations.ForEachAsync(async x => await x.DisposeAsync().ConfigureAwait(false)).ConfigureAwait(false);
-                await _lstGearLocations.ForEachAsync(async x => await x.DisposeAsync().ConfigureAwait(false)).ConfigureAwait(false);
-                await _lstWeaponLocations.ForEachAsync(async x => await x.DisposeAsync().ConfigureAwait(false)).ConfigureAwait(false);
-                await _lstVehicleLocations.ForEachAsync(async x => await x.DisposeAsync().ConfigureAwait(false)).ConfigureAwait(false);
+                await _lstArmorLocations.ForEachWithSideEffectsAsync(async x => await x.DisposeAsync().ConfigureAwait(false)).ConfigureAwait(false);
+                await _lstGearLocations.ForEachWithSideEffectsAsync(async x => await x.DisposeAsync().ConfigureAwait(false)).ConfigureAwait(false);
+                await _lstWeaponLocations.ForEachWithSideEffectsAsync(async x => await x.DisposeAsync().ConfigureAwait(false)).ConfigureAwait(false);
+                await _lstVehicleLocations.ForEachWithSideEffectsAsync(async x => await x.DisposeAsync().ConfigureAwait(false)).ConfigureAwait(false);
                 await _lstArmorLocations.DisposeAsync().ConfigureAwait(false);
                 await _lstGearLocations.DisposeAsync().ConfigureAwait(false);
                 await _lstWeaponLocations.DisposeAsync().ConfigureAwait(false);
@@ -12583,40 +12751,40 @@ namespace Chummer
                 _intMainMugshotIndex = -1;
                 await _lstMugshots.ForEachAsync(x => x.Dispose(), token).ConfigureAwait(false);
                 await _lstMugshots.ClearAsync(token).ConfigureAwait(false);
-                await _lstContacts.ForEachAsync(async x => await x.DisposeAsync().ConfigureAwait(false), token)
+                await _lstContacts.ForEachWithSideEffectsAsync(async x => await x.DisposeAsync().ConfigureAwait(false), token)
                                   .ConfigureAwait(false);
                 await _lstContacts.ClearAsync(token).ConfigureAwait(false);
-                await _lstSpirits.ForEachAsync(async x => await x.DisposeAsync().ConfigureAwait(false), token)
+                await _lstSpirits.ForEachWithSideEffectsAsync(async x => await x.DisposeAsync().ConfigureAwait(false), token)
                                  .ConfigureAwait(false);
                 await _lstSpirits.ClearAsync(token).ConfigureAwait(false);
-                await _lstArmor.ForEachAsync(async x => await x.DisposeAsync().ConfigureAwait(false), token)
+                await _lstArmor.ForEachWithSideEffectsAsync(async x => await x.DisposeAsync().ConfigureAwait(false), token)
                                .ConfigureAwait(false);
-                await _lstWeapons.ForEachAsync(async x => await x.DisposeAsync().ConfigureAwait(false), token)
+                await _lstWeapons.ForEachWithSideEffectsAsync(async x => await x.DisposeAsync().ConfigureAwait(false), token)
                                  .ConfigureAwait(false);
-                await _lstGear.ForEachAsync(async x => await x.DisposeAsync().ConfigureAwait(false), token)
+                await _lstGear.ForEachWithSideEffectsAsync(async x => await x.DisposeAsync().ConfigureAwait(false), token)
                               .ConfigureAwait(false);
-                await _lstCyberware.ForEachAsync(async x => await x.DisposeAsync().ConfigureAwait(false), token)
+                await _lstCyberware.ForEachWithSideEffectsAsync(async x => await x.DisposeAsync().ConfigureAwait(false), token)
                                    .ConfigureAwait(false);
-                await _lstVehicles.ForEachAsync(async x => await x.DisposeAsync().ConfigureAwait(false), token)
+                await _lstVehicles.ForEachWithSideEffectsAsync(async x => await x.DisposeAsync().ConfigureAwait(false), token)
                                   .ConfigureAwait(false);
-                await _lstLifestyles.ForEachAsync(async x => await x.DisposeAsync().ConfigureAwait(false), token)
+                await _lstLifestyles.ForEachWithSideEffectsAsync(async x => await x.DisposeAsync().ConfigureAwait(false), token)
                                     .ConfigureAwait(false);
-                await _lstSpells.ForEachAsync(async x => await x.DisposeAsync().ConfigureAwait(false), token)
+                await _lstSpells.ForEachWithSideEffectsAsync(async x => await x.DisposeAsync().ConfigureAwait(false), token)
                     .ConfigureAwait(false);
-                await _lstPowers.ForEachAsync(async x => await x.DisposeAsync().ConfigureAwait(false), token)
+                await _lstPowers.ForEachWithSideEffectsAsync(async x => await x.DisposeAsync().ConfigureAwait(false), token)
                                 .ConfigureAwait(false);
-                await _lstMartialArts.ForEachAsync(async x => await x.DisposeAsync().ConfigureAwait(false), token)
+                await _lstMartialArts.ForEachWithSideEffectsAsync(async x => await x.DisposeAsync().ConfigureAwait(false), token)
                                      .ConfigureAwait(false);
-                await _lstStackedFoci.ForEachAsync(async x => await x.DisposeAsync().ConfigureAwait(false), token)
+                await _lstStackedFoci.ForEachWithSideEffectsAsync(async x => await x.DisposeAsync().ConfigureAwait(false), token)
                                      .ConfigureAwait(false);
-                await _lstDrugs.ForEachAsync(async x => await x.DisposeAsync().ConfigureAwait(false), token)
+                await _lstDrugs.ForEachWithSideEffectsAsync(async x => await x.DisposeAsync().ConfigureAwait(false), token)
                                .ConfigureAwait(false);
-                await _lstMentorSpirits.ForEachAsync(async x => await x.DisposeAsync().ConfigureAwait(false), token)
+                await _lstMentorSpirits.ForEachWithSideEffectsAsync(async x => await x.DisposeAsync().ConfigureAwait(false), token)
                                        .ConfigureAwait(false);
-                await _lstGearLocations.ForEachAsync(async x => await x.DisposeAsync().ConfigureAwait(false), token).ConfigureAwait(false);
-                await _lstArmorLocations.ForEachAsync(async x => await x.DisposeAsync().ConfigureAwait(false), token).ConfigureAwait(false);
-                await _lstWeaponLocations.ForEachAsync(async x => await x.DisposeAsync().ConfigureAwait(false), token).ConfigureAwait(false);
-                await _lstVehicleLocations.ForEachAsync(async x => await x.DisposeAsync().ConfigureAwait(false), token).ConfigureAwait(false);
+                await _lstGearLocations.ForEachWithSideEffectsAsync(async x => await x.DisposeAsync().ConfigureAwait(false), token).ConfigureAwait(false);
+                await _lstArmorLocations.ForEachWithSideEffectsAsync(async x => await x.DisposeAsync().ConfigureAwait(false), token).ConfigureAwait(false);
+                await _lstWeaponLocations.ForEachWithSideEffectsAsync(async x => await x.DisposeAsync().ConfigureAwait(false), token).ConfigureAwait(false);
+                await _lstVehicleLocations.ForEachWithSideEffectsAsync(async x => await x.DisposeAsync().ConfigureAwait(false), token).ConfigureAwait(false);
                 // Reset all of the Lists.
                 // This kills the GC
                 ImprovementManager.ClearCachedValues(this, token);
@@ -13427,9 +13595,9 @@ namespace Chummer
                             return strGearReturn;
                         }
 
-                        objReturnGear
-                            = Weapons.FindWeaponGear(strImprovedSourceName, out WeaponAccessory objGearAccessory,
-                                token);
+                        WeaponAccessory objGearAccessory;
+                        (objReturnGear, objGearAccessory)
+                            = await Weapons.FindWeaponGearAsync(strImprovedSourceName, token).ConfigureAwait(false);
 
                         if (objReturnGear != null)
                         {
@@ -13462,8 +13630,10 @@ namespace Chummer
                             return strGearReturn;
                         }
 
-                        objReturnGear
-                            = Armor.FindArmorGear(strImprovedSourceName, out Armor objArmor, out ArmorMod objArmorMod);
+                        Armor objArmor;
+                        ArmorMod objArmorMod;
+                        (objReturnGear, objArmor, objArmorMod)
+                            = await Armor.FindArmorGearAsync(strImprovedSourceName, token).ConfigureAwait(false);
                         if (objReturnGear != null)
                         {
                             strGearReturn = await objReturnGear.DisplayNameShortAsync(strLanguage, token)
@@ -13497,8 +13667,9 @@ namespace Chummer
                             return strGearReturn;
                         }
 
-                        objReturnGear
-                            = Cyberware.FindCyberwareGear(strImprovedSourceName, out Cyberware objGearCyberware);
+                        Cyberware objGearCyberware;
+                        (objReturnGear, objGearCyberware)
+                            = await Cyberware.FindCyberwareGearAsync(strImprovedSourceName, token).ConfigureAwait(false);
 
                         if (objReturnGear != null)
                         {
@@ -14259,6 +14430,73 @@ namespace Chummer
                         }
                     }
                 }
+            }
+        }
+
+        /// <summary>
+        /// Return a specific Cyberware grade based on its name.
+        /// </summary>
+        /// <param name="objSource">Source to load the Grades from, either Bioware or Cyberware.</param>
+        /// <param name="strName">Name of the grade to fetch.</param>
+        /// <param name="blnIgnoreBannedGrades">Whether to ignore grades banned at chargen.</param>
+        /// <param name="token">CancellationToken to listen to.</param>
+        public async Task<Grade> GetGradeByNameAsync(Improvement.ImprovementSource objSource, string strName, bool blnIgnoreBannedGrades = false, CancellationToken token = default)
+        {
+            token.ThrowIfCancellationRequested();
+            IAsyncDisposable objLocker = await LockObject.EnterReadLockAsync(token).ConfigureAwait(false);
+            try
+            {
+                token.ThrowIfCancellationRequested();
+                Grade objStandardGrade = null;
+                string strXPath;
+                using (new FetchSafelyFromPool<StringBuilder>(Utils.StringBuilderPool, out StringBuilder sbdFilter))
+                {
+                    CharacterSettings objSettings = await GetSettingsAsync(token).ConfigureAwait(false);
+                    if (objSettings != null)
+                    {
+                        sbdFilter.Append('(').Append(await objSettings.BookXPathAsync(token: token).ConfigureAwait(false)).Append(") and ");
+                        if (!await GetIgnoreRulesAsync(token).ConfigureAwait(false) && !await GetCreatedAsync(token).ConfigureAwait(false) && !blnIgnoreBannedGrades)
+                        {
+                            foreach (string strBannedGrade in objSettings.BannedWareGrades)
+                            {
+                                sbdFilter.Append("not(contains(name, ").Append(strBannedGrade.CleanXPath())
+                                    .Append(")) and ");
+                            }
+                        }
+                    }
+
+                    if (sbdFilter.Length != 0)
+                    {
+                        sbdFilter.Length -= 5;
+                        strXPath = "/chummer/grades/grade[(" + sbdFilter + ")]";
+                    }
+                    else
+                        strXPath = "/chummer/grades/grade";
+                }
+
+                using (XmlNodeList xmlGradeList =
+                       (await LoadDataAsync(Grade.GetDataFileNameFromImprovementSource(objSource), token: token).ConfigureAwait(false))
+                           .SelectNodes(strXPath))
+                {
+                    if (xmlGradeList?.Count > 0)
+                    {
+                        foreach (XmlNode objNode in xmlGradeList)
+                        {
+                            Grade objGrade = new Grade(this, objSource);
+                            objGrade.Load(objNode);
+                            if (objGrade.Name == strName)
+                                return objGrade;
+                            else if (objGrade.Name == "Standard")
+                                objStandardGrade = objGrade;
+                        }
+                    }
+                }
+
+                return objStandardGrade;
+            }
+            finally
+            {
+                await objLocker.DisposeAsync().ConfigureAwait(false);
             }
         }
 
@@ -15571,6 +15809,7 @@ namespace Chummer
         /// <param name="token">CancellationToken to listen to.</param>
         public void MoveVehicleGearParent(TreeNode nodDestination, TreeNode nodGearNode, CancellationToken token = default)
         {
+            token.ThrowIfCancellationRequested();
             if (nodDestination == null || nodGearNode == null)
                 return;
             // The item cannot be dropped onto itself or onto one of its children.
@@ -15649,6 +15888,106 @@ namespace Chummer
         }
 
         /// <summary>
+        /// Move a Vehicle Gear TreeNode after Drag and Drop.
+        /// </summary>
+        /// <param name="nodDestination">Destination Node.</param>
+        /// <param name="nodGearNode">Node of gear to move.</param>
+        /// <param name="token">CancellationToken to listen to.</param>
+        public async Task MoveVehicleGearParentAsync(TreeNode nodDestination, TreeNode nodGearNode, CancellationToken token = default)
+        {
+            token.ThrowIfCancellationRequested();
+            if (nodDestination == null || nodGearNode == null)
+                return;
+            // The item cannot be dropped onto itself or onto one of its children.
+            for (TreeNode objCheckNode = nodDestination;
+                objCheckNode != null && objCheckNode.Level >= nodDestination.Level;
+                objCheckNode = objCheckNode.Parent)
+            {
+                if (objCheckNode == nodGearNode)
+                    return;
+            }
+
+            if (!(nodGearNode.Tag is IHasInternalId nodeId))
+                return;
+            IAsyncDisposable objLocker = await LockObject.EnterUpgradeableReadLockAsync(token).ConfigureAwait(false);
+            try
+            {
+                token.ThrowIfCancellationRequested();
+                // Locate the currently selected piece of Gear.
+                //TODO: Better interface for determining what the parent of a bit of gear is.
+                (Gear objGear, Vehicle objOldVehicle, WeaponAccessory objOldWeaponAccessory, Cyberware objOldCyberware) = await Vehicles.FindVehicleGearAsync(nodeId.InternalId, token: token).ConfigureAwait(false);
+
+                if (objGear == null)
+                    return;
+
+                IAsyncDisposable objLocker2 = await LockObject.EnterWriteLockAsync(token).ConfigureAwait(false);
+                try
+                {
+                    token.ThrowIfCancellationRequested();
+                    if (nodDestination.Tag is Gear objDestinationGear)
+                    {
+                        // Remove the Gear from the Vehicle.
+                        if (objGear.Parent is IHasChildren<Gear> parent)
+                            await parent.Children.RemoveAsync(objGear, token).ConfigureAwait(false);
+                        else if (objOldCyberware != null)
+                            await objOldCyberware.GearChildren.RemoveAsync(objGear, token).ConfigureAwait(false);
+                        else if (objOldWeaponAccessory != null)
+                            await objOldWeaponAccessory.GearChildren.RemoveAsync(objGear, token).ConfigureAwait(false);
+                        else
+                            await objOldVehicle.GearChildren.RemoveAsync(objGear, token).ConfigureAwait(false);
+
+                        // Add the Gear to its new parent.
+                        objGear.Location = null;
+                        await objDestinationGear.Children.AddAsync(objGear, token).ConfigureAwait(false);
+                    }
+                    else
+                    {
+                        // Determine if this is a Location.
+                        TreeNode nodVehicleNode = nodDestination;
+                        Location objLocation = null;
+                        while (nodVehicleNode.Level > 1)
+                        {
+                            if (objLocation is null && nodVehicleNode.Tag is Location loc)
+                            {
+                                objLocation = loc;
+                            }
+
+                            nodVehicleNode = nodVehicleNode.Parent;
+                        }
+
+                        // Determine if this is a Location in the destination Vehicle.
+                        if (nodDestination.Tag is Vehicle objNewVehicle)
+                        {
+                            // Remove the Gear from the Vehicle.
+                            if (objGear.Parent is IHasChildren<Gear> parent)
+                                await parent.Children.RemoveAsync(objGear, token).ConfigureAwait(false);
+                            else if (objOldCyberware != null)
+                                await objOldCyberware.GearChildren.RemoveAsync(objGear, token).ConfigureAwait(false);
+                            else if (objOldWeaponAccessory != null)
+                                await objOldWeaponAccessory.GearChildren.RemoveAsync(objGear, token).ConfigureAwait(false);
+                            else
+                                await objOldVehicle.GearChildren.RemoveAsync(objGear, token).ConfigureAwait(false);
+
+                            // Add the Gear to the Vehicle and set its Location.
+                            objGear.Parent = objNewVehicle;
+                            await objNewVehicle.GearChildren.AddAsync(objGear, token).ConfigureAwait(false);
+                            if (objLocation != null)
+                                await objLocation.Children.AddAsync(objGear, token).ConfigureAwait(false);
+                        }
+                    }
+                }
+                finally
+                {
+                    await objLocker2.DisposeAsync().ConfigureAwait(false);
+                }
+            }
+            finally
+            {
+                await objLocker.DisposeAsync().ConfigureAwait(false);
+            }
+        }
+
+        /// <summary>
         /// Move an Improvement TreeNode after Drag and Drop.
         /// </summary>
         /// <param name="objDestination">Destination Node.</param>
@@ -15656,6 +15995,7 @@ namespace Chummer
         /// <param name="token">CancellationToken to listen to.</param>
         public void MoveImprovementNode(TreeNode objDestination, TreeNode nodOldNode, CancellationToken token = default)
         {
+            token.ThrowIfCancellationRequested();
             if (objDestination == null)
                 return;
             if (!(nodOldNode?.Tag is Improvement objImprovement))
@@ -15663,12 +16003,16 @@ namespace Chummer
             TreeNode objNewParent = objDestination;
             while (objNewParent.Level > 0)
                 objNewParent = objNewParent.Parent;
+            TreeView treView = objNewParent.TreeView;
 
             using (LockObject.EnterWriteLock(token))
             {
-                objImprovement.CustomGroup = objNewParent.Tag.ToString() == "Node_SelectedImprovements"
+                objImprovement.CustomGroup = treView?.DoThreadSafeFunc(() =>
+                    objNewParent.Tag.ToString() == "Node_SelectedImprovements"
+                        ? string.Empty
+                        : objNewParent.Text, token) ?? (objNewParent.Tag.ToString() == "Node_SelectedImprovements"
                     ? string.Empty
-                    : objNewParent.Text;
+                    : objNewParent.Text);
                 Improvements[Improvements.IndexOf(objImprovement)] = objImprovement;
             }
         }
@@ -15757,6 +16101,81 @@ namespace Chummer
         }
 
         /// <summary>
+        /// Clear all Spell tab elements from the character.
+        /// </summary>
+        public async Task ClearMagicAsync(bool blnKeepAdeptEligible, CancellationToken token = default)
+        {
+            IAsyncDisposable objLocker = await LockObject.EnterUpgradeableReadLockAsync(token).ConfigureAwait(false);
+            try
+            {
+                token.ThrowIfCancellationRequested();
+                if ((await ImprovementManager.GetCachedImprovementListForValueOfAsync(this, Improvement.ImprovementType.FreeSpells, token: token).ConfigureAwait(false))
+                        .Count > 0
+                    || (await ImprovementManager
+                        .GetCachedImprovementListForValueOfAsync(this, Improvement.ImprovementType.FreeSpellsATT, token: token).ConfigureAwait(false)).Count > 0
+                    || (await ImprovementManager
+                        .GetCachedImprovementListForValueOfAsync(this, Improvement.ImprovementType.FreeSpellsSkill, token: token).ConfigureAwait(false)).Count >
+                    0)
+                {
+                    // Run through all of the Spells and remove their Improvements.
+                    IAsyncDisposable objLocker2 = await LockObject.EnterWriteLockAsync(token).ConfigureAwait(false);
+                    try
+                    {
+                        token.ThrowIfCancellationRequested();
+                        ThreadSafeObservableCollection<Spell> lstSpells = await GetSpellsAsync(token).ConfigureAwait(false);
+                        for (int i = await lstSpells.GetCountAsync(token).ConfigureAwait(false) - 1; i >= 0; --i)
+                        {
+                            if (i < await lstSpells.GetCountAsync(token).ConfigureAwait(false))
+                            {
+                                Spell objToRemove = await lstSpells.GetValueAtAsync(i, token).ConfigureAwait(false);
+                                if (objToRemove.Grade == 0)
+                                {
+                                    if (blnKeepAdeptEligible && objToRemove.Category == "Rituals" &&
+                                        !objToRemove.Descriptors.Contains("Spell"))
+                                        continue;
+                                    // Remove the Improvements created by the Spell.
+                                    await ImprovementManager.RemoveImprovementsAsync(this, Improvement.ImprovementSource.Spell,
+                                        objToRemove.InternalId, token: token).ConfigureAwait(false);
+                                    await lstSpells.RemoveAtAsync(i, token).ConfigureAwait(false);
+                                }
+                            }
+                        }
+                    }
+                    finally
+                    {
+                        await objLocker2.DisposeAsync().ConfigureAwait(false);
+                    }
+                }
+
+                IAsyncDisposable objLocker3 = await LockObject.EnterWriteLockAsync(token).ConfigureAwait(false);
+                try
+                {
+                    token.ThrowIfCancellationRequested();
+                    ThreadSafeObservableCollection<Spirit> lstSpirits = await GetSpiritsAsync(token).ConfigureAwait(false);
+                    for (int i = await lstSpirits.GetCountAsync(token).ConfigureAwait(false) - 1; i >= 0; --i)
+                    {
+                        if (i < await lstSpirits.GetCountAsync(token).ConfigureAwait(false))
+                        {
+                            Spirit objToRemove = await lstSpirits.GetValueAtAsync(i, token).ConfigureAwait(false);
+                            if (objToRemove.EntityType == SpiritType.Spirit)
+                            {
+                                await lstSpirits.RemoveAtAsync(i, token).ConfigureAwait(false);
+                            }
+                        }
+                    }
+                }
+                finally
+                {
+                    await objLocker3.DisposeAsync().ConfigureAwait(false);
+                }
+            }
+            finally
+            {
+                await objLocker.DisposeAsync().ConfigureAwait(false);
+            }
+        }
+
+        /// <summary>
         /// Clear all Adept tab elements from the character.
         /// </summary>
         public void ClearAdeptPowers(CancellationToken token = default)
@@ -15780,6 +16199,40 @@ namespace Chummer
                             objToRemove.Rating = 0;
                     }
                 }
+            }
+        }
+
+        /// <summary>
+        /// Clear all Adept tab elements from the character.
+        /// </summary>
+        public async Task ClearAdeptPowersAsync(CancellationToken token = default)
+        {
+            IAsyncDisposable objLocker = await LockObject.EnterWriteLockAsync(token).ConfigureAwait(false);
+            try
+            {
+                token.ThrowIfCancellationRequested();
+                ThreadSafeBindingList<Power> lstPowers = await GetPowersAsync(token).ConfigureAwait(false);
+                // Run through all powers and remove the ones not added by improvements or foci
+                for (int i = await lstPowers.GetCountAsync(token).ConfigureAwait(false) - 1; i >= 0; --i)
+                {
+                    if (i < await lstPowers.GetCountAsync(token).ConfigureAwait(false))
+                    {
+                        Power objToRemove = await lstPowers.GetValueAtAsync(i, token).ConfigureAwait(false);
+                        if (await objToRemove.GetFreeLevelsAsync(token).ConfigureAwait(false) == 0 && await objToRemove.GetFreePointsAsync(token).ConfigureAwait(false) == 0)
+                        {
+                            // Remove the Improvements created by the Power.
+                            await ImprovementManager.RemoveImprovementsAsync(this, Improvement.ImprovementSource.Power,
+                                objToRemove.InternalId, token: token).ConfigureAwait(false);
+                            await lstPowers.RemoveAtAsync(i, token).ConfigureAwait(false);
+                        }
+                        else
+                            await objToRemove.SetRatingAsync(0, token).ConfigureAwait(false);
+                    }
+                }
+            }
+            finally
+            {
+                await objLocker.DisposeAsync().ConfigureAwait(false);
             }
         }
 
@@ -15821,6 +16274,52 @@ namespace Chummer
         }
 
         /// <summary>
+        /// Clear all Technomancer tab elements from the character.
+        /// </summary>
+        public async Task ClearResonanceAsync(CancellationToken token = default)
+        {
+            IAsyncDisposable objLocker = await LockObject.EnterWriteLockAsync(token).ConfigureAwait(false);
+            try
+            {
+                token.ThrowIfCancellationRequested();
+                ThreadSafeObservableCollection<ComplexForm> lstComplexForms = await GetComplexFormsAsync(token).ConfigureAwait(false);
+                // Run through all of the Complex Forms and remove their Improvements.
+                for (int i = await lstComplexForms.GetCountAsync(token).ConfigureAwait(false) - 1; i >= 0; --i)
+                {
+                    if (i < await lstComplexForms.GetCountAsync(token).ConfigureAwait(false))
+                    {
+                        ComplexForm objToRemove = await lstComplexForms.GetValueAtAsync(i, token).ConfigureAwait(false);
+                        if (objToRemove.Grade == 0)
+                        {
+                            // Remove the Improvements created by the Spell.
+                            await ImprovementManager.RemoveImprovementsAsync(this,
+                                Improvement.ImprovementSource.ComplexForm,
+                                objToRemove.InternalId, token: token).ConfigureAwait(false);
+                            await lstComplexForms.RemoveAtAsync(i, token).ConfigureAwait(false);
+                        }
+                    }
+                }
+
+                ThreadSafeObservableCollection<Spirit> lstSpirits = await GetSpiritsAsync(token).ConfigureAwait(false);
+                for (int i = await lstSpirits.GetCountAsync(token).ConfigureAwait(false) - 1; i >= 0; --i)
+                {
+                    if (i < await lstSpirits.GetCountAsync(token).ConfigureAwait(false))
+                    {
+                        Spirit objToRemove = await lstSpirits.GetValueAtAsync(i, token).ConfigureAwait(false);
+                        if (objToRemove.EntityType == SpiritType.Sprite)
+                        {
+                            await lstSpirits.RemoveAtAsync(i, token).ConfigureAwait(false);
+                        }
+                    }
+                }
+            }
+            finally
+            {
+                await objLocker.DisposeAsync().ConfigureAwait(false);
+            }
+        }
+
+        /// <summary>
         /// Clear all Advanced Programs tab elements from the character.
         /// </summary>
         public void ClearAdvancedPrograms(CancellationToken token = default)
@@ -15842,6 +16341,37 @@ namespace Chummer
                         }
                     }
                 }
+            }
+        }
+
+        /// <summary>
+        /// Clear all Advanced Programs tab elements from the character.
+        /// </summary>
+        public async Task ClearAdvancedProgramsAsync(CancellationToken token = default)
+        {
+            IAsyncDisposable objLocker = await LockObject.EnterWriteLockAsync(token).ConfigureAwait(false);
+            try
+            {
+                token.ThrowIfCancellationRequested();
+                ThreadSafeObservableCollection<AIProgram> lstAIPrograms = await GetAIProgramsAsync(token).ConfigureAwait(false);
+                for (int i = await lstAIPrograms.GetCountAsync(token).ConfigureAwait(false) - 1; i >= 0; --i)
+                {
+                    if (i < await lstAIPrograms.GetCountAsync(token).ConfigureAwait(false))
+                    {
+                        AIProgram objToRemove = await lstAIPrograms.GetValueAtAsync(i, token).ConfigureAwait(false);
+                        if (objToRemove.CanDelete)
+                        {
+                            // Remove the Improvements created by the Program.
+                            await ImprovementManager.RemoveImprovementsAsync(this, Improvement.ImprovementSource.AIProgram,
+                                objToRemove.InternalId, token: token).ConfigureAwait(false);
+                            await lstAIPrograms.RemoveAtAsync(i, token).ConfigureAwait(false);
+                        }
+                    }
+                }
+            }
+            finally
+            {
+                await objLocker.DisposeAsync().ConfigureAwait(false);
             }
         }
 
@@ -15907,6 +16437,81 @@ namespace Chummer
         }
 
         /// <summary>
+        /// Clear all cyberware and bioware implanted on the character.
+        /// </summary>
+        public async Task ClearCyberwareTabAsync(CancellationToken token = default)
+        {
+            IAsyncDisposable objLocker = await LockObject.EnterUpgradeableReadLockAsync(token).ConfigureAwait(false);
+            try
+            {
+                token.ThrowIfCancellationRequested();
+                string strDisabledSource = string.Empty;
+                if (await GetCreatedAsync(token).ConfigureAwait(false))
+                {
+                    Improvement objDisablingImprovement = (await ImprovementManager
+                            .GetCachedImprovementListForValueOfAsync(
+                                this,
+                                Improvement.ImprovementType.SpecialTab,
+                                "Cyberware", token: token).ConfigureAwait(false))
+                        .Find(x => x.UniqueName == "disabletab");
+                    if (objDisablingImprovement != null)
+                    {
+                        strDisabledSource = await LanguageManager.GetStringAsync("String_Space", token: token).ConfigureAwait(false) +
+                                            '(' + await GetObjectNameAsync(objDisablingImprovement, GlobalSettings.Language, token: token).ConfigureAwait(false) +
+                                            ')' +
+                                            await LanguageManager.GetStringAsync("String_Space", token: token).ConfigureAwait(false);
+                    }
+                }
+
+                IAsyncDisposable objLocker2 = await LockObject.EnterWriteLockAsync(token).ConfigureAwait(false);
+                try
+                {
+                    token.ThrowIfCancellationRequested();
+                    foreach (Cyberware objCyberware in await Cyberware
+                                 .ToListAsync(async x => x.SourceID != Backend.Equipment.Cyberware.EssenceHoleGUID
+                                                         && x.SourceID != Backend.Equipment.Cyberware
+                                                             .EssenceAntiHoleGUID &&
+                                                         await x.GetIsModularCurrentlyEquippedAsync(token).ConfigureAwait(false), token: token).ConfigureAwait(false))
+                    {
+                        if (!string.IsNullOrEmpty(objCyberware.PlugsIntoModularMount))
+                        {
+                            if (await objCyberware.GetCanRemoveThroughImprovementsAsync(token).ConfigureAwait(false))
+                            {
+                                var objParent = objCyberware.Parent;
+                                if (objParent != null)
+                                    await objParent.Children.RemoveAsync(objCyberware, token).ConfigureAwait(false);
+                                await Cyberware.AddAsync(objCyberware, token).ConfigureAwait(false);
+                                await objCyberware.ChangeModularEquipAsync(false, token: token).ConfigureAwait(false);
+                            }
+                        }
+                        else if (await objCyberware.GetCanRemoveThroughImprovementsAsync(token).ConfigureAwait(false))
+                        {
+                            await objCyberware.DeleteCyberwareAsync(token: token).ConfigureAwait(false);
+                            ExpenseLogEntry objExpense = new ExpenseLogEntry(this);
+                            string strEntry = await LanguageManager.GetStringAsync(
+                                objCyberware.SourceType == Improvement.ImprovementSource.Cyberware
+                                    ? "String_ExpenseSoldCyberware"
+                                    : "String_ExpenseSoldBioware", token: token).ConfigureAwait(false);
+                            objExpense.Create(0,
+                                strEntry + strDisabledSource
+                                         + await objCyberware.GetCurrentDisplayNameShortAsync(token).ConfigureAwait(false),
+                                ExpenseType.Nuyen, DateTime.Now);
+                            await ExpenseEntries.AddWithSortAsync(objExpense, token: token).ConfigureAwait(false);
+                        }
+                    }
+                }
+                finally
+                {
+                    await objLocker2.DisposeAsync().ConfigureAwait(false);
+                }
+            }
+            finally
+            {
+                await objLocker.DisposeAsync().ConfigureAwait(false);
+            }
+        }
+
+        /// <summary>
         /// Clear all Critter tab elements from the character.
         /// </summary>
         public void ClearCritterPowers(CancellationToken token = default)
@@ -15927,6 +16532,38 @@ namespace Chummer
                         }
                     }
                 }
+            }
+        }
+
+        /// <summary>
+        /// Clear all Critter tab elements from the character.
+        /// </summary>
+        public async Task ClearCritterPowersAsync(CancellationToken token = default)
+        {
+            IAsyncDisposable objLocker = await LockObject.EnterWriteLockAsync(token).ConfigureAwait(false);
+            try
+            {
+                token.ThrowIfCancellationRequested();
+                ThreadSafeObservableCollection<CritterPower> lstCritterPowers = await GetCritterPowersAsync(token).ConfigureAwait(false);
+                for (int i = await lstCritterPowers.GetCountAsync(token).ConfigureAwait(false) - 1; i >= 0; --i)
+                {
+                    if (i < await lstCritterPowers.GetCountAsync(token).ConfigureAwait(false))
+                    {
+                        CritterPower objToRemove = await lstCritterPowers.GetValueAtAsync(i, token).ConfigureAwait(false);
+                        if (objToRemove.Grade >= 0)
+                        {
+                            // Remove the Improvements created by the Metamagic.
+                            await ImprovementManager.RemoveImprovementsAsync(this,
+                                Improvement.ImprovementSource.CritterPower,
+                                objToRemove.InternalId, token: token).ConfigureAwait(false);
+                            await lstCritterPowers.RemoveAtAsync(i, token).ConfigureAwait(false);
+                        }
+                    }
+                }
+            }
+            finally
+            {
+                await objLocker.DisposeAsync().ConfigureAwait(false);
             }
         }
 
@@ -16493,6 +17130,47 @@ namespace Chummer
             }
         }
 
+        /// <summary>
+        /// Index of Character's main portrait. -1 if set to none.
+        /// </summary>
+        public async Task<int> GetMainMugshotIndexAsync(CancellationToken token = default)
+        {
+            token.ThrowIfCancellationRequested();
+            IAsyncDisposable objLocker = await LockObject.EnterReadLockAsync(token).ConfigureAwait(false);
+            try
+            {
+                token.ThrowIfCancellationRequested();
+                return _intMainMugshotIndex;
+            }
+            finally
+            {
+                await objLocker.DisposeAsync().ConfigureAwait(false);
+            }
+        }
+
+        /// <summary>
+        /// Index of Character's main portrait. -1 if set to none.
+        /// </summary>
+        public async Task SetMainMugshotIndexAsync(int value, CancellationToken token = default)
+        {
+            token.ThrowIfCancellationRequested();
+            if (value < -1)
+                value = -1;
+            IAsyncDisposable objLocker = await LockObject.EnterUpgradeableReadLockAsync(token).ConfigureAwait(false);
+            try
+            {
+                token.ThrowIfCancellationRequested();
+                if (value >= await Mugshots.GetCountAsync(token).ConfigureAwait(false))
+                    value = -1;
+                if (Interlocked.Exchange(ref _intMainMugshotIndex, value) != value)
+                    await OnPropertyChangedAsync(nameof(MainMugshotIndex), token).ConfigureAwait(false);
+            }
+            finally
+            {
+                await objLocker.DisposeAsync().ConfigureAwait(false);
+            }
+        }
+
         public void SaveMugshots(XmlWriter objWriter, CancellationToken token = default)
         {
             Utils.SafelyRunSynchronously(() => SaveMugshotsCore(true, objWriter, token), token);
@@ -16688,8 +17366,8 @@ namespace Chummer
                         }
                         catch (UnauthorizedAccessException)
                         {
-                            Program.ShowScrollableMessageBox(
-                                await LanguageManager.GetStringAsync("Message_Insufficient_Permissions_Warning", token: token).ConfigureAwait(false));
+                            await Program.ShowScrollableMessageBoxAsync(
+                                await LanguageManager.GetStringAsync("Message_Insufficient_Permissions_Warning", token: token).ConfigureAwait(false), token: token).ConfigureAwait(false);
                         }
                     }
 
@@ -18088,6 +18766,25 @@ namespace Chummer
         }
 
         /// <summary>
+        /// Burnt Street Cred.
+        /// </summary>
+        public async Task SetBurntStreetCredAsync(int value, CancellationToken token = default)
+        {
+            token.ThrowIfCancellationRequested();
+            IAsyncDisposable objLocker = await LockObject.EnterUpgradeableReadLockAsync(token).ConfigureAwait(false);
+            try
+            {
+                token.ThrowIfCancellationRequested();
+                if (Interlocked.Exchange(ref _intBurntStreetCred, value) != value)
+                    await OnPropertyChangedAsync(nameof(BurntStreetCred), token).ConfigureAwait(false);
+            }
+            finally
+            {
+                await objLocker.DisposeAsync().ConfigureAwait(false);
+            }
+        }
+
+        /// <summary>
         /// Notoriety.
         /// </summary>
         [HubTag]
@@ -18162,8 +18859,7 @@ namespace Chummer
                 {
                     if (Interlocked.Exchange(ref _intPublicAwareness, value) == value)
                         return;
-                    using (LockObject.EnterWriteLock())
-                        OnPropertyChanged();
+                    OnPropertyChanged();
                 }
             }
         }
@@ -18694,8 +19390,7 @@ namespace Chummer
                     }
                     else if (Interlocked.Exchange(ref _intPhysicalCMFilled, value) != value)
                     {
-                        using (LockObject.EnterWriteLock())
-                            OnPropertyChanged();
+                        OnPropertyChanged();
                     }
                 }
             }
@@ -18715,6 +19410,44 @@ namespace Chummer
                     return objVehicle.PhysicalCMFilled;
 
                 return _intPhysicalCMFilled;
+            }
+            finally
+            {
+                await objLocker.DisposeAsync().ConfigureAwait(false);
+            }
+        }
+
+        /// <summary>
+        /// Number of Physical Condition Monitor Boxes that are filled.
+        /// </summary>
+        public async Task SetPhysicalCMFilledAsync(int value, CancellationToken token = default)
+        {
+            token.ThrowIfCancellationRequested();
+            IAsyncDisposable objLocker = await LockObject.EnterUpgradeableReadLockAsync(token).ConfigureAwait(false);
+            try
+            {
+                token.ThrowIfCancellationRequested();
+                if (HomeNode is Vehicle objVehicle)
+                {
+                    if (objVehicle.PhysicalCMFilled != value)
+                    {
+                        IAsyncDisposable objLocker2 = await LockObject.EnterWriteLockAsync(token).ConfigureAwait(false);
+                        try
+                        {
+                            token.ThrowIfCancellationRequested();
+                            objVehicle.PhysicalCMFilled = value;
+                            await OnPropertyChangedAsync(nameof(PhysicalCMFilled), token).ConfigureAwait(false);
+                        }
+                        finally
+                        {
+                            await objLocker2.DisposeAsync().ConfigureAwait(false);
+                        }
+                    }
+                }
+                else if (Interlocked.Exchange(ref _intPhysicalCMFilled, value) != value)
+                {
+                    await OnPropertyChangedAsync(nameof(PhysicalCMFilled), token).ConfigureAwait(false);
+                }
             }
             finally
             {
@@ -18758,8 +19491,7 @@ namespace Chummer
                     }
                     else if (Interlocked.Exchange(ref _intStunCMFilled, value) != value)
                     {
-                        using (LockObject.EnterWriteLock())
-                            OnPropertyChanged();
+                        OnPropertyChanged();
                     }
                 }
             }
@@ -18786,6 +19518,53 @@ namespace Chummer
                 }
 
                 return _intStunCMFilled;
+            }
+            finally
+            {
+                await objLocker.DisposeAsync().ConfigureAwait(false);
+            }
+        }
+
+        /// <summary>
+        /// Number of Stun Condition Monitor Boxes that are filled.
+        /// </summary>
+        public async Task SetStunCMFilledAsync(int value, CancellationToken token = default)
+        {
+            token.ThrowIfCancellationRequested();
+            IAsyncDisposable objLocker = await LockObject.EnterUpgradeableReadLockAsync(token).ConfigureAwait(false);
+            try
+            {
+                token.ThrowIfCancellationRequested();
+                if (await GetIsAIAsync(token).ConfigureAwait(false))
+                {
+                    IHasMatrixAttributes objHomeNode = await GetHomeNodeAsync(token).ConfigureAwait(false);
+                    if (objHomeNode != null)
+                    {
+                        // A.I. do not have a Stun Condition Monitor, but they do have a Matrix Condition Monitor if they are in their home node.
+                        if (HomeNode.MatrixCMFilled != value)
+                        {
+                            IAsyncDisposable objLocker2 = await LockObject.EnterWriteLockAsync(token).ConfigureAwait(false);
+                            try
+                            {
+                                token.ThrowIfCancellationRequested();
+                                HomeNode.MatrixCMFilled = value;
+                                await OnPropertyChangedAsync(nameof(StunCMFilled), token).ConfigureAwait(false);
+                            }
+                            finally
+                            {
+                                await objLocker2.DisposeAsync().ConfigureAwait(false);
+                            }
+                        }
+                    }
+                    else if (Interlocked.Exchange(ref _intStunCMFilled, value) != value)
+                    {
+                        await OnPropertyChangedAsync(nameof(StunCMFilled), token).ConfigureAwait(false);
+                    }
+                }
+                else if (Interlocked.Exchange(ref _intStunCMFilled, value) != value)
+                {
+                    await OnPropertyChangedAsync(nameof(StunCMFilled), token).ConfigureAwait(false);
+                }
             }
             finally
             {
@@ -19541,7 +20320,7 @@ namespace Chummer
         {
             if (value == 0)
                 return;
-            IAsyncDisposable objLocker = await LockObject.EnterUpgradeableReadLockAsync(token).ConfigureAwait(false);
+            IAsyncDisposable objLocker = await LockObject.EnterWriteLockAsync(token).ConfigureAwait(false);
             try
             {
                 token.ThrowIfCancellationRequested();
@@ -21546,6 +22325,39 @@ namespace Chummer
                 if (Interlocked.Exchange(ref _intMAGAdept, value) == value)
                     return;
                 await OnPropertyChangedAsync(nameof(MysticAdeptPowerPoints), token).ConfigureAwait(false);
+            }
+            finally
+            {
+                await objLocker.DisposeAsync().ConfigureAwait(false);
+            }
+        }
+
+        /// <summary>
+        /// Amount of Power Points for Mystic Adepts.
+        /// </summary>
+        public async Task ModifyMysticAdeptPowerPointsAsync(int value, CancellationToken token = default)
+        {
+            token.ThrowIfCancellationRequested();
+            IAsyncDisposable objLocker = await LockObject.EnterUpgradeableReadLockAsync(token).ConfigureAwait(false);
+            try
+            {
+                token.ThrowIfCancellationRequested();
+                value = Math.Min(value,
+                    await (await GetAttributeAsync("MAG", token: token).ConfigureAwait(false)).GetTotalValueAsync(token)
+                        .ConfigureAwait(false) - _intMAGAdept);
+                if (value == 0)
+                    return;
+                IAsyncDisposable objLocker2 = await LockObject.EnterWriteLockAsync(token).ConfigureAwait(false);
+                try
+                {
+                    token.ThrowIfCancellationRequested();
+                    Interlocked.Add(ref _intMAGAdept, value);
+                    await OnPropertyChangedAsync(nameof(MysticAdeptPowerPoints), token).ConfigureAwait(false);
+                }
+                finally
+                {
+                    await objLocker2.DisposeAsync().ConfigureAwait(false);
+                }
             }
             finally
             {
@@ -25955,9 +26767,10 @@ namespace Chummer
                 {
                     strReturn = strReturn
                         .CheapReplace('{' + strAttributeName + '}', () =>
-                                          dicValueOverrides?.ContainsKey(strAttributeName) == true
-                                              ? dicValueOverrides[strAttributeName].ToString()
-                                              : ActiveCommlink?.GetTotalMatrixAttribute(strAttributeName).ToString());
+                            dicValueOverrides != null &&
+                            dicValueOverrides.TryGetValue(strAttributeName, out int intOverride)
+                                ? intOverride.ToString()
+                                : ActiveCommlink?.GetTotalMatrixAttribute(strAttributeName).ToString());
                 }
             }
 
@@ -25978,10 +26791,11 @@ namespace Chummer
                 foreach (string strAttributeName in MatrixAttributes.MatrixAttributeStrings)
                 {
                     sbdInput.CheapReplace('{' + strAttributeName + '}', () =>
-                                              dicValueOverrides?.ContainsKey(strAttributeName) == true
-                                                  ? dicValueOverrides[strAttributeName].ToString()
-                                                  : ActiveCommlink?.GetTotalMatrixAttribute(strAttributeName)
-                                                                  .ToString());
+                        dicValueOverrides != null &&
+                        dicValueOverrides.TryGetValue(strAttributeName, out int intOverride)
+                            ? intOverride.ToString()
+                            : ActiveCommlink?.GetTotalMatrixAttribute(strAttributeName)
+                                .ToString());
                 }
             }
         }
@@ -28876,7 +29690,7 @@ namespace Chummer
                         continue;
                     Armor objSourceArmor =
                         lstArmorsToConsider.Find(x => x.InternalId == objImprovement.SourceName)
-                        ?? lstArmorsToConsider.FindArmorMod(objImprovement.SourceName)?.Parent;
+                        ?? (await lstArmorsToConsider.FindArmorModAsync(objImprovement.SourceName, token).ConfigureAwait(false))?.Parent;
                     if (objSourceArmor == null)
                         continue;
                     decGeneralArmorImprovementValue -= objImprovement.Value;
@@ -30998,7 +31812,7 @@ namespace Chummer
                     {
                         foreach (Armor objArmor in lstArmorsToConsider)
                         {
-                            if (dicArmorStackingValues.TryGetValue(objArmor, out var tupStack)
+                            if (dicArmorStackingValues.TryGetValue(objArmor, out Tuple<int, int> tupStack)
                                 && tupStack.Item1 > intAverageStrength)
                                 dicArmorStackingValues[objArmor]
                                     = new Tuple<int, int>(intAverageStrength, tupStack.Item2);
@@ -31064,7 +31878,6 @@ namespace Chummer
                         continue;
                     string strCustomFitName = (await objArmor.ArmorMods.FirstOrDefaultAsync(x => x.Name == "Custom Fit (Stack)" && x.Equipped, token: token).ConfigureAwait(false))?.Extra ?? string.Empty;
 
-
                     int intLoopStack = objArmor.ArmorValue.StartsWith('+') || objArmor.ArmorValue.StartsWith('-')
                         ? await objArmor.GetTotalArmorAsync(token).ConfigureAwait(false)
                         : 0;
@@ -31108,7 +31921,7 @@ namespace Chummer
                 {
                     foreach (Armor objArmor in lstArmorsToConsider)
                     {
-                        if (dicArmorStackingValues.TryGetValue(objArmor, out var tupStack)
+                        if (dicArmorStackingValues.TryGetValue(objArmor, out Tuple<int, int> tupStack)
                             && tupStack.Item1 > intAverageStrength)
                             dicArmorStackingValues[objArmor]
                                 = new Tuple<int, int>(intAverageStrength, tupStack.Item2);
@@ -32333,8 +33146,8 @@ namespace Chummer
                     using (LockObject.EnterWriteLock())
                     {
                         _decNuyen = value;
+                        OnPropertyChanged();
                     }
-                    OnPropertyChanged();
                 }
             }
         }
@@ -32373,13 +33186,12 @@ namespace Chummer
                 {
                     token.ThrowIfCancellationRequested();
                     _decNuyen = value;
+                    await OnPropertyChangedAsync(nameof(Nuyen), token).ConfigureAwait(false);
                 }
                 finally
                 {
                     await objLocker2.DisposeAsync().ConfigureAwait(false);
                 }
-
-                await OnPropertyChangedAsync(nameof(Nuyen), token).ConfigureAwait(false);
             }
             finally
             {
@@ -32394,20 +33206,11 @@ namespace Chummer
         {
             if (value == 0)
                 return;
-            IAsyncDisposable objLocker = await LockObject.EnterUpgradeableReadLockAsync(token).ConfigureAwait(false);
+            IAsyncDisposable objLocker = await LockObject.EnterWriteLockAsync(token).ConfigureAwait(false);
             try
             {
                 token.ThrowIfCancellationRequested();
-                IAsyncDisposable objLocker2 = await LockObject.EnterWriteLockAsync(token).ConfigureAwait(false);
-                try
-                {
-                    token.ThrowIfCancellationRequested();
-                    _decNuyen += value;
-                }
-                finally
-                {
-                    await objLocker2.DisposeAsync().ConfigureAwait(false);
-                }
+                _decNuyen += value;
                 await OnPropertyChangedAsync(nameof(Nuyen), token).ConfigureAwait(false);
             }
             finally
@@ -32461,8 +33264,8 @@ namespace Chummer
                     using (LockObject.EnterWriteLock())
                     {
                         _decStartingNuyen = value;
+                        OnPropertyChanged();
                     }
-                    OnPropertyChanged();
                 }
             }
         }
@@ -32500,13 +33303,12 @@ namespace Chummer
                 {
                     token.ThrowIfCancellationRequested();
                     _decStartingNuyen = value;
+                    await OnPropertyChangedAsync(nameof(StartingNuyen), token).ConfigureAwait(false);
                 }
                 finally
                 {
                     await objLocker2.DisposeAsync().ConfigureAwait(false);
                 }
-
-                await OnPropertyChangedAsync(nameof(StartingNuyen), token).ConfigureAwait(false);
             }
             finally
             {
@@ -32681,8 +33483,8 @@ namespace Chummer
                     using (LockObject.EnterWriteLock())
                     {
                         _decNuyenBP = value;
+                        OnPropertyChanged();
                     }
-                    OnPropertyChanged();
                 }
             }
         }
@@ -32722,12 +33524,12 @@ namespace Chummer
                 {
                     token.ThrowIfCancellationRequested();
                     _decNuyenBP = value;
+                    await OnPropertyChangedAsync(nameof(NuyenBP), token).ConfigureAwait(false);
                 }
                 finally
                 {
                     await objLocker2.DisposeAsync().ConfigureAwait(false);
                 }
-                await OnPropertyChangedAsync(nameof(NuyenBP), token).ConfigureAwait(false);
             }
             finally
             {
@@ -33607,8 +34409,8 @@ namespace Chummer
                     using (LockObject.EnterWriteLock())
                     {
                         _guiMetatype = value;
+                        OnPropertyChanged();
                     }
-                    OnPropertyChanged();
                 }
             }
         }
@@ -33706,8 +34508,8 @@ namespace Chummer
                     using (LockObject.EnterWriteLock())
                     {
                         _guiMetavariant = value;
+                        OnPropertyChanged();
                     }
-                    OnPropertyChanged();
                 }
             }
         }
@@ -35193,7 +35995,6 @@ namespace Chummer
                         _blnAdeptEnabled = value;
                         if (!value)
                             ClearAdeptPowers();
-
                         OnPropertyChanged();
                     }
                 }
@@ -35210,6 +36011,37 @@ namespace Chummer
             {
                 token.ThrowIfCancellationRequested();
                 return _blnAdeptEnabled;
+            }
+            finally
+            {
+                await objLocker.DisposeAsync().ConfigureAwait(false);
+            }
+        }
+
+        /// <summary>
+        /// Whether Adept options are enabled.
+        /// </summary>
+        public async Task SetAdeptEnabledAsync(bool value, CancellationToken token = default)
+        {
+            IAsyncDisposable objLocker = await LockObject.EnterUpgradeableReadLockAsync(token).ConfigureAwait(false);
+            try
+            {
+                token.ThrowIfCancellationRequested();
+                if (_blnAdeptEnabled == value)
+                    return;
+                IAsyncDisposable objLocker2 = await LockObject.EnterWriteLockAsync(token).ConfigureAwait(false);
+                try
+                {
+                    token.ThrowIfCancellationRequested();
+                    _blnAdeptEnabled = value;
+                    if (!value)
+                        await ClearAdeptPowersAsync(token).ConfigureAwait(false);
+                    await OnPropertyChangedAsync(nameof(AdeptEnabled), token).ConfigureAwait(false);
+                }
+                finally
+                {
+                    await objLocker2.DisposeAsync().ConfigureAwait(false);
+                }
             }
             finally
             {
@@ -35238,7 +36070,6 @@ namespace Chummer
                         _blnMagicianEnabled = value;
                         if (!value)
                             ClearMagic(AdeptEnabled);
-
                         OnPropertyChanged();
                     }
                 }
@@ -35255,6 +36086,37 @@ namespace Chummer
             {
                 token.ThrowIfCancellationRequested();
                 return _blnMagicianEnabled;
+            }
+            finally
+            {
+                await objLocker.DisposeAsync().ConfigureAwait(false);
+            }
+        }
+
+        /// <summary>
+        /// Whether Magician options are enabled.
+        /// </summary>
+        public async Task SetMagicianEnabledAsync(bool value, CancellationToken token = default)
+        {
+            IAsyncDisposable objLocker = await LockObject.EnterUpgradeableReadLockAsync(token).ConfigureAwait(false);
+            try
+            {
+                token.ThrowIfCancellationRequested();
+                if (_blnMagicianEnabled == value)
+                    return;
+                IAsyncDisposable objLocker2 = await LockObject.EnterWriteLockAsync(token).ConfigureAwait(false);
+                try
+                {
+                    token.ThrowIfCancellationRequested();
+                    _blnMagicianEnabled = value;
+                    if (!value)
+                        await ClearMagicAsync(await GetAdeptEnabledAsync(token).ConfigureAwait(false), token).ConfigureAwait(false);
+                    await OnPropertyChangedAsync(nameof(MagicianEnabled), token).ConfigureAwait(false);
+                }
+                finally
+                {
+                    await objLocker2.DisposeAsync().ConfigureAwait(false);
+                }
             }
             finally
             {
@@ -35283,7 +36145,6 @@ namespace Chummer
                         _blnTechnomancerEnabled = value;
                         if (!value)
                             ClearResonance();
-
                         OnPropertyChanged();
                     }
                 }
@@ -35300,6 +36161,37 @@ namespace Chummer
             {
                 token.ThrowIfCancellationRequested();
                 return _blnTechnomancerEnabled;
+            }
+            finally
+            {
+                await objLocker.DisposeAsync().ConfigureAwait(false);
+            }
+        }
+
+        /// <summary>
+        /// Whether Technomancer options are enabled.
+        /// </summary>
+        public async Task SetTechnomancerEnabledAsync(bool value, CancellationToken token = default)
+        {
+            IAsyncDisposable objLocker = await LockObject.EnterUpgradeableReadLockAsync(token).ConfigureAwait(false);
+            try
+            {
+                token.ThrowIfCancellationRequested();
+                if (_blnTechnomancerEnabled == value)
+                    return;
+                IAsyncDisposable objLocker2 = await LockObject.EnterWriteLockAsync(token).ConfigureAwait(false);
+                try
+                {
+                    token.ThrowIfCancellationRequested();
+                    _blnTechnomancerEnabled = value;
+                    if (!value)
+                        await ClearResonanceAsync(token).ConfigureAwait(false);
+                    await OnPropertyChangedAsync(nameof(TechnomancerEnabled), token).ConfigureAwait(false);
+                }
+                finally
+                {
+                    await objLocker2.DisposeAsync().ConfigureAwait(false);
+                }
             }
             finally
             {
@@ -35326,8 +36218,8 @@ namespace Chummer
                     using (LockObject.EnterWriteLock())
                     {
                         _blnPsycheActive = value;
+                        OnPropertyChanged();
                     }
-                    OnPropertyChanged();
                 }
             }
         }
@@ -35367,13 +36259,12 @@ namespace Chummer
                 {
                     token.ThrowIfCancellationRequested();
                     _blnPsycheActive = value;
+                    await OnPropertyChangedAsync(nameof(PsycheActive), token).ConfigureAwait(false);
                 }
                 finally
                 {
                     await objLocker2.DisposeAsync().ConfigureAwait(false);
                 }
-
-                await OnPropertyChangedAsync(nameof(PsycheActive), token).ConfigureAwait(false);
             }
             finally
             {
@@ -35402,10 +36293,57 @@ namespace Chummer
                         _blnAdvancedProgramsEnabled = value;
                         if (!value)
                             ClearAdvancedPrograms();
-
                         OnPropertyChanged();
                     }
                 }
+            }
+        }
+
+        /// <summary>
+        /// Whether Advanced Program options are enabled.
+        /// </summary>
+        public async Task<bool> GetAdvancedProgramsEnabledAsync(CancellationToken token = default)
+        {
+            IAsyncDisposable objLocker = await LockObject.EnterReadLockAsync(token).ConfigureAwait(false);
+            try
+            {
+                token.ThrowIfCancellationRequested();
+                return _blnAdvancedProgramsEnabled;
+            }
+            finally
+            {
+                await objLocker.DisposeAsync().ConfigureAwait(false);
+            }
+        }
+
+        /// <summary>
+        /// Whether Advanced Program options are enabled.
+        /// </summary>
+        public async Task SetAdvancedProgramsEnabledAsync(bool value, CancellationToken token = default)
+        {
+            IAsyncDisposable objLocker = await LockObject.EnterUpgradeableReadLockAsync(token).ConfigureAwait(false);
+            try
+            {
+                token.ThrowIfCancellationRequested();
+                if (_blnAdvancedProgramsEnabled == value)
+                    return;
+                IAsyncDisposable objLocker2 = await LockObject.EnterWriteLockAsync(token).ConfigureAwait(false);
+                try
+                {
+                    token.ThrowIfCancellationRequested();
+                    _blnAdvancedProgramsEnabled = value;
+                    if (!value)
+                        await ClearAdvancedProgramsAsync(token).ConfigureAwait(false);
+                    await OnPropertyChangedAsync(nameof(AdvancedProgramsEnabled), token).ConfigureAwait(false);
+                }
+                finally
+                {
+                    await objLocker2.DisposeAsync().ConfigureAwait(false);
+                }
+            }
+            finally
+            {
+                await objLocker.DisposeAsync().ConfigureAwait(false);
             }
         }
 
@@ -35430,10 +36368,57 @@ namespace Chummer
                         _blnCyberwareDisabled = value;
                         if (value)
                             ClearCyberwareTab();
-
                         OnPropertyChanged();
                     }
                 }
+            }
+        }
+
+        /// <summary>
+        /// Whether Cyberware options are disabled.
+        /// </summary>
+        public async Task<bool> GetCyberwareDisabledAsync(CancellationToken token = default)
+        {
+            IAsyncDisposable objLocker = await LockObject.EnterReadLockAsync(token).ConfigureAwait(false);
+            try
+            {
+                token.ThrowIfCancellationRequested();
+                return _blnCyberwareDisabled;
+            }
+            finally
+            {
+                await objLocker.DisposeAsync().ConfigureAwait(false);
+            }
+        }
+
+        /// <summary>
+        /// Whether Cyberware options are disabled.
+        /// </summary>
+        public async Task SetCyberwareDisabledAsync(bool value, CancellationToken token = default)
+        {
+            IAsyncDisposable objLocker = await LockObject.EnterUpgradeableReadLockAsync(token).ConfigureAwait(false);
+            try
+            {
+                token.ThrowIfCancellationRequested();
+                if (_blnCyberwareDisabled == value)
+                    return;
+                IAsyncDisposable objLocker2 = await LockObject.EnterWriteLockAsync(token).ConfigureAwait(false);
+                try
+                {
+                    token.ThrowIfCancellationRequested();
+                    _blnCyberwareDisabled = value;
+                    if (value)
+                        await ClearCyberwareTabAsync(token).ConfigureAwait(false);
+                    await OnPropertyChangedAsync(nameof(CyberwareDisabled), token).ConfigureAwait(false);
+                }
+                finally
+                {
+                    await objLocker2.DisposeAsync().ConfigureAwait(false);
+                }
+            }
+            finally
+            {
+                await objLocker.DisposeAsync().ConfigureAwait(false);
             }
         }
 
@@ -35450,6 +36435,24 @@ namespace Chummer
             }
         }
 
+        public async Task<bool> GetAddCyberwareEnabledAsync(CancellationToken token = default)
+        {
+            IAsyncDisposable objLocker = await LockObject.EnterReadLockAsync(token).ConfigureAwait(false);
+            try
+            {
+                token.ThrowIfCancellationRequested();
+                return !await GetCyberwareDisabledAsync(token).ConfigureAwait(false) && !await GetIsAIAsync(token).ConfigureAwait(false)
+                                                               && (await ImprovementManager
+                                                                   .GetCachedImprovementListForValueOfAsync(
+                                                                       this, Improvement.ImprovementType.DisableCyberware, token: token).ConfigureAwait(false))
+                                                               .Count == 0;
+            }
+            finally
+            {
+                await objLocker.DisposeAsync().ConfigureAwait(false);
+            }
+        }
+
         public bool AddBiowareEnabled
         {
             get
@@ -35460,6 +36463,24 @@ namespace Chummer
                                                  .GetCachedImprovementListForValueOf(
                                                      this, Improvement.ImprovementType.DisableBioware)
                                                  .Count == 0;
+            }
+        }
+
+        public async Task<bool> GetAddBiowareEnabledAsync(CancellationToken token = default)
+        {
+            IAsyncDisposable objLocker = await LockObject.EnterReadLockAsync(token).ConfigureAwait(false);
+            try
+            {
+                token.ThrowIfCancellationRequested();
+                return !await GetCyberwareDisabledAsync(token).ConfigureAwait(false) && !await GetIsAIAsync(token).ConfigureAwait(false)
+                                          && (await ImprovementManager
+                                              .GetCachedImprovementListForValueOfAsync(
+                                                  this, Improvement.ImprovementType.DisableBioware, token: token).ConfigureAwait(false))
+                                              .Count == 0;
+            }
+            finally
+            {
+                await objLocker.DisposeAsync().ConfigureAwait(false);
             }
         }
 
@@ -35484,6 +36505,28 @@ namespace Chummer
             }
         }
 
+        /// <summary>
+        /// Whether the Initiation tab should be shown (override for BP mode).
+        /// </summary>
+        public async Task<bool> GetInitiationEnabledAsync(CancellationToken token = default)
+        {
+            IAsyncDisposable objLocker = await LockObject.EnterReadLockAsync(token).ConfigureAwait(false);
+            try
+            {
+                token.ThrowIfCancellationRequested();
+                if (_intCachedInitiationEnabled < 0)
+                {
+                    _intCachedInitiationEnabled = (!await GetInitiationForceDisabledAsync(token).ConfigureAwait(false) && (await GetMAGEnabledAsync(token).ConfigureAwait(false) || await GetRESEnabledAsync(token).ConfigureAwait(false))).ToInt32();
+                }
+
+                return _intCachedInitiationEnabled > 0;
+            }
+            finally
+            {
+                await objLocker.DisposeAsync().ConfigureAwait(false);
+            }
+        }
+
         public bool InitiationForceDisabled
         {
             get
@@ -35502,10 +36545,51 @@ namespace Chummer
                         _blnInitiationDisabled = value;
                         if (value)
                             ClearInitiations();
-
                         OnPropertyChanged();
                     }
                 }
+            }
+        }
+
+        public async Task<bool> GetInitiationForceDisabledAsync(CancellationToken token = default)
+        {
+            IAsyncDisposable objLocker = await LockObject.EnterReadLockAsync(token).ConfigureAwait(false);
+            try
+            {
+                token.ThrowIfCancellationRequested();
+                return _blnInitiationDisabled;
+            }
+            finally
+            {
+                await objLocker.DisposeAsync().ConfigureAwait(false);
+            }
+        }
+
+        public async Task SetInitiationForceDisabledAsync(bool value, CancellationToken token = default)
+        {
+            IAsyncDisposable objLocker = await LockObject.EnterUpgradeableReadLockAsync(token).ConfigureAwait(false);
+            try
+            {
+                token.ThrowIfCancellationRequested();
+                if (_blnInitiationDisabled == value)
+                    return;
+                IAsyncDisposable objLocker2 = await LockObject.EnterWriteLockAsync(token).ConfigureAwait(false);
+                try
+                {
+                    token.ThrowIfCancellationRequested();
+                    _blnInitiationDisabled = value;
+                    if (value)
+                        await ClearInitiationsAsync(token).ConfigureAwait(false);
+                    await OnPropertyChangedAsync(nameof(InitiationForceDisabled), token).ConfigureAwait(false);
+                }
+                finally
+                {
+                    await objLocker2.DisposeAsync().ConfigureAwait(false);
+                }
+            }
+            finally
+            {
+                await objLocker.DisposeAsync().ConfigureAwait(false);
             }
         }
 
@@ -35530,7 +36614,6 @@ namespace Chummer
                         _blnCritterEnabled = value;
                         if (!value)
                             ClearCritterPowers();
-
                         OnPropertyChanged();
                     }
                 }
@@ -35548,6 +36631,37 @@ namespace Chummer
             {
                 token.ThrowIfCancellationRequested();
                 return _blnCritterEnabled;
+            }
+            finally
+            {
+                await objLocker.DisposeAsync().ConfigureAwait(false);
+            }
+        }
+
+        /// <summary>
+        /// Whether Critter options are enabled.
+        /// </summary>
+        public async Task SetCritterEnabledAsync(bool value, CancellationToken token = default)
+        {
+            IAsyncDisposable objLocker = await LockObject.EnterUpgradeableReadLockAsync(token).ConfigureAwait(false);
+            try
+            {
+                token.ThrowIfCancellationRequested();
+                if (_blnCritterEnabled == value)
+                    return;
+                IAsyncDisposable objLocker2 = await LockObject.EnterWriteLockAsync(token).ConfigureAwait(false);
+                try
+                {
+                    token.ThrowIfCancellationRequested();
+                    _blnCritterEnabled = value;
+                    if (!value)
+                        await ClearCritterPowersAsync(token).ConfigureAwait(false);
+                    await OnPropertyChangedAsync(nameof(CritterEnabled), token).ConfigureAwait(false);
+                }
+                finally
+                {
+                    await objLocker2.DisposeAsync().ConfigureAwait(false);
+                }
             }
             finally
             {
@@ -36548,6 +37662,55 @@ namespace Chummer
             {
                 token.ThrowIfCancellationRequested();
                 return _decPrototypeTranshuman;
+            }
+            finally
+            {
+                await objLocker.DisposeAsync().ConfigureAwait(false);
+            }
+        }
+
+        /// <summary>
+        /// Whether user is getting free bioware from Prototype Transhuman.
+        /// </summary>
+        public async Task SetPrototypeTranshumanAsync(decimal value, CancellationToken token = default)
+        {
+            IAsyncDisposable objLocker = await LockObject.EnterUpgradeableReadLockAsync(token).ConfigureAwait(false);
+            try
+            {
+                token.ThrowIfCancellationRequested();
+                if (_decPrototypeTranshuman == value)
+                    return;
+                IAsyncDisposable objLocker2 = await LockObject.EnterWriteLockAsync(token).ConfigureAwait(false);
+                try
+                {
+                    token.ThrowIfCancellationRequested();
+                    _decPrototypeTranshuman = value;
+                    await OnPropertyChangedAsync(nameof(PrototypeTranshuman), token).ConfigureAwait(false);
+                }
+                finally
+                {
+                    await objLocker2.DisposeAsync().ConfigureAwait(false);
+                }
+            }
+            finally
+            {
+                await objLocker.DisposeAsync().ConfigureAwait(false);
+            }
+        }
+
+        /// <summary>
+        /// Whether user is getting free bioware from Prototype Transhuman.
+        /// </summary>
+        public async Task ModifyPrototypeTranshumanAsync(decimal value, CancellationToken token = default)
+        {
+            if (value == 0)
+                return;
+            IAsyncDisposable objLocker = await LockObject.EnterWriteLockAsync(token).ConfigureAwait(false);
+            try
+            {
+                token.ThrowIfCancellationRequested();
+                _decPrototypeTranshuman += value;
+                await OnPropertyChangedAsync(nameof(PrototypeTranshuman), token).ConfigureAwait(false);
             }
             finally
             {
@@ -39443,15 +40606,14 @@ namespace Chummer
                         int intMAGAdeptMinimumReduction = intMagMinReduction;
                         if (Settings.ESSLossReducesMaximumOnly)
                         {
-                            intMAGMinimumReduction =
-                                Math.Max(0, intMagMinReduction + MAG.TotalValue - MAG.TotalMaximum);
-                            intMAGAdeptMinimumReduction = Math.Max(0,
-                                                                   intMagMinReduction + MAGAdept.TotalValue
-                                                                   - MAGAdept.TotalMaximum);
-                            intRESMinimumReduction
-                                = Math.Max(0, intResMinReduction + RES.TotalValue - RES.TotalMaximum);
-                            intDEPMinimumReduction
-                                = Math.Max(0, intDepMinReduction + DEP.TotalValue - DEP.TotalMaximum);
+                            (int iI, int iJ) = MAG.MinimumMaximumNoEssenceLoss();
+                            intMAGMinimumReduction = Math.Max(0, intMagMinReduction + iI - iJ);
+                            (iI, iJ) = MAGAdept.MinimumMaximumNoEssenceLoss();
+                            intMAGAdeptMinimumReduction = Math.Max(0, intMagMinReduction + iI - iJ);
+                            (iI, iJ) = RES.MinimumMaximumNoEssenceLoss();
+                            intRESMinimumReduction = Math.Max(0, intResMinReduction + iI - iJ);
+                            (iI, iJ) = DEP.MinimumMaximumNoEssenceLoss();
+                            intDEPMinimumReduction = Math.Max(0, intDepMinReduction + iI - iJ);
                         }
 
                         using (LockObject.EnterWriteLock(token))
@@ -39705,7 +40867,7 @@ namespace Chummer
 
                 // Only worry about essence loss attribute modifiers if this character actually has any attributes that would be affected by essence loss
                 // (which means EssenceAtSpecialStart is not set to decimal.MinValue)
-                if (EssenceAtSpecialStart != decimal.MinValue)
+                if (await GetEssenceAtSpecialStartAsync(token).ConfigureAwait(false) != decimal.MinValue)
                 {
                     decimal decSpecialAttBurnMultiplier = 1.0m;
                     decimal decTotalSpecialAttBurnMultiplier = 1.0m;
@@ -39734,9 +40896,9 @@ namespace Chummer
                     decimal decESSMag = await EssenceAsync(true, "MAG", token).ConfigureAwait(false);
                     decimal decESSRes = await EssenceAsync(true, "RES", token).ConfigureAwait(false);
                     decimal decESSDep = await EssenceAsync(true, "DEP", token).ConfigureAwait(false);
-                    if (!Settings.DontRoundEssenceInternally)
+                    if (!await (await GetSettingsAsync(token).ConfigureAwait(false)).GetDontRoundEssenceInternallyAsync(token).ConfigureAwait(false))
                     {
-                        int intESSDecimals = Settings.EssenceDecimals;
+                        int intESSDecimals = await (await GetSettingsAsync(token).ConfigureAwait(false)).GetEssenceDecimalsAsync(token).ConfigureAwait(false);
                         decESSMag = decimal.Round(decESSMag, intESSDecimals, MidpointRounding.AwayFromZero);
                         decESSRes = decimal.Round(decESSRes, intESSDecimals, MidpointRounding.AwayFromZero);
                         decESSDep = decimal.Round(decESSDep, intESSDecimals, MidpointRounding.AwayFromZero);
@@ -39755,9 +40917,9 @@ namespace Chummer
                                                                * decTotalSpecialAttBurnMultiplier).StandardRound();
                     // Character has the option set where essence loss just acts as an augmented malus, so just replace old essence loss improvements with new ones that apply an augmented malus
                     // equal to the amount by which the attribute's maximum would normally be reduced.
-                    if (Settings.SpecialKarmaCostBasedOnShownValue)
+                    if (await (await GetSettingsAsync(token).ConfigureAwait(false)).GetSpecialKarmaCostBasedOnShownValueAsync(token).ConfigureAwait(false))
                     {
-                        Improvement.ImprovementSource eEssenceLossSource = Created
+                        Improvement.ImprovementSource eEssenceLossSource = await GetCreatedAsync(token).ConfigureAwait(false)
                             ? Improvement.ImprovementSource.EssenceLoss
                             : Improvement.ImprovementSource.EssenceLossChargen;
                         IAsyncDisposable objLocker2 = await LockObject.EnterWriteLockAsync(token).ConfigureAwait(false);
@@ -39789,7 +40951,7 @@ namespace Chummer
                                         Improvement.ImprovementType.Attribute, string.Empty, 0, 1, 0, 0,
                                         -intMagMaxReduction, token: token).ConfigureAwait(false);
                                     // If this is a Mystic Adept using special Mystic Adept PP rules (i.e. no second MAG attribute), Mystic Adepts lose PPs even if they have fewer PPs than their MAG
-                                    if (UseMysticAdeptPPs)
+                                    if (await GetUseMysticAdeptPPsAsync(token).ConfigureAwait(false))
                                         await ImprovementManager.CreateImprovementAsync(
                                             this, string.Empty, eEssenceLossSource,
                                             string.Empty,
@@ -39801,27 +40963,31 @@ namespace Chummer
                                 if (intResMaxReduction != 0)
                                 {
                                     int intRESReduction = intResMaxReduction;
-                                    if (TechnomancerEnabled && SubmersionGrade > 0 && (await ImprovementManager
+                                    if (await GetTechnomancerEnabledAsync(token).ConfigureAwait(false) && (await ImprovementManager
                                             .GetCachedImprovementListForValueOfAsync(this,
                                                 Improvement.ImprovementType
                                                     .CyberadeptDaemon, token: token).ConfigureAwait(false))
                                         .Count > 0)
                                     {
-                                        decimal decNonCyberwareEssence = BiowareEssence + EssenceHole;
-                                        int intMaxCyberadeptDaemonBonus = Math.Ceiling(decNonCyberwareEssence) ==
-                                                                          Math.Floor(decNonCyberwareEssence)
-                                            ? (int)Math.Ceiling(CyberwareEssence)
-                                            : (int)Math.Floor(CyberwareEssence);
-                                        int intCyberadeptDaemonBonus = 0;
-                                        for (int i = 1; i <= SubmersionGrade; ++i)
+                                        int intSubmersionGrade = await GetSubmersionGradeAsync(token).ConfigureAwait(false);
+                                        if (intSubmersionGrade > 0)
                                         {
-                                            intCyberadeptDaemonBonus += i.DivAwayFromZero(2);
-                                        }
+                                            decimal decNonCyberwareEssence = await GetBiowareEssenceAsync(token).ConfigureAwait(false) + await GetEssenceHoleAsync(token).ConfigureAwait(false);
+                                            int intMaxCyberadeptDaemonBonus = Math.Ceiling(decNonCyberwareEssence) ==
+                                                                              Math.Floor(decNonCyberwareEssence)
+                                                ? (int)Math.Ceiling(CyberwareEssence)
+                                                : (int)Math.Floor(CyberwareEssence);
+                                            int intCyberadeptDaemonBonus = 0;
+                                            for (int i = 1; i <= intSubmersionGrade; ++i)
+                                            {
+                                                intCyberadeptDaemonBonus += i.DivAwayFromZero(2);
+                                            }
 
-                                        intRESReduction
-                                            -= Math.Min(intCyberadeptDaemonBonus, intMaxCyberadeptDaemonBonus);
-                                        if (intRESReduction < 0)
-                                            intRESReduction = 0;
+                                            intRESReduction
+                                                -= Math.Min(intCyberadeptDaemonBonus, intMaxCyberadeptDaemonBonus);
+                                            if (intRESReduction < 0)
+                                                intRESReduction = 0;
+                                        }
                                     }
 
                                     if (intRESReduction != 0)
@@ -39860,15 +41026,15 @@ namespace Chummer
                     {
                         // "Base" minimum reduction. This is the amount by which the character's special attribute minima would be reduced across career and create modes if there wasn't any funny business
                         int intMagMinReduction
-                            = ((EssenceAtSpecialStart - decESSMag) * decSpecialAttBurnMultiplier
+                            = ((await GetEssenceAtSpecialStartAsync(token).ConfigureAwait(false) - decESSMag) * decSpecialAttBurnMultiplier
                                                                    * decTotalSpecialAttBurnMultiplier)
                             .StandardRound();
                         int intResMinReduction
-                            = ((EssenceAtSpecialStart - decESSRes) * decSpecialAttBurnMultiplier
+                            = ((await GetEssenceAtSpecialStartAsync(token).ConfigureAwait(false) - decESSRes) * decSpecialAttBurnMultiplier
                                                                    * decTotalSpecialAttBurnMultiplier)
                             .StandardRound();
                         int intDepMinReduction
-                            = ((EssenceAtSpecialStart - decESSDep) * decSpecialAttBurnMultiplier
+                            = ((await GetEssenceAtSpecialStartAsync(token).ConfigureAwait(false) - decESSDep) * decSpecialAttBurnMultiplier
                                                                    * decTotalSpecialAttBurnMultiplier)
                             .StandardRound();
 
@@ -39876,7 +41042,7 @@ namespace Chummer
                         // They are extra amounts by which the relevant attributes' karma levels should be burned
                         int intExtraRESBurn = Math.Max(0,
                             Math.Max(
-                                RES.Base + await RES.GetFreeBaseAsync(token)
+                                await RES.GetBaseAsync(token).ConfigureAwait(false) + await RES.GetFreeBaseAsync(token)
                                              .ConfigureAwait(false)
                                          + await RES.GetRawMinimumAsync(token)
                                              .ConfigureAwait(false)
@@ -39884,12 +41050,12 @@ namespace Chummer
                                                  token)
                                              .ConfigureAwait(false),
                                 await RES.GetTotalMinimumAsync(token)
-                                    .ConfigureAwait(false)) + RES.Karma
+                                    .ConfigureAwait(false)) + await RES.GetKarmaAsync(token).ConfigureAwait(false)
                             - await RES.GetTotalMaximumAsync(token)
                                 .ConfigureAwait(false));
                         int intExtraDEPBurn = Math.Max(0,
                             Math.Max(
-                                DEP.Base + await DEP.GetFreeBaseAsync(token)
+                                await DEP.GetBaseAsync(token).ConfigureAwait(false) + await DEP.GetFreeBaseAsync(token)
                                              .ConfigureAwait(false)
                                          + await DEP.GetRawMinimumAsync(token)
                                              .ConfigureAwait(false)
@@ -39897,12 +41063,12 @@ namespace Chummer
                                                  token)
                                              .ConfigureAwait(false),
                                 await DEP.GetTotalMinimumAsync(token)
-                                    .ConfigureAwait(false)) + DEP.Karma
+                                    .ConfigureAwait(false)) + await DEP.GetKarmaAsync(token).ConfigureAwait(false)
                             - await DEP.GetTotalMaximumAsync(token)
                                 .ConfigureAwait(false));
                         int intExtraMAGBurn = Math.Max(0,
                             Math.Max(
-                                MAG.Base + await MAG.GetFreeBaseAsync(token)
+                                await MAG.GetBaseAsync(token).ConfigureAwait(false) + await MAG.GetFreeBaseAsync(token)
                                              .ConfigureAwait(false)
                                          + await MAG.GetRawMinimumAsync(token)
                                              .ConfigureAwait(false)
@@ -39910,21 +41076,21 @@ namespace Chummer
                                                  token)
                                              .ConfigureAwait(false),
                                 await MAG.GetTotalMinimumAsync(token)
-                                    .ConfigureAwait(false)) + MAG.Karma
+                                    .ConfigureAwait(false)) + await MAG.GetKarmaAsync(token).ConfigureAwait(false)
                             - await MAG.GetTotalMaximumAsync(token)
                                 .ConfigureAwait(false));
                         int intExtraMAGAdeptBurn = MAG == MAGAdept
                             ? intExtraMAGBurn
                             : Math.Max(0,
                                 Math.Max(
-                                    MAGAdept.Base
+                                    await MAGAdept.GetBaseAsync(token).ConfigureAwait(false)
                                     + await MAGAdept.GetFreeBaseAsync(token).ConfigureAwait(false)
                                     + await MAGAdept.GetRawMinimumAsync(token).ConfigureAwait(false)
                                     +
                                     await MAGAdept.GetAttributeValueModifiersAsync(token)
                                         .ConfigureAwait(false),
                                     await MAGAdept.GetTotalMinimumAsync(token).ConfigureAwait(false))
-                                + MAGAdept.Karma
+                                + await MAGAdept.GetKarmaAsync(token).ConfigureAwait(false)
                                 - await MAGAdept.GetTotalMaximumAsync(token).ConfigureAwait(false));
                         // Old values for minimum reduction from essence loss in career mode. These are used to determine if any karma needs to get burned.
                         int intOldRESCareerMinimumReduction = 0;
@@ -40003,7 +41169,7 @@ namespace Chummer
                                 int intMAGMinimumReduction;
                                 int intMAGAdeptMinimumReduction;
                                 // If only maxima would be reduced, use the attribute's current total value instead of its current maximum, as this makes sure minima will only get reduced if the maximum reduction would eat into the current value
-                                if (Settings.ESSLossReducesMaximumOnly)
+                                if (await (await GetSettingsAsync(token).ConfigureAwait(false)).GetESSLossReducesMaximumOnlyAsync(token).ConfigureAwait(false))
                                 {
                                     intMAGMinimumReduction = Math.Max(0,
                                         intMagMinReduction
@@ -40042,24 +41208,25 @@ namespace Chummer
                                 {
                                     // ... and adding minimum reducing-improvements wouldn't do anything, start burning karma.
                                     if (intMAGMinimumReduction >
-                                        MAG.Base + await MAG.GetFreeBaseAsync(token).ConfigureAwait(false)
-                                                 + await MAG.GetRawMinimumAsync(token).ConfigureAwait(false)
-                                                 + await MAG.GetAttributeValueModifiersAsync(token)
-                                                     .ConfigureAwait(false))
+                                        await MAG.GetBaseAsync(token).ConfigureAwait(false)
+                                        + await MAG.GetFreeBaseAsync(token).ConfigureAwait(false)
+                                        + await MAG.GetRawMinimumAsync(token).ConfigureAwait(false)
+                                        + await MAG.GetAttributeValueModifiersAsync(token)
+                                            .ConfigureAwait(false))
                                     {
                                         // intMAGMinimumReduction is not actually reduced so that karma doesn't get burned away each time this function is called.
                                         // Besides, this only fires if intMAGMinimumReduction is already at a level where increasing it any more wouldn't have any effect on the character.
-                                        intExtraMAGBurn += Math.Min(MAG.Karma, intMAGMinimumReductionDelta);
-                                        MAG.Karma -= intExtraMAGBurn;
+                                        intExtraMAGBurn += Math.Min(await MAG.GetKarmaAsync(token).ConfigureAwait(false), intMAGMinimumReductionDelta);
+                                        await MAG.ModifyKarmaAsync(-intExtraMAGBurn, token).ConfigureAwait(false);
                                     }
 
                                     // Mystic Adept PPs may need to be burned away based on the change of our MAG attribute
-                                    if (UseMysticAdeptPPs)
+                                    if (await GetUseMysticAdeptPPsAsync(token).ConfigureAwait(false))
                                     {
                                         // First burn away PPs gained during chargen...
                                         int intChargenPPBurn =
-                                            Math.Min(MysticAdeptPowerPoints, intMAGMinimumReductionDelta);
-                                        MysticAdeptPowerPoints -= intChargenPPBurn;
+                                            Math.Min(await GetMysticAdeptPowerPointsAsync(token).ConfigureAwait(false), intMAGMinimumReductionDelta);
+                                        await ModifyMysticAdeptPowerPointsAsync(-intChargenPPBurn, token).ConfigureAwait(false);
                                         // ... now burn away PPs gained from initiations.
                                         decimal decPPBurn = Math.Min(intMAGMinimumReductionDelta - intChargenPPBurn,
                                             await ImprovementManager.ValueOfAsync(
@@ -40105,7 +41272,7 @@ namespace Chummer
                                     if (intMAGAdeptMinimumReductionDelta > 0)
                                     {
                                         // ... and adding minimum reducing-improvements wouldn't do anything, start burning karma.
-                                        if (intMAGAdeptMinimumReduction > MAGAdept.Base
+                                        if (intMAGAdeptMinimumReduction > await MAGAdept.GetBaseAsync(token).ConfigureAwait(false)
                                             + await MAGAdept.GetFreeBaseAsync(token).ConfigureAwait(false) +
                                             await MAGAdept.GetRawMinimumAsync(token).ConfigureAwait(false)
                                             + await MAGAdept.GetAttributeValueModifiersAsync(token)
@@ -40113,9 +41280,9 @@ namespace Chummer
                                         {
                                             // intMAGAdeptMinimumReduction is not actually reduced so that karma doesn't get burned away each time this function is called.
                                             // Besides, this only fires if intMAGAdeptMinimumReduction is already at a level where increasing it any more wouldn't have any effect on the character.
-                                            intExtraMAGAdeptBurn += Math.Min(MAGAdept.Karma,
+                                            intExtraMAGAdeptBurn += Math.Min(await MAGAdept.GetKarmaAsync(token).ConfigureAwait(false),
                                                 intMAGAdeptMinimumReductionDelta);
-                                            MAGAdept.Karma -= intExtraMAGAdeptBurn;
+                                            await MAGAdept.ModifyKarmaAsync(-intExtraMAGAdeptBurn, token).ConfigureAwait(false);
                                         }
                                     }
                                     // If the new MAGAdept reduction is less than our old one, the character doesn't actually get any new values back
@@ -40168,7 +41335,7 @@ namespace Chummer
                                 // This is the step where create mode attribute loss regarding attribute minimum loss gets factored out.
                                 int intRESMinimumReduction;
                                 // If only maxima would be reduced, use the attribute's current total value instead of its current maximum, as this makes sure minima will only get reduced if the maximum reduction would eat into the current value
-                                if (Settings.ESSLossReducesMaximumOnly)
+                                if (await (await GetSettingsAsync(token).ConfigureAwait(false)).GetESSLossReducesMaximumOnlyAsync(token).ConfigureAwait(false))
                                 {
                                     intRESMinimumReduction = Math.Max(0,
                                         intResMinReduction
@@ -40193,15 +41360,15 @@ namespace Chummer
                                 {
                                     // ... and adding minimum reducing-improvements wouldn't do anything, start burning karma.
                                     if (intRESMinimumReduction >
-                                        RES.Base + await RES.GetFreeBaseAsync(token).ConfigureAwait(false)
+                                        await RES.GetBaseAsync(token).ConfigureAwait(false) + await RES.GetFreeBaseAsync(token).ConfigureAwait(false)
                                                  + await RES.GetRawMinimumAsync(token).ConfigureAwait(false)
                                                  + await RES.GetAttributeValueModifiersAsync(token)
                                                      .ConfigureAwait(false))
                                     {
                                         // intRESMinimumReduction is not actually reduced so that karma doesn't get burned away each time this function is called.
                                         // Besides, this only fires if intRESMinimumReduction is already at a level where increasing it any more wouldn't have any effect on the character.
-                                        intExtraRESBurn += Math.Min(RES.Karma, intRESMinimumReductionDelta);
-                                        RES.Karma -= intExtraRESBurn;
+                                        intExtraRESBurn += Math.Min(await RES.GetKarmaAsync(token).ConfigureAwait(false), intRESMinimumReductionDelta);
+                                        await RES.ModifyKarmaAsync(-intExtraRESBurn, token).ConfigureAwait(false);
                                     }
                                 }
                                 // If the new RES reduction is less than our old one, the character doesn't actually get any new values back
@@ -40242,7 +41409,7 @@ namespace Chummer
                                 // This is the step where create mode attribute loss regarding attribute minimum loss gets factored out.
                                 int intDEPMinimumReduction;
                                 // If only maxima would be reduced, use the attribute's current total value instead of its current maximum, as this makes sure minima will only get reduced if the maximum reduction would eat into the current value
-                                if (Settings.ESSLossReducesMaximumOnly)
+                                if (await (await GetSettingsAsync(token).ConfigureAwait(false)).GetESSLossReducesMaximumOnlyAsync(token).ConfigureAwait(false))
                                 {
                                     intDEPMinimumReduction = Math.Max(0,
                                         intDepMinReduction
@@ -40267,15 +41434,15 @@ namespace Chummer
                                 {
                                     // ... and adding minimum reducing-improvements wouldn't do anything, start burning karma.
                                     if (intDEPMinimumReduction >
-                                        DEP.Base + await DEP.GetFreeBaseAsync(token).ConfigureAwait(false)
+                                        await DEP.GetBaseAsync(token).ConfigureAwait(false) + await DEP.GetFreeBaseAsync(token).ConfigureAwait(false)
                                                  + await DEP.GetRawMinimumAsync(token).ConfigureAwait(false)
                                                  + await DEP.GetAttributeValueModifiersAsync(token)
                                                      .ConfigureAwait(false))
                                     {
                                         // intDEPMinimumReduction is not actually reduced so that karma doesn't get burned away each time this function is called.
                                         // Besides, this only fires if intDEPMinimumReduction is already at a level where increasing it any more wouldn't have any effect on the character.
-                                        intExtraDEPBurn += Math.Min(DEP.Karma, intDEPMinimumReductionDelta);
-                                        DEP.Karma -= intExtraDEPBurn;
+                                        intExtraDEPBurn += Math.Min(await DEP.GetKarmaAsync(token).ConfigureAwait(false), intDEPMinimumReductionDelta);
+                                        await DEP.ModifyKarmaAsync(-intExtraDEPBurn, token).ConfigureAwait(false);
                                     }
                                 }
                                 // If the new DEP reduction is less than our old one, the character doesn't actually get any new values back
@@ -40318,44 +41485,31 @@ namespace Chummer
                     else
                     {
                         int intMagMinReduction
-                            = ((EssenceAtSpecialStart - decESSMag) * decSpecialAttBurnMultiplier
+                            = ((await GetEssenceAtSpecialStartAsync(token).ConfigureAwait(false) - decESSMag) * decSpecialAttBurnMultiplier
                                                                    * decTotalSpecialAttBurnMultiplier)
                             .StandardRound();
                         int intResMinReduction
-                            = ((EssenceAtSpecialStart - decESSRes) * decSpecialAttBurnMultiplier
+                            = ((await GetEssenceAtSpecialStartAsync(token).ConfigureAwait(false) - decESSRes) * decSpecialAttBurnMultiplier
                                                                    * decTotalSpecialAttBurnMultiplier)
                             .StandardRound();
                         int intDepMinReduction
-                            = ((EssenceAtSpecialStart - decESSDep) * decSpecialAttBurnMultiplier
+                            = ((await GetEssenceAtSpecialStartAsync(token).ConfigureAwait(false) - decESSDep) * decSpecialAttBurnMultiplier
                                                                    * decTotalSpecialAttBurnMultiplier)
                             .StandardRound();
                         int intMAGMinimumReduction = intMagMinReduction;
                         int intMAGAdeptMinimumReduction = intMagMinReduction;
                         int intRESMinimumReduction = intResMinReduction;
                         int intDEPMinimumReduction = intDepMinReduction;
-                        if (Settings.ESSLossReducesMaximumOnly)
+                        if (await (await GetSettingsAsync(token).ConfigureAwait(false)).GetESSLossReducesMaximumOnlyAsync(token).ConfigureAwait(false))
                         {
-                            intMAGMinimumReduction =
-                                Math.Max(
-                                    0,
-                                    intMagMinReduction + await MAG.GetTotalValueAsync(token).ConfigureAwait(false)
-                                    - await MAG.GetTotalMaximumAsync(token).ConfigureAwait(false));
-                            intMAGAdeptMinimumReduction = Math.Max(0,
-                                intMagMinReduction
-                                + await MAGAdept.GetTotalValueAsync(token)
-                                    .ConfigureAwait(false)
-                                - await MAGAdept.GetTotalMaximumAsync(token)
-                                    .ConfigureAwait(false));
-                            intRESMinimumReduction
-                                = Math.Max(
-                                    0,
-                                    intResMinReduction + await RES.GetTotalValueAsync(token).ConfigureAwait(false)
-                                    - await RES.GetTotalMaximumAsync(token).ConfigureAwait(false));
-                            intDEPMinimumReduction
-                                = Math.Max(
-                                    0,
-                                    intDepMinReduction + await DEP.GetTotalValueAsync(token).ConfigureAwait(false)
-                                    - await DEP.GetTotalMaximumAsync(token).ConfigureAwait(false));
+                            (int iI, int iJ) = await MAG.MinimumMaximumNoEssenceLossAsync(token: token).ConfigureAwait(false);
+                            intMAGMinimumReduction = Math.Max(0, intMagMinReduction + iI - iJ);
+                            (iI, iJ) = await MAGAdept.MinimumMaximumNoEssenceLossAsync(token: token).ConfigureAwait(false);
+                            intMAGAdeptMinimumReduction = Math.Max(0, intMagMinReduction + iI - iJ);
+                            (iI, iJ) = await RES.MinimumMaximumNoEssenceLossAsync(token: token).ConfigureAwait(false);
+                            intRESMinimumReduction = Math.Max(0, intResMinReduction + iI - iJ);
+                            (iI, iJ) = await DEP.MinimumMaximumNoEssenceLossAsync(token: token).ConfigureAwait(false);
+                            intDEPMinimumReduction = Math.Max(0, intDepMinReduction + iI - iJ);
                         }
 
                         IAsyncDisposable objLocker2
@@ -40436,15 +41590,17 @@ namespace Chummer
                                                 >= await MAG.GetTotalMaximumAsync(token).ConfigureAwait(false))
                                             {
                                                 await MAG.AssignBaseKarmaLimitsAsync(
-                                                        MAGAdept.Base, MAGAdept.Karma, MAGAdept.RawMetatypeMinimum,
-                                                        MAGAdept.RawMetatypeMaximum,
-                                                        MAGAdept.RawMetatypeAugmentedMaximum,
+                                                        await MAGAdept.GetBaseAsync(token).ConfigureAwait(false),
+                                                        await MAGAdept.GetKarmaAsync(token).ConfigureAwait(false),
+                                                        await MAGAdept.GetRawMetatypeMinimumAsync(token).ConfigureAwait(false),
+                                                        await MAGAdept.GetRawMetatypeMaximumAsync(token).ConfigureAwait(false),
+                                                        await MAGAdept.GetRawMetatypeAugmentedMaximumAsync(token).ConfigureAwait(false),
                                                         token)
                                                     .ConfigureAwait(false);
                                                 await MAGAdept.AssignBaseKarmaLimitsAsync(0, 0, 0, 0, 0, token)
                                                     .ConfigureAwait(false);
 
-                                                MagicianEnabled = false;
+                                                await SetMagicianEnabledAsync(false, token).ConfigureAwait(false);
                                             }
 
                                             if (intMagMaxReduction
@@ -40453,10 +41609,10 @@ namespace Chummer
                                                 await MAGAdept.AssignBaseKarmaLimitsAsync(0, 0, 0, 0, 0, token)
                                                     .ConfigureAwait(false);
 
-                                                AdeptEnabled = false;
+                                                await SetAdeptEnabledAsync(false, token).ConfigureAwait(false);
                                             }
 
-                                            if (!MagicianEnabled && !AdeptEnabled)
+                                            if (!await GetMagicianEnabledAsync(token).ConfigureAwait(false) && !await GetAdeptEnabledAsync(token).ConfigureAwait(false))
                                                 await SetMAGEnabledAsync(false, token).ConfigureAwait(false);
                                         }
                                         else if (intMagMaxReduction
@@ -40465,8 +41621,8 @@ namespace Chummer
                                             await MAG.AssignBaseKarmaLimitsAsync(0, 0, 0, 0, 0, token)
                                                 .ConfigureAwait(false);
 
-                                            MagicianEnabled = false;
-                                            AdeptEnabled = false;
+                                            await SetMagicianEnabledAsync(false, token).ConfigureAwait(false);
+                                            await SetAdeptEnabledAsync(false, token).ConfigureAwait(false);
                                             await SetMAGEnabledAsync(false, token).ConfigureAwait(false);
                                         }
                                     }
@@ -40475,15 +41631,17 @@ namespace Chummer
                                         if (await MAG.GetTotalMaximumAsync(token).ConfigureAwait(false) < 1)
                                         {
                                             await MAG.AssignBaseKarmaLimitsAsync(
-                                                    MAGAdept.Base, MAGAdept.Karma, MAGAdept.RawMetatypeMinimum,
-                                                    MAGAdept.RawMetatypeMaximum,
-                                                    MAGAdept.RawMetatypeAugmentedMaximum,
+                                                    await MAGAdept.GetBaseAsync(token).ConfigureAwait(false),
+                                                    await MAGAdept.GetKarmaAsync(token).ConfigureAwait(false),
+                                                    await MAGAdept.GetRawMetatypeMinimumAsync(token).ConfigureAwait(false),
+                                                    await MAGAdept.GetRawMetatypeMaximumAsync(token).ConfigureAwait(false),
+                                                    await MAGAdept.GetRawMetatypeAugmentedMaximumAsync(token).ConfigureAwait(false),
                                                     token)
                                                 .ConfigureAwait(false);
                                             await MAGAdept.AssignBaseKarmaLimitsAsync(0, 0, 0, 0, 0, token)
                                                 .ConfigureAwait(false);
 
-                                            MagicianEnabled = false;
+                                            await SetMagicianEnabledAsync(false, token).ConfigureAwait(false);
                                         }
 
                                         if (await MAGAdept.GetTotalMaximumAsync(token).ConfigureAwait(false) < 1)
@@ -40491,10 +41649,10 @@ namespace Chummer
                                             await MAGAdept.AssignBaseKarmaLimitsAsync(0, 0, 0, 0, 0, token)
                                                 .ConfigureAwait(false);
 
-                                            AdeptEnabled = false;
+                                            await SetAdeptEnabledAsync(false, token).ConfigureAwait(false);
                                         }
 
-                                        if (!MagicianEnabled && !AdeptEnabled)
+                                        if (!await GetMagicianEnabledAsync(token).ConfigureAwait(false) && !await GetAdeptEnabledAsync(token).ConfigureAwait(false))
                                             await SetMAGEnabledAsync(false, token).ConfigureAwait(false);
                                     }
                                     else if (await MAG.GetTotalMaximumAsync(token).ConfigureAwait(false) < 1)
@@ -40502,8 +41660,8 @@ namespace Chummer
                                         await MAG.AssignBaseKarmaLimitsAsync(0, 0, 0, 0, 0, token)
                                             .ConfigureAwait(false);
 
-                                        MagicianEnabled = false;
-                                        AdeptEnabled = false;
+                                        await SetMagicianEnabledAsync(false, token).ConfigureAwait(false);
+                                        await SetAdeptEnabledAsync(false, token).ConfigureAwait(false);
                                         await SetMAGEnabledAsync(false, token).ConfigureAwait(false);
                                     }
                                 }
@@ -40512,16 +41670,16 @@ namespace Chummer
                                 {
                                     int intResTotalMaximum
                                         = await RES.GetTotalMaximumAsync(token).ConfigureAwait(false);
-                                    if (Settings.SpecialKarmaCostBasedOnShownValue
+                                    if (await (await GetSettingsAsync(token).ConfigureAwait(false)).GetSpecialKarmaCostBasedOnShownValueAsync(token).ConfigureAwait(false)
                                         && intResMaxReduction >= intResTotalMaximum
-                                        || !Settings.SpecialKarmaCostBasedOnShownValue
+                                        || !await (await GetSettingsAsync(token).ConfigureAwait(false)).GetSpecialKarmaCostBasedOnShownValueAsync(token).ConfigureAwait(false)
                                         && intResTotalMaximum < 1)
                                     {
                                         await RES.AssignBaseKarmaLimitsAsync(0, 0, 0, 0, 0, token)
                                             .ConfigureAwait(false);
 
                                         await SetRESEnabledAsync(false, token).ConfigureAwait(false);
-                                        TechnomancerEnabled = false;
+                                        await SetTechnomancerEnabledAsync(false, token).ConfigureAwait(false);
                                     }
                                 }
                             }
@@ -40546,7 +41704,7 @@ namespace Chummer
                 }
 
                 // If the character is Cyberzombie, adjust their Attributes based on their Essence.
-                if (MetatypeCategory == "Cyberzombie")
+                if (await GetMetatypeCategoryAsync(token).ConfigureAwait(false) == "Cyberzombie")
                 {
                     int intESSModifier = (-await EssenceAsync(token: token).ConfigureAwait(false)).StandardRound();
                     IAsyncDisposable objLocker2 = await LockObject.EnterWriteLockAsync(token).ConfigureAwait(false);
@@ -40663,7 +41821,7 @@ namespace Chummer
             CancellationToken token = default)
         {
             token.ThrowIfCancellationRequested();
-            List<string> lstProperties = new List<string>();
+            List<string> lstProperties = new List<string>(17);
             IAsyncDisposable objLocker = await LockObject.EnterUpgradeableReadLockAsync(token).ConfigureAwait(false);
             try
             {
@@ -40729,7 +41887,7 @@ namespace Chummer
         public async Task RefreshAGIDependentProperties(object sender, MultiplePropertiesChangedEventArgs e, CancellationToken token = default)
         {
             token.ThrowIfCancellationRequested();
-            List<string> lstProperties = new List<string>();
+            List<string> lstProperties = new List<string>(4);
             IAsyncDisposable objLocker = await LockObject.EnterUpgradeableReadLockAsync(token).ConfigureAwait(false);
             try
             {
@@ -40773,7 +41931,7 @@ namespace Chummer
         public async Task RefreshREADependentProperties(object sender, MultiplePropertiesChangedEventArgs e, CancellationToken token = default)
         {
             token.ThrowIfCancellationRequested();
-            List<string> lstProperties = new List<string>();
+            List<string> lstProperties = new List<string>(7);
             IAsyncDisposable objLocker = await LockObject.EnterUpgradeableReadLockAsync(token).ConfigureAwait(false);
             try
             {
@@ -40823,7 +41981,7 @@ namespace Chummer
         public async Task RefreshSTRDependentProperties(object sender, MultiplePropertiesChangedEventArgs e, CancellationToken token = default)
         {
             token.ThrowIfCancellationRequested();
-            List<string> lstProperties = new List<string>();
+            List<string> lstProperties = new List<string>(8);
             IAsyncDisposable objLocker = await LockObject.EnterUpgradeableReadLockAsync(token).ConfigureAwait(false);
             try
             {
@@ -40874,7 +42032,7 @@ namespace Chummer
         public async Task RefreshCHADependentProperties(object sender, MultiplePropertiesChangedEventArgs e, CancellationToken token = default)
         {
             token.ThrowIfCancellationRequested();
-            List<string> lstProperties = new List<string>();
+            List<string> lstProperties = new List<string>(7);
             IAsyncDisposable objLocker = await LockObject.EnterUpgradeableReadLockAsync(token).ConfigureAwait(false);
             try
             {
@@ -40924,7 +42082,7 @@ namespace Chummer
         public async Task RefreshINTDependentProperties(object sender, MultiplePropertiesChangedEventArgs e, CancellationToken token = default)
         {
             token.ThrowIfCancellationRequested();
-            List<string> lstProperties = new List<string>();
+            List<string> lstProperties = new List<string>(13);
             IAsyncDisposable objLocker = await LockObject.EnterUpgradeableReadLockAsync(token).ConfigureAwait(false);
             try
             {
@@ -40980,7 +42138,7 @@ namespace Chummer
         public async Task RefreshLOGDependentProperties(object sender, MultiplePropertiesChangedEventArgs e, CancellationToken token = default)
         {
             token.ThrowIfCancellationRequested();
-            List<string> lstProperties = new List<string>();
+            List<string> lstProperties = new List<string>(12);
             IAsyncDisposable objLocker = await LockObject.EnterUpgradeableReadLockAsync(token).ConfigureAwait(false);
             try
             {
@@ -41034,7 +42192,7 @@ namespace Chummer
         public async Task RefreshWILDependentProperties(object sender, MultiplePropertiesChangedEventArgs e, CancellationToken token = default)
         {
             token.ThrowIfCancellationRequested();
-            List<string> lstProperties = new List<string>();
+            List<string> lstProperties = new List<string>(28);
             IAsyncDisposable objLocker = await LockObject.EnterUpgradeableReadLockAsync(token).ConfigureAwait(false);
             try
             {
@@ -41105,7 +42263,7 @@ namespace Chummer
         public async Task RefreshEDGDependentProperties(object sender, MultiplePropertiesChangedEventArgs e, CancellationToken token = default)
         {
             token.ThrowIfCancellationRequested();
-            List<string> lstProperties = new List<string>();
+            List<string> lstProperties = new List<string>(3);
             IAsyncDisposable objLocker = await LockObject.EnterUpgradeableReadLockAsync(token).ConfigureAwait(false);
             try
             {
@@ -41155,7 +42313,7 @@ namespace Chummer
             CancellationToken token = default)
         {
             token.ThrowIfCancellationRequested();
-            List<string> lstProperties = new List<string>();
+            List<string> lstProperties = new List<string>(6);
             IAsyncDisposable objLocker = await LockObject.EnterUpgradeableReadLockAsync(token).ConfigureAwait(false);
             try
             {
@@ -41229,7 +42387,7 @@ namespace Chummer
                 if (await GetAttributeAsync("MAG", token: token).ConfigureAwait(false) == objMagAdept)
                     return;
 
-                List<string> lstProperties = new List<string>();
+                List<string> lstProperties = new List<string>(3);
                 if (e.PropertyNames.Contains(nameof(CharacterAttrib.TotalValue)))
                 {
                     await ProcessSettingsExpressionsForDependentProperties(lstProperties, "{MAGAdept}", token)
@@ -41269,7 +42427,7 @@ namespace Chummer
         public async Task RefreshRESDependentProperties(object sender, MultiplePropertiesChangedEventArgs e, CancellationToken token = default)
         {
             token.ThrowIfCancellationRequested();
-            List<string> lstProperties = new List<string>();
+            List<string> lstProperties = new List<string>(4);
             IAsyncDisposable objLocker = await LockObject.EnterUpgradeableReadLockAsync(token).ConfigureAwait(false);
             try
             {
@@ -41314,7 +42472,7 @@ namespace Chummer
         public async Task RefreshDEPDependentProperties(object sender, MultiplePropertiesChangedEventArgs e, CancellationToken token = default)
         {
             token.ThrowIfCancellationRequested();
-            List<string> lstProperties = new List<string>();
+            List<string> lstProperties = new List<string>(3);
             IAsyncDisposable objLocker = await LockObject.EnterUpgradeableReadLockAsync(token).ConfigureAwait(false);
             try
             {
@@ -41362,7 +42520,7 @@ namespace Chummer
         public async Task RefreshESSDependentProperties(object sender, MultiplePropertiesChangedEventArgs e, CancellationToken token = default)
         {
             token.ThrowIfCancellationRequested();
-            List<string> lstProperties = new List<string>();
+            List<string> lstProperties = new List<string>(7);
             IAsyncDisposable objLocker = await LockObject.EnterUpgradeableReadLockAsync(token).ConfigureAwait(false);
             try
             {
@@ -41895,7 +43053,7 @@ namespace Chummer
                                 continue;
                             if (intLoopForce == intSupportedForce)
                             {
-                                if (lstSupportedObjects.Count + 1 > intNumSupportsPossible)
+                                if (lstSupportedObjects.Count > 0 && lstSupportedObjects.Count + 1 > intNumSupportsPossible)
                                     // Remove the last element because we know it's the lowest
                                     lstSupportedObjects.RemoveAt(lstSupportedObjects.Count - 1);
                                 // Safe to insert object at the top because we cannot get objects with more Force in the list
@@ -41907,7 +43065,7 @@ namespace Chummer
                             }
                             else
                             {
-                                if (lstSupportedObjects.Count + 1 > intNumSupportsPossible)
+                                if (lstSupportedObjects.Count > 0 && lstSupportedObjects.Count + 1 > intNumSupportsPossible)
                                 {
                                     // Check against the last element because we know it'll be the lowest, only replace item if loop has a higher force than this one
                                     if (intLoopForce <= lstSupportedObjects[lstSupportedObjects.Count - 1].Force)
@@ -41991,7 +43149,7 @@ namespace Chummer
                                 continue;
                             if (intLoopForce == intSupportedForce)
                             {
-                                if (lstSupportedObjects.Count + 1 > intNumSupportsPossible)
+                                if (lstSupportedObjects.Count > 0 && lstSupportedObjects.Count + 1 > intNumSupportsPossible)
                                     // Remove the last element because we know it's the lowest
                                     lstSupportedObjects.RemoveAt(lstSupportedObjects.Count - 1);
                                 // Safe to insert object at the top because we cannot get objects with more Force in the list
@@ -42003,7 +43161,7 @@ namespace Chummer
                             }
                             else
                             {
-                                if (lstSupportedObjects.Count + 1 > intNumSupportsPossible)
+                                if (lstSupportedObjects.Count > 0 && lstSupportedObjects.Count + 1 > intNumSupportsPossible)
                                 {
                                     // Check against the last element because we know it'll be the lowest, only replace item if loop has a higher force than this one
                                     if (intLoopForce <= lstSupportedObjects[lstSupportedObjects.Count - 1].Force)
@@ -42124,8 +43282,10 @@ namespace Chummer
                     if (_blnLoadAsDirty == value)
                         return;
                     using (LockObject.EnterWriteLock())
+                    {
                         _blnLoadAsDirty = value;
-                    OnPropertyChanged();
+                        OnPropertyChanged();
+                    }
                 }
             }
         }
@@ -42159,13 +43319,12 @@ namespace Chummer
                 {
                     token.ThrowIfCancellationRequested();
                     _blnLoadAsDirty = value;
+                    OnPropertyChanged(nameof(LoadAsDirty));
                 }
                 finally
                 {
                     await objLocker2.DisposeAsync().ConfigureAwait(false);
                 }
-
-                OnPropertyChanged(nameof(LoadAsDirty));
             }
             finally
             {
@@ -42494,7 +43653,7 @@ namespace Chummer
                     new DependencyGraphNode<string, Character>(nameof(CurrentDisplayName),
                         new DependencyGraphNode<string, Character>(nameof(CharacterName),
                             new DependencyGraphNode<string, Character>(nameof(Alias)),
-                            new DependencyGraphNode<string, Character>(nameof(Name), x => string.IsNullOrWhiteSpace(x.Alias),
+                            new DependencyGraphNode<string, Character>(nameof(Name), x => string.IsNullOrWhiteSpace(x.Alias), async (x, t) => string.IsNullOrWhiteSpace(await x.GetAliasAsync(t).ConfigureAwait(false)),
                                 new DependencyGraphNode<string, Character>(nameof(Alias))
                             )
                         )
@@ -42507,7 +43666,7 @@ namespace Chummer
                                     new DependencyGraphNode<string, Character>(nameof(MagicianEnabled))
                                 )
                             ),
-                            new DependencyGraphNode<string, Character>(nameof(MysticAdeptPowerPoints), x => x.UseMysticAdeptPPs,
+                            new DependencyGraphNode<string, Character>(nameof(MysticAdeptPowerPoints), x => x.UseMysticAdeptPPs, (x, t) => x.GetUseMysticAdeptPPsAsync(t),
                                 new DependencyGraphNode<string, Character>(nameof(UseMysticAdeptPPs))
                             )
                         ),
@@ -42550,19 +43709,19 @@ namespace Chummer
                         new DependencyGraphNode<string, Character>(nameof(MatrixInitiative),
                             new DependencyGraphNode<string, Character>(nameof(MatrixInitiativeDice),
                                 new DependencyGraphNode<string, Character>(nameof(IsAI)),
-                                new DependencyGraphNode<string, Character>(nameof(InitiativeDice), x => !x.IsAI,
+                                new DependencyGraphNode<string, Character>(nameof(InitiativeDice), x => !x.IsAI, async (x, t) => !await x.GetIsAIAsync(t).ConfigureAwait(false),
                                     new DependencyGraphNode<string, Character>(nameof(IsAI))
                                 )
                             ),
                             new DependencyGraphNode<string, Character>(nameof(MatrixInitiativeValue),
                                 new DependencyGraphNode<string, Character>(nameof(IsAI)),
-                                new DependencyGraphNode<string, Character>(nameof(HomeNode), x => x.IsAI,
+                                new DependencyGraphNode<string, Character>(nameof(HomeNode), x => x.IsAI, (x, t) => x.GetIsAIAsync(t),
                                     new DependencyGraphNode<string, Character>(nameof(IsAI))
                                 ),
-                                new DependencyGraphNode<string, Character>(nameof(WoundModifier), x => x.IsAI,
+                                new DependencyGraphNode<string, Character>(nameof(WoundModifier), x => x.IsAI, (x, t) => x.GetIsAIAsync(t),
                                     new DependencyGraphNode<string, Character>(nameof(IsAI))
                                 ),
-                                new DependencyGraphNode<string, Character>(nameof(InitiativeValue), x => !x.IsAI,
+                                new DependencyGraphNode<string, Character>(nameof(InitiativeValue), x => !x.IsAI, async (x, t) => !await x.GetIsAIAsync(t).ConfigureAwait(false),
                                     new DependencyGraphNode<string, Character>(nameof(IsAI))
                                 )
                             )
@@ -42571,27 +43730,27 @@ namespace Chummer
                     new DependencyGraphNode<string, Character>(nameof(MatrixInitiativeColdToolTip),
                         new DependencyGraphNode<string, Character>(nameof(MatrixInitiativeCold),
                             new DependencyGraphNode<string, Character>(nameof(IsAI)),
-                            new DependencyGraphNode<string, Character>(nameof(MatrixInitiative), x => x.IsAI,
+                            new DependencyGraphNode<string, Character>(nameof(MatrixInitiative), x => x.IsAI, (x, t) => x.GetIsAIAsync(t),
                                 new DependencyGraphNode<string, Character>(nameof(IsAI))
                             ),
-                            new DependencyGraphNode<string, Character>(nameof(ActiveCommlink), x => !x.IsAI,
+                            new DependencyGraphNode<string, Character>(nameof(ActiveCommlink), x => !x.IsAI, async (x, t) => !await x.GetIsAIAsync(t).ConfigureAwait(false),
                                 new DependencyGraphNode<string, Character>(nameof(IsAI))
                             ),
                             new DependencyGraphNode<string, Character>(nameof(MatrixInitiativeColdDice),
                                 new DependencyGraphNode<string, Character>(nameof(IsAI)),
-                                new DependencyGraphNode<string, Character>(nameof(MatrixInitiativeDice), x => x.IsAI,
+                                new DependencyGraphNode<string, Character>(nameof(MatrixInitiativeDice), x => x.IsAI, (x, t) => x.GetIsAIAsync(t),
                                     new DependencyGraphNode<string, Character>(nameof(IsAI))
                                 )
                             ),
                             new DependencyGraphNode<string, Character>(nameof(MatrixInitiativeColdValue),
-                                new DependencyGraphNode<string, Character>(nameof(ActiveCommlink), x => !x.IsAI,
+                                new DependencyGraphNode<string, Character>(nameof(ActiveCommlink), x => !x.IsAI, async (x, t) => !await x.GetIsAIAsync(t).ConfigureAwait(false),
                                     new DependencyGraphNode<string, Character>(nameof(IsAI))
                                 ),
                                 new DependencyGraphNode<string, Character>(nameof(IsAI)),
-                                new DependencyGraphNode<string, Character>(nameof(MatrixInitiativeValue), x => x.IsAI,
+                                new DependencyGraphNode<string, Character>(nameof(MatrixInitiativeValue), x => x.IsAI, (x, t) => x.GetIsAIAsync(t),
                                     new DependencyGraphNode<string, Character>(nameof(IsAI))
                                 ),
-                                new DependencyGraphNode<string, Character>(nameof(WoundModifier), x => !x.IsAI,
+                                new DependencyGraphNode<string, Character>(nameof(WoundModifier), x => !x.IsAI, async (x, t) => !await x.GetIsAIAsync(t).ConfigureAwait(false),
                                     new DependencyGraphNode<string, Character>(nameof(IsAI))
                                 )
                             )
@@ -42600,27 +43759,27 @@ namespace Chummer
                     new DependencyGraphNode<string, Character>(nameof(MatrixInitiativeHotToolTip),
                         new DependencyGraphNode<string, Character>(nameof(MatrixInitiativeHot),
                             new DependencyGraphNode<string, Character>(nameof(IsAI)),
-                            new DependencyGraphNode<string, Character>(nameof(MatrixInitiative), x => x.IsAI,
+                            new DependencyGraphNode<string, Character>(nameof(MatrixInitiative), x => x.IsAI, (x, t) => x.GetIsAIAsync(t),
                                 new DependencyGraphNode<string, Character>(nameof(IsAI))
                             ),
-                            new DependencyGraphNode<string, Character>(nameof(ActiveCommlink), x => !x.IsAI,
+                            new DependencyGraphNode<string, Character>(nameof(ActiveCommlink), x => !x.IsAI, async (x, t) => !await x.GetIsAIAsync(t).ConfigureAwait(false),
                                 new DependencyGraphNode<string, Character>(nameof(IsAI))
                             ),
                             new DependencyGraphNode<string, Character>(nameof(MatrixInitiativeHotDice),
                                 new DependencyGraphNode<string, Character>(nameof(IsAI)),
-                                new DependencyGraphNode<string, Character>(nameof(MatrixInitiativeDice), x => x.IsAI,
+                                new DependencyGraphNode<string, Character>(nameof(MatrixInitiativeDice), x => x.IsAI, (x, t) => x.GetIsAIAsync(t),
                                     new DependencyGraphNode<string, Character>(nameof(IsAI))
                                 )
                             ),
                             new DependencyGraphNode<string, Character>(nameof(MatrixInitiativeHotValue),
-                                new DependencyGraphNode<string, Character>(nameof(ActiveCommlink), x => !x.IsAI,
+                                new DependencyGraphNode<string, Character>(nameof(ActiveCommlink), x => !x.IsAI, async (x, t) => !await x.GetIsAIAsync(t).ConfigureAwait(false),
                                     new DependencyGraphNode<string, Character>(nameof(IsAI))
                                 ),
                                 new DependencyGraphNode<string, Character>(nameof(IsAI)),
-                                new DependencyGraphNode<string, Character>(nameof(MatrixInitiativeValue), x => x.IsAI,
+                                new DependencyGraphNode<string, Character>(nameof(MatrixInitiativeValue), x => x.IsAI, (x, t) => x.GetIsAIAsync(t),
                                     new DependencyGraphNode<string, Character>(nameof(IsAI))
                                 ),
-                                new DependencyGraphNode<string, Character>(nameof(WoundModifier), x => !x.IsAI,
+                                new DependencyGraphNode<string, Character>(nameof(WoundModifier), x => !x.IsAI, async (x, t) => !await x.GetIsAIAsync(t).ConfigureAwait(false),
                                     new DependencyGraphNode<string, Character>(nameof(IsAI))
                                 )
                             )
@@ -42647,7 +43806,7 @@ namespace Chummer
                     new DependencyGraphNode<string, Character>(nameof(DisplayStunCM),
                         new DependencyGraphNode<string, Character>(nameof(IsAI)),
                         new DependencyGraphNode<string, Character>(nameof(HomeNode)),
-                        new DependencyGraphNode<string, Character>(nameof(StunCM), x => !x.IsAI || x.HomeNode != null)
+                        new DependencyGraphNode<string, Character>(nameof(StunCM), x => !x.IsAI || x.HomeNode != null, async (x, t) => !await x.GetIsAIAsync(t).ConfigureAwait(false) || await x.GetHomeNodeAsync(t).ConfigureAwait(false) != null)
                     ),
                     new DependencyGraphNode<string, Character>(nameof(StunCMLabelText),
                         new DependencyGraphNode<string, Character>(nameof(IsAI)),
@@ -42682,7 +43841,8 @@ namespace Chummer
                             new DependencyGraphNode<string, Character>(nameof(CMThreshold)),
                             new DependencyGraphNode<string, Character>(nameof(IsAI))
                         ),
-                        new DependencyGraphNode<string, Character>(nameof(Encumbrance), x => x.Settings.DoEncumbrancePenaltyWoundModifier)
+                        new DependencyGraphNode<string, Character>(nameof(Encumbrance), x => x.Settings.DoEncumbrancePenaltyWoundModifier, async (x, t) =>
+                            await (await x.GetSettingsAsync(t).ConfigureAwait(false)).GetDoEncumbrancePenaltyWoundModifierAsync(t).ConfigureAwait(false))
                     ),
                     new DependencyGraphNode<string, Character>(nameof(CMThresholdOffsets),
                         new DependencyGraphNode<string, Character>(nameof(PhysicalCMThresholdOffset)),
@@ -42702,7 +43862,7 @@ namespace Chummer
                         new DependencyGraphNode<string, Character>(nameof(DamageResistancePool),
                             new DependencyGraphNode<string, Character>(nameof(TotalArmorRating)),
                             new DependencyGraphNode<string, Character>(nameof(IsAI)),
-                            new DependencyGraphNode<string, Character>(nameof(HomeNode), x => x.IsAI,
+                            new DependencyGraphNode<string, Character>(nameof(HomeNode), x => x.IsAI, (x, t) => x.GetIsAIAsync(t),
                                 new DependencyGraphNode<string, Character>(nameof(IsAI))
                             )
                         )
@@ -42733,7 +43893,7 @@ namespace Chummer
                         new DependencyGraphNode<string, Character>(nameof(SpellDefenseIndirectSoak),
                             new DependencyGraphNode<string, Character>(nameof(TotalArmorRating)),
                             new DependencyGraphNode<string, Character>(nameof(IsAI)),
-                            new DependencyGraphNode<string, Character>(nameof(HomeNode), x => x.IsAI,
+                            new DependencyGraphNode<string, Character>(nameof(HomeNode), x => x.IsAI, (x, t) => x.GetIsAIAsync(t),
                                 new DependencyGraphNode<string, Character>(nameof(IsAI))
                             ),
                             new DependencyGraphNode<string, Character>(nameof(SpellResistance))
@@ -42888,7 +44048,7 @@ namespace Chummer
                         new DependencyGraphNode<string, Character>(nameof(SpellDefenseManipulationPhysical),
                             new DependencyGraphNode<string, Character>(nameof(SpellResistance)),
                             new DependencyGraphNode<string, Character>(nameof(IsAI)),
-                            new DependencyGraphNode<string, Character>(nameof(HomeNode), x => x.IsAI,
+                            new DependencyGraphNode<string, Character>(nameof(HomeNode), x => x.IsAI, (x, t) => x.GetIsAIAsync(t),
                                 new DependencyGraphNode<string, Character>(nameof(IsAI))
                             )
                         )
@@ -43042,9 +44202,9 @@ namespace Chummer
                             new DependencyGraphNode<string, Character>(nameof(CalculatedPublicAwareness),
                                 new DependencyGraphNode<string, Character>(nameof(PublicAwareness)),
                                 new DependencyGraphNode<string, Character>(nameof(TotalStreetCred),
-                                    x => x.Settings.UseCalculatedPublicAwareness),
+                                    x => x.Settings.UseCalculatedPublicAwareness, async (x, t) => await (await x.GetSettingsAsync(t).ConfigureAwait(false)).GetUseCalculatedPublicAwarenessAsync(t).ConfigureAwait(false)),
                                 new DependencyGraphNode<string, Character>(nameof(TotalNotoriety),
-                                    x => x.Settings.UseCalculatedPublicAwareness)
+                                    x => x.Settings.UseCalculatedPublicAwareness, async (x, t) => await (await x.GetSettingsAsync(t).ConfigureAwait(false)).GetUseCalculatedPublicAwarenessAsync(t).ConfigureAwait(false))
                             )
                         )
                     ),
@@ -43106,30 +44266,42 @@ namespace Chummer
                                     new DependencyGraphNode<string, Character>(nameof(CurrentWalkingRateString),
                                         new DependencyGraphNode<string, Character>(nameof(WalkString),
                                             x => x.AttributeSection.AttributeCategory ==
-                                                 CharacterAttrib.AttributeCategory.Standard),
+                                                 CharacterAttrib.AttributeCategory.Standard,
+                                            async (x, t) => await (await x.GetAttributeSectionAsync(t).ConfigureAwait(false)).GetAttributeCategoryAsync(t).ConfigureAwait(false) ==
+                                                            CharacterAttrib.AttributeCategory.Standard),
                                         new DependencyGraphNode<string, Character>(nameof(WalkAltString),
                                             x => x.AttributeSection.AttributeCategory !=
-                                                 CharacterAttrib.AttributeCategory.Standard)
+                                                 CharacterAttrib.AttributeCategory.Standard,
+                                            async (x, t) => await (await x.GetAttributeSectionAsync(t).ConfigureAwait(false)).GetAttributeCategoryAsync(t).ConfigureAwait(false) !=
+                                                            CharacterAttrib.AttributeCategory.Standard)
                                     )
                                 ),
                                 new DependencyGraphNode<string, Character>(nameof(RunningRate),
                                     new DependencyGraphNode<string, Character>(nameof(CurrentRunningRateString),
                                         new DependencyGraphNode<string, Character>(nameof(RunString),
                                             x => x.AttributeSection.AttributeCategory ==
-                                                 CharacterAttrib.AttributeCategory.Standard),
+                                                 CharacterAttrib.AttributeCategory.Standard,
+                                            async (x, t) => await (await x.GetAttributeSectionAsync(t).ConfigureAwait(false)).GetAttributeCategoryAsync(t).ConfigureAwait(false) ==
+                                                            CharacterAttrib.AttributeCategory.Standard),
                                         new DependencyGraphNode<string, Character>(nameof(RunAltString),
                                             x => x.AttributeSection.AttributeCategory !=
-                                                 CharacterAttrib.AttributeCategory.Standard)
+                                                 CharacterAttrib.AttributeCategory.Standard,
+                                            async (x, t) => await (await x.GetAttributeSectionAsync(t).ConfigureAwait(false)).GetAttributeCategoryAsync(t).ConfigureAwait(false) !=
+                                                            CharacterAttrib.AttributeCategory.Standard)
                                     )
                                 ),
                                 new DependencyGraphNode<string, Character>(nameof(SprintingRate),
                                     new DependencyGraphNode<string, Character>(nameof(CurrentSprintingRateString),
                                         new DependencyGraphNode<string, Character>(nameof(SprintString),
                                             x => x.AttributeSection.AttributeCategory ==
-                                                 CharacterAttrib.AttributeCategory.Standard),
+                                                 CharacterAttrib.AttributeCategory.Standard,
+                                            async (x, t) => await (await x.GetAttributeSectionAsync(t).ConfigureAwait(false)).GetAttributeCategoryAsync(t).ConfigureAwait(false) ==
+                                                            CharacterAttrib.AttributeCategory.Standard),
                                         new DependencyGraphNode<string, Character>(nameof(SprintAltString),
                                             x => x.AttributeSection.AttributeCategory !=
-                                                 CharacterAttrib.AttributeCategory.Standard)
+                                                 CharacterAttrib.AttributeCategory.Standard,
+                                            async (x, t) => await (await x.GetAttributeSectionAsync(t).ConfigureAwait(false)).GetAttributeCategoryAsync(t).ConfigureAwait(false) !=
+                                                            CharacterAttrib.AttributeCategory.Standard)
                                     )
                                 )
                             )
@@ -43532,12 +44704,12 @@ namespace Chummer
                     {
                         if (setNamesOfChangedProperties == null)
                             setNamesOfChangedProperties
-                                = s_CharacterDependencyGraph.GetWithAllDependents(this, strPropertyName, true);
+                                = await s_CharacterDependencyGraph.GetWithAllDependentsAsync(this, strPropertyName, true, token).ConfigureAwait(false);
                         else
                         {
-                            foreach (string strLoopChangedProperty in s_CharacterDependencyGraph
-                                         .GetWithAllDependentsEnumerable(
-                                             this, strPropertyName))
+                            foreach (string strLoopChangedProperty in await s_CharacterDependencyGraph
+                                         .GetWithAllDependentsEnumerableAsync(
+                                             this, strPropertyName, token).ConfigureAwait(false))
                                 setNamesOfChangedProperties.Add(strLoopChangedProperty);
                         }
                     }
@@ -44115,18 +45287,29 @@ namespace Chummer
                                 Log.Error(ex);
                             }
 
-                            Program.ShowScrollableMessageBox(
-                                string.Format(GlobalSettings.CultureInfo,
-                                              blnSync
-                                                  // ReSharper disable once MethodHasAsyncOverload
-                                                  ? LanguageManager.GetString("Message_FailedLoad", token: token)
-                                                  : await LanguageManager.GetStringAsync("Message_FailedLoad", token: token).ConfigureAwait(false),
-                                              ex.Message),
-                                blnSync
+                            if (blnSync)
+                            {
+                                // ReSharper disable once MethodHasAsyncOverloadWithCancellation
+                                Program.ShowScrollableMessageBox(
+                                    string.Format(GlobalSettings.CultureInfo,
+                                        // ReSharper disable once MethodHasAsyncOverload
+                                        LanguageManager.GetString("Message_FailedLoad", token: token),
+                                        ex.Message),
                                     // ReSharper disable once MethodHasAsyncOverload
-                                    ? LanguageManager.GetString("MessageTitle_FailedLoad", token: token)
-                                    : await LanguageManager.GetStringAsync("MessageTitle_FailedLoad", token: token).ConfigureAwait(false),
-                                MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                    LanguageManager.GetString("MessageTitle_FailedLoad", token: token),
+                                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            }
+                            else
+                            {
+                                await Program.ShowScrollableMessageBoxAsync(
+                                    string.Format(GlobalSettings.CultureInfo,
+                                        await LanguageManager.GetStringAsync("Message_FailedLoad", token: token)
+                                            .ConfigureAwait(false),
+                                        ex.Message),
+                                    await LanguageManager.GetStringAsync("MessageTitle_FailedLoad", token: token)
+                                        .ConfigureAwait(false),
+                                    MessageBoxButtons.OK, MessageBoxIcon.Error, token: token).ConfigureAwait(false);
+                            }
                             return false;
                         }
                         catch (NotSupportedException ex)
@@ -44138,18 +45321,29 @@ namespace Chummer
                                 Log.Error(ex);
                             }
 
-                            Program.ShowScrollableMessageBox(
-                                string.Format(GlobalSettings.CultureInfo,
-                                              blnSync
-                                                  // ReSharper disable once MethodHasAsyncOverload
-                                                  ? LanguageManager.GetString("Message_FailedLoad", token: token)
-                                                  : await LanguageManager.GetStringAsync("Message_FailedLoad", token: token).ConfigureAwait(false),
-                                              ex.Message),
-                                blnSync
+                            if (blnSync)
+                            {
+                                // ReSharper disable once MethodHasAsyncOverloadWithCancellation
+                                Program.ShowScrollableMessageBox(
+                                    string.Format(GlobalSettings.CultureInfo,
+                                        // ReSharper disable once MethodHasAsyncOverload
+                                        LanguageManager.GetString("Message_FailedLoad", token: token),
+                                        ex.Message),
                                     // ReSharper disable once MethodHasAsyncOverload
-                                    ? LanguageManager.GetString("MessageTitle_FailedLoad", token: token)
-                                    : await LanguageManager.GetStringAsync("MessageTitle_FailedLoad", token: token).ConfigureAwait(false),
-                                MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                    LanguageManager.GetString("MessageTitle_FailedLoad", token: token),
+                                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            }
+                            else
+                            {
+                                await Program.ShowScrollableMessageBoxAsync(
+                                    string.Format(GlobalSettings.CultureInfo,
+                                        await LanguageManager.GetStringAsync("Message_FailedLoad", token: token)
+                                            .ConfigureAwait(false),
+                                        ex.Message),
+                                    await LanguageManager.GetStringAsync("MessageTitle_FailedLoad", token: token)
+                                        .ConfigureAwait(false),
+                                    MessageBoxButtons.OK, MessageBoxIcon.Error, token: token).ConfigureAwait(false);
+                            }
                             return false;
                         }
                         catch (UnauthorizedAccessException ex)
@@ -44161,18 +45355,30 @@ namespace Chummer
                                 Log.Error(ex);
                             }
 
-                            Program.ShowScrollableMessageBox(
-                                string.Format(GlobalSettings.CultureInfo,
-                                              blnSync
-                                                  // ReSharper disable once MethodHasAsyncOverload
-                                                  ? LanguageManager.GetString("Message_FailedLoad", token: token)
-                                                  : await LanguageManager.GetStringAsync("Message_FailedLoad", token: token).ConfigureAwait(false),
-                                              ex.Message),
-                                blnSync
+                            if (blnSync)
+                            {
+                                // ReSharper disable once MethodHasAsyncOverloadWithCancellation
+                                Program.ShowScrollableMessageBox(
+                                    string.Format(GlobalSettings.CultureInfo,
+                                        // ReSharper disable once MethodHasAsyncOverload
+                                        LanguageManager.GetString("Message_FailedLoad", token: token),
+                                        ex.Message),
                                     // ReSharper disable once MethodHasAsyncOverload
-                                    ? LanguageManager.GetString("MessageTitle_FailedLoad", token: token)
-                                    : await LanguageManager.GetStringAsync("MessageTitle_FailedLoad", token: token).ConfigureAwait(false),
-                                MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                    LanguageManager.GetString("MessageTitle_FailedLoad", token: token),
+                                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            }
+                            else
+                            {
+                                await Program.ShowScrollableMessageBoxAsync(
+                                    string.Format(GlobalSettings.CultureInfo,
+                                        await LanguageManager.GetStringAsync("Message_FailedLoad", token: token)
+                                            .ConfigureAwait(false),
+                                        ex.Message),
+                                    await LanguageManager.GetStringAsync("MessageTitle_FailedLoad", token: token)
+                                        .ConfigureAwait(false),
+                                    MessageBoxButtons.OK, MessageBoxIcon.Error, token: token).ConfigureAwait(false);
+                            }
+
                             return false;
                         }
 
@@ -44555,29 +45761,20 @@ namespace Chummer
 
                                 if (string.IsNullOrEmpty(strSettingsKey))
                                 {
-                                    if (Program.ShowScrollableMessageBox(
-                                            string.Format(GlobalSettings.CultureInfo,
-                                                          blnSync
-                                                              // ReSharper disable once MethodHasAsyncOverload
-                                                              ? LanguageManager.GetString(
-                                                                  "Message_MissingGameplayOption", token: token)
-                                                              : await LanguageManager
-                                                                      .GetStringAsync(
-                                                                          "Message_MissingGameplayOption", token: token).ConfigureAwait(false),
-                                                          blnSync ? SettingsKey : await GetSettingsKeyAsync(token).ConfigureAwait(false)),
-                                            blnSync
-                                                // ReSharper disable once MethodHasAsyncOverload
-                                                ? LanguageManager.GetString(
-                                                    "Message_MissingGameplayOption_Title", token: token)
-                                                : await LanguageManager.GetStringAsync(
-                                                    "Message_MissingGameplayOption_Title", token: token).ConfigureAwait(false),
-                                            MessageBoxButtons.OKCancel, MessageBoxIcon.Error)
-                                        == DialogResult.OK)
+                                    if (blnSync)
                                     {
-                                        if (blnSync)
+                                        // ReSharper disable MethodHasAsyncOverload
+                                        // ReSharper disable MethodHasAsyncOverloadWithCancellation
+                                        if (Program.ShowScrollableMessageBox(
+                                                string.Format(GlobalSettings.CultureInfo,
+                                                    LanguageManager.GetString(
+                                                        "Message_MissingGameplayOption", token: token),
+                                                    SettingsKey),
+                                                LanguageManager.GetString(
+                                                    "Message_MissingGameplayOption_Title", token: token),
+                                                MessageBoxButtons.OKCancel, MessageBoxIcon.Error)
+                                            == DialogResult.OK)
                                         {
-                                            // ReSharper disable MethodHasAsyncOverload
-                                            // ReSharper disable MethodHasAsyncOverloadWithCancellation
                                             using (ThreadSafeForm<SelectBuildMethod> frmPickBP
                                                    = ThreadSafeForm<SelectBuildMethod>.Get(
                                                        () => new SelectBuildMethod(this, true)))
@@ -44585,18 +45782,33 @@ namespace Chummer
                                                 if (frmPickBP.ShowDialogSafe(this, token) != DialogResult.OK)
                                                     return false;
                                             }
-                                            // ReSharper restore MethodHasAsyncOverloadWithCancellation
-                                            // ReSharper restore MethodHasAsyncOverload
                                         }
                                         else
+                                            return false;
+                                        // ReSharper restore MethodHasAsyncOverloadWithCancellation
+                                        // ReSharper restore MethodHasAsyncOverload
+                                    }
+                                    else if (await Program.ShowScrollableMessageBoxAsync(
+                                                 string.Format(GlobalSettings.CultureInfo,
+                                                     await LanguageManager
+                                                         .GetStringAsync(
+                                                             "Message_MissingGameplayOption", token: token)
+                                                         .ConfigureAwait(false),
+                                                     await GetSettingsKeyAsync(token).ConfigureAwait(false)),
+                                                 await LanguageManager.GetStringAsync(
+                                                         "Message_MissingGameplayOption_Title", token: token)
+                                                     .ConfigureAwait(false),
+                                                 MessageBoxButtons.OKCancel, MessageBoxIcon.Error, token: token).ConfigureAwait(false)
+                                             == DialogResult.OK)
+                                    {
+                                        using (ThreadSafeForm<SelectBuildMethod> frmPickBP =
+                                               await ThreadSafeForm<SelectBuildMethod>.GetAsync(
+                                                       () => new SelectBuildMethod(this, true), token)
+                                                   .ConfigureAwait(false))
                                         {
-                                            using (ThreadSafeForm<SelectBuildMethod> frmPickBP =
-                                                   await ThreadSafeForm<SelectBuildMethod>.GetAsync(
-                                                       () => new SelectBuildMethod(this, true), token).ConfigureAwait(false))
-                                            {
-                                                if (await frmPickBP.ShowDialogSafeAsync(this, token).ConfigureAwait(false) != DialogResult.OK)
-                                                    return false;
-                                            }
+                                            if (await frmPickBP.ShowDialogSafeAsync(this, token)
+                                                    .ConfigureAwait(false) != DialogResult.OK)
+                                                return false;
                                         }
                                     }
                                     else
@@ -46236,7 +47448,11 @@ namespace Chummer
                                                 objPower.Extra = strForcedValue;
                                             else
                                                 await objPower.SetExtraAsync(strForcedValue, token).ConfigureAwait(false);
-                                            objPower.Create(xmlPowerData, intRating);
+                                            if (blnSync)
+                                                // ReSharper disable once MethodHasAsyncOverloadWithCancellation
+                                                objPower.Create(xmlPowerData, intRating);
+                                            else
+                                                await objPower.CreateAsync(xmlPowerData, intRating, token: token).ConfigureAwait(false);
                                             objPower.Notes = xmlHeroLabPower.SelectSingleNodeAndCacheExpression(
                                                 "description", token)?.Value;
                                             if (blnSync)
@@ -46871,23 +48087,38 @@ namespace Chummer
                             }
 
                             // Curb Mystic Adept power points if the values that were loaded in would be illegal
-                            if (MysticAdeptPowerPoints > 0)
+                            if (blnSync)
                             {
-                                int intMAGTotalValue = blnSync
-                                    ? MAG.TotalValue
-                                    : await (await GetAttributeAsync("MAG", token: token).ConfigureAwait(false)).GetTotalValueAsync(token).ConfigureAwait(false);
-                                if (MysticAdeptPowerPoints > intMAGTotalValue)
-                                    MysticAdeptPowerPoints = intMAGTotalValue;
+                                if (MysticAdeptPowerPoints > 0)
+                                {
+                                    int intMAGTotalValue = MAG.TotalValue;
+                                    if (MysticAdeptPowerPoints > intMAGTotalValue)
+                                        MysticAdeptPowerPoints = intMAGTotalValue;
+                                }
+                            }
+                            else
+                            {
+                                int intMysticAdeptPowerPoints = await GetMysticAdeptPowerPointsAsync(token).ConfigureAwait(false);
+                                if (intMysticAdeptPowerPoints > 0)
+                                {
+                                    int intMAGTotalValue =
+                                        await (await GetAttributeAsync("MAG", token: token).ConfigureAwait(false))
+                                            .GetTotalValueAsync(token).ConfigureAwait(false);
+                                    if (intMysticAdeptPowerPoints > intMAGTotalValue)
+                                        await SetMysticAdeptPowerPointsAsync(intMAGTotalValue, token).ConfigureAwait(false);
+                                }
                             }
 
-                            if (!InitiationEnabled || !AddInitiationsAllowed)
+                            if (blnSync)
                             {
-                                if (blnSync)
+                                if (!InitiationEnabled || !AddInitiationsAllowed)
+                                {
                                     // ReSharper disable once MethodHasAsyncOverload
                                     ClearInitiations(token);
-                                else
-                                    await ClearInitiationsAsync(token).ConfigureAwait(false);
+                                }
                             }
+                            else if (!await GetInitiationEnabledAsync(token).ConfigureAwait(false) || !await GetAddInitiationsAllowedAsync(token).ConfigureAwait(false))
+                                await ClearInitiationsAsync(token).ConfigureAwait(false);
                             //Timekeeper.Finish("load_char_improvementrefreshers");
                         }
                     }
@@ -47786,6 +49017,9 @@ namespace Chummer
             {
                 using (LockObject.EnterReadLock())
                 {
+                    if (!AnyPowerAdeptWayDiscountEnabled)
+                        return false;
+
                     decimal decMAG;
                     if (IsMysticAdept && Settings.MysAdeptSecondMAGAttribute)
                     {
@@ -47798,11 +49032,7 @@ namespace Chummer
                         decMAG = MAG.TotalValue;
                     }
 
-                    // Add any Power Point Improvements to MAG.
-                    decMAG += ImprovementManager.ValueOf(this, Improvement.ImprovementType.AdeptPowerPoints);
-
-                    return AnyPowerAdeptWayDiscountEnabled &&
-                           Powers.Count(p => p.DiscountedAdeptWay) < (decMAG / 2).ToInt32();
+                    return Powers.Count(p => p.DiscountedAdeptWay) < (decMAG / 2).ToInt32();
                 }
             }
         }
@@ -47814,6 +49044,10 @@ namespace Chummer
             try
             {
                 token.ThrowIfCancellationRequested();
+
+                if (!await GetAnyPowerAdeptWayDiscountEnabledAsync(token).ConfigureAwait(false))
+                    return false;
+
                 decimal decMAG;
                 if (await GetIsMysticAdeptAsync(token).ConfigureAwait(false) &&
                     await (await GetSettingsAsync(token).ConfigureAwait(false))
@@ -47830,14 +49064,8 @@ namespace Chummer
                         .GetTotalValueAsync(token).ConfigureAwait(false);
                 }
 
-                // Add any Power Point Improvements to MAG.
-                decMAG += await ImprovementManager
-                    .ValueOfAsync(this, Improvement.ImprovementType.AdeptPowerPoints, token: token)
-                    .ConfigureAwait(false);
-
-                return await GetAnyPowerAdeptWayDiscountEnabledAsync(token).ConfigureAwait(false) &&
-                       await Powers.CountAsync(p => p.GetDiscountedAdeptWayAsync(token), token: token)
-                           .ConfigureAwait(false) < (decMAG / 2).ToInt32();
+                return await Powers.CountAsync(p => p.GetDiscountedAdeptWayAsync(token), token: token)
+                    .ConfigureAwait(false) < (decMAG / 2).ToInt32();
             }
             finally
             {
@@ -48014,19 +49242,19 @@ namespace Chummer
 
                 if (!blnEssence || !blnEnabled)
                 {
-                    Program.ShowScrollableMessageBox(strMessage,
+                    await Program.ShowScrollableMessageBoxAsync(strMessage,
                         await LanguageManager.GetStringAsync("MessageTitle_CyberzombieRequirements", token: token)
                             .ConfigureAwait(false),
-                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBoxButtons.OK, MessageBoxIcon.Error, token: token).ConfigureAwait(false);
                     return false;
                 }
 
-                if (Program.ShowScrollableMessageBox(
+                if (await Program.ShowScrollableMessageBoxAsync(
                         await LanguageManager.GetStringAsync("Message_CyberzombieConfirm", token: token)
                             .ConfigureAwait(false),
                         await LanguageManager.GetStringAsync("MessageTitle_CyberzombieConfirm", token: token)
                             .ConfigureAwait(false),
-                        MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
+                        MessageBoxButtons.YesNo, MessageBoxIcon.Question, token: token).ConfigureAwait(false) == DialogResult.No)
                     return false;
 
                 int intWILResult;

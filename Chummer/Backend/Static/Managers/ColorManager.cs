@@ -20,6 +20,7 @@
 using System;
 using System.Collections.Concurrent;
 using System.Drawing;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -585,7 +586,7 @@ namespace Chummer
                         {
                             x.ForeColor = WindowTextLight;
                             x.BackColor = WindowLight;
-                            foreach (DiceRollerListViewItem objItem in x.Items)
+                            foreach (DiceRollerListViewItem objItem in x.Items.OfType<DiceRollerListViewItem>())
                             {
                                 if (objItem.IsHit)
                                 {
@@ -616,7 +617,7 @@ namespace Chummer
                         {
                             x.ForeColor = WindowTextDark;
                             x.BackColor = WindowDark;
-                            foreach (DiceRollerListViewItem objItem in x.Items)
+                            foreach (DiceRollerListViewItem objItem in x.Items.OfType<DiceRollerListViewItem>())
                             {
                                 if (objItem.IsHit)
                                 {
@@ -1074,7 +1075,7 @@ namespace Chummer
                             x.BackColor = objBackColor;
                             if (blnLightMode)
                             {
-                                foreach (DiceRollerListViewItem objItem in x.Items)
+                                foreach (DiceRollerListViewItem objItem in x.Items.OfType<DiceRollerListViewItem>())
                                 {
                                     if (objItem.IsHit)
                                     {
@@ -1103,7 +1104,7 @@ namespace Chummer
                             }
                             else
                             {
-                                foreach (DiceRollerListViewItem objItem in x.Items)
+                                foreach (DiceRollerListViewItem objItem in x.Items.OfType<DiceRollerListViewItem>())
                                 {
                                     if (objItem.IsHit)
                                     {
@@ -1532,10 +1533,14 @@ namespace Chummer
                     break;
             }
 
+            dblRed = Math.Round(dblRed * byte.MaxValue, MidpointRounding.AwayFromZero);
+            dblGreen = Math.Round(dblGreen * byte.MaxValue, MidpointRounding.AwayFromZero);
+            dblBlue = Math.Round(dblBlue * byte.MaxValue, MidpointRounding.AwayFromZero);
+
             return Color.FromArgb(chrAlpha,
-                Math.Max(Math.Min(Convert.ToInt32(Math.Round(dblRed * byte.MaxValue, MidpointRounding.AwayFromZero)), byte.MaxValue), byte.MinValue),
-                Math.Max(Math.Min(Convert.ToInt32(Math.Round(dblGreen * byte.MaxValue, MidpointRounding.AwayFromZero)), byte.MaxValue), byte.MinValue),
-                Math.Max(Math.Min(Convert.ToInt32(Math.Round(dblBlue * byte.MaxValue, MidpointRounding.AwayFromZero)), byte.MaxValue), byte.MinValue));
+                Math.Max(Math.Min(double.IsNaN(dblRed) ? 0 : Convert.ToInt32(dblRed), byte.MaxValue), byte.MinValue),
+                Math.Max(Math.Min(double.IsNaN(dblGreen) ? 0 : Convert.ToInt32(dblGreen), byte.MaxValue), byte.MinValue),
+                Math.Max(Math.Min(double.IsNaN(dblBlue) ? 0 : Convert.ToInt32(dblBlue), byte.MaxValue), byte.MinValue));
         }
 
         /// <summary>
@@ -1612,10 +1617,14 @@ namespace Chummer
                     break;
             }
 
+            dblRed = Math.Round(dblRed * byte.MaxValue, MidpointRounding.AwayFromZero);
+            dblGreen = Math.Round(dblGreen * byte.MaxValue, MidpointRounding.AwayFromZero);
+            dblBlue = Math.Round(dblBlue * byte.MaxValue, MidpointRounding.AwayFromZero);
+
             return Color.FromArgb(chrAlpha,
-                Math.Max(Math.Min(Convert.ToInt32(Math.Round(dblRed * byte.MaxValue, MidpointRounding.AwayFromZero)), byte.MaxValue), byte.MinValue),
-                Math.Max(Math.Min(Convert.ToInt32(Math.Round(dblGreen * byte.MaxValue, MidpointRounding.AwayFromZero)), byte.MaxValue), byte.MinValue),
-                Math.Max(Math.Min(Convert.ToInt32(Math.Round(dblBlue * byte.MaxValue, MidpointRounding.AwayFromZero)), byte.MaxValue), byte.MinValue));
+                Math.Max(Math.Min(double.IsNaN(dblRed) ? 0 : Convert.ToInt32(dblRed), byte.MaxValue), byte.MinValue),
+                Math.Max(Math.Min(double.IsNaN(dblGreen) ? 0 : Convert.ToInt32(dblGreen), byte.MaxValue), byte.MinValue),
+                Math.Max(Math.Min(double.IsNaN(dblBlue) ? 0 : Convert.ToInt32(dblBlue), byte.MaxValue), byte.MinValue));
         }
 
         #endregion Color Utility Methods

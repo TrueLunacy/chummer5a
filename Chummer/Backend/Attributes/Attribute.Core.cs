@@ -175,15 +175,6 @@ namespace Chummer.Backend.Attributes
                     _eMetatypeCategory =
                         ConvertToMetatypeAttributeCategory(objNode["metatypecategory"]?.InnerText ?? "Standard");
                 }
-
-                if (!_objCharacter.Created)
-                {
-                    while (KarmaMaximum < 0 && Base > 0)
-                        --Base;
-                    // Very rough fix for when Karma values somehow exceed KarmaMaximum after loading in. This shouldn't happen in the first place, but this ad-hoc patch will help fix crashes.
-                    if (Karma > KarmaMaximum)
-                        Karma = KarmaMaximum;
-                }
             }
         }
 
@@ -321,6 +312,24 @@ namespace Chummer.Backend.Attributes
         }
 
         /// <summary>
+        /// Minimum value for the CharacterAttribute as set by the character's Metatype.
+        /// </summary>
+        public async Task<int> GetRawMetatypeMinimumAsync(CancellationToken token = default)
+        {
+            token.ThrowIfCancellationRequested();
+            IAsyncDisposable objLocker = await LockObject.EnterReadLockAsync(token).ConfigureAwait(false);
+            try
+            {
+                token.ThrowIfCancellationRequested();
+                return _intMetatypeMin;
+            }
+            finally
+            {
+                await objLocker.DisposeAsync().ConfigureAwait(false);
+            }
+        }
+
+        /// <summary>
         /// Minimum value for the CharacterAttribute as set by the character's Metatype or overwritten attributes nodes.
         /// </summary>
         public int MetatypeMinimum
@@ -355,8 +364,8 @@ namespace Chummer.Backend.Attributes
             {
                 token.ThrowIfCancellationRequested();
                 if (MetatypeCategory == AttributeCategory.Shapeshifter)
-                    return RawMetatypeMinimum;
-                int intReturn = RawMetatypeMinimum;
+                    return await GetRawMetatypeMinimumAsync(token).ConfigureAwait(false);
+                int intReturn = await GetRawMetatypeMinimumAsync(token).ConfigureAwait(false);
                 Improvement objImprovement = await (await _objCharacter.GetImprovementsAsync(token).ConfigureAwait(false)).LastOrDefaultAsync(
                     x => x.ImproveType == Improvement.ImprovementType.ReplaceAttribute && x.ImprovedName == Abbrev
                         && x.Enabled && x.Minimum != 0, token: token).ConfigureAwait(false);
@@ -397,6 +406,24 @@ namespace Chummer.Backend.Attributes
         }
 
         /// <summary>
+        /// Maximum value for the CharacterAttribute as set by the character's Metatype.
+        /// </summary>
+        public async Task<int> GetRawMetatypeMaximumAsync(CancellationToken token = default)
+        {
+            token.ThrowIfCancellationRequested();
+            IAsyncDisposable objLocker = await LockObject.EnterReadLockAsync(token).ConfigureAwait(false);
+            try
+            {
+                token.ThrowIfCancellationRequested();
+                return _intMetatypeMax;
+            }
+            finally
+            {
+                await objLocker.DisposeAsync().ConfigureAwait(false);
+            }
+        }
+
+        /// <summary>
         /// Maximum value for the CharacterAttribute as set by the character's Metatype or overwritten attributes nodes.
         /// </summary>
         public int MetatypeMaximum
@@ -406,7 +433,9 @@ namespace Chummer.Backend.Attributes
                 using (LockObject.EnterReadLock())
                 {
                     if (Abbrev == "EDG" && _objCharacter.IsAI)
-                        return _objCharacter.DEP.TotalValue;
+                        return _objCharacter.DEP?.TotalValue ?? (_objCharacter.IsLoading
+                            ? RawMetatypeMaximum
+                            : throw new NullReferenceException(nameof(Character.DEP)));
                     if (MetatypeCategory == AttributeCategory.Shapeshifter)
                         return RawMetatypeMaximum;
                     int intReturn = RawMetatypeMaximum;
@@ -439,10 +468,18 @@ namespace Chummer.Backend.Attributes
             {
                 token.ThrowIfCancellationRequested();
                 if (Abbrev == "EDG" && await _objCharacter.GetIsAIAsync(token).ConfigureAwait(false))
-                    return await (await _objCharacter.GetAttributeAsync("DEP", token: token).ConfigureAwait(false)).GetTotalValueAsync(token).ConfigureAwait(false);
+                {
+                    CharacterAttrib objDepth = await _objCharacter.GetAttributeAsync("DEP", token: token).ConfigureAwait(false);
+                    if (objDepth != null)
+                        return await objDepth.GetTotalValueAsync(token).ConfigureAwait(false);
+                    return _objCharacter.IsLoading
+                        ? await GetRawMetatypeMaximumAsync(token).ConfigureAwait(false)
+                        : throw new NullReferenceException(nameof(Character.DEP));
+                }
+
                 if (MetatypeCategory == AttributeCategory.Shapeshifter)
-                    return RawMetatypeMaximum;
-                int intReturn = RawMetatypeMaximum;
+                    return await GetRawMetatypeMaximumAsync(token).ConfigureAwait(false);
+                int intReturn = await GetRawMetatypeMaximumAsync(token).ConfigureAwait(false);
                 Improvement objImprovement = await (await _objCharacter.GetImprovementsAsync(token).ConfigureAwait(false))
                     .LastOrDefaultAsync(
                         x => x.ImproveType == Improvement.ImprovementType.ReplaceAttribute &&
@@ -492,6 +529,24 @@ namespace Chummer.Backend.Attributes
         }
 
         /// <summary>
+        /// Maximum augmented value for the CharacterAttribute as set by the character's Metatype.
+        /// </summary>
+        public async Task<int> GetRawMetatypeAugmentedMaximumAsync(CancellationToken token = default)
+        {
+            token.ThrowIfCancellationRequested();
+            IAsyncDisposable objLocker = await LockObject.EnterReadLockAsync(token).ConfigureAwait(false);
+            try
+            {
+                token.ThrowIfCancellationRequested();
+                return _intMetatypeAugMax;
+            }
+            finally
+            {
+                await objLocker.DisposeAsync().ConfigureAwait(false);
+            }
+        }
+
+        /// <summary>
         /// Maximum augmented value for the CharacterAttribute as set by the character's Metatype or overwritten attributes nodes.
         /// </summary>
         public int MetatypeAugmentedMaximum
@@ -526,8 +581,8 @@ namespace Chummer.Backend.Attributes
             {
                 token.ThrowIfCancellationRequested();
                 if (MetatypeCategory == AttributeCategory.Shapeshifter)
-                    return RawMetatypeAugmentedMaximum;
-                int intReturn = RawMetatypeAugmentedMaximum;
+                    return await GetRawMetatypeAugmentedMaximumAsync(token).ConfigureAwait(false);
+                int intReturn = await GetRawMetatypeAugmentedMaximumAsync(token).ConfigureAwait(false);
                 Improvement objImprovement = await (await _objCharacter.GetImprovementsAsync(token).ConfigureAwait(false))
                     .LastOrDefaultAsync(
                         x => x.ImproveType == Improvement.ImprovementType.ReplaceAttribute &&
@@ -538,6 +593,60 @@ namespace Chummer.Backend.Attributes
                 }
 
                 return intReturn;
+            }
+            finally
+            {
+                await objLocker.DisposeAsync().ConfigureAwait(false);
+            }
+        }
+
+        public void DoBaseFix(bool blnDoBaseOnPropertyChanged = false)
+        {
+            using (LockObject.EnterWriteLock())
+            {
+                int intKarmaMaximum = KarmaMaximum;
+                while (intKarmaMaximum < 0 && _intBase > 0)
+                {
+                    blnDoBaseOnPropertyChanged = true;
+                    --_intBase;
+                    intKarmaMaximum = KarmaMaximum;
+                }
+
+                // Very rough fix for when values somehow exceed maxima after loading in. This shouldn't happen in the first place, but this ad-hoc patch will help fix crashes.
+                int intPriorityMaximum = PriorityMaximum;
+                if (Base > intPriorityMaximum)
+                    Base = intPriorityMaximum;
+                else if (blnDoBaseOnPropertyChanged)
+                    OnPropertyChanged(nameof(Base));
+
+                if (Karma > intKarmaMaximum)
+                    Karma = intKarmaMaximum;
+            }
+        }
+
+        public async Task DoBaseFixAsync(bool blnDoBaseOnPropertyChanged = false, CancellationToken token = default)
+        {
+            IAsyncDisposable objLocker = await LockObject.EnterWriteLockAsync(token).ConfigureAwait(false);
+            try
+            {
+                token.ThrowIfCancellationRequested();
+                int intKarmaMaximum = await GetKarmaMaximumAsync(token).ConfigureAwait(false);
+                while (intKarmaMaximum < 0 && _intBase > 0)
+                {
+                    blnDoBaseOnPropertyChanged = true;
+                    --_intBase;
+                    intKarmaMaximum = await GetKarmaMaximumAsync(token).ConfigureAwait(false);
+                }
+
+                // Very rough fix for when values somehow exceed maxima after loading in. This shouldn't happen in the first place, but this ad-hoc patch will help fix crashes.
+                int intPriorityMaximum = await GetPriorityMaximumAsync(token).ConfigureAwait(false);
+                if (await GetBaseAsync(token).ConfigureAwait(false) > intPriorityMaximum)
+                    await SetBaseAsync(intPriorityMaximum, token).ConfigureAwait(false);
+                else if (blnDoBaseOnPropertyChanged)
+                    await OnPropertyChangedAsync(nameof(Base), token).ConfigureAwait(false);
+
+                if (await GetKarmaAsync(token).ConfigureAwait(false) > intKarmaMaximum)
+                    await SetKarmaAsync(intKarmaMaximum, token).ConfigureAwait(false);
             }
             finally
             {
@@ -564,19 +673,8 @@ namespace Chummer.Backend.Attributes
                     using (LockObject.EnterWriteLock())
                     {
                         _intBase = value;
-                        int intKarmaMaximum = KarmaMaximum;
-                        while (intKarmaMaximum < 0 && _intBase > 0)
-                        {
-                            --_intBase;
-                            intKarmaMaximum = KarmaMaximum;
-                        }
-
-                        // Very rough fix for when Karma values somehow exceed KarmaMaximum after loading in. This shouldn't happen in the first place, but this ad-hoc patch will help fix crashes.
-                        if (Karma > intKarmaMaximum)
-                            Karma = intKarmaMaximum;
+                        DoBaseFix(true);
                     }
-
-                    OnPropertyChanged();
                 }
             }
         }
@@ -614,23 +712,12 @@ namespace Chummer.Backend.Attributes
                 {
                     token.ThrowIfCancellationRequested();
                     _intBase = value;
-                    int intKarmaMaximum = await GetKarmaMaximumAsync(token).ConfigureAwait(false);
-                    while (intKarmaMaximum < 0 && _intBase > 0)
-                    {
-                        --_intBase;
-                        intKarmaMaximum = await GetKarmaMaximumAsync(token).ConfigureAwait(false);
-                    }
-
-                    // Very rough fix for when Karma values somehow exceed KarmaMaximum after loading in. This shouldn't happen in the first place, but this ad-hoc patch will help fix crashes.
-                    if (await GetKarmaAsync(token).ConfigureAwait(false) > intKarmaMaximum)
-                        await SetKarmaAsync(intKarmaMaximum, token).ConfigureAwait(false);
+                    await DoBaseFixAsync(true, token).ConfigureAwait(false);
                 }
                 finally
                 {
                     await objLocker2.DisposeAsync().ConfigureAwait(false);
                 }
-
-                await OnPropertyChangedAsync(nameof(Base), token).ConfigureAwait(false);
             }
             finally
             {
@@ -645,13 +732,12 @@ namespace Chummer.Backend.Attributes
         {
             if (value == 0)
                 return;
-            IAsyncDisposable objLocker = await LockObject.EnterUpgradeableReadLockAsync(token).ConfigureAwait(false);
+            IAsyncDisposable objLocker = await LockObject.EnterWriteLockAsync(token).ConfigureAwait(false);
             try
             {
                 token.ThrowIfCancellationRequested();
-                // No need to write lock because interlocked guarantees safety
                 Interlocked.Add(ref _intBase, value);
-                await OnPropertyChangedAsync(nameof(Base), token).ConfigureAwait(false);
+                await DoBaseFixAsync(true, token).ConfigureAwait(false);
             }
             finally
             {
@@ -681,7 +767,8 @@ namespace Chummer.Backend.Attributes
             {
                 token.ThrowIfCancellationRequested();
                 return Math.Max(
-                    Base + await GetFreeBaseAsync(token).ConfigureAwait(false) +
+                    await GetBaseAsync(token).ConfigureAwait(false) +
+                    await GetFreeBaseAsync(token).ConfigureAwait(false) +
                     await GetRawMinimumAsync(token).ConfigureAwait(false),
                     await GetTotalMinimumAsync(token).ConfigureAwait(false));
             }
@@ -790,11 +877,10 @@ namespace Chummer.Backend.Attributes
         {
             if (value == 0)
                 return;
-            IAsyncDisposable objLocker = await LockObject.EnterUpgradeableReadLockAsync(token).ConfigureAwait(false);
+            IAsyncDisposable objLocker = await LockObject.EnterWriteLockAsync(token).ConfigureAwait(false);
             try
             {
                 token.ThrowIfCancellationRequested();
-                // No need to write lock because interlocked guarantees safety
                 Interlocked.Add(ref _intKarma, value);
                 await OnPropertyChangedAsync(nameof(Karma), token).ConfigureAwait(false);
             }
@@ -859,16 +945,16 @@ namespace Chummer.Backend.Attributes
         }
 
         /// <summary>
-        /// Total Maximum value of the CharacterAttribute before essence modifiers are applied but .
+        /// The CharacterAttribute's combined Minimum and Maximum values (Metatype Min/Max + Modifiers) before essence modifiers are applied.
         /// </summary>
-        public int MaximumNoEssenceLoss(bool blnUseEssenceAtSpecialStart = false)
+        public Tuple<int, int> MinimumMaximumNoEssenceLoss(bool blnUseEssenceAtSpecialStart = false)
         {
             using (LockObject.EnterReadLock())
             {
                 // If we're looking at MAG and the character is a Cyberzombie, MAG is always 1, regardless of ESS penalties and bonuses.
                 if (_objCharacter.MetatypeCategory == "Cyberzombie" && (Abbrev == "MAG" || Abbrev == "MAGAdept"))
                 {
-                    return 1;
+                    return new Tuple<int, int>(1, 1);
                 }
 
                 int intRawMinimum = MetatypeMinimum;
@@ -930,14 +1016,14 @@ namespace Chummer.Backend.Attributes
                 if (intTotalMaximum < intTotalMinimum)
                     intTotalMaximum = intTotalMinimum;
 
-                return intTotalMaximum;
+                return new Tuple<int, int>(intTotalMinimum, intTotalMaximum);
             }
         }
 
         /// <summary>
-        /// Total Maximum value of the CharacterAttribute before essence modifiers are applied but .
+        /// The CharacterAttribute's combined Minimum and Maximum values (Metatype Min/Max + Modifiers) before essence modifiers are applied.
         /// </summary>
-        public async Task<int> MaximumNoEssenceLossAsync(bool blnUseEssenceAtSpecialStart = false, CancellationToken token = default)
+        public async Task<Tuple<int, int>> MinimumMaximumNoEssenceLossAsync(bool blnUseEssenceAtSpecialStart = false, CancellationToken token = default)
         {
             IAsyncDisposable objLocker = await LockObject.EnterReadLockAsync(token).ConfigureAwait(false);
             try
@@ -947,7 +1033,7 @@ namespace Chummer.Backend.Attributes
                 if (await _objCharacter.GetMetatypeCategoryAsync(token).ConfigureAwait(false) == "Cyberzombie"
                     && (Abbrev == "MAG" || Abbrev == "MAGAdept"))
                 {
-                    return 1;
+                    return new Tuple<int, int>(1, 1);
                 }
 
                 int intRawMaximumBase = await GetMetatypeMaximumAsync(token).ConfigureAwait(false);
@@ -1012,12 +1098,46 @@ namespace Chummer.Backend.Attributes
                 if (intTotalMaximum < intTotalMinimum)
                     intTotalMaximum = intTotalMinimum;
 
-                return intTotalMaximum;
+                return new Tuple<int, int>(intTotalMinimum, intTotalMaximum);
             }
             finally
             {
                 await objLocker.DisposeAsync().ConfigureAwait(false);
             }
+        }
+
+        /// <summary>
+        /// The CharacterAttribute's combined Maximum value (Metatype Maximum + Modifiers) before essence modifiers are applied.
+        /// </summary>
+        public int MaximumNoEssenceLoss(bool blnUseEssenceAtSpecialStart = false)
+        {
+            return MinimumMaximumNoEssenceLoss(blnUseEssenceAtSpecialStart).Item2;
+        }
+
+        /// <summary>
+        /// The CharacterAttribute's combined Maximum value (Metatype Maximum + Modifiers) before essence modifiers are applied.
+        /// </summary>
+        public async Task<int> MaximumNoEssenceLossAsync(bool blnUseEssenceAtSpecialStart = false, CancellationToken token = default)
+        {
+            token.ThrowIfCancellationRequested();
+            return (await MinimumMaximumNoEssenceLossAsync(blnUseEssenceAtSpecialStart, token).ConfigureAwait(false)).Item2;
+        }
+
+        /// <summary>
+        /// The CharacterAttribute's combined Minimum value (Metatype Minimum + Modifiers) before essence modifiers are applied.
+        /// </summary>
+        public int MinimumNoEssenceLoss(bool blnUseEssenceAtSpecialStart = false)
+        {
+            return MinimumMaximumNoEssenceLoss(blnUseEssenceAtSpecialStart).Item1;
+        }
+
+        /// <summary>
+        /// The CharacterAttribute's combined Minimum value (Metatype Minimum + Modifiers) before essence modifiers are applied.
+        /// </summary>
+        public async Task<int> MinimumNoEssenceLossAsync(bool blnUseEssenceAtSpecialStart = false, CancellationToken token = default)
+        {
+            token.ThrowIfCancellationRequested();
+            return (await MinimumMaximumNoEssenceLossAsync(blnUseEssenceAtSpecialStart, token).ConfigureAwait(false)).Item1;
         }
 
         /// <summary>
@@ -2910,7 +3030,8 @@ namespace Chummer.Backend.Attributes
             {
                 token.ThrowIfCancellationRequested();
                 return Math.Max(
-                    await GetTotalMaximumAsync(token).ConfigureAwait(false) - Karma -
+                    await GetTotalMaximumAsync(token).ConfigureAwait(false) -
+                    await GetKarmaAsync(token).ConfigureAwait(false) -
                     await GetFreeBaseAsync(token).ConfigureAwait(false) -
                     await GetRawMinimumAsync(token).ConfigureAwait(false), 0);
             }
@@ -3525,11 +3646,11 @@ namespace Chummer.Backend.Attributes
                     {
                         if (setNamesOfChangedProperties == null)
                             setNamesOfChangedProperties
-                                = s_AttributeDependencyGraph.GetWithAllDependents(this, strPropertyName, true);
+                                = await s_AttributeDependencyGraph.GetWithAllDependentsAsync(this, strPropertyName, true, token).ConfigureAwait(false);
                         else
                         {
-                            foreach (string strLoopChangedProperty in s_AttributeDependencyGraph
-                                         .GetWithAllDependentsEnumerable(this, strPropertyName))
+                            foreach (string strLoopChangedProperty in await s_AttributeDependencyGraph
+                                         .GetWithAllDependentsEnumerableAsync(this, strPropertyName, token).ConfigureAwait(false))
                                 setNamesOfChangedProperties.Add(strLoopChangedProperty);
                         }
                     }
@@ -3734,7 +3855,7 @@ namespace Chummer.Backend.Attributes
                                 new DependencyGraphNode<string, CharacterAttrib>(nameof(MaximumModifiers))
                             )
                         ),
-                        new DependencyGraphNode<string, CharacterAttrib>(nameof(TotalValue), x => x.HasModifiers(),
+                        new DependencyGraphNode<string, CharacterAttrib>(nameof(TotalValue), x => x.HasModifiers(), (x, t) => x.HasModifiersAsync(t),
                             new DependencyGraphNode<string, CharacterAttrib>(nameof(HasModifiers))
                         ),
                         new DependencyGraphNode<string, CharacterAttrib>(nameof(HasModifiers))

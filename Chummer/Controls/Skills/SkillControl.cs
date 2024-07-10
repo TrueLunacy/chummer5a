@@ -44,6 +44,8 @@ namespace Chummer.UI.Skills
         private readonly Font _fntItalic;
         private readonly Font _fntNormalName;
         private readonly Font _fntItalicName;
+        private readonly Font _fntNormalSpec;
+        private readonly Font _fntStrikethroughSpec;
         private CharacterAttrib _objAttributeActive;
 
         // ReSharper disable once PrivateFieldCanBeConvertedToLocalVariable
@@ -172,6 +174,9 @@ namespace Chummer.UI.Skills
                         Text = "[Specializations]",
                         TextAlign = ContentAlignment.MiddleLeft
                     };
+                    _fntNormalSpec = lblCareerSpec.Font;
+                    _fntStrikethroughSpec = new Font(_fntNormalSpec, FontStyle.Strikeout);
+                    Disposed += (sender, args) => _fntStrikethroughSpec.Dispose();
 
                     tlpRight.Controls.Add(lblCareerSpec, 0, 0);
                     tlpRight.Controls.Add(btnAddSpec, 1, 0);
@@ -768,6 +773,14 @@ namespace Chummer.UI.Skills
                         await SetAttributeActiveAsync(_objSkill.AttributeObject, token).ConfigureAwait(false);
                     }
                 }
+
+                if ((blnAll || e.PropertyNames.Contains(nameof(Skill.CanHaveSpecs))) && _fntNormalSpec != null)
+                {
+                    bool blnCanHaveSpecs = await _objSkill.GetCanHaveSpecsAsync(token).ConfigureAwait(false);
+                    await lblCareerSpec
+                        .DoThreadSafeAsync(x => x.Font = blnCanHaveSpecs ? _fntNormalSpec : _fntStrikethroughSpec,
+                            token).ConfigureAwait(false);
+                }
                 if (cboSpec != null && await cboSpec.DoThreadSafeFuncAsync(x => x.Visible, token: token)
                         .ConfigureAwait(false))
                 {
@@ -963,45 +976,45 @@ namespace Chummer.UI.Skills
                 try
                 {
                     _objMyToken.ThrowIfCancellationRequested();
-                    int price = _objSkill.CharacterObject.Settings.KarmaSpecialization;
+                    Character objCharacter = _objSkill.CharacterObject;
+                    int intPrice = await (await objCharacter.GetSettingsAsync(_objMyToken).ConfigureAwait(false))
+                        .GetKarmaKnowledgeSpecializationAsync(_objMyToken).ConfigureAwait(false);
 
-                    decimal decExtraSpecCost = 0;
                     int intTotalBaseRating = await _objSkill.GetTotalBaseRatingAsync(_objMyToken).ConfigureAwait(false);
                     decimal decSpecCostMultiplier = 1.0m;
                     bool blnCreated
-                        = await _objSkill.CharacterObject.GetCreatedAsync(_objMyToken).ConfigureAwait(false);
-                    foreach (Improvement objLoopImprovement in _objSkill.CharacterObject.Improvements)
+                        = await objCharacter.GetCreatedAsync(_objMyToken).ConfigureAwait(false);
+                    decimal decExtraSpecCost = objCharacter.Improvements.Sum(objLoopImprovement =>
+                        objLoopImprovement.Minimum <= intTotalBaseRating
+                        && (string.IsNullOrEmpty(objLoopImprovement.Condition)
+                            || (objLoopImprovement.Condition == "career") == blnCreated
+                            || (objLoopImprovement.Condition == "create") != blnCreated)
+                        && objLoopImprovement.Enabled
+                        && objLoopImprovement.ImprovedName == _objSkill.SkillCategory, objLoopImprovement =>
                     {
-                        if (objLoopImprovement.Minimum <= intTotalBaseRating
-                            && (string.IsNullOrEmpty(objLoopImprovement.Condition)
-                                || (objLoopImprovement.Condition == "career") == blnCreated
-                                || (objLoopImprovement.Condition == "create") != blnCreated)
-                            && objLoopImprovement.Enabled
-                            && objLoopImprovement.ImprovedName == _objSkill.SkillCategory)
+                        switch (objLoopImprovement.ImproveType)
                         {
-                            switch (objLoopImprovement.ImproveType)
-                            {
-                                case Improvement.ImprovementType.SkillCategorySpecializationKarmaCost:
-                                    decExtraSpecCost += objLoopImprovement.Value;
-                                    break;
+                            case Improvement.ImprovementType.SkillCategorySpecializationKarmaCost:
+                                return objLoopImprovement.Value;
 
-                                case Improvement.ImprovementType.SkillCategorySpecializationKarmaCostMultiplier:
-                                    decSpecCostMultiplier *= objLoopImprovement.Value / 100.0m;
-                                    break;
-                            }
+                            case Improvement.ImprovementType.SkillCategorySpecializationKarmaCostMultiplier:
+                                decSpecCostMultiplier *= objLoopImprovement.Value / 100.0m;
+                                break;
                         }
-                    }
+
+                        return 0;
+                    }, token: _objMyToken);
 
                     if (decSpecCostMultiplier != 1.0m)
-                        price = (price * decSpecCostMultiplier + decExtraSpecCost).StandardRound();
+                        intPrice = (intPrice * decSpecCostMultiplier + decExtraSpecCost).StandardRound();
                     else
-                        price += decExtraSpecCost.StandardRound(); //Spec
+                        intPrice += decExtraSpecCost.StandardRound(); //Spec
 
                     string strConfirm = string.Format(GlobalSettings.CultureInfo,
                         await LanguageManager
                             .GetStringAsync(
                                 "Message_ConfirmKarmaExpenseSkillSpecialization",
-                                token: _objMyToken).ConfigureAwait(false), price);
+                                token: _objMyToken).ConfigureAwait(false), intPrice);
 
                     if (!await CommonFunctions.ConfirmKarmaExpenseAsync(strConfirm, _objMyToken)
                             .ConfigureAwait(false))
@@ -1011,7 +1024,7 @@ namespace Chummer.UI.Skills
                            await ThreadSafeForm<SelectSpec>.GetAsync(() => new SelectSpec(_objSkill), _objMyToken)
                                .ConfigureAwait(false))
                     {
-                        if (await selectForm.ShowDialogSafeAsync(_objSkill.CharacterObject, _objMyToken)
+                        if (await selectForm.ShowDialogSafeAsync(objCharacter, _objMyToken)
                                 .ConfigureAwait(false) != DialogResult.OK)
                             return;
                         await _objSkill.AddSpecialization(selectForm.MyForm.SelectedItem, _objMyToken)
@@ -1232,7 +1245,7 @@ namespace Chummer.UI.Skills
                     x => x.MinimumSize =
                         new Size(
                             intNewNameWidth - x.Margin.Right -
-                            pnlAttributes.DoThreadSafeFunc(y => y.Margin.Left + y.Width),
+                            pnlAttributes.DoThreadSafeFunc(y => y.Margin.Left + y.Width, token: _objMyToken),
                             x.MinimumSize.Height), token: _objMyToken);
             }
             catch (OperationCanceledException)

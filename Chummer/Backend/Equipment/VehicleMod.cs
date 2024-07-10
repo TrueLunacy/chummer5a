@@ -814,10 +814,10 @@ namespace Chummer.Backend.Equipment
         {
             get
             {
-                string strText = _strMaxRating.ToUpperInvariant();
-                if (string.IsNullOrEmpty(strText))
+                if (string.IsNullOrEmpty(_strMaxRating))
                     return 0;
-                int intReturn = 0;
+                string strText = _strMaxRating.ToUpperInvariant();
+                int intReturn;
                 switch (strText)
                 {
                     case "QTY":
@@ -872,10 +872,10 @@ namespace Chummer.Backend.Equipment
         public async Task<int> GetMaxRatingAsync(CancellationToken token = default)
         {
             token.ThrowIfCancellationRequested();
-            string strText = _strMaxRating.ToUpperInvariant();
-            if (string.IsNullOrEmpty(strText))
+            if (string.IsNullOrEmpty(_strMaxRating))
                 return 0;
-            int intReturn = 0;
+            string strText = _strMaxRating.ToUpperInvariant();
+            int intReturn;
             switch (strText)
             {
                 case "QTY":
@@ -1134,6 +1134,29 @@ namespace Chummer.Backend.Equipment
                     if (_objCharacter.IsAI && _objCharacter.HomeNode is Vehicle objVehicle && objVehicle == _objParent)
                         _objCharacter.OnPropertyChanged(nameof(Character.PhysicalCM));
                 }
+            }
+        }
+        
+        /// <summary>
+        /// Whether this Mod is installed and contributing towards the Vehicle's stats.
+        /// </summary>
+        public async Task SetEquippedAsync(bool value, CancellationToken token = default)
+        {
+            token.ThrowIfCancellationRequested();
+            _blnEquipped = value;
+            if (!IncludedInVehicle)
+            {
+                if (_objParent != null && (Bonus?["sensor"] != null || (WirelessOn && WirelessBonus?["sensor"] != null)))
+                {
+                    // Any time any vehicle mod is changed, update our sensory array's rating, just in case
+                    Gear objGear = await _objParent.GearChildren
+                        .FirstOrDefaultAsync(x =>
+                            x.Category == "Sensors" && x.Name == "Sensor Array" && x.IncludedInParent, token: token);
+                    if (objGear != null)
+                        await objGear.SetRatingAsync(await _objParent.GetCalculatedSensorAsync(token), token);
+                }
+                if (await _objCharacter.GetIsAIAsync(token) && await _objCharacter.GetHomeNodeAsync(token) is Vehicle objVehicle && objVehicle == _objParent)
+                    await _objCharacter.OnPropertyChangedAsync(nameof(Character.PhysicalCM), token);
             }
         }
 
@@ -2649,25 +2672,25 @@ namespace Chummer.Backend.Equipment
             await (await GetSourceDetailAsync(token).ConfigureAwait(false)).SetControlAsync(sourceControl, token).ConfigureAwait(false);
         }
 
-        public bool AllowPasteXml
+        public async Task<bool> AllowPasteXml(CancellationToken token = default)
         {
-            get
+            token.ThrowIfCancellationRequested();
+            switch (await GlobalSettings.GetClipboardContentTypeAsync(token).ConfigureAwait(false))
             {
-                switch (GlobalSettings.ClipboardContentType)
+                case ClipboardContentType.Weapon:
                 {
-                    case ClipboardContentType.Weapon:
-                        {
-                            // TODO: Make this not depend on string names
-                            return Name.StartsWith("Mechanical Arm", StringComparison.Ordinal) || Name.Contains("Drone Arm");
-                        }
-                    default:
-                        return false;
+                    // TODO: Make this not depend on string names
+                    return Name.StartsWith("Mechanical Arm", StringComparison.Ordinal) ||
+                           Name.Contains("Drone Arm");
                 }
+                default:
+                    return false;
             }
         }
 
-        public bool AllowPasteObject(object input)
+        public Task<bool> AllowPasteObject(object input, CancellationToken token = default)
         {
+            token.ThrowIfCancellationRequested();
             throw new NotImplementedException();
         }
 

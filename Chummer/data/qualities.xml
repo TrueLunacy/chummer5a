@@ -1382,7 +1382,7 @@
       <karma>-5</karma>
       <category>Negative</category>
       <bonus>
-        <blockskillgroupdefaulting />
+        <skillgroupdisablechoice />
         <notoriety>1</notoriety>
       </bonus>
       <source>SR5</source>
@@ -2756,7 +2756,7 @@
         </specificskill>
         <specificskill>
           <name>Survival</name>
-          <bonus>-1</bonus>
+          <bonus>2</bonus>
           <condition>Urban</condition>
         </specificskill>
       </bonus>

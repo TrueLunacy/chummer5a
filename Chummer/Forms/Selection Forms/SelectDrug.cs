@@ -501,7 +501,7 @@ namespace Chummer
 
                         break;
                     }
-                case Keys.Up when lstDrug.SelectedIndex - 1 >= 0:
+                case Keys.Up when lstDrug.SelectedIndex >= 1:
                     lstDrug.SelectedIndex--;
                     break;
 
@@ -950,10 +950,10 @@ namespace Chummer
                 return;
             if (await cboGrade.DoThreadSafeFuncAsync(x => x.Text.StartsWith('*'), token: token).ConfigureAwait(false))
             {
-                Program.ShowScrollableMessageBox(this,
-                                                 await LanguageManager.GetStringAsync("Message_BannedGrade", token: token).ConfigureAwait(false),
-                                                 await LanguageManager.GetStringAsync("MessageTitle_BannedGrade", token: token).ConfigureAwait(false),
-                                                 MessageBoxButtons.OK, MessageBoxIcon.Information);
+                await Program.ShowScrollableMessageBoxAsync(this,
+                    await LanguageManager.GetStringAsync("Message_BannedGrade", token: token).ConfigureAwait(false),
+                    await LanguageManager.GetStringAsync("MessageTitle_BannedGrade", token: token).ConfigureAwait(false),
+                    MessageBoxButtons.OK, MessageBoxIcon.Information, token: token).ConfigureAwait(false);
                 return;
             }
             XPathNavigator objDrugNode = _xmlBaseDrugDataNode.TryGetNodeByNameOrId(_strNodeXPath, strSelectedId);

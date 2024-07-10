@@ -1050,7 +1050,7 @@ namespace Chummer.Backend.Equipment
                                                    Maximum = decMax,
                                                    Description = string.Format(
                                                        GlobalSettings.CultureInfo,
-                                                       LanguageManager.GetString("String_SelectVariableCost"),
+                                                       LanguageManager.GetString("String_SelectVariableCost", token: token),
                                                        CurrentDisplayNameShort),
                                                    AllowCancel = false
                                                }))
@@ -2249,14 +2249,49 @@ namespace Chummer.Backend.Equipment
         }
 
         /// <summary>
-        /// Load the CharacterAttribute from the XmlNode.
+        /// Load the cyberware/bioware from the XmlNode synchronously.
         /// </summary>
         /// <param name="objNode">XmlNode to load.</param>
-        /// <param name="blnCopy">Whether this is a copy of an existing cyberware being loaded.</param>
-        public void Load(XmlNode objNode, bool blnCopy = false)
+        /// <param name="blnCopy">Whether this is a copy of an existing cyberware/bioware being loaded.</param>
+        /// <param name="token">Cancellation token to listen to.</param>
+        public void Load(XmlNode objNode, bool blnCopy = false, CancellationToken token = default)
         {
-            using (LockObject.EnterWriteLock())
+            Utils.SafelyRunSynchronously(() => LoadCoreAsync(true, objNode, blnCopy, token), token);
+        }
+
+        /// <summary>
+        /// Load the cyberware/bioware from the XmlNode asynchronously.
+        /// </summary>
+        /// <param name="objNode">XmlNode to load.</param>
+        /// <param name="blnCopy">Whether this is a copy of an existing cyberware/bioware being loaded.</param>
+        /// <param name="token">Cancellation token to listen to.</param>
+        public Task LoadAsync(XmlNode objNode, bool blnCopy = false, CancellationToken token = default)
+        {
+            return LoadCoreAsync(false, objNode, blnCopy, token);
+        }
+
+        /// <summary>
+        /// Load the cyberware/bioware from the XmlNode.
+        /// Uses flag hack method design outlined here to avoid locking:
+        /// https://docs.microsoft.com/en-us/archive/msdn-magazine/2015/july/async-programming-brownfield-async-development
+        /// </summary>
+        /// <param name="blnSync">Flag hack for whether this method is being called synchronously or asynchronously</param>
+        /// <param name="objNode">XmlNode to load.</param>
+        /// <param name="blnCopy">Whether this is a copy of an existing cyberware/bioware being loaded.</param>
+        /// <param name="token">Cancellation token to listen to.</param>
+        private async Task LoadCoreAsync(bool blnSync, XmlNode objNode, bool blnCopy = false, CancellationToken token = default)
+        {
+            token.ThrowIfCancellationRequested();
+            IDisposable objLocker = null;
+            IAsyncDisposable objLockerAsync = null;
+            if (blnSync)
+                // ReSharper disable once MethodHasAsyncOverload
+                objLocker = LockObject.EnterWriteLock(token);
+            else
+                objLockerAsync = await LockObject.EnterWriteLockAsync(token).ConfigureAwait(false);
+            try
             {
+                token.ThrowIfCancellationRequested();
                 _blnDoPropertyChangedInCollectionChanged = false;
                 try
                 {
@@ -2289,12 +2324,18 @@ namespace Chummer.Backend.Equipment
                         // This step is needed in case there's a custom data file that has the name "Reflex Recorder (Skill)", in which case we wouldn't want to rename the 'ware
                         XPathNavigator xmlReflexRecorderNode
                             = _eImprovementSource == Improvement.ImprovementSource.Bioware
-                                ? _objCharacter.LoadDataXPath("bioware.xml")
-                                    .SelectSingleNodeAndCacheExpression(
-                                        "/chummer/biowares/bioware[name = \"Reflex Recorder (Skill)\"]")
-                                : _objCharacter.LoadDataXPath("cyberware.xml")
-                                    .SelectSingleNodeAndCacheExpression(
-                                        "/chummer/cyberwares/cyberware[name = \"Reflex Recorder (Skill)\"]");
+                                ? (blnSync
+                                    // ReSharper disable once MethodHasAsyncOverload
+                                    ? _objCharacter.LoadDataXPath("bioware.xml", token: token)
+                                    : await _objCharacter.LoadDataXPathAsync("bioware.xml", token: token).ConfigureAwait(false))
+                                .SelectSingleNodeAndCacheExpression(
+                                    "/chummer/biowares/bioware[name = \"Reflex Recorder (Skill)\"]")
+                                : (blnSync
+                                    // ReSharper disable once MethodHasAsyncOverload
+                                    ? _objCharacter.LoadDataXPath("cyberware.xml", token: token)
+                                    : await _objCharacter.LoadDataXPathAsync("bioware.xml", token: token).ConfigureAwait(false))
+                                .SelectSingleNodeAndCacheExpression(
+                                    "/chummer/cyberwares/cyberware[name = \"Reflex Recorder (Skill)\"]");
                         if (xmlReflexRecorderNode == null)
                             _strName = "Reflex Recorder";
                     }
@@ -2356,8 +2397,12 @@ namespace Chummer.Backend.Equipment
 
                     objNode.TryGetStringFieldQuickly("subsystems", ref _strAllowSubsystems);
                     if (objNode["grade"] != null)
-                        _objGrade = Grade.ConvertToCyberwareGrade(objNode["grade"].InnerText, _eImprovementSource,
-                            _objCharacter);
+                        _objGrade = blnSync
+                            // ReSharper disable once MethodHasAsyncOverloadWithCancellation
+                            ? Grade.ConvertToCyberwareGrade(objNode["grade"].InnerText, _eImprovementSource,
+                                _objCharacter)
+                            : await Grade.ConvertToCyberwareGradeAsync(objNode["grade"].InnerText, _eImprovementSource,
+                                _objCharacter, token).ConfigureAwait(false);
                     objNode.TryGetStringFieldQuickly("location", ref _strLocation);
                     if (!objNode.TryGetStringFieldQuickly("extra", ref _strExtra) && _strLocation != "Left" &&
                         _strLocation != "Right")
@@ -2369,7 +2414,7 @@ namespace Chummer.Backend.Equipment
                     objNode.TryGetBoolFieldQuickly("suite", ref _blnSuite);
                     objNode.TryGetBoolFieldQuickly("stolen", ref _blnStolen);
                     objNode.TryGetInt32FieldQuickly("essdiscount", ref _intEssenceDiscount);
-                    if (_objCharacter.Created)
+                    if (blnSync ? _objCharacter.Created : await _objCharacter.GetCreatedAsync(token).ConfigureAwait(false))
                     {
                         objNode.TryGetDecFieldQuickly("extraessadditivemultiplier", ref _decExtraESSAdditiveMultiplier);
                         objNode.TryGetDecFieldQuickly("extraessmultiplicativemultiplier",
@@ -2377,7 +2422,10 @@ namespace Chummer.Backend.Equipment
                     }
 
                     objNode.TryGetStringFieldQuickly("forcegrade", ref _strForceGrade);
-                    if (_objCharacter.IsPrototypeTranshuman && SourceType == Improvement.ImprovementSource.Bioware)
+                    if ((blnSync
+                            ? _objCharacter.IsPrototypeTranshuman
+                            : await _objCharacter.GetIsPrototypeTranshumanAsync(token).ConfigureAwait(false)) &&
+                        SourceType == Improvement.ImprovementSource.Bioware)
                         objNode.TryGetBoolFieldQuickly("prototypetranshuman", ref _blnPrototypeTranshuman);
 
                     _nodBonus = objNode["bonus"] ?? objMyNode.Value?["bonus"];
@@ -2433,8 +2481,12 @@ namespace Chummer.Backend.Equipment
                     {
                         _strForceGrade = objMyNode.Value?["forcegrade"]?.InnerText;
                         if (!string.IsNullOrEmpty(_strForceGrade))
-                            _objGrade = Grade.ConvertToCyberwareGrade(_strForceGrade, _eImprovementSource,
-                                _objCharacter);
+                            _objGrade = blnSync
+                                // ReSharper disable once MethodHasAsyncOverloadWithCancellation
+                                ? Grade.ConvertToCyberwareGrade(_strForceGrade, _eImprovementSource,
+                                    _objCharacter)
+                                : await Grade.ConvertToCyberwareGradeAsync(_strForceGrade, _eImprovementSource,
+                                    _objCharacter, token).ConfigureAwait(false);
                     }
 
                     if (objNode["weaponguid"] != null
@@ -2455,8 +2507,18 @@ namespace Chummer.Backend.Equipment
                         foreach (XmlNode nodChild in nodChildren)
                         {
                             Cyberware objChild = new Cyberware(_objCharacter);
-                            objChild.Load(nodChild, blnCopy);
-                            _lstChildren.Add(objChild);
+                            if (blnSync)
+                            {
+                                // ReSharper disable once MethodHasAsyncOverload
+                                objChild.Load(nodChild, blnCopy, token);
+                                // ReSharper disable once MethodHasAsyncOverloadWithCancellation
+                                _lstChildren.Add(objChild);
+                            }
+                            else
+                            {
+                                await objChild.LoadAsync(nodChild, blnCopy, token).ConfigureAwait(false);
+                                await _lstChildren.AddAsync(objChild, token).ConfigureAwait(false);
+                            }
                         }
                     }
 
@@ -2467,7 +2529,11 @@ namespace Chummer.Backend.Equipment
                         {
                             Gear objGear = new Gear(_objCharacter);
                             objGear.Load(nodChild, blnCopy);
-                            _lstGear.Add(objGear);
+                            if (blnSync)
+                                // ReSharper disable once MethodHasAsyncOverloadWithCancellation
+                                _lstGear.Add(objGear);
+                            else
+                                await _lstGear.AddAsync(objGear, token).ConfigureAwait(false);
                         }
                     }
 
@@ -2513,17 +2579,32 @@ namespace Chummer.Backend.Equipment
 
                     bool blnIsActive = false;
                     if (objNode.TryGetBoolFieldQuickly("active", ref blnIsActive) && blnIsActive)
-                        this.SetActiveCommlink(_objCharacter, true);
+                    {
+                        if (blnSync)
+                            // ReSharper disable once MethodHasAsyncOverloadWithCancellation
+                            this.SetActiveCommlink(_objCharacter, true);
+                        else
+                            await this.SetActiveCommlinkAsync(_objCharacter, true, token).ConfigureAwait(false);
+                    }
+
                     if (blnCopy)
                     {
-                        this.SetHomeNode(_objCharacter, false);
+                        if (blnSync)
+                            // ReSharper disable once MethodHasAsyncOverloadWithCancellation
+                            this.SetHomeNode(_objCharacter, false);
+                        else
+                            await this.SetHomeNodeAsync(_objCharacter, false, token).ConfigureAwait(false);
                     }
                     else
                     {
                         bool blnIsHomeNode = false;
                         if (objNode.TryGetBoolFieldQuickly("homenode", ref blnIsHomeNode) && blnIsHomeNode)
                         {
-                            this.SetHomeNode(_objCharacter, true);
+                            if (blnSync)
+                                // ReSharper disable once MethodHasAsyncOverloadWithCancellation
+                                this.SetHomeNode(_objCharacter, true);
+                            else
+                                await this.SetHomeNodeAsync(_objCharacter, true, token).ConfigureAwait(false);
                         }
                     }
 
@@ -2563,11 +2644,19 @@ namespace Chummer.Backend.Equipment
 
                             if (Bonus != null)
                             {
-                                ImprovementManager.CreateImprovements(_objCharacter, _eImprovementSource,
-                                    _guiID.ToString(
-                                        "D", GlobalSettings.InvariantCultureInfo),
-                                    Bonus, Rating,
-                                    CurrentDisplayNameShort);
+                                if (blnSync)
+                                    // ReSharper disable once MethodHasAsyncOverload
+                                    ImprovementManager.CreateImprovements(_objCharacter, _eImprovementSource,
+                                        _guiID.ToString(
+                                            "D", GlobalSettings.InvariantCultureInfo),
+                                        Bonus, Rating,
+                                        CurrentDisplayNameShort, token: token);
+                                else
+                                    await ImprovementManager.CreateImprovementsAsync(_objCharacter, _eImprovementSource,
+                                        _guiID.ToString(
+                                            "D", GlobalSettings.InvariantCultureInfo),
+                                        Bonus, await GetRatingAsync(token).ConfigureAwait(false),
+                                        await GetCurrentDisplayNameShortAsync(token).ConfigureAwait(false), token: token).ConfigureAwait(false);
                             }
 
                             if (!string.IsNullOrEmpty(ImprovementManager.SelectedValue)
@@ -2577,10 +2666,19 @@ namespace Chummer.Backend.Equipment
                             if (PairBonus != null)
                             {
                                 // This cyberware should not be included in the count to make things easier.
-                                List<Cyberware> lstPairableCyberwares = _objCharacter.Cyberware.DeepWhere(
-                                    x => x.Children,
-                                    x => x != this && IncludePair.Contains(x.Name) && x.Extra == Extra &&
-                                         x.IsModularCurrentlyEquipped).ToList();
+                                List<Cyberware> lstPairableCyberwares;
+                                if (blnSync)
+                                    lstPairableCyberwares = _objCharacter.Cyberware.DeepWhere(
+                                        x => x.Children,
+                                        x => x != this && IncludePair.Contains(x.Name) && x.Extra == Extra &&
+                                             x.IsModularCurrentlyEquipped, token).ToList();
+                                else
+                                {
+                                    lstPairableCyberwares = await (await _objCharacter.GetCyberwareAsync(token).ConfigureAwait(false)).DeepWhereAsync(
+                                        x => x.Children,
+                                        async x => x != this && IncludePair.Contains(x.Name) && x.Extra == Extra &&
+                                                   await x.GetIsModularCurrentlyEquippedAsync(token).ConfigureAwait(false), token: token).ConfigureAwait(false);
+                                }
                                 int intCount = lstPairableCyberwares.Count;
                                 // Need to use slightly different logic if this cyberware has a location (Left or Right) and only pairs with itself because Lefts can only be paired with Rights and Rights only with Lefts
                                 if (!string.IsNullOrEmpty(Location) && IncludePair.All(x => x == Name))
@@ -2607,28 +2705,58 @@ namespace Chummer.Backend.Equipment
                                         ImprovementManager.ForcedValue = _strForced;
                                     else if (Bonus != null && !string.IsNullOrEmpty(_strExtra))
                                         ImprovementManager.ForcedValue = _strExtra;
-                                    ImprovementManager.CreateImprovements(
-                                        _objCharacter, SourceType, InternalId + "Pair",
-                                        PairBonus, Rating, CurrentDisplayNameShort);
+                                    if (blnSync)
+                                        // ReSharper disable once MethodHasAsyncOverload
+                                        ImprovementManager.CreateImprovements(
+                                            _objCharacter, SourceType, InternalId + "Pair",
+                                            PairBonus, Rating, CurrentDisplayNameShort, token: token);
+                                    else
+                                        await ImprovementManager.CreateImprovementsAsync(
+                                            _objCharacter, await GetSourceTypeAsync(token).ConfigureAwait(false), InternalId + "Pair",
+                                            PairBonus, await GetRatingAsync(token).ConfigureAwait(false), await GetCurrentDisplayNameShortAsync(token).ConfigureAwait(false), token: token).ConfigureAwait(false);
                                 }
                             }
 
-                            RefreshWirelessBonuses();
+                            if (blnSync)
+                                // ReSharper disable once MethodHasAsyncOverloadWithCancellation
+                                RefreshWirelessBonuses();
+                            else
+                                await RefreshWirelessBonusesAsync(token).ConfigureAwait(false);
                         }
 
-                        if (!IsModularCurrentlyEquipped)
+                        if (blnSync)
                         {
-                            ChangeModularEquip(false);
+                            if (!IsModularCurrentlyEquipped)
+                                // ReSharper disable once MethodHasAsyncOverloadWithCancellation
+                                ChangeModularEquip(false);
                         }
+                        else if (!await GetIsModularCurrentlyEquippedAsync(token).ConfigureAwait(false))
+                            await ChangeModularEquipAsync(false, token: token).ConfigureAwait(false);
                     }
                 }
                 finally
                 {
                     _blnDoPropertyChangedInCollectionChanged = true;
-                    if (Children.Count > 0)
-                        Utils.SafelyRunSynchronously(() => CyberwareChildrenOnCollectionChanged(
-                            this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, Children)));
+                    if (blnSync)
+                    {
+                        if (Children.Count > 0)
+                            Utils.SafelyRunSynchronously(() => CyberwareChildrenOnCollectionChanged(
+                                this,
+                                new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, Children), token), token);
+                    }
+                    else if (await Children.GetCountAsync(token).ConfigureAwait(false) > 0)
+                        await CyberwareChildrenOnCollectionChanged(
+                            this,
+                            new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, Children), token).ConfigureAwait(false);
                 }
+            }
+            finally
+            {
+                if (blnSync)
+                    // ReSharper disable once MethodHasAsyncOverload
+                    objLocker.Dispose();
+                else
+                    await objLockerAsync.DisposeAsync().ConfigureAwait(false);
             }
         }
 
@@ -3679,7 +3807,59 @@ namespace Chummer.Backend.Equipment
             set
             {
                 using (LockObject.EnterUpgradeableReadLock())
+                {
+                    if (_strLocation == value)
+                        return;
+                    using (LockObject.EnterWriteLock())
+                        _strLocation = value;
+                }
+            }
+        }
+
+        /// <summary>
+        /// The location of a Cyberlimb (Left or Right).
+        /// </summary>
+        public async Task<string> GetLocationAsync(CancellationToken token = default)
+        {
+            token.ThrowIfCancellationRequested();
+            IAsyncDisposable objLocker = await LockObject.EnterReadLockAsync(token).ConfigureAwait(false);
+            try
+            {
+                token.ThrowIfCancellationRequested();
+                return _strLocation;
+            }
+            finally
+            {
+                await objLocker.DisposeAsync().ConfigureAwait(false);
+            }
+        }
+
+        /// <summary>
+        /// The location of a Cyberlimb (Left or Right).
+        /// </summary>
+        public async Task SetLocationAsync(string value, CancellationToken token = default)
+        {
+            token.ThrowIfCancellationRequested();
+            IAsyncDisposable objLocker = await LockObject.EnterUpgradeableReadLockAsync(token).ConfigureAwait(false);
+            try
+            {
+                token.ThrowIfCancellationRequested();
+                if (_strLocation == value)
+                    return;
+                IAsyncDisposable objLocker2 = await LockObject.EnterWriteLockAsync(token).ConfigureAwait(false);
+                try
+                {
+                    token.ThrowIfCancellationRequested();
                     _strLocation = value;
+                }
+                finally
+                {
+                    await objLocker2.DisposeAsync().ConfigureAwait(false);
+                }
+            }
+            finally
+            {
+                await objLocker.DisposeAsync().ConfigureAwait(false);
             }
         }
 
@@ -3953,6 +4133,23 @@ namespace Chummer.Backend.Equipment
         }
 
         /// <summary>
+        /// The modular mount this cyberware contains. Returns string.Empty if it contains no mount.
+        /// </summary>
+        public async Task<string> GetHasModularMountAsync(CancellationToken token = default)
+        {
+            IAsyncDisposable objLocker = await LockObject.EnterReadLockAsync(token).ConfigureAwait(false);
+            try
+            {
+                token.ThrowIfCancellationRequested();
+                return _strHasModularMount;
+            }
+            finally
+            {
+                await objLocker.DisposeAsync().ConfigureAwait(false);
+            }
+        }
+
+        /// <summary>
         /// What modular mount this cyberware plugs into. Returns string.Empty if it doesn't plug into a modular mount.
         /// </summary>
         public string PlugsIntoModularMount
@@ -3966,6 +4163,23 @@ namespace Chummer.Backend.Equipment
             {
                 using (LockObject.EnterUpgradeableReadLock())
                     _strPlugsIntoModularMount = value;
+            }
+        }
+
+        /// <summary>
+        /// What modular mount this cyberware plugs into. Returns string.Empty if it doesn't plug into a modular mount.
+        /// </summary>
+        public async Task<string> GetPlugsIntoModularMountAsync(CancellationToken token = default)
+        {
+            IAsyncDisposable objLocker = await LockObject.EnterReadLockAsync(token).ConfigureAwait(false);
+            try
+            {
+                token.ThrowIfCancellationRequested();
+                return _strPlugsIntoModularMount;
+            }
+            finally
+            {
+                await objLocker.DisposeAsync().ConfigureAwait(false);
             }
         }
 
@@ -4920,6 +5134,23 @@ namespace Chummer.Backend.Equipment
         }
 
         /// <summary>
+        /// Comma-separated list of mount locations with which this 'ware is mutually exclusive.
+        /// </summary>
+        public async Task<string> GetBlocksMountsAsync(CancellationToken token = default)
+        {
+            IAsyncDisposable objLocker = await LockObject.EnterReadLockAsync(token).ConfigureAwait(false);
+            try
+            {
+                token.ThrowIfCancellationRequested();
+                return _strBlocksMounts;
+            }
+            finally
+            {
+                await objLocker.DisposeAsync().ConfigureAwait(false);
+            }
+        }
+
+        /// <summary>
         /// Rating.
         /// </summary>
         public int Rating
@@ -5792,7 +6023,7 @@ namespace Chummer.Backend.Equipment
                 token.ThrowIfCancellationRequested();
                 if (!string.IsNullOrWhiteSpace(ForceGrade) && ForceGrade != _objGrade.Name)
                 {
-                    return Grade.ConvertToCyberwareGrade(ForceGrade, await GetSourceTypeAsync(token).ConfigureAwait(false), _objCharacter);
+                    return await Grade.ConvertToCyberwareGradeAsync(ForceGrade, await GetSourceTypeAsync(token).ConfigureAwait(false), _objCharacter, token).ConfigureAwait(false);
                 }
 
                 return _objGrade;
@@ -7183,7 +7414,7 @@ namespace Chummer.Backend.Equipment
                 {
                     string[] strValues = strCapacity.TrimStartOnce("FixedValues(", true).TrimEndOnce(')')
                         .Split(',', StringSplitOptions.RemoveEmptyEntries);
-                    strCapacity = strValues[Math.Max(Math.Min((await GetRatingAsync(token).ConfigureAwait(false)), strValues.Length) - 1, 0)];
+                    strCapacity = strValues[Math.Max(Math.Min(await GetRatingAsync(token).ConfigureAwait(false), strValues.Length) - 1, 0)];
                 }
 
                 if (string.IsNullOrEmpty(strCapacity))
@@ -9858,15 +10089,15 @@ namespace Chummer.Backend.Equipment
                 token.ThrowIfCancellationRequested();
                 // Unequip all modular children first so that we don't delete them
                 Cyberware objModularChild
-                    = Children.DeepFirstOrDefault(x => x.Children, x => !string.IsNullOrEmpty(x.PlugsIntoModularMount));
+                    = await Children.DeepFirstOrDefaultAsync(x => x.Children, async x => !string.IsNullOrEmpty(await x.GetPlugsIntoModularMountAsync(token).ConfigureAwait(false)), token).ConfigureAwait(false);
                 while (objModularChild != null)
                 {
                     await Children.RemoveAsync(objModularChild, token).ConfigureAwait(false);
                     await _objCharacter.Cyberware.AddAsync(objModularChild, token).ConfigureAwait(false);
                     await objModularChild.ChangeModularEquipAsync(false, token: token).ConfigureAwait(false);
                     objModularChild
-                        = Children.DeepFirstOrDefault(x => x.Children,
-                                                      x => !string.IsNullOrEmpty(x.PlugsIntoModularMount));
+                        = await Children.DeepFirstOrDefaultAsync(x => x.Children,
+                            async x => !string.IsNullOrEmpty(await x.GetPlugsIntoModularMountAsync(token).ConfigureAwait(false)), token).ConfigureAwait(false);
                 }
 
                 // Remove the cyberware from the actual parent
@@ -9878,8 +10109,8 @@ namespace Chummer.Backend.Equipment
                     }
                     else if (ParentVehicle != null)
                     {
-                        _objCharacter.Vehicles.FindVehicleCyberware(x => x.InternalId == InternalId,
-                                                                    out VehicleMod objMod);
+                        VehicleMod objMod =
+                            (await _objCharacter.Vehicles.FindVehicleCyberwareAsync(x => x.InternalId == InternalId, token: token).ConfigureAwait(false)).Item2;
                         await objMod.Cyberware.RemoveAsync(this, token).ConfigureAwait(false);
                     }
                     else if (await _objCharacter.Cyberware.ContainsAsync(this, token).ConfigureAwait(false))
@@ -9988,8 +10219,8 @@ namespace Chummer.Backend.Equipment
                 {
                     // Locate the Weapon Accessory that was added.
                     WeaponAccessory objWeaponAccessory
-                        = _objCharacter.Vehicles.FindVehicleWeaponAccessory(WeaponAccessoryID) ??
-                          _objCharacter.Weapons.FindWeaponAccessory(WeaponAccessoryID);
+                        = await _objCharacter.Vehicles.FindVehicleWeaponAccessoryAsync(WeaponAccessoryID, token).ConfigureAwait(false) ??
+                          await _objCharacter.Weapons.FindWeaponAccessoryAsync(WeaponAccessoryID, token).ConfigureAwait(false);
                     if (objWeaponAccessory != null)
                         await objWeaponAccessory.DeleteWeaponAccessoryAsync(token: token).ConfigureAwait(false);
                 }
@@ -10411,7 +10642,7 @@ namespace Chummer.Backend.Equipment
                     this.RefreshChildrenGearsClearBindings(treCyberware, y, innerToken);
 
                 Task FuncGearToAdd(object x, NotifyCollectionChangedEventArgs y, CancellationToken innerToken = default) =>
-                    this.RefreshChildrenGears(treCyberware, cmsCyberwareGear, null, () => Children.Count, y,
+                    this.RefreshChildrenGears(treCyberware, cmsCyberwareGear, null, () => Children.GetCountAsync(innerToken), y,
                         funcMakeDirty, token: innerToken);
 
                 Children.AddTaggedBeforeClearCollectionChanged(treCyberware, FuncCyberwareBeforeClearToAdd);
@@ -10466,7 +10697,7 @@ namespace Chummer.Backend.Equipment
                     this.RefreshChildrenGearsClearBindings(treCyberware, y, innerToken);
 
                 Task FuncGearToAdd(object x, NotifyCollectionChangedEventArgs y, CancellationToken innerToken = default) =>
-                    this.RefreshChildrenGears(treCyberware, cmsCyberwareGear, null, () => Children.Count, y,
+                    this.RefreshChildrenGears(treCyberware, cmsCyberwareGear, null, () => Children.GetCountAsync(innerToken), y,
                         funcMakeDirty, token: innerToken);
 
                 Children.AddTaggedBeforeClearCollectionChanged(treCyberware, FuncCyberwareBeforeClearToAdd);
@@ -10945,12 +11176,12 @@ namespace Chummer.Backend.Equipment
                     (!await _objCharacter.GetIgnoreRulesAsync(token).ConfigureAwait(false) ||
                      await _objCharacter.GetCreatedAsync(token).ConfigureAwait(false)))
                 {
-                    Program.ShowScrollableMessageBox(
+                    await Program.ShowScrollableMessageBoxAsync(
                         await LanguageManager.GetStringAsync("Message_CannotRemoveCyberware", token: token)
                             .ConfigureAwait(false),
                         await LanguageManager.GetStringAsync("MessageTitle_CannotRemoveCyberware", token: token)
                             .ConfigureAwait(false),
-                        MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        MessageBoxButtons.OK, MessageBoxIcon.Information, token: token).ConfigureAwait(false);
                     return false;
                 }
 
@@ -11050,12 +11281,12 @@ namespace Chummer.Backend.Equipment
                     (!await _objCharacter.GetIgnoreRulesAsync(token).ConfigureAwait(false) ||
                      await _objCharacter.GetCreatedAsync(token).ConfigureAwait(false)))
                 {
-                    Program.ShowScrollableMessageBox(
+                    await Program.ShowScrollableMessageBoxAsync(
                         await LanguageManager.GetStringAsync("Message_CannotRemoveCyberware", token: token)
                             .ConfigureAwait(false),
                         await LanguageManager.GetStringAsync("MessageTitle_CannotRemoveCyberware", token: token)
                             .ConfigureAwait(false),
-                        MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        MessageBoxButtons.OK, MessageBoxIcon.Information, token: token).ConfigureAwait(false);
                     return false;
                 }
 
@@ -11076,9 +11307,8 @@ namespace Chummer.Backend.Equipment
                     objParent = Parent;
                 else if (ParentVehicle != null)
                 {
-                    _objCharacter.Vehicles.FindVehicleCyberware(x => x.InternalId == InternalId,
-                        out VehicleMod objMod);
-                    objParent = objMod;
+                    objParent =
+                        (await _objCharacter.Vehicles.FindVehicleCyberwareAsync(x => x.InternalId == InternalId, token: token).ConfigureAwait(false)).Item2;
                 }
 
                 // Record the cost of the Cyberware carrier with the Cyberware.
@@ -11186,11 +11416,11 @@ namespace Chummer.Backend.Equipment
 
                         if (decCost > await _objCharacter.GetNuyenAsync(token).ConfigureAwait(false))
                         {
-                            Program.ShowScrollableMessageBox(
+                            await Program.ShowScrollableMessageBoxAsync(
                                 await LanguageManager.GetStringAsync("Message_NotEnoughNuyen", token: token).ConfigureAwait(false),
                                 await LanguageManager.GetStringAsync("MessageTitle_NotEnoughNuyen", token: token).ConfigureAwait(false),
                                 MessageBoxButtons.OK,
-                                MessageBoxIcon.Information);
+                                MessageBoxIcon.Information, token: token).ConfigureAwait(false);
                             return false;
                         }
                     }
@@ -11279,12 +11509,12 @@ namespace Chummer.Backend.Equipment
                     : await CalculatedTotalCostAsync(intRating, objGrade, token).ConfigureAwait(false) - decSaleCost;
                 if (decNewCost > await _objCharacter.GetNuyenAsync(token).ConfigureAwait(false))
                 {
-                    Program.ShowScrollableMessageBox(
+                    await Program.ShowScrollableMessageBoxAsync(
                         await LanguageManager.GetStringAsync("Message_NotEnoughNuyen", token: token)
                             .ConfigureAwait(false),
                         await LanguageManager.GetStringAsync("MessageTitle_NotEnoughNuyen", token: token)
                             .ConfigureAwait(false),
-                        MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        MessageBoxButtons.OK, MessageBoxIcon.Information, token: token).ConfigureAwait(false);
                     return;
                 }
 
@@ -11390,23 +11620,36 @@ namespace Chummer.Backend.Equipment
             }
         }
 
-        public bool AllowPasteXml
+        public async Task<bool> AllowPasteXml(CancellationToken token = default)
         {
-            get
+            token.ThrowIfCancellationRequested();
+            IAsyncDisposable objLocker = await GlobalSettings.EnterClipboardReadLockAsync(token).ConfigureAwait(false);
+            try
             {
-                switch (GlobalSettings.ClipboardContentType)
+                token.ThrowIfCancellationRequested();
+                switch (await GlobalSettings.GetClipboardContentTypeAsync(token).ConfigureAwait(false))
                 {
                     case ClipboardContentType.Gear:
                         string strCategory =
-                            GlobalSettings.Clipboard.SelectSingleNodeAndCacheExpressionAsNavigator("/character/gear/category")?.Value;
+                            (await GlobalSettings.GetClipboardAsync(token).ConfigureAwait(false))
+                                .SelectSingleNodeAndCacheExpressionAsNavigator("/character/gear/category", token)?.Value;
                         string strName =
-                            GlobalSettings.Clipboard.SelectSingleNodeAndCacheExpressionAsNavigator("/character/gear/name")?.Value;
-                        using (LockObject.EnterReadLock())
+                            (await GlobalSettings.GetClipboardAsync(token).ConfigureAwait(false))
+                                .SelectSingleNodeAndCacheExpressionAsNavigator("/character/gear/name", token)
+                                ?.Value;
+                        IAsyncDisposable objLocker2 = await LockObject.EnterReadLockAsync(token).ConfigureAwait(false);
+                        try
                         {
-                            if (AllowGear?.SelectSingleNode("gearcategory[. = " + strCategory.CleanXPath() + "] | gearname[. = " + strName.CleanXPath() + ']') != null)
+                            token.ThrowIfCancellationRequested();
+                            if (AllowGear?.SelectSingleNode("gearcategory[. = " + strCategory.CleanXPath() +
+                                                            "] | gearname[. = " + strName.CleanXPath() + ']') != null)
                             {
                                 return true;
                             }
+                        }
+                        finally
+                        {
+                            await objLocker2.DisposeAsync().ConfigureAwait(false);
                         }
 
                         break;
@@ -11418,29 +11661,39 @@ namespace Chummer.Backend.Equipment
                     default:
                         return false;
                 }
-
-                return false;
             }
+            finally
+            {
+                await objLocker.DisposeAsync().ConfigureAwait(false);
+            }
+
+            return false;
         }
 
-        public bool AllowPasteObject(object input)
+        public async Task<bool> AllowPasteObject(object input, CancellationToken token = default)
         {
+            token.ThrowIfCancellationRequested();
             if (!(input is Cyberware objCyberware))
                 return true;
-            using (LockObject.EnterReadLock())
+            IAsyncDisposable objLocker = await LockObject.EnterReadLockAsync(token).ConfigureAwait(false);
+            try
             {
-                if (!string.IsNullOrEmpty(objCyberware.PlugsIntoModularMount))
+                token.ThrowIfCancellationRequested();
+                string strPlugsIntoModularMount = await objCyberware.GetPlugsIntoModularMountAsync(token).ConfigureAwait(false);
+                if (!string.IsNullOrEmpty(strPlugsIntoModularMount))
                 {
-                    if (objCyberware.PlugsIntoModularMount != HasModularMount)
+                    if (strPlugsIntoModularMount != await GetHasModularMountAsync(token).ConfigureAwait(false))
                         return false;
-                    string strInputHasModularMount = objCyberware.HasModularMount;
-                    if (Children.Any(x => x.PlugsIntoModularMount == strInputHasModularMount))
+                    string strInputHasModularMount = await objCyberware.GetHasModularMountAsync(token).ConfigureAwait(false);
+                    if (await Children.AnyAsync(
+                            async x => await x.GetPlugsIntoModularMountAsync(token).ConfigureAwait(false) == strInputHasModularMount,
+                            token: token).ConfigureAwait(false))
                         return false;
 
-                    objCyberware.Location = Location;
+                    objCyberware.Location = await GetLocationAsync(token).ConfigureAwait(false);
                 }
 
-                if (objCyberware.SourceType != SourceType)
+                if (await objCyberware.GetSourceTypeAsync(token).ConfigureAwait(false) != await GetSourceTypeAsync(token).ConfigureAwait(false))
                     return true;
                 string strAllowedSubsystems = AllowedSubsystems;
                 if (!string.IsNullOrEmpty(strAllowedSubsystems))
@@ -11449,33 +11702,34 @@ namespace Chummer.Backend.Equipment
                     return strAllowedSubsystems.SplitNoAlloc(',').All(strSubsystem => strCategory != strSubsystem);
                 }
 
-                if (string.IsNullOrEmpty(objCyberware.HasModularMount) &&
-                    string.IsNullOrEmpty(objCyberware.BlocksMounts))
+                if (string.IsNullOrEmpty(await objCyberware.GetHasModularMountAsync(token).ConfigureAwait(false)) &&
+                    string.IsNullOrEmpty(await objCyberware.GetBlocksMountsAsync(token).ConfigureAwait(false)))
                     return true;
                 using (new FetchSafelyFromPool<HashSet<string>>(Utils.StringHashSetPool,
-                                                                out HashSet<string> setDisallowedMounts))
+                           out HashSet<string> setDisallowedMounts))
                 using (new FetchSafelyFromPool<HashSet<string>>(Utils.StringHashSetPool,
-                                                                out HashSet<string> setHasMounts))
+                           out HashSet<string> setHasMounts))
                 {
-                    foreach (string strLoop in BlocksMounts.SplitNoAlloc(','))
+                    foreach (string strLoop in (await objCyberware.GetBlocksMountsAsync(token).ConfigureAwait(false)).SplitNoAlloc(','))
                         setDisallowedMounts.Add(strLoop + Location);
-                    string strLoopHasModularMount = HasModularMount;
+                    string strLoopHasModularMount = await GetHasModularMountAsync(token).ConfigureAwait(false);
                     if (!string.IsNullOrEmpty(strLoopHasModularMount))
                         setHasMounts.Add(strLoopHasModularMount);
-                    foreach (Cyberware objLoopCyberware in Children.DeepWhere(
-                                 x => x.Children, x => string.IsNullOrEmpty(x.PlugsIntoModularMount)))
+                    foreach (Cyberware objLoopCyberware in await Children.DeepWhereAsync(
+                                 x => x.Children, x => string.IsNullOrEmpty(x.PlugsIntoModularMount), token: token).ConfigureAwait(false))
                     {
-                        foreach (string strLoop in objLoopCyberware.BlocksMounts.SplitNoAlloc(','))
+                        foreach (string strLoop in (await objLoopCyberware.GetBlocksMountsAsync(token).ConfigureAwait(false)).SplitNoAlloc(
+                                     ','))
                         {
                             setDisallowedMounts.Add(strLoop + objLoopCyberware.Location);
                         }
 
-                        strLoopHasModularMount = objLoopCyberware.HasModularMount;
+                        strLoopHasModularMount = await objLoopCyberware.GetHasModularMountAsync(token).ConfigureAwait(false);
                         if (!string.IsNullOrEmpty(strLoopHasModularMount))
                             setHasMounts.Add(strLoopHasModularMount);
                     }
 
-                    if (!string.IsNullOrEmpty(objCyberware.HasModularMount) &&
+                    if (!string.IsNullOrEmpty(await objCyberware.GetHasModularMountAsync(token).ConfigureAwait(false)) &&
                         setDisallowedMounts.Count > 0)
                     {
                         foreach (string strLoop in setDisallowedMounts)
@@ -11490,20 +11744,28 @@ namespace Chummer.Backend.Equipment
                                     continue;
                             }
 
-                            if (strCheck == objCyberware.HasModularMount)
+                            if (strCheck == await objCyberware.GetHasModularMountAsync(token).ConfigureAwait(false))
                             {
                                 return false;
                             }
                         }
                     }
 
-                    if (string.IsNullOrEmpty(objCyberware.BlocksMounts))
+                    if (string.IsNullOrEmpty(await objCyberware.GetBlocksMountsAsync(token).ConfigureAwait(false)))
                         return true;
-                    if (string.IsNullOrEmpty(objCyberware.Location) && string.IsNullOrEmpty(Location) &&
-                        (Children.All(x => x.Location != "Left") || Children.All(x => x.Location != "Right")))
+                    if (string.IsNullOrEmpty(await objCyberware.GetLocationAsync(token).ConfigureAwait(false)) &&
+                        string.IsNullOrEmpty(await GetLocationAsync(token).ConfigureAwait(false)) &&
+                        (await Children.AllAsync(async x => await x.GetLocationAsync(token).ConfigureAwait(false) != "Left", token: token).ConfigureAwait(false)
+                         || await Children.AllAsync(async x => await x.GetLocationAsync(token).ConfigureAwait(false) != "Right",
+                             token: token).ConfigureAwait(false)))
                         return true;
-                    return objCyberware.BlocksMounts.SplitNoAlloc(',').All(strLoop => !setHasMounts.Contains(strLoop));
+                    return (await objCyberware.GetBlocksMountsAsync(token).ConfigureAwait(false)).SplitNoAlloc(',')
+                        .All(strLoop => !setHasMounts.Contains(strLoop));
                 }
+            }
+            finally
+            {
+                await objLocker.DisposeAsync().ConfigureAwait(false);
             }
         }
 

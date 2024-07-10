@@ -446,11 +446,11 @@ namespace Chummer
                     {
                         if (setNamesOfChangedProperties == null)
                             setNamesOfChangedProperties
-                                = s_CharacterSettingsDependencyGraph.GetWithAllDependents(this, strPropertyName, true);
+                                = await s_CharacterSettingsDependencyGraph.GetWithAllDependentsAsync(this, strPropertyName, true, token).ConfigureAwait(false);
                         else
                         {
-                            foreach (string strLoopChangedProperty in s_CharacterSettingsDependencyGraph
-                                         .GetWithAllDependentsEnumerable(this, strPropertyName))
+                            foreach (string strLoopChangedProperty in await s_CharacterSettingsDependencyGraph
+                                         .GetWithAllDependentsEnumerableAsync(this, strPropertyName, token).ConfigureAwait(false))
                                 setNamesOfChangedProperties.Add(strLoopChangedProperty);
                         }
                     }
@@ -1019,8 +1019,8 @@ namespace Chummer
         public async Task<List<string>> GetDifferingPropertyNamesAsync(CharacterSettings objOther, CancellationToken token = default)
         {
             token.ThrowIfCancellationRequested();
-            List<string> lstReturn = new List<string>();
             PropertyInfo[] aobjProperties = typeof(CharacterSettings).GetProperties();
+            List<string> lstReturn = new List<string>(aobjProperties.Length);
             if (objOther == null)
             {
                 lstReturn.Add(nameof(SourceIdString));
@@ -2205,10 +2205,10 @@ namespace Chummer
                 }
                 catch (UnauthorizedAccessException)
                 {
-                    Program.ShowScrollableMessageBox(await LanguageManager
-                                                           .GetStringAsync(
-                                                               "Message_Insufficient_Permissions_Warning", token: token)
-                                                           .ConfigureAwait(false));
+                    await Program.ShowScrollableMessageBoxAsync(await LanguageManager
+                        .GetStringAsync(
+                            "Message_Insufficient_Permissions_Warning", token: token)
+                        .ConfigureAwait(false), token: token).ConfigureAwait(false);
                     return false;
                 }
             }
@@ -3904,32 +3904,32 @@ namespace Chummer
                     catch (IOException)
                     {
                         if (blnShowDialogs)
-                            Program.ShowScrollableMessageBox(
+                            await Program.ShowScrollableMessageBoxAsync(
                                 await LanguageManager.GetStringAsync("Message_CharacterOptions_CannotLoadCharacter", token: token).ConfigureAwait(false),
                                 await LanguageManager.GetStringAsync("MessageText_CharacterOptions_CannotLoadCharacter", token: token).ConfigureAwait(false),
                                 MessageBoxButtons.OK,
-                                MessageBoxIcon.Error);
+                                MessageBoxIcon.Error, token: token).ConfigureAwait(false);
                         return false;
                     }
                     catch (XmlException)
                     {
                         if (blnShowDialogs)
-                            Program.ShowScrollableMessageBox(
+                            await Program.ShowScrollableMessageBoxAsync(
                                 await LanguageManager.GetStringAsync("Message_CharacterOptions_CannotLoadCharacter", token: token).ConfigureAwait(false),
                                 await LanguageManager.GetStringAsync("MessageText_CharacterOptions_CannotLoadCharacter", token: token).ConfigureAwait(false),
                                 MessageBoxButtons.OK,
-                                MessageBoxIcon.Error);
+                                MessageBoxIcon.Error, token: token).ConfigureAwait(false);
                         return false;
                     }
                 }
                 else
                 {
                     if (blnShowDialogs)
-                        Program.ShowScrollableMessageBox(
+                        await Program.ShowScrollableMessageBoxAsync(
                             await LanguageManager.GetStringAsync("Message_CharacterOptions_CannotLoadCharacter", token: token).ConfigureAwait(false),
                             await LanguageManager.GetStringAsync("MessageText_CharacterOptions_CannotLoadCharacter", token: token).ConfigureAwait(false),
                             MessageBoxButtons.OK,
-                            MessageBoxIcon.Error);
+                            MessageBoxIcon.Error, token: token).ConfigureAwait(false);
                     return false;
                 }
 

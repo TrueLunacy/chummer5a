@@ -81,21 +81,37 @@ namespace Chummer
 
         private static SynchronizationContext MySynchronizationContext { get; set; }
 
-        private static JoinableTaskContext MyJoinableTaskContext { get; set; }
+        private static JoinableTaskContext MyJoinableTaskContext => s_objJoinableTaskContext;
 
         public static JoinableTaskContext CreateSynchronizationContext()
         {
-            if (Program.IsMainThread)
+            if (!Program.IsMainThread && (!IsUnitTest || IsUnitTestForUI))
+                throw new InvalidOperationException("Cannot call CreateSynchronizationContext outside of the main thread.");
+
+            if (s_objJoinableTaskFactory.IsValueCreated)
             {
-                using (new DummyForm()) // New Form needs to be created (or Application.Run() called) before Synchronization.Current is set
+                JoinableTaskContext objNewContext = new JoinableTaskContext();
+                JoinableTaskContext objReturn = Interlocked.CompareExchange(ref s_objJoinableTaskContext, objNewContext, default);
+                if (objReturn != default)
                 {
-                    MySynchronizationContext = SynchronizationContext.Current;
-                    return MyJoinableTaskContext
-                        = new JoinableTaskContext(Thread.CurrentThread, SynchronizationContext.Current);
+                    objNewContext.Dispose();
+                    return objReturn;
                 }
             }
 
-            return default;
+            using (new DummyForm()) // New Form needs to be created (or Application.Run() called) before Synchronization.Current is set
+            {
+                JoinableTaskContext objNewContext = new JoinableTaskContext();
+                JoinableTaskContext objReturn = Interlocked.CompareExchange(ref s_objJoinableTaskContext, objNewContext, default);
+                if (objReturn != default)
+                {
+                    objNewContext.Dispose();
+                    return objReturn;
+                }
+
+                MySynchronizationContext = SynchronizationContext.Current;
+                return objNewContext;
+            }
         }
 
         // Need this as a Lazy, otherwise it won't fire properly in the designer if we just cache it, and the check itself is also quite expensive
@@ -351,9 +367,8 @@ namespace Chummer
 
         private static readonly Lazy<JoinableTaskFactory> s_objJoinableTaskFactory
             = new Lazy<JoinableTaskFactory>(() => IsRunningInVisualStudio
-                                                ? new JoinableTaskFactory(new JoinableTaskContext())
-                                                : new JoinableTaskFactory(
-                                                    MyJoinableTaskContext ?? CreateSynchronizationContext()));
+                ? new JoinableTaskFactory(new JoinableTaskContext())
+                : new JoinableTaskFactory(MyJoinableTaskContext ?? CreateSynchronizationContext()));
 
         public static JoinableTaskFactory JoinableTaskFactory => s_objJoinableTaskFactory.Value;
 
@@ -603,14 +618,26 @@ namespace Chummer
                         // For safety purposes, do not allow unprompted deleting of any files outside of the Chummer folder itself
                         if (blnShowUnauthorizedAccess)
                         {
-                            if (Program.ShowScrollableMessageBox(
-                                    string.Format(GlobalSettings.CultureInfo,
-                                        blnSync
+                            if (blnSync)
+                            {
+                                // ReSharper disable once MethodHasAsyncOverloadWithCancellation
+                                if (Program.ShowScrollableMessageBox(
+                                        string.Format(GlobalSettings.CultureInfo,
                                             // ReSharper disable once MethodHasAsyncOverload
-                                            ? LanguageManager.GetString("Message_Prompt_Delete_Existing_File", token: token)
-                                            : await LanguageManager.GetStringAsync(
-                                                "Message_Prompt_Delete_Existing_File", token: token).ConfigureAwait(false), strPath),
-                                    buttons: MessageBoxButtons.YesNo, icon: MessageBoxIcon.Warning) != DialogResult.Yes)
+                                            LanguageManager.GetString("Message_Prompt_Delete_Existing_File",
+                                                token: token), strPath),
+                                        buttons: MessageBoxButtons.YesNo, icon: MessageBoxIcon.Warning) !=
+                                    DialogResult.Yes)
+                                    return false;
+                            }
+                            else if (await Program.ShowScrollableMessageBoxAsync(
+                                         string.Format(GlobalSettings.CultureInfo,
+                                             await LanguageManager.GetStringAsync(
+                                                     "Message_Prompt_Delete_Existing_File", token: token)
+                                                 .ConfigureAwait(false), strPath),
+                                         buttons: MessageBoxButtons.YesNo, icon: MessageBoxIcon.Warning,
+                                         token: token).ConfigureAwait(false) !=
+                                     DialogResult.Yes)
                                 return false;
                         }
                         else
@@ -638,10 +665,23 @@ namespace Chummer
                 {
                     // We do not have sufficient privileges to delete this file.
                     if (blnShowUnauthorizedAccess)
-                        Program.ShowScrollableMessageBox(blnSync
-                            // ReSharper disable once MethodHasAsyncOverload
-                            ? LanguageManager.GetString("Message_Insufficient_Permissions_Warning", token: token)
-                            : await LanguageManager.GetStringAsync("Message_Insufficient_Permissions_Warning", token: token).ConfigureAwait(false));
+                    {
+                        if (blnSync)
+                        {
+                            // ReSharper disable once MethodHasAsyncOverloadWithCancellation
+                            Program.ShowScrollableMessageBox(
+                                // ReSharper disable once MethodHasAsyncOverload
+                                LanguageManager.GetString("Message_Insufficient_Permissions_Warning", token: token));
+                        }
+                        else
+                        {
+                            await Program.ShowScrollableMessageBoxAsync(
+                                await LanguageManager
+                                    .GetStringAsync("Message_Insufficient_Permissions_Warning", token: token)
+                                    .ConfigureAwait(false), token: token).ConfigureAwait(false);
+                        }
+                    }
+
                     return false;
                 }
                 catch (DirectoryNotFoundException)
@@ -732,15 +772,26 @@ namespace Chummer
                 // For safety purposes, do not allow unprompted deleting of any files outside of the Chummer folder itself
                 if (blnShowUnauthorizedAccess)
                 {
-                    if (Program.ShowScrollableMessageBox(
-                            string.Format(GlobalSettings.Language,
-                                blnSync
+                    if (blnSync)
+                    {
+                        // ReSharper disable once MethodHasAsyncOverloadWithCancellation
+                        if (Program.ShowScrollableMessageBox(
+                                string.Format(GlobalSettings.CultureInfo,
                                     // ReSharper disable once MethodHasAsyncOverload
-                                    ? LanguageManager.GetString("Message_Prompt_Delete_Existing_File", token: token)
-                                    : await LanguageManager.GetStringAsync("Message_Prompt_Delete_Existing_File", token: token).ConfigureAwait(false),
-                                strPath),
-                            buttons: MessageBoxButtons.YesNo, icon: MessageBoxIcon.Warning)
-                        != DialogResult.Yes)
+                                    LanguageManager.GetString("Message_Prompt_Delete_Existing_File",
+                                        token: token), strPath),
+                                buttons: MessageBoxButtons.YesNo, icon: MessageBoxIcon.Warning) !=
+                            DialogResult.Yes)
+                            return false;
+                    }
+                    else if (await Program.ShowScrollableMessageBoxAsync(
+                                 string.Format(GlobalSettings.CultureInfo,
+                                     await LanguageManager.GetStringAsync(
+                                             "Message_Prompt_Delete_Existing_File", token: token)
+                                         .ConfigureAwait(false), strPath),
+                                 buttons: MessageBoxButtons.YesNo, icon: MessageBoxIcon.Warning,
+                                 token: token).ConfigureAwait(false) !=
+                             DialogResult.Yes)
                         return false;
                 }
                 else
@@ -802,7 +853,7 @@ namespace Chummer
                 string caption
                     = await LanguageManager.GetStringAsync("MessageTitle_Options_CloseForms", strLanguage, token: token).ConfigureAwait(false);
                 token.ThrowIfCancellationRequested();
-                if (Program.ShowScrollableMessageBox(text, caption, MessageBoxButtons.YesNo, MessageBoxIcon.Question)
+                if (await Program.ShowScrollableMessageBoxAsync(text, caption, MessageBoxButtons.YesNo, MessageBoxIcon.Question, token: token).ConfigureAwait(false)
                     != DialogResult.Yes)
                     return;
             }
@@ -836,16 +887,16 @@ namespace Chummer
                         string strCharacterName = await objOpenCharacterForm.CharacterObject
                                                                             .GetCharacterNameAsync(token)
                                                                             .ConfigureAwait(false);
-                        if (Program.ShowScrollableMessageBox(
+                        if (await Program.ShowScrollableMessageBoxAsync(
                                 string.Format(GlobalSettings.CultureInfo,
-                                              await LanguageManager.GetStringAsync(
-                                                                       "Message_UnsavedChanges", strLanguage,
-                                                                       token: token)
-                                                                   .ConfigureAwait(false), strCharacterName),
+                                    await LanguageManager.GetStringAsync(
+                                            "Message_UnsavedChanges", strLanguage,
+                                            token: token)
+                                        .ConfigureAwait(false), strCharacterName),
                                 await LanguageManager
-                                      .GetStringAsync("MessageTitle_UnsavedChanges", strLanguage, token: token)
-                                      .ConfigureAwait(false),
-                                MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question) != DialogResult.Yes)
+                                    .GetStringAsync("MessageTitle_UnsavedChanges", strLanguage, token: token)
+                                    .ConfigureAwait(false),
+                                MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question, token: token).ConfigureAwait(false) != DialogResult.Yes)
                         {
                             return;
                         }
@@ -2604,6 +2655,8 @@ namespace Chummer
         {
             MaximumRetained = DefaultPoolSize
         };
+
+        private static JoinableTaskContext s_objJoinableTaskContext;
 
         /// <summary>
         /// Memory Pool for empty StringBuilder objects. A bit slower up-front than a simple allocation, but reduces memory allocations, which saves on CPU used for Garbage Collection.
