@@ -75,7 +75,7 @@ namespace Chummer
                     if (strOriginal.Contains(strOldValue))
                         sbdInput.Replace(strOldValue, funcNewValueFactory.Invoke());
                 }
-                else if (strOriginal.IndexOf(strOldValue, eStringComparison) != -1)
+                else if (strOriginal.Contains(strOldValue, eStringComparison))
                 {
                     string strOldStringBuilderValue = sbdInput.ToString();
                     sbdInput.Clear();
@@ -136,7 +136,7 @@ namespace Chummer
                         sbdInput.Replace(strOldValue, strFactoryResult);
                     }
                 }
-                else if (strOriginal.IndexOf(strOldValue, eStringComparison) != -1)
+                else if (strOriginal.Contains(strOldValue, eStringComparison))
                 {
                     token.ThrowIfCancellationRequested();
                     string strFactoryResult = string.Empty;
@@ -191,7 +191,7 @@ namespace Chummer
                         sbdInput.Replace(strOldValue, await tskReplaceTask.ConfigureAwait(false));
                     }
                 }
-                else if (strOriginal.IndexOf(strOldValue, eStringComparison) != -1)
+                else if (strOriginal.Contains(strOldValue, eStringComparison))
                 {
                     token.ThrowIfCancellationRequested();
                     Task<string> tskReplaceTask = funcNewValueFactory.Invoke();
@@ -269,10 +269,8 @@ namespace Chummer
         public static StringBuilder AppendJoin([NotNull] this StringBuilder sbdInput, string strSeparator, string[] astrValues, int intStartIndex, int intCount)
         {
             ArgumentNullException.ThrowIfNull(astrValues);
-            if (intStartIndex < 0)
-                throw new ArgumentOutOfRangeException(nameof(intStartIndex));
-            if (intCount < 0)
-                throw new ArgumentOutOfRangeException(nameof(intCount));
+            ArgumentOutOfRangeException.ThrowIfNegative(intStartIndex);
+            ArgumentOutOfRangeException.ThrowIfNegative(intCount);
             if (intStartIndex + intCount >= astrValues.Length)
                 throw new ArgumentOutOfRangeException(nameof(intStartIndex));
             for (int i = 0; i < intCount; ++i)
@@ -382,10 +380,8 @@ namespace Chummer
         public static StringBuilder AppendJoin([NotNull] this StringBuilder sbdInput, char chrSeparator, string[] astrValues, int intStartIndex, int intCount)
         {
             ArgumentNullException.ThrowIfNull(astrValues);
-            if (intStartIndex < 0)
-                throw new ArgumentOutOfRangeException(nameof(intStartIndex));
-            if (intCount < 0)
-                throw new ArgumentOutOfRangeException(nameof(intCount));
+            ArgumentOutOfRangeException.ThrowIfNegative(intStartIndex);
+            ArgumentOutOfRangeException.ThrowIfNegative(intCount);
             if (intStartIndex + intCount >= astrValues.Length)
                 throw new ArgumentOutOfRangeException(nameof(intStartIndex));
             for (int i = 0; i < intCount; ++i)
@@ -505,10 +501,8 @@ namespace Chummer
         {
             token.ThrowIfCancellationRequested();
             ArgumentNullException.ThrowIfNull(astrValues);
-            if (intStartIndex < 0)
-                throw new ArgumentOutOfRangeException(nameof(intStartIndex));
-            if (intCount < 0)
-                throw new ArgumentOutOfRangeException(nameof(intCount));
+            ArgumentOutOfRangeException.ThrowIfNegative(intStartIndex);
+            ArgumentOutOfRangeException.ThrowIfNegative(intCount);
             if (intStartIndex + intCount >= astrValues.Length)
                 throw new ArgumentOutOfRangeException(nameof(intStartIndex));
             for (int i = 0; i < intCount; ++i)
@@ -633,10 +627,8 @@ namespace Chummer
         {
             token.ThrowIfCancellationRequested();
             ArgumentNullException.ThrowIfNull(astrValues);
-            if (intStartIndex < 0)
-                throw new ArgumentOutOfRangeException(nameof(intStartIndex));
-            if (intCount < 0)
-                throw new ArgumentOutOfRangeException(nameof(intCount));
+            ArgumentOutOfRangeException.ThrowIfNegative(intStartIndex);
+            ArgumentOutOfRangeException.ThrowIfNegative(intCount);
             if (intStartIndex + intCount >= astrValues.Length)
                 throw new ArgumentOutOfRangeException(nameof(intStartIndex));
             for (int i = 0; i < intCount; ++i)

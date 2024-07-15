@@ -642,9 +642,9 @@ namespace Chummer
                     using (StreamReader objFile = new StreamReader(objFileStream, Encoding.UTF8, true))
                     {
                         token.ThrowIfCancellationRequested();
-                        for (string strLine = await objFile.ReadLineAsync().ConfigureAwait(false);
+                        for (string strLine = await objFile.ReadLineAsync(token).ConfigureAwait(false);
                              strLine != null;
-                             strLine = await objFile.ReadLineAsync().ConfigureAwait(false))
+                             strLine = await objFile.ReadLineAsync(token).ConfigureAwait(false))
                         {
                             token.ThrowIfCancellationRequested();
                             if (strLine.StartsWith("<!-- ext:", StringComparison.Ordinal))

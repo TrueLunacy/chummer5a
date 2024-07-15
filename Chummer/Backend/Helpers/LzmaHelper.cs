@@ -302,7 +302,7 @@ namespace Chummer
             encoder.SetCoderProperties(propIDs, properties);
             await encoder.WriteCoderPropertiesAsync(objOutStream, token).ConfigureAwait(false);
             long fileSize = eos || stdInMode ? -1 : objInStream.Length;
-            await objOutStream.WriteAsync(BitConverter.GetBytes(fileSize), 0, 8, token).ConfigureAwait(false);
+            await objOutStream.WriteAsync(BitConverter.GetBytes(fileSize).AsMemory(0, 8), token).ConfigureAwait(false);
             token.ThrowIfCancellationRequested();
             IAsyncCodeProgress funcProgress = funcOnProgress != null ? new AsyncDelegateCodeProgress(funcOnProgress) : null;
             await Task.Run(() => encoder.CodeAsync(objInStream, objOutStream, -1, -1, funcProgress, token), token).ConfigureAwait(false);
@@ -331,11 +331,11 @@ namespace Chummer
             Decoder decoder = s_LzyDecoder.Value;
             token.ThrowIfCancellationRequested();
             byte[] properties = new byte[5];
-            if (await objInStream.ReadAsync(properties, 0, 5, token).ConfigureAwait(false) != 5)
+            if (await objInStream.ReadAsync(properties.AsMemory(0, 5), token).ConfigureAwait(false) != 5)
                 throw new ArgumentException("input .lzma is too short");
             decoder.SetDecoderProperties(properties);
             byte[] achrBuffer = new byte[8];
-            _ = await objInStream.ReadAsync(achrBuffer, 0, 8, token).ConfigureAwait(false);
+            _ = await objInStream.ReadAsync(achrBuffer.AsMemory(0, 8), token).ConfigureAwait(false);
             long outSize = BitConverter.ToInt64(achrBuffer, 0);
             token.ThrowIfCancellationRequested();
             long compressedSize = objInStream.Length - objInStream.Position;

@@ -44,7 +44,7 @@ namespace Chummer
                 strCode = strCode.Substring(0, intWhitespaceIndex);
                 if (intWhitespaceIndex + 1 < strCode.Length)
                 {
-                    int.TryParse(strCode.Substring(intWhitespaceIndex + 1), NumberStyles.Integer, GlobalSettings.InvariantCultureInfo, out intPage);
+                    int.TryParse(strCode.AsSpan(intWhitespaceIndex + 1), NumberStyles.Integer, GlobalSettings.InvariantCultureInfo, out intPage);
                 }
             }
             return GetSourceString(strCode, intPage, strLanguage, objCultureInfo, objCharacter);
@@ -61,7 +61,7 @@ namespace Chummer
                 strCode = strCode.Substring(0, intWhitespaceIndex);
                 if (intWhitespaceIndex + 1 < strCode.Length)
                 {
-                    int.TryParse(strCode.Substring(intWhitespaceIndex + 1), NumberStyles.Integer, GlobalSettings.InvariantCultureInfo, out intPage);
+                    int.TryParse(strCode.AsSpan(intWhitespaceIndex + 1), NumberStyles.Integer, GlobalSettings.InvariantCultureInfo, out intPage);
                 }
             }
             return GetSourceStringAsync(strCode, intPage, strLanguage, objCultureInfo, objCharacter, token);

@@ -888,7 +888,7 @@ namespace Chummer.Backend.Equipment
                     intReturn = await Parent.GetTotalBodyAsync(this, token).ConfigureAwait(false);
                     break;
                 default:
-                    int.TryParse(strText, out intReturn);
+                    _ = int.TryParse(strText, out intReturn);
                     break;
             }
 

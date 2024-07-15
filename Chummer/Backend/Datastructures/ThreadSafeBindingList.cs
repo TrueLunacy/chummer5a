@@ -1258,10 +1258,8 @@ namespace Chummer
         /// interface implementation of each element.</param>
         public void Sort(int index, int length, IComparer<T> objComparer = null)
         {
-            if (index < 0)
-                throw new ArgumentOutOfRangeException(nameof(index));
-            if (length < 0)
-                throw new ArgumentOutOfRangeException(nameof(length));
+            ArgumentOutOfRangeException.ThrowIfNegative(index);
+            ArgumentOutOfRangeException.ThrowIfNegative(length);
             if (length == 0)
                 return;
             if (index + length > Count)
@@ -1529,10 +1527,8 @@ namespace Chummer
         /// <param name="token">Cancellation token to listen to.</param>
         public async Task SortAsync(int index, int length, IComparer<T> objComparer = null, CancellationToken token = default)
         {
-            if (index < 0)
-                throw new ArgumentOutOfRangeException(nameof(index));
-            if (length < 0)
-                throw new ArgumentOutOfRangeException(nameof(length));
+            ArgumentOutOfRangeException.ThrowIfNegative(index);
+            ArgumentOutOfRangeException.ThrowIfNegative(length);
             if (index + length > await GetCountAsync(token).ConfigureAwait(false))
                 throw new InvalidOperationException(nameof(length));
             if (length == 0)

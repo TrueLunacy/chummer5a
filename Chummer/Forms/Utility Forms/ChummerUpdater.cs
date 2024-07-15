@@ -418,9 +418,9 @@ namespace Chummer
                                 using (StreamReader objReader = new StreamReader(dataStream, Encoding.UTF8, true))
                                 {
                                     token.ThrowIfCancellationRequested();
-                                    for (string strLine = await objReader.ReadLineAsync().ConfigureAwait(false);
+                                    for (string strLine = await objReader.ReadLineAsync(token).ConfigureAwait(false);
                                          strLine != null;
-                                         strLine = await objReader.ReadLineAsync().ConfigureAwait(false))
+                                         strLine = await objReader.ReadLineAsync(token).ConfigureAwait(false))
                                     {
                                         token.ThrowIfCancellationRequested();
                                         if (!string.IsNullOrEmpty(strLine))

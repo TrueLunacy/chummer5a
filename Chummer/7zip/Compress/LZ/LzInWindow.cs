@@ -104,7 +104,7 @@ namespace SevenZip.Compression.LZ
                     int size = (int)(0 - _bufferOffset + _blockSize - _streamPos);
                     if (size == 0)
                         return;
-                    int numReadBytes = await _stream.ReadAsync(_bufferBase, (int)(_bufferOffset + _streamPos), size, token).ConfigureAwait(false);
+                    int numReadBytes = await _stream.ReadAsync(_bufferBase.AsMemory((int)(_bufferOffset + _streamPos), size), token).ConfigureAwait(false);
                     if (numReadBytes == 0)
                     {
                         _posLimit = _streamPos;

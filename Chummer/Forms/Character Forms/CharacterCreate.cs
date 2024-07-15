@@ -8745,7 +8745,7 @@ namespace Chummer
                                             if (!strLoop.EndsWith("Right", StringComparison.Ordinal)
                                                 && (!strLoop.EndsWith("Left", StringComparison.Ordinal)
                                                     || setDisallowedMounts.Contains(
-                                                        strLoop.Substring(0, strLoop.Length - 4) + "Right")))
+                                                        string.Concat(strLoop.AsSpan(0, strLoop.Length - 4), "Right"))))
                                                 sbdDisallowedMounts.Append(strLoop.TrimEndOnce("Left")).Append(',');
                                         }
 
@@ -8823,7 +8823,7 @@ namespace Chummer
                                             if (!strLoop.EndsWith("Right", StringComparison.Ordinal)
                                                 && (!strLoop.EndsWith("Left", StringComparison.Ordinal)
                                                     || setDisallowedMounts.Contains(
-                                                        strLoop.Substring(0, strLoop.Length - 4) + "Right")))
+                                                        string.Concat(strLoop.AsSpan(0, strLoop.Length - 4), "Right"))))
                                                 sbdDisallowedMounts.Append(strLoop.TrimEndOnce("Left")).Append(',');
                                         }
 
@@ -17948,8 +17948,7 @@ namespace Chummer
                             string strKey = strLoop;
                             if (objSelectedCyberware.Location != objLoopCyberware.Location)
                                 strKey += objLoopCyberware.Location;
-                            if (!dicDisallowedMounts.ContainsKey(strKey))
-                                dicDisallowedMounts.Add(strKey, int.MaxValue);
+                            dicDisallowedMounts.TryAdd(strKey, int.MaxValue);
                         }
 
                         strLoopHasModularMount = objSelectedCyberware.Location != objLoopCyberware.Location

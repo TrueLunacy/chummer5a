@@ -68,7 +68,7 @@ namespace SevenZip.Buffer
             if (m_StreamWasExhausted)
                 return false;
             m_ProcessedSize += m_Pos;
-            int aNumProcessedBytes = await m_Stream.ReadAsync(m_Buffer, 0, (int)m_BufferSize, token).ConfigureAwait(false);
+            int aNumProcessedBytes = await m_Stream.ReadAsync(m_Buffer.AsMemory(0, (int)m_BufferSize), token).ConfigureAwait(false);
             m_Pos = 0;
             m_Limit = (uint)aNumProcessedBytes;
             m_StreamWasExhausted = aNumProcessedBytes == 0;

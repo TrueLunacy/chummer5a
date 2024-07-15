@@ -374,8 +374,8 @@ namespace Chummer
                             }
                             else
                             {
-                                strReturn = strReturn.Substring(0, intOpeningBracketIndex)
-                                            + strReturn.Substring(intOpeningBracketIndex + 1);
+                                strReturn = string.Concat(strReturn.AsSpan(0, intOpeningBracketIndex)
+, strReturn.AsSpan(intOpeningBracketIndex + 1));
                             }
                         }
                         else

@@ -654,7 +654,7 @@ namespace Chummer
                 }
                 else
                 {
-                    if (int.TryParse(strLimbCount.Substring(0, intSeparatorIndex), NumberStyles.Any,
+                    if (int.TryParse(strLimbCount.AsSpan(0, intSeparatorIndex), NumberStyles.Any,
                                      GlobalSettings.InvariantCultureInfo, out int intLimbCount))
                     {
                         _objCharacterSettings.LimbCount = intLimbCount;

@@ -90,7 +90,7 @@ namespace SevenZip.Buffer
             token.ThrowIfCancellationRequested();
             if (m_Pos == 0)
                 return;
-            await m_Stream.WriteAsync(m_Buffer, 0, (int)m_Pos, token).ConfigureAwait(false);
+            await m_Stream.WriteAsync(m_Buffer.AsMemory(0, (int)m_Pos), token).ConfigureAwait(false);
             m_Pos = 0;
         }
 

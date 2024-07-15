@@ -807,9 +807,7 @@ namespace Chummer
                                             strDisplayNameNoFile = strDisplayNameNoFile
                                                                    .Substring(0, strDisplayNameNoFile.LastIndexOf('['))
                                                                    .Trim();
-                                        if (strDisplayNameNoFile.IndexOf(strSearchFilter,
-                                                                         StringComparison.OrdinalIgnoreCase)
-                                            == -1)
+                                        if (!strDisplayNameNoFile.Contains(strSearchFilter, StringComparison.OrdinalIgnoreCase))
                                             continue;
                                     }
 

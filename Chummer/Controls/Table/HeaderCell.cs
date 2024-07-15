@@ -93,10 +93,7 @@ namespace Chummer.UI.Table
             get => _intArrowSize;
             set
             {
-                if (value <= 0)
-                {
-                    throw new ArgumentOutOfRangeException(nameof(ArrowSize));
-                }
+                ArgumentOutOfRangeException.ThrowIfNegativeOrZero(value);
 
                 if (Interlocked.Exchange(ref _intArrowSize, value) != value)
                     ResizeControl(this, null);
@@ -108,10 +105,7 @@ namespace Chummer.UI.Table
             get => _intArrowPadding;
             set
             {
-                if (value < 0)
-                {
-                    throw new ArgumentOutOfRangeException(nameof(ArrowPadding));
-                }
+                ArgumentOutOfRangeException.ThrowIfNegative(value);
 
                 if (Interlocked.Exchange(ref _intArrowPadding, value) != value)
                     ResizeControl(this, null);

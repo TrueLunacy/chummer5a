@@ -298,8 +298,7 @@ namespace Chummer
                 return;
             if (index < 0 || index >= lstCollection.Count)
                 throw new ArgumentOutOfRangeException(nameof(index));
-            if (count < 0)
-                throw new ArgumentOutOfRangeException(nameof(count));
+            ArgumentOutOfRangeException.ThrowIfNegative(count);
             IDisposable objLocker = lstCollection is IHasLockObject objHasLockObject
                 ? objHasLockObject.LockObject.EnterWriteLock(token)
                 : null;

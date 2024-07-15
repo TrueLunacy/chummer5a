@@ -4407,9 +4407,9 @@ namespace Chummer.Backend.Equipment
                                 intAmmo = (intAmmo * decAmmoBonusPercent).StandardRound();
                             }
 
-                            strThisAmmo = intAmmo.ToString(objCulture)
-                                          + strAmmo.Substring(strAmmo.IndexOf('('),
-                                              strAmmo.Length - strAmmo.IndexOf('('));
+                            strThisAmmo = string.Concat(intAmmo.ToString(objCulture)
+, strAmmo.AsSpan(strAmmo.IndexOf('('),
+                                              strAmmo.Length - strAmmo.IndexOf('(')));
                         }
 
                         if (!string.IsNullOrEmpty(strPrepend))

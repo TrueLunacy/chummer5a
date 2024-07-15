@@ -126,7 +126,7 @@ namespace Chummer
                     }
                 }
 
-                Task.Run(() => BeginShow(frmForm));
+                Task.Run(() => BeginShow(frmForm), token);
                 return objCompletionSource.Task;
             }
         }
@@ -178,7 +178,7 @@ namespace Chummer
             {
                 objCompletionSource.SetResult(frmForm.ShowDialog(owner));
                 objCancelRegistration.Dispose();
-            }));
+            }), token);
             return objCompletionSource.Task;
         }
 
@@ -225,7 +225,7 @@ namespace Chummer
                 }
             }
 
-            Task.Run(() => BeginShow(frmForm));
+            Task.Run(() => BeginShow(frmForm), token);
             return objCompletionSource.Task;
         }
 

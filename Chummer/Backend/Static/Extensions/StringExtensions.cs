@@ -561,7 +561,7 @@ namespace Chummer
         public static bool Contains(this string strHaystack, char chrNeedle)
         {
             ArgumentNullException.ThrowIfNull(strHaystack);
-            return strHaystack.IndexOf(chrNeedle) != -1;
+            return strHaystack.Contains(chrNeedle);
         }
 
         /// <summary>
@@ -575,7 +575,7 @@ namespace Chummer
         public static bool Contains(this string strHaystack, string strNeedle, StringComparison eComparison)
         {
             ArgumentNullException.ThrowIfNull(strHaystack);
-            return strHaystack.IndexOf(strNeedle, eComparison) != -1;
+            return strHaystack.Contains(strNeedle, eComparison);
         }
 
         /// <summary>
@@ -1190,7 +1190,7 @@ namespace Chummer
                     if (strInput.Contains(strOldValue))
                         return strInput.Replace(strOldValue, funcNewValueFactory.Invoke());
                 }
-                else if (strInput.IndexOf(strOldValue, eStringComparison) != -1)
+                else if (strInput.Contains(strOldValue, eStringComparison))
                     return strInput.Replace(strOldValue, funcNewValueFactory.Invoke(), eStringComparison);
             }
 
@@ -1235,7 +1235,7 @@ namespace Chummer
                         return strInput.Replace(strOldValue, strFactoryResult);
                     }
                 }
-                else if (strInput.IndexOf(strOldValue, eStringComparison) != -1)
+                else if (strInput.Contains(strOldValue, eStringComparison))
                 {
                     token.ThrowIfCancellationRequested();
                     string strFactoryResult = string.Empty;
@@ -1331,7 +1331,7 @@ namespace Chummer
                         return strInput.Replace(strOldValue, strNewValue);
                     }
                 }
-                else if (strInput.IndexOf(strOldValue, eStringComparison) != -1)
+                else if (strInput.Contains(strOldValue, eStringComparison))
                 {
                     token.ThrowIfCancellationRequested();
                     string strNewValue = await funcNewValueFactory.Invoke().ConfigureAwait(false);

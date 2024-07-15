@@ -39,10 +39,8 @@ namespace Chummer
         public static void Sort<T>(this BindingList<T> lstCollection, int index, int length, IComparer<T> objComparer = null) where T : IComparable
         {
             ArgumentNullException.ThrowIfNull(lstCollection);
-            if (index < 0)
-                throw new ArgumentOutOfRangeException(nameof(index));
-            if (length < 0)
-                throw new ArgumentOutOfRangeException(nameof(length));
+            ArgumentOutOfRangeException.ThrowIfNegative(index);
+            ArgumentOutOfRangeException.ThrowIfNegative(length);
             if (index + length > lstCollection.Count)
                 throw new InvalidOperationException(nameof(length));
             if (length == 0)

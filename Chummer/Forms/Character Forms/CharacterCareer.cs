@@ -14172,7 +14172,7 @@ namespace Chummer
                                         if (!strLoop.EndsWith("Right", StringComparison.Ordinal)
                                             && (!strLoop.EndsWith("Left", StringComparison.Ordinal)
                                                 || setDisallowedMounts.Contains(
-                                                    strLoop.Substring(0, strLoop.Length - 4) + "Right")))
+                                                    string.Concat(strLoop.AsSpan(0, strLoop.Length - 4), "Right"))))
                                             sbdDisallowedMounts.Append(strLoop.TrimEndOnce("Left")).Append(',');
                                     }
 
@@ -14248,7 +14248,7 @@ namespace Chummer
                                         if (!strLoop.EndsWith("Right", StringComparison.Ordinal)
                                             && (!strLoop.EndsWith("Left", StringComparison.Ordinal)
                                                 || setDisallowedMounts.Contains(
-                                                    strLoop.Substring(0, strLoop.Length - 4) + "Right")))
+                                                    string.Concat(strLoop.AsSpan(0, strLoop.Length - 4), "Right"))))
                                             sbdDisallowedMounts.Append(strLoop.TrimEndOnce("Left")).Append(',');
                                     }
 

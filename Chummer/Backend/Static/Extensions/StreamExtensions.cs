@@ -70,7 +70,7 @@ namespace Chummer
                 try
                 {
                     Array.Clear(achrReturn, 0, intLength);
-                    _ = await objStream.ReadAsync(achrReturn, 0, intLength, token).ConfigureAwait(false);
+                    _ = await objStream.ReadAsync(achrReturn.AsMemory(0, intLength), token).ConfigureAwait(false);
                 }
                 catch
                 {
@@ -300,7 +300,7 @@ namespace Chummer
                 while (inData.Position < num2)
                 {
                     token.ThrowIfCancellationRequested();
-                    _ = await inData.ReadAsync(achrBuffer, 0, 3, token).ConfigureAwait(false);
+                    _ = await inData.ReadAsync(achrBuffer.AsMemory(0, 3), token).ConfigureAwait(false);
 
                     if (insertLineBreaks)
                     {
@@ -333,7 +333,7 @@ namespace Chummer
                 {
                     case 2:
                     {
-                        _ = await inData.ReadAsync(achrBuffer, 0, 2, token).ConfigureAwait(false);
+                        _ = await inData.ReadAsync(achrBuffer.AsMemory(0, 2), token).ConfigureAwait(false);
                         sbdChars.Append(s_Base64Table[(achrBuffer[0] & 0xFC) >> 2])
                             .Append(s_Base64Table[((achrBuffer[0] & 3) << 4) | ((achrBuffer[1] & 0xF0) >> 4)])
                             .Append(s_Base64Table[(achrBuffer[1] & 0xF) << 2])
@@ -343,7 +343,7 @@ namespace Chummer
                     }
                     case 1:
                     {
-                        _ = await inData.ReadAsync(achrBuffer, 0, 1, token).ConfigureAwait(false);
+                        _ = await inData.ReadAsync(achrBuffer.AsMemory(0, 1), token).ConfigureAwait(false);
                         sbdChars.Append(s_Base64Table[(achrBuffer[0] & 0xFC) >> 2])
                             .Append(s_Base64Table[(achrBuffer[0] & 3) << 4])
                             .Append(s_Base64Table[64])

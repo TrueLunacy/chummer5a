@@ -17,6 +17,7 @@
  *  https://github.com/chummer5a/chummer5a
  */
 
+using System;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
@@ -156,7 +157,7 @@ namespace SevenZip.Compression.RangeCoder
                         byte paddingValue = (byte)(0xFF + shiftedLow);
                         for (int i = 1; i < cacheSize; ++i)
                             data[i] = paddingValue;
-                        await Stream.WriteAsync(data, 0, cacheSize, token).ConfigureAwait(false);
+                        await Stream.WriteAsync(data.AsMemory(0, cacheSize), token).ConfigureAwait(false);
                     }
                     else
                         Stream.WriteByte((byte)(_cache + shiftedLow));
@@ -290,7 +291,7 @@ namespace SevenZip.Compression.RangeCoder
             Code = 0;
             Range = 0xFFFFFFFF;
             byte[] achrBuffer = new byte[5];
-            _ = await Stream.ReadAsync(achrBuffer, 0, 5, token).ConfigureAwait(false);
+            _ = await Stream.ReadAsync(achrBuffer.AsMemory(0, 5), token).ConfigureAwait(false);
             unchecked
             {
                 for (int i = 0; i < 5; i++)
@@ -336,7 +337,7 @@ namespace SevenZip.Compression.RangeCoder
                 if (intNumReads <= 0)
                     return;
                 byte[] achrBuffer = new byte[intNumReads];
-                _ = await Stream.ReadAsync(achrBuffer, 0, intNumReads, token).ConfigureAwait(false);
+                _ = await Stream.ReadAsync(achrBuffer.AsMemory(0, intNumReads), token).ConfigureAwait(false);
                 int i = 0;
                 while (Range < kTopValue)
                 {

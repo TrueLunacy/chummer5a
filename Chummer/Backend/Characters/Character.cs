@@ -45178,12 +45178,12 @@ namespace Chummer
                                                     for (string strLine = blnSync
                                                              // ReSharper disable once MethodHasAsyncOverload
                                                              ? objReader.ReadLine()
-                                                             : await objReader.ReadLineAsync().ConfigureAwait(false);
+                                                             : await objReader.ReadLineAsync(token).ConfigureAwait(false);
                                                          strLine != null;
                                                          strLine = blnSync
                                                              // ReSharper disable once MethodHasAsyncOverload
                                                              ? objReader.ReadLine()
-                                                             : await objReader.ReadLineAsync().ConfigureAwait(false))
+                                                             : await objReader.ReadLineAsync(token).ConfigureAwait(false))
                                                     {
                                                         token.ThrowIfCancellationRequested();
                                                         // Trim away the newlines and empty spaces at the beginning and end of lines
@@ -47419,7 +47419,7 @@ namespace Chummer
                                                     int intSecondPartParenthesesEnd = strSecondPart.IndexOf(')');
                                                     if (intSecondPartParenthesesEnd != -1
                                                         && !int.TryParse(
-                                                            strSecondPart.Substring(0, intSecondPartParenthesesEnd),
+                                                            strSecondPart.AsSpan(0, intSecondPartParenthesesEnd),
                                                             out intRating))
                                                         intRating = 1;
 

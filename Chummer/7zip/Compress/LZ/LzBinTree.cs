@@ -126,8 +126,7 @@ namespace SevenZip.Compression.LZ
         public void Create(uint historySize, uint keepAddBufferBefore,
                 uint matchMaxLen, uint keepAddBufferAfter)
         {
-            if (historySize > kMaxValForNormalize - 256)
-                throw new ArgumentOutOfRangeException(nameof(historySize));
+            ArgumentOutOfRangeException.ThrowIfGreaterThan(historySize, kMaxValForNormalize - 256);
             unchecked
             {
                 _cutValue = 16 + (matchMaxLen >> 1);
