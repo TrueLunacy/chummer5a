@@ -2327,12 +2327,14 @@ namespace Chummer.Backend.Equipment
                                     // ReSharper disable once MethodHasAsyncOverload
                                     ? _objCharacter.LoadDataXPath("bioware.xml", token: token)
                                     : await _objCharacter.LoadDataXPathAsync("bioware.xml", token: token).ConfigureAwait(false))
-                                .SelectSingleNodeAndCacheExpression("/chummer/biowares/bioware[name = \"Reflex Recorder (Skill)\"]", token: token)
+                                .SelectSingleNodeAndCacheExpression(
+                                    "/chummer/biowares/bioware[name = \"Reflex Recorder (Skill)\"]", token)
                                 : (blnSync
                                     // ReSharper disable once MethodHasAsyncOverload
                                     ? _objCharacter.LoadDataXPath("cyberware.xml", token: token)
                                     : await _objCharacter.LoadDataXPathAsync("bioware.xml", token: token).ConfigureAwait(false))
-                                .SelectSingleNodeAndCacheExpression("/chummer/cyberwares/cyberware[name = \"Reflex Recorder (Skill)\"]", token: token);
+                                .SelectSingleNodeAndCacheExpression(
+                                    "/chummer/cyberwares/cyberware[name = \"Reflex Recorder (Skill)\"]", token);
                         if (xmlReflexRecorderNode == null)
                             _strName = "Reflex Recorder";
                     }
@@ -6954,6 +6956,7 @@ namespace Chummer.Backend.Equipment
                 using (LockObject.EnterReadLock())
                 {
                     return !string.IsNullOrWhiteSpace(LimbSlot)
+                           || !string.IsNullOrEmpty(MountToLimbType(PlugsIntoModularMount))
                            || (InheritAttributes && Children.Any(objChild => objChild.IsLimb));
                 }
             }
@@ -6968,8 +6971,9 @@ namespace Chummer.Backend.Equipment
             try
             {
                 token.ThrowIfCancellationRequested();
-                return !string.IsNullOrWhiteSpace(LimbSlot)
-                       || (InheritAttributes && await Children
+                return !string.IsNullOrWhiteSpace(await GetLimbSlotAsync(token).ConfigureAwait(false))
+                       || !string.IsNullOrEmpty(MountToLimbType(await GetPlugsIntoModularMountAsync(token).ConfigureAwait(false)))
+                       || (await GetInheritAttributesAsync(token).ConfigureAwait(false) && await Children
                            .AnyAsync(objChild => objChild.GetIsLimbAsync(token), token).ConfigureAwait(false));
             }
             finally

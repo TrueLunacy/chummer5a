@@ -77,7 +77,7 @@ namespace Chummer
                 return setFirst.SetEquals(second);
             if (second is ISet<T> setSecond)
                 return setSecond.SetEquals(first);
-            if (first.GetOrderInvariantEnsembleHashCode() != second.GetOrderInvariantEnsembleHashCode())
+            if (first.GetOrderInvariantEnsembleHashCodeSmart() != second.GetOrderInvariantEnsembleHashCodeSmart())
                 return false;
             List<T> lstTemp = second.ToList();
             foreach (T item in first)
@@ -100,8 +100,7 @@ namespace Chummer
             // Sets do not have IEqualityComparer versions for SetEquals, so we always need to do this the slow way
             if (first.Count != second.Count)
                 return false;
-            if (first.GetOrderInvariantEnsembleHashCode() != second.GetOrderInvariantEnsembleHashCode())
-                return false;
+            // Cannot use hashes because the equality comparer might not be compatible with them (it could mark two objects with different hashes equal)
             List<T> lstTemp = second.ToList();
             foreach (T item in first)
             {

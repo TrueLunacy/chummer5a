@@ -6719,7 +6719,7 @@ namespace Chummer.Backend.Equipment
                     {
                         XPathNodeIterator xmlAddonCategoryList =
                             (await this.GetNodeXPathAsync(token: token).ConfigureAwait(false))
-                            ?.SelectAndCacheExpression("addoncategory", token: token);
+                            ?.SelectAndCacheExpression("addoncategory", token);
                         if (!(xmlAddonCategoryList?.Count > 0))
                             return false;
                         string strCategory = (await GlobalSettings.GetClipboardAsync(token).ConfigureAwait(false)).SelectSingleNodeAndCacheExpressionAsNavigator("category", token)?.Value ?? string.Empty;

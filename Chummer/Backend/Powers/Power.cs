@@ -533,7 +533,7 @@ namespace Chummer
                             // ReSharper disable once MethodHasAsyncOverload
                             blnSync ? this.GetNodeXPath(token: token) : await this.GetNodeXPathAsync(token).ConfigureAwait(false);
                         _nodAdeptWayRequirements =
-                            objWayRequirements?.SelectSingleNodeAndCacheExpression("adeptwayrequires", token: token);
+                            objWayRequirements?.SelectSingleNodeAndCacheExpression("adeptwayrequires", token);
                     }
                 }
 
