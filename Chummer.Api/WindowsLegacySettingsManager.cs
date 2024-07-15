@@ -1,25 +1,23 @@
-using Chummer.Api.Enums;
+﻿using Chummer.Api.Enums;
 using Chummer.Api.Models.GlobalSettings;
 using Microsoft.Win32;
-using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
+using System.Collections.Immutable;
 using System.Globalization;
 
 namespace Chummer.Api
 {
-    public static class LegacySettingsManager
+    public class WindowsLegacySettingsManager(IGlobalSettingsManager manager) : ILegacySettingsManager
     {
-        public static GlobalSettings? LoadLegacyRegistrySettings()
+        public GlobalSettings LoadLegacyRegistrySettings()
         {
             if (!OperatingSystem.IsWindows())
             {
-                // todo: diagnostics?
-                return null;
+                throw new InvalidOperationException();
             }
             using RegistryKey? baseKey = Registry.CurrentUser.OpenSubKey("Software\\Chummer5");
             if (baseKey is null)
-                return null;
-            GlobalSettings def = GlobalSettings.DefaultSettings;
+                return manager.DefaultGlobalSettings;
+            GlobalSettings def = manager.DefaultGlobalSettings;
             Update update = new Update(
                 ShouldAutoUpdate: baseKey.LoadValueOrDefault("autoupdate", def.Update.ShouldAutoUpdate),
                 PreferNightly: baseKey.LoadValueOrDefault("prefernightlybuilds", def.Update.PreferNightly)
@@ -83,6 +81,7 @@ namespace Chummer.Api
                 LoggingResetCountdown: baseKey.LoadValueOrDefault("useloggingApplicationInsightsResetCounter", def.Logging.LoggingResetCountdown)
             );
 
+
             Character character = new Character(
                 RosterPath: baseKey.LoadValueOrDefault("characterrosterpath", def.Character.RosterPath),
                 CreateBackupOnCareer: baseKey.LoadValueOrDefault("createbackuponcareer", def.Character.CreateBackupOnCareer),
@@ -104,7 +103,7 @@ namespace Chummer.Api
 
             return new GlobalSettings(
                 update, cd, pdf, print, display, ux, saving, logging, character,
-                lang, mru, faves, sourcebooks
+                lang, mru.ToImmutableArray(), faves.ToImmutableArray(), sourcebooks.ToImmutableArray()
             );
             static CultureInfo ParseLanguage(string? value, CultureInfo defaultValue)
             {
@@ -199,7 +198,7 @@ namespace Chummer.Api
                 if (!useCustom) return defaultValue;
                 return baseKey.LoadValueOrDefault(key, defaultValue);
             }
-            static IReadOnlyList<DirectoryInfo> LoadCustomDataDirectories(RegistryKey? key, IReadOnlyList<DirectoryInfo> defaultValue)
+            static ImmutableArray<DirectoryInfo> LoadCustomDataDirectories(RegistryKey? key, ImmutableArray<DirectoryInfo> defaultValue)
             {
                 // The old format stores all the custom data directories literally
                 // We want a new one where we store the directory where the subdirectories are searched for custom data
@@ -235,66 +234,6 @@ namespace Chummer.Api
                 if (!printfreeexpenses) return PrintExpenses.PrintValueExpenses;
                 return PrintExpenses.PrintAllExpenses;
             }
-        }
-
-        [return: NotNullIfNotNull(nameof(defaultValue))]
-        private static T? LoadValueOrDefault<T>(this RegistryKey baseKey, string key, T? defaultValue)
-            where T : IParsable<T>
-        {
-            Debug.Assert(OperatingSystem.IsWindows());
-            object? value = baseKey.GetValue(key);
-            if (value is not null && T.TryParse(value.ToString(), CultureInfo.InvariantCulture, out T? parsedValue))
-                return parsedValue;
-            return defaultValue;
-        }
-
-        private static T LoadEnumOrDefault<T>(this RegistryKey baseKey, string key, T defaultValue)
-            where T : struct, Enum
-        {
-            Debug.Assert(OperatingSystem.IsWindows());
-            object? value = baseKey.GetValue(key);
-            if (value is not null && Enum.TryParse<T>(value.ToString(), true, out T parsedValue))
-                return parsedValue;
-            return defaultValue;
-        }
-
-        [return: NotNullIfNotNull(nameof(defaultValue))]
-        private static FileInfo? LoadValueOrDefault(this RegistryKey baseKey, string key, FileInfo? defaultValue)
-        {
-            Debug.Assert(OperatingSystem.IsWindows());
-            object? value = baseKey.GetValue(key);
-            if (value is not null)
-            {
-                string? vstr = value.ToString();
-                if (vstr is not null)
-                    return new FileInfo(vstr);
-            }
-            return defaultValue;
-        }
-
-        [return: NotNullIfNotNull(nameof(defaultValue))]
-        private static DirectoryInfo? LoadValueOrDefault(this RegistryKey baseKey, string key, DirectoryInfo? defaultValue)
-        {
-            Debug.Assert(OperatingSystem.IsWindows());
-            object? value = baseKey.GetValue(key);
-            if (value is not null)
-            {
-                string? vstr = value.ToString();
-                if (vstr is not null)
-                    return new DirectoryInfo(vstr);
-            }
-            return defaultValue;
-        }
-
-        private static bool TryLoadValue<T>(this RegistryKey baseKey, string key, [NotNullWhen(true)] out T? value)
-            where T : IParsable<T>
-        {
-            Debug.Assert(OperatingSystem.IsWindows());
-            object? objval = baseKey.GetValue(key);
-            if (objval is not null)
-                return T.TryParse(objval.ToString(), null, out value);
-            value = default;
-            return false;
         }
     }
 }

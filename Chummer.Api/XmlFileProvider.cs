@@ -1,4 +1,5 @@
-﻿using System.Xml.Linq;
+using System.Xml;
+using System.Xml.Linq;
 
 namespace Chummer.Api
 {
@@ -11,10 +12,10 @@ namespace Chummer.Api
             this.dataDirectory = dataDirectory;
         }
 
-        public XDocument Books()
+        public XmlReader Books()
         {
-            using FileStream fs = dataDirectory.EnumerateFiles().Single(f => f.Name == "books.xml").OpenRead();
-            return XDocument.Load(fs);
+            FileStream fs = dataDirectory.EnumerateFiles().Single(f => f.Name == "books.xml").OpenRead();
+            return XmlReader.Create(fs);
         }
     }
 }

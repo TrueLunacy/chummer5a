@@ -1,4 +1,7 @@
-﻿namespace Chummer.Api.Models.GlobalSettings
+using RecordSourceGenerator.Generated;
+
+namespace Chummer.Api.Models.GlobalSettings
 {
-    public record Update(bool ShouldAutoUpdate, bool PreferNightly);
+    [XmlRecord]
+    public sealed partial record Update(bool ShouldAutoUpdate, bool PreferNightly);
 }

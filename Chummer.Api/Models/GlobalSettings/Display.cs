@@ -1,7 +1,9 @@
-﻿using Chummer.Api.Enums;
+using Chummer.Api.Enums;
+using RecordSourceGenerator.Generated;
 
 namespace Chummer.Api.Models.GlobalSettings
 {
-    public record Display(bool StartInFullscreenMode, ColorMode ColorMode, DpiScalingMethod DpiScalingMethod,
+    [XmlRecord]
+    public sealed partial record Display(bool StartInFullscreenMode, ColorMode ColorMode, DpiScalingMethod DpiScalingMethod,
         string? CustomDateFormat, string? CustomTimeFormat);
 }

@@ -1,4 +1,4 @@
-﻿using Chummer.Api.Models.GlobalSettings;
+using Chummer.Api.Models.GlobalSettings;
 
 namespace Chummer.Api
 {
@@ -6,5 +6,6 @@ namespace Chummer.Api
     {
         GlobalSettings LoadGlobalSettings(Stream stream);
         void SerializeGlobalSettings(GlobalSettings globalSettings, Stream stream);
+        GlobalSettings DefaultGlobalSettings { get; }
     }
 }

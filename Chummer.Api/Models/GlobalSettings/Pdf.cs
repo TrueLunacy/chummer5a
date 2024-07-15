@@ -1,8 +1,11 @@
 using Chummer.Api.Enums;
+using RecordSourceGenerator.Generated;
+using System.Xml;
 
 namespace Chummer.Api.Models.GlobalSettings
 {
-    public sealed record Pdf(FileInfo? ApplicationPath, PdfParametersStyle ParametersStyle, bool InsertPdfNotes)
+    [XmlRecord]
+    public sealed partial record Pdf(FileInfo? ApplicationPath, PdfParametersStyle ParametersStyle, bool InsertPdfNotes)
     {
         public bool Equals(Pdf? other)
         {
@@ -17,6 +20,21 @@ namespace Chummer.Api.Models.GlobalSettings
             return ApplicationPath?.GetHashCode() ?? 0
                 ^ ParametersStyle.GetHashCode()
                 ^ InsertPdfNotes.GetHashCode();
+        }
+
+        private static partial FileInfo? ParseApplicationPath(XmlReader reader, FileInfo? defaultValue)
+        {
+            var path = reader.ReadInnerXml();
+            if (string.IsNullOrWhiteSpace(path))
+                return defaultValue;
+            return new FileInfo(path);
+        }
+
+        private static partial void WriteApplicationPath(FileInfo path, XmlWriter writer, string elementName)
+        {
+            writer.WriteStartElement(elementName);
+            writer.WriteValue(path.FullName);
+            writer.WriteEndElement();
         }
     }
 }

@@ -1,6 +1,10 @@
+using RecordSourceGenerator.Generated;
+using System.Xml;
+
 namespace Chummer.Api.Models.GlobalSettings
 {
-    public sealed record Character(DirectoryInfo? RosterPath, bool CreateBackupOnCareer, Guid DefaultSettingsFile,
+    [XmlRecord]
+    public sealed partial record Character(DirectoryInfo? RosterPath, bool CreateBackupOnCareer, Guid DefaultSettingsFile,
         bool LiveRefresh, bool EnableLifeModules)
     {
         public bool Equals(Character? other)
@@ -21,6 +25,21 @@ namespace Chummer.Api.Models.GlobalSettings
                 ^ DefaultSettingsFile.GetHashCode()
                 ^ LiveRefresh.GetHashCode()
                 ^ EnableLifeModules.GetHashCode();
+        }
+
+        private static partial DirectoryInfo? ParseRosterPath(XmlReader reader, DirectoryInfo? defaultValue)
+        {
+            var path = reader.ReadInnerXml();
+            if (string.IsNullOrWhiteSpace(path))
+                return defaultValue;
+            return new DirectoryInfo(path);
+        }
+
+        private static partial void WriteRosterPath(DirectoryInfo path, XmlWriter writer, string elementName)
+        {
+            writer.WriteStartElement(elementName);
+            writer.WriteValue(path.FullName);
+            writer.WriteEndElement();
         }
     }
 }

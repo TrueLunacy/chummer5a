@@ -1,15 +1,14 @@
-using System;
-using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Globalization;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Threading.Tasks;
-using System.Xml.Serialization;
+using System.IO;
+using System.Xml;
 using Chummer.Api.Enums;
+using RecordSourceGenerator.Generated;
 
 namespace Chummer.Api.Models.GlobalSettings
 {
-    public record GlobalSettings(
+    [XmlRecord]
+    public sealed partial record GlobalSettings(
         Update Update,
         CustomData CustomData,
         Pdf Pdf,
@@ -20,14 +19,100 @@ namespace Chummer.Api.Models.GlobalSettings
         Logging Logging,
         Character Character,
         CultureInfo Language,
-        List<FileInfo> MostRecentlyUsed,
-        List<FileInfo> FavoriteCharacters,
-        List<Sourcebook> SourcebookInfo
+        ImmutableArray<FileInfo> MostRecentlyUsed,
+        ImmutableArray<FileInfo> FavoriteCharacters,
+        ImmutableArray<Sourcebook> SourcebookInfo
     )
     {
-        public int SettingsVersion => 1;
+        private static partial CultureInfo ParseLanguage(XmlReader reader, CultureInfo? defaultValue)
+        {
+            var culture = reader.ReadInnerXml();
+            if (string.IsNullOrWhiteSpace(culture))
+                return defaultValue;
+            try
+            {
+                return CultureInfo.GetCultureInfo(culture);
+            }
+            catch (CultureNotFoundException)
+            {
+                return defaultValue;
+            }
+        }
 
-        public static readonly GlobalSettings DefaultSettings = new(
+        private static partial FileInfo ParseMostRecentlyUsed(XmlReader reader, FileInfo defaultValue)
+        {
+            var path = reader.ReadInnerXml();
+            if (string.IsNullOrWhiteSpace(path))
+                return defaultValue;
+            return new FileInfo(path);
+        }
+
+        private static partial FileInfo ParseFavoriteCharacters(XmlReader reader, FileInfo defaultValue)
+        {
+            var path = reader.ReadInnerXml();
+            if (string.IsNullOrWhiteSpace(path))
+                return defaultValue;
+            return new FileInfo(path);
+        }
+
+        private static partial void WriteLanguage(CultureInfo info, XmlWriter writer, string elementName)
+        {
+            writer.WriteStartElement(elementName);
+            writer.WriteValue(info.Name);
+            writer.WriteEndElement();
+        }
+
+        private static partial void WriteMostRecentlyUsed(FileInfo path, XmlWriter writer, string elementName)
+        {
+            writer.WriteStartElement(elementName);
+            writer.WriteValue(path.FullName);
+            writer.WriteEndElement();
+        }
+
+        private static partial void WriteFavoriteCharacters(FileInfo path, XmlWriter writer, string elementName)
+        {
+            writer.WriteStartElement(elementName);
+            writer.WriteValue(path.FullName);
+            writer.WriteEndElement();
+        }
+
+        public bool Equals(GlobalSettings? other)
+        {
+            return other is not null
+                && Update == other.Update
+                && CustomData == other.CustomData
+                && Pdf == other.Pdf
+                && Print == other.Print
+                && Display == other.Display
+                && UX == other.UX
+                && Saving == other.Saving
+                && Logging == other.Logging
+                && Character == other.Character
+                && Language?.Name == other.Language?.Name
+                && MostRecentlyUsed.SequenceEqual(other.MostRecentlyUsed)
+                && FavoriteCharacters.SequenceEqual(other.FavoriteCharacters)
+                && SourcebookInfo.SequenceEqual(other.SourcebookInfo);
+        }
+
+        public override int GetHashCode()
+        {
+            return Update.GetHashCode()
+                ^ CustomData.GetHashCode()
+                ^ Pdf.GetHashCode()
+                ^ Print.GetHashCode()
+                ^ Display.GetHashCode()
+                ^ UX.GetHashCode()
+                ^ Saving.GetHashCode()
+                ^ Logging.GetHashCode()
+                ^ Character.GetHashCode()
+                ^ (Language?.GetHashCode() ?? 0)
+                ^ MostRecentlyUsed.Select(mru => mru.FullName.GetHashCode()).Aggregate((l, r) => l ^ r)
+                ^ FavoriteCharacters.Select(f => f.FullName.GetHashCode()).Aggregate((l, r) => l ^ r)
+                ^ SourcebookInfo.Select(s => s.GetHashCode()).Aggregate((l, r) => l ^ r);
+        }
+
+
+        /*public static readonly GlobalSettings DefaultSettings = new(
             new Update(ShouldAutoUpdate: false, PreferNightly: false),
             new CustomData(AllowLiveUpdates: false, CustomDataDirectories: new List<DirectoryInfo>()),
             new Pdf(ApplicationPath: null, ParametersStyle: PdfParametersStyle.WebBrowserStyle, InsertPdfNotes: true),
@@ -50,6 +135,6 @@ namespace Chummer.Api.Models.GlobalSettings
             MostRecentlyUsed: new List<FileInfo>(),
             FavoriteCharacters: new List<FileInfo>(),
             SourcebookInfo: new List<Sourcebook>()
-        );
+        );*/
     }
 }

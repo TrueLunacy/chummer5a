@@ -1,9 +1,10 @@
-﻿using System.Xml.Linq;
+using System.Xml;
+using System.Xml.Linq;
 
 namespace Chummer.Api
 {
     public interface IXmlFileProvider
     {
-        public XDocument Books();
+        XmlReader Books();
     }
 }

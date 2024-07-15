@@ -1,6 +1,12 @@
-﻿using Chummer.Api.Enums;
+using Chummer.Api.Enums;
+using RecordSourceGenerator.Generated;
+using System.Reflection;
+using System.Runtime.CompilerServices;
+using System.Runtime.Serialization;
+using System.Xml;
 
 namespace Chummer.Api.Models.GlobalSettings
 {
-    public record Logging(LogLevel LogLevel, uint LoggingResetCountdown);
+    [XmlRecord]
+    public sealed partial record Logging(LogLevel LogLevel, uint LoggingResetCountdown);
 }
