@@ -236,7 +236,6 @@ namespace Chummer
             {
                 settings = gsm.DefaultGlobalSettings;
                 settingsFile = default!;
-
                 return;
             }
 
@@ -324,6 +323,7 @@ namespace Chummer
 
         public static async Task SaveOptionsToRegistry(CancellationToken token = default)
         {
+            Debug.Assert(!Utils.IsDesignerMode); // should never happen, but you can't be too sure
             using FileStream fs = settingsFile.Open(FileMode.Create, FileAccess.ReadWrite, FileShare.None);
             gsm.SerializeGlobalSettings(settings, fs);
         }
