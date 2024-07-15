@@ -133,6 +133,7 @@ namespace RecordSourceGenerator
                 // 4. Other: Emit a partial method
                 isb.WriteLine($$"""
                 #nullable enable
+                #pragma warning disable CS1522
                 using System;
                 using System.Xml;
                 using System.Reflection;
@@ -288,54 +289,64 @@ namespace RecordSourceGenerator
             using (var attrif = isb.Brace())
             {
                 isb.WriteLine("while (reader.MoveToNextAttribute())");
-                using var attrwhile = isb.Brace();
-                isb.WriteLine("switch (reader.Name)");
-                using var attrswitch = isb.Brace();
-                foreach (var param in model.Params.Where(p => p.Position == XmlPosition.Attribute))
+                using (var attrwhile = isb.Brace())
                 {
-                    isb.WriteLine($"case \"{param.XmlName}\":");
-                    using (var casebrace = isb.Brace())
+                    isb.WriteLine("switch (reader.Name)");
+                    using var attrswitch = isb.Brace();
+                    foreach (var param in model.Params.Where(p => p.Position == XmlPosition.Attribute))
                     {
-                        Debug.Assert(!param.ImmutableArrayOf);
-                        if (param.HasPartialMethod)
-                            partialmethods.Add(param.GetParsePartialMethod());
-                        if (param.StringType)
+                        isb.WriteLine($"case \"{param.XmlName}\":");
+                        using (var casebrace = isb.Brace())
                         {
-                            isb.WriteLine($$"""
-                            MethodInfo field = typeof({{model.ClassIdentifier}})
-                                .GetProperty(nameof({{param.ParameterName}}))!
-                                .GetSetMethod()!;
-                            field.Invoke(returnObject, new object?[] { reader.Value });
-                            """);
-
-                        }
-                        else if (param.TryParseable)
-                        {
-                            isb.WriteLine($$"""
-                            if ({{param.GetTryParse("v", "reader.Value")}})
+                            Debug.Assert(!param.ImmutableArrayOf);
+                            if (param.HasPartialMethod)
+                                partialmethods.Add(param.GetParsePartialMethod());
+                            if (param.StringType)
                             {
+                                isb.WriteLine($$"""
+                                MethodInfo field = typeof({{model.ClassIdentifier}})
+                                    .GetProperty(nameof({{param.ParameterName}}))!
+                                    .GetSetMethod()!;
+                                field.Invoke(returnObject, new object?[] { reader.Value });
+                                """);
+
+                            }
+                            else if (param.TryParseable)
+                            {
+                                isb.WriteLine($$"""
+                                if ({{param.GetTryParse("v", "reader.Value")}})
+                                {
+                                    MethodInfo field = typeof({{model.ClassIdentifier}})
+                                        .GetProperty(nameof({{param.ParameterName}}))!
+                                        .GetSetMethod()!;
+                                    field.Invoke(returnObject, new object?[] { v });
+                                }
+                                """);
+                            }
+                            else
+                            {
+                                isb.WriteLine($$"""
+                                {{param.GetValueAssignment("v", "reader", $"defaultValue{(model.IsStruct ? "" : "?")}.{param.ParameterName}")}}
                                 MethodInfo field = typeof({{model.ClassIdentifier}})
                                     .GetProperty(nameof({{param.ParameterName}}))!
                                     .GetSetMethod()!;
                                 field.Invoke(returnObject, new object?[] { v });
+                                """);
                             }
-                            """);
                         }
-                        else
-                        {
-                            isb.WriteLine($$"""
-                            {{param.GetValueAssignment("v", "reader", $"defaultValue{(model.IsStruct ? "" : "?")}.{param.ParameterName}")}}
-                            MethodInfo field = typeof({{model.ClassIdentifier}})
-                                .GetProperty(nameof({{param.ParameterName}}))!
-                                .GetSetMethod()!;
-                            field.Invoke(returnObject, new object?[] { v });
-                            """);
-                        }
+                        isb.WriteLine("break;");
+                        isb.WriteLine("""
+                        default:
+                            reader.Read();
+                            break;
+                        """);
                     }
-                    isb.WriteLine("break;");
                 }
+                isb.WriteLine("reader.MoveToElement();");
             }
-            isb.WriteLine("while (reader.Read())");
+            isb.WriteLine("Debug.Assert(reader.Name == elementName);");
+            isb.WriteLine($"reader.Read();");
+            isb.WriteLine("while (true)");
             using (var whilebrace = isb.Brace())
             {
                 isb.WriteLine("if (reader.NodeType == XmlNodeType.Element)");
@@ -363,14 +374,14 @@ namespace RecordSourceGenerator
                                         if (param.StringType)
                                         {
                                             isb.WriteLine($$"""
-                                            string value = reader.ReadInnerXml();
+                                            string value = reader.ReadElementContentAsString();
                                             list.Add(value);
                                             """);
                                         }
                                         else if (param.TryParseable)
                                         {
                                             isb.WriteLine($$"""
-                                            string value = reader.ReadInnerXml();
+                                            string value = reader.ReadElementContentAsString();
                                             if ({{param.GetTryParse("v", "value")}})
                                             {
                                                 list.Add(v);
@@ -413,7 +424,7 @@ namespace RecordSourceGenerator
                                 else if (param.StringType)
                                 {
                                     isb.WriteLine($$"""
-                                    string value = reader.ReadInnerXml();
+                                    string value = reader.ReadElementContentAsString();
                                     MethodInfo field = typeof({{model.ClassIdentifier}})
                                         .GetProperty(nameof({{param.ParameterName}}))!
                                         .GetSetMethod()!;
@@ -424,7 +435,7 @@ namespace RecordSourceGenerator
                                 else if (param.TryParseable)
                                 {
                                     isb.WriteLine($$"""
-                                    string value = reader.ReadInnerXml();
+                                    string value = reader.ReadElementContentAsString();
                                     if ({{param.GetTryParse("v", "value")}})
                                     {
                                         MethodInfo field = typeof({{model.ClassIdentifier}})
@@ -450,7 +461,10 @@ namespace RecordSourceGenerator
                     }
                 }
                 isb.WriteLine($$"""
+                else reader.Read();
                 if (reader.NodeType == XmlNodeType.EndElement && reader.Name == elementName)
+                    break;
+                else if (reader.NodeType == XmlNodeType.None)
                     break;
                 """);
             }

@@ -1236,7 +1236,7 @@ namespace Chummer
             {
                 Pdf = settings.Pdf with
                 {
-                    ApplicationPath = value is null ? null : new FileInfo(value)
+                    ApplicationPath = string.IsNullOrWhiteSpace(value) ? null : new FileInfo(value)
                 }
             };
         }
@@ -1347,7 +1347,7 @@ namespace Chummer
             {
                 Character = settings.Character with
                 {
-                    RosterPath = value is null ? null : new DirectoryInfo(value)
+                    RosterPath = string.IsNullOrWhiteSpace(value) ? null : new DirectoryInfo(value)
                 }
             };
         }
@@ -1414,7 +1414,7 @@ namespace Chummer
             {
                 Saving = settings.Saving with
                 {
-                    LastMugshotFolder = value is null ? null : new DirectoryInfo(value)
+                    LastMugshotFolder = string.IsNullOrWhiteSpace(value) ? null : new DirectoryInfo(value)
                 }
             };
         }
