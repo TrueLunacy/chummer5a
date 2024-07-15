@@ -361,14 +361,6 @@ namespace Chummer
                             return;
                         }
 
-                        if (!string.IsNullOrEmpty(GlobalSettings.ErrorMessage))
-                        {
-                            // MainForm is null at the moment, so we have to show error box manually
-                            MessageBox.Show(GlobalSettings.ErrorMessage, Application.ProductName, MessageBoxButtons.OK,
-                                            MessageBoxIcon.Error);
-                            return;
-                        }
-
                         if (!string.IsNullOrEmpty(strPostErrorMessage))
                         {
                             // MainForm is null at the moment, so we have to show error box manually
