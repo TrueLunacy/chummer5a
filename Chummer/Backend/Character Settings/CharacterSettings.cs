@@ -3460,12 +3460,8 @@ namespace Chummer
                 objXmlNode.TryGetBoolFieldQuickly("unclampattributeminimum", ref _blnUnclampAttributeMinimum);
                 // Following two settings used to be stored in global options, so they are fetched from the registry if they are not present
                 // Use Rigger 5.0 drone mods
-                if (!objXmlNode.TryGetBoolFieldQuickly("dronemods", ref _blnDroneMods))
-                    GlobalSettings.LoadBoolFromRegistry(ref _blnDroneMods, "dronemods", string.Empty, true);
-                // Apply maximum drone attribute improvement rule to Pilot, too
-                if (!objXmlNode.TryGetBoolFieldQuickly("dronemodsmaximumpilot", ref _blnDroneModsMaximumPilot))
-                    GlobalSettings.LoadBoolFromRegistry(ref _blnDroneModsMaximumPilot, "dronemodsPilot", string.Empty,
-                                                        true);
+                objXmlNode.TryGetBoolFieldQuickly("dronemods", ref _blnDroneMods);
+                objXmlNode.TryGetBoolFieldQuickly("dronemodsmaximumpilot", ref _blnDroneModsMaximumPilot);
 
                 // Maximum number of attributes at metatype maximum in character creation
                 if (!objXmlNode.TryGetInt32FieldQuickly("maxnumbermaxattributescreate",
@@ -4232,12 +4228,9 @@ namespace Chummer
                 objXmlNode.TryGetBoolFieldQuickly("unclampattributeminimum", ref _blnUnclampAttributeMinimum);
                 // Following two settings used to be stored in global options, so they are fetched from the registry if they are not present
                 // Use Rigger 5.0 drone mods
-                if (!objXmlNode.TryGetBoolFieldQuickly("dronemods", ref _blnDroneMods))
-                    GlobalSettings.LoadBoolFromRegistry(ref _blnDroneMods, "dronemods", string.Empty, true);
+                objXmlNode.TryGetBoolFieldQuickly("dronemods", ref _blnDroneMods);
                 // Apply maximum drone attribute improvement rule to Pilot, too
-                if (!objXmlNode.TryGetBoolFieldQuickly("dronemodsmaximumpilot", ref _blnDroneModsMaximumPilot))
-                    GlobalSettings.LoadBoolFromRegistry(ref _blnDroneModsMaximumPilot, "dronemodsPilot", string.Empty,
-                                                        true);
+                objXmlNode.TryGetBoolFieldQuickly("dronemodsmaximumpilot", ref _blnDroneModsMaximumPilot);
 
                 // Maximum number of attributes at metatype maximum in character creation
                 if (!objXmlNode.TryGetInt32FieldQuickly("maxnumbermaxattributescreate",

@@ -26,7 +26,7 @@
     <Configurations>Debug;Release;Debuggable Release</Configurations>
     <EmbeddedResourceUseDependentUponConvention>true</EmbeddedResourceUseDependentUponConvention>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
-    <Nullable>enable</Nullable>
+    <Nullable>disable</Nullable>
   </PropertyGroup>
   <ItemGroup>
     <AssemblyAttribute Include="System.Runtime.InteropServices.ComVisible">
@@ -25845,7 +25845,6 @@
     <RepositoryUrl>https://github.com/chummer5a/chummer5a/</RepositoryUrl>
     <Title>Chummer5a</Title>
     <Product>Chummer5a</Product>
-    <Nullable>disable</Nullable>
     <Company>Chummer5a</Company>
     <Authors>Chummer5a</Authors>
   </PropertyGroup>

@@ -43,6 +43,9 @@ using System.Collections.Immutable;
 using Microsoft.Extensions.DependencyInjection;
 using System.Diagnostics;
 
+#nullable enable
+#pragma warning disable CS1998
+
 namespace Chummer
 {
     public enum ClipboardContentType
@@ -88,8 +91,8 @@ namespace Chummer
         private static readonly Lazy<Logger> s_ObjLogger = new Lazy<Logger>(LogManager.GetCurrentClassLogger);
         private static Logger Log => s_ObjLogger.Value;
         private string _strPath = string.Empty;
-        private PdfReader _objPdfReader;
-        private PdfDocument _objPdfDocument;
+        private PdfReader? _objPdfReader;
+        private PdfDocument? _objPdfDocument;
 
         public SourcebookInfo()
         {
@@ -132,7 +135,7 @@ namespace Chummer
 
         public int Offset { get; set; }
 
-        internal PdfDocument CachedPdfDocument
+        internal PdfDocument? CachedPdfDocument
         {
             get
             {
@@ -191,13 +194,11 @@ namespace Chummer
     /// </summary>
     public static class GlobalSettings
     {
-        public static string ErrorMessage { get; }
+        public static event EventHandler<TextEventArgs>? MruChanged;
 
-        public static event EventHandler<TextEventArgs> MruChanged;
+        public static event PropertyChangedEventHandler? ClipboardChanged;
 
-        public static event PropertyChangedEventHandler ClipboardChanged;
-
-        public static event PropertyChangedAsyncEventHandler ClipboardChangedAsync;
+        public static event PropertyChangedAsyncEventHandler? ClipboardChangedAsync;
 
         public const int MaxMruSize = 10;
         private static readonly MostRecentlyUsedCollection<string> s_LstMostRecentlyUsedCharacters = new MostRecentlyUsedCollection<string>(MaxMruSize);
@@ -219,73 +220,12 @@ namespace Chummer
 
         private static readonly HashSet<CustomDataDirectoryInfo> s_SetCustomDataDirectoryInfos = new HashSet<CustomDataDirectoryInfo>();
 
-        /// <summary>
-        /// Load a Bool Option from the Registry.
-        /// </summary>
-        public static bool LoadBoolFromRegistry(ref bool blnStorage, string strBoolName, string strSubKey = "", bool blnDeleteAfterFetch = false)
-        {
-            RegistryKey objKey = string.IsNullOrWhiteSpace(strSubKey)
-                ? BaseKey
-                : BaseKey.OpenSubKey(strSubKey);
-            if (objKey == null)
-                return false;
-            try
-            {
-                object objRegistryResult = objKey.GetValue(strBoolName);
-                if (objRegistryResult != null)
-                {
-                    if (bool.TryParse(objRegistryResult.ToString(), out bool blnTemp))
-                        blnStorage = blnTemp;
-                    if (blnDeleteAfterFetch)
-                        objKey.DeleteValue(strBoolName);
-                    return true;
-        }
-            }
-            finally
-            {
-                if (objKey != BaseKey)
-                    objKey.Close();
-            }
-
-            return false;
-        }
-
-        /// <summary>
-        /// Load an String Option from the Registry.
-        /// </summary>
-        public static bool LoadStringFromRegistry(ref string strStorage, string strStringName, string strSubKey = "", bool blnDeleteAfterFetch = false)
-        {
-            RegistryKey objKey = string.IsNullOrWhiteSpace(strSubKey)
-                ? BaseKey
-                : BaseKey.OpenSubKey(strSubKey);
-            if (objKey == null)
-                return false;
-            try
-            {
-                object objRegistryResult = objKey.GetValue(strStringName);
-                if (objRegistryResult != null)
-                {
-                    strStorage = objRegistryResult.ToString();
-                    if (blnDeleteAfterFetch)
-                        objKey.DeleteValue(strStringName);
-                    return true;
-        }
-            }
-            finally
-            {
-                if (objKey != BaseKey)
-                    objKey.Close();
-            }
-
-            return false;
-        }
-
         private static Api.Models.GlobalSettings.GlobalSettings settings;
         private static readonly IGlobalSettingsManager gsm;
         private static readonly FileInfo settingsFile;
         private static readonly IDataLoader cdl;
 
-        private static RegistryKey BaseKey;
+        //private static RegistryKey BaseKey;
 
         static GlobalSettings()
         {
@@ -295,11 +235,10 @@ namespace Chummer
             if (Utils.IsDesignerMode)
             {
                 settings = gsm.DefaultGlobalSettings;
+                settingsFile = default!;
+
                 return;
             }
-
-
-            BaseKey = Registry.CurrentUser.CreateSubKey("Software\\Chummer5", true);
 
             settingsFile = new FileInfo(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData, Environment.SpecialFolderOption.Create),
                 "Chummer5", "GlobalSettings.xml"));
@@ -307,7 +246,7 @@ namespace Chummer
             {
                 settings = legacy.LoadLegacyRegistrySettings();
                 Debug.Assert(settings is not null);
-                if (!settingsFile.Directory.Exists)
+                if (!settingsFile.Directory!.Exists)
                     settingsFile.Directory.Create();
                 using (FileStream fs = settingsFile.Open(FileMode.Create, FileAccess.Write, FileShare.None))
                 {
@@ -1290,7 +1229,7 @@ namespace Chummer
         /// <summary>
         /// Path to the user's PDF application.
         /// </summary>
-        public static string PdfAppPath
+        public static string? PdfAppPath
         {
             get => settings.Pdf.ApplicationPath?.FullName;
             set => settings = settings with
@@ -1401,14 +1340,14 @@ namespace Chummer
         /// <summary>
         /// Path to the directory that Chummer should watch and from which to automatically populate its character roster.
         /// </summary>
-        public static string CharacterRosterPath
+        public static string? CharacterRosterPath
         {
             get => settings.Character.RosterPath?.FullName;
             set => settings = settings with
             {
                 Character = settings.Character with
                 {
-                    RosterPath = new DirectoryInfo(value)
+                    RosterPath = value is null ? null : new DirectoryInfo(value)
                 }
             };
         }
@@ -1468,14 +1407,14 @@ namespace Chummer
         /// <summary>
         /// Last folder from which a mugshot was added
         /// </summary>
-        public static string RecentImageFolder
+        public static string? RecentImageFolder
         {
             get => settings.Saving.LastMugshotFolder?.FullName;
             set => settings = settings with
             {
                 Saving = settings.Saving with
                 {
-                    LastMugshotFolder = new DirectoryInfo(value)
+                    LastMugshotFolder = value is null ? null : new DirectoryInfo(value)
                 }
             };
         }
@@ -1557,7 +1496,7 @@ namespace Chummer
             }
         }
 
-        public static string CustomDateFormat
+        public static string? CustomDateFormat
         {
             get => settings.Display.CustomDateFormat;
             set => settings = settings with
@@ -1569,7 +1508,7 @@ namespace Chummer
             };
         }
 
-        public static string CustomTimeFormat
+        public static string? CustomTimeFormat
         {
             get => settings.Display.CustomTimeFormat;
             set => settings = settings with
