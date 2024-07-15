@@ -39,6 +39,9 @@ using Chummer.Api;
 using Chummer.Api.Enums;
 using Chummer.Api.Models.GlobalSettings;
 using Image = System.Drawing.Image;
+using System.Collections.Immutable;
+using Microsoft.Extensions.DependencyInjection;
+using System.Diagnostics;
 
 namespace Chummer
 {
@@ -278,46 +281,39 @@ namespace Chummer
         }
 
         private static Api.Models.GlobalSettings.GlobalSettings settings;
-        private static readonly GlobalSettingsManager gsm;
+        private static readonly IGlobalSettingsManager gsm;
         private static readonly FileInfo settingsFile;
-        private static readonly ChummerDataLoader cdl;
+        private static readonly IDataLoader cdl;
 
         private static RegistryKey BaseKey;
 
         static GlobalSettings()
         {
+            gsm = TemporaryServiceLocator.Services.GetRequiredService<IGlobalSettingsManager>();
+            cdl = TemporaryServiceLocator.Services.GetRequiredService<IDataLoader>();
+            var legacy = TemporaryServiceLocator.Services.GetRequiredService<ILegacySettingsManager>();
             if (Utils.IsDesignerMode)
             {
-                settings = Api.Models.GlobalSettings.GlobalSettings.DefaultSettings;
+                settings = gsm.DefaultGlobalSettings;
                 return;
             }
 
-            cdl = new ChummerDataLoader(
-                new XmlFileProvider(new DirectoryInfo(Utils.GetDataFolderPath))
-            );
 
             BaseKey = Registry.CurrentUser.CreateSubKey("Software\\Chummer5", true);
 
             settingsFile = new FileInfo(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData, Environment.SpecialFolderOption.Create),
                 "Chummer5", "GlobalSettings.xml"));
-            gsm = new GlobalSettingsManager();
             if (!settingsFile.Exists)
             {
-                settings = LegacySettingsManager.LoadLegacyRegistrySettings();
-                if (settings is not null) // succeeded at loading legacy settings
+                settings = legacy.LoadLegacyRegistrySettings();
+                Debug.Assert(settings is not null);
+                if (!settingsFile.Directory.Exists)
+                    settingsFile.Directory.Create();
+                using (FileStream fs = settingsFile.Open(FileMode.Create, FileAccess.Write, FileShare.None))
                 {
-                    if (!settingsFile.Directory.Exists)
-                        settingsFile.Directory.Create();
-                    using (FileStream fs = settingsFile.Open(FileMode.Create, FileAccess.Write, FileShare.None))
-                    {
-                        gsm.SerializeGlobalSettings(settings, fs);
-                    }
-                    Program.ShowScrollableMessageBox(LanguageManager.GetString("Message_ImportedLegacySettings"));
+                    gsm.SerializeGlobalSettings(settings, fs);
                 }
-                else
-                {
-                    settings = Api.Models.GlobalSettings.GlobalSettings.DefaultSettings;
-                }
+                Program.ShowScrollableMessageBox(LanguageManager.GetString("Message_ImportedLegacySettings"));
             }
             else
             {
@@ -1378,7 +1374,7 @@ namespace Chummer
             }
             settings = settings with
             {
-                SourcebookInfo = sb
+                SourcebookInfo = [.. sb]
             };
         }
 
@@ -1492,7 +1488,7 @@ namespace Chummer
         {
             settings = settings with
             {
-                FavoriteCharacters = s_LstFavoriteCharacters.Select(s => new FileInfo(s)).ToList()
+                FavoriteCharacters = s_LstFavoriteCharacters.Select(s => new FileInfo(s)).ToImmutableArray()
             };
 
             using (FileStream fs = settingsFile.Open(FileMode.Create, FileAccess.Write, FileShare.None))
@@ -1508,7 +1504,7 @@ namespace Chummer
         {
             settings = settings with
             {
-                MostRecentlyUsed = s_LstMostRecentlyUsedCharacters.Select(s => new FileInfo(s)).ToList()
+                MostRecentlyUsed = s_LstMostRecentlyUsedCharacters.Select(s => new FileInfo(s)).ToImmutableArray()
             };
 
             using (FileStream fs = settingsFile.Open(FileMode.Create, FileAccess.Write, FileShare.None))

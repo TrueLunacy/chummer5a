@@ -31,6 +31,7 @@ using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Chummer.Api;
 using Chummer.Backend;
 using Chummer.Forms;
 using Chummer.Plugins;
@@ -40,6 +41,7 @@ using Microsoft.ApplicationInsights.DataContracts;
 using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.ApplicationInsights.Metrics;
 using Microsoft.ApplicationInsights.NLogTarget;
+using Microsoft.Extensions.DependencyInjection;
 using NLog;
 using NLog.Config;
 
@@ -47,6 +49,20 @@ using NLog.Config;
 
 namespace Chummer
 {
+    public static class TemporaryServiceLocator
+    {
+        public static IServiceProvider Services { get; }
+        static TemporaryServiceLocator()
+        {
+            IServiceCollection collection = new ServiceCollection();
+            collection.AddSingleton<ILegacySettingsManager, WindowsLegacySettingsManager>();
+            collection.AddSingleton<IGlobalSettingsManager, GlobalSettingsManager>();
+            collection.AddSingleton<IXmlFileProvider, XmlFileProvider>(s => new XmlFileProvider(new DirectoryInfo(Utils.GetDataFolderPath)));
+            collection.AddSingleton<IDataLoader, ChummerDataLoader>();
+            Services = collection.BuildServiceProvider();
+        }
+    }
+
     public static class Program
     {
         private static Logger Log;

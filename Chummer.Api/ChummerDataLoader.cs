@@ -9,8 +9,7 @@ using System.Xml.Linq;
 
 namespace Chummer.Api
 {
-
-    public class ChummerDataLoader(IXmlFileProvider provider)
+    public class ChummerDataLoader(IXmlFileProvider provider) : IDataLoader
     {
         private IReadOnlyList<ChummerBook>? books;
         public IReadOnlyList<ChummerBook> LoadBooks()
