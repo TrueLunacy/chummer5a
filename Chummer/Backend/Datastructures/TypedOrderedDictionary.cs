@@ -495,8 +495,7 @@ namespace Chummer
 
         public void Insert(int index, Tuple<TKey, TValue> item)
         {
-            if (item == null)
-                throw new ArgumentNullException(nameof(item));
+            ArgumentNullException.ThrowIfNull(item);
             if (_dicUnorderedData.ContainsKey(item.Item1))
                 throw new ArgumentException(null, nameof(item));
             _dicUnorderedData.Add(item.Item1, item.Item2);

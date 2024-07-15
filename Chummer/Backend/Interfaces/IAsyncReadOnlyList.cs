@@ -363,8 +363,7 @@ namespace Chummer
         public static async Task<int> LastIndexOfAsync<T>(this IAsyncReadOnlyList<T> lstCollection, T objItem,
             CancellationToken token = default)
         {
-            if (lstCollection == null)
-                throw new ArgumentNullException(nameof(lstCollection));
+            ArgumentNullException.ThrowIfNull(lstCollection);
             if (objItem == null)
                 throw new ArgumentNullException(nameof(objItem));
             for (int i = await lstCollection.GetCountAsync(token).ConfigureAwait(false) - 1; i >= 0; --i)
@@ -381,8 +380,7 @@ namespace Chummer
         public static async Task<int> IndexOfAsync<T>(this IAsyncReadOnlyList<T> lstCollection, T objItem,
             CancellationToken token = default)
         {
-            if (lstCollection == null)
-                throw new ArgumentNullException(nameof(lstCollection));
+            ArgumentNullException.ThrowIfNull(lstCollection);
             if (objItem == null)
                 throw new ArgumentNullException(nameof(objItem));
             for (int i = 0; i < await lstCollection.GetCountAsync(token).ConfigureAwait(false); ++i)

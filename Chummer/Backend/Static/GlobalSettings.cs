@@ -1292,12 +1292,12 @@ namespace Chummer
         /// </summary>
         public static string PdfAppPath
         {
-            get => settings.Pdf.ApplicationPath.FullName;
+            get => settings.Pdf.ApplicationPath?.FullName;
             set => settings = settings with
             {
                 Pdf = settings.Pdf with
                 {
-                    ApplicationPath = new FileInfo(value)
+                    ApplicationPath = value is null ? null : new FileInfo(value)
                 }
             };
         }

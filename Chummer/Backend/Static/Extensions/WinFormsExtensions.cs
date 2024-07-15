@@ -51,8 +51,7 @@ namespace Chummer
         public static DialogResult ShowDialogSafe(this Form frmForm, IWin32Window owner = null, CancellationToken token = default)
         {
             token.ThrowIfCancellationRequested();
-            if (frmForm == null)
-                throw new ArgumentNullException(nameof(frmForm));
+            ArgumentNullException.ThrowIfNull(frmForm);
             if (frmForm.IsDisposed)
                 throw new ObjectDisposedException(nameof(frmForm));
             if (!Utils.IsUnitTest)

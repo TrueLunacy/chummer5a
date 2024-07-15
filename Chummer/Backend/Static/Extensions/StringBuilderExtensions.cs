@@ -222,8 +222,7 @@ namespace Chummer
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static StringBuilder AppendJoin<T>([NotNull] this StringBuilder sbdInput, string strSeparator, IEnumerable<T> lstValues)
         {
-            if (lstValues == null)
-                throw new ArgumentNullException(nameof(lstValues));
+            ArgumentNullException.ThrowIfNull(lstValues);
             bool blnFirst = true;
             foreach (T objValue in lstValues)
             {
@@ -245,8 +244,7 @@ namespace Chummer
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static StringBuilder AppendJoin([NotNull] this StringBuilder sbdInput, string strSeparator, IEnumerable<string> lstValues)
         {
-            if (lstValues == null)
-                throw new ArgumentNullException(nameof(lstValues));
+            ArgumentNullException.ThrowIfNull(lstValues);
             bool blnFirst = true;
             foreach (string strValue in lstValues)
             {
@@ -270,8 +268,7 @@ namespace Chummer
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static StringBuilder AppendJoin([NotNull] this StringBuilder sbdInput, string strSeparator, string[] astrValues, int intStartIndex, int intCount)
         {
-            if (astrValues == null)
-                throw new ArgumentNullException(nameof(astrValues));
+            ArgumentNullException.ThrowIfNull(astrValues);
             if (intStartIndex < 0)
                 throw new ArgumentOutOfRangeException(nameof(intStartIndex));
             if (intCount < 0)
@@ -297,8 +294,7 @@ namespace Chummer
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static StringBuilder AppendJoin([NotNull] this StringBuilder sbdInput, string strSeparator, params string[] astrValues)
         {
-            if (astrValues == null)
-                throw new ArgumentNullException(nameof(astrValues));
+            ArgumentNullException.ThrowIfNull(astrValues);
             for (int i = 0; i < astrValues.Length; ++i)
             {
                 if (i > 0)
@@ -318,8 +314,7 @@ namespace Chummer
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static StringBuilder AppendJoin([NotNull] this StringBuilder sbdInput, string strSeparator, params object[] aobjValues)
         {
-            if (aobjValues == null)
-                throw new ArgumentNullException(nameof(aobjValues));
+            ArgumentNullException.ThrowIfNull(aobjValues);
             for (int i = 0; i < aobjValues.Length; ++i)
             {
                 if (i > 0)
@@ -340,8 +335,7 @@ namespace Chummer
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static StringBuilder AppendJoin<T>([NotNull] this StringBuilder sbdInput, char chrSeparator, IEnumerable<T> lstValues)
         {
-            if (lstValues == null)
-                throw new ArgumentNullException(nameof(lstValues));
+            ArgumentNullException.ThrowIfNull(lstValues);
             bool blnFirst = true;
             foreach (T objValue in lstValues)
             {
@@ -363,8 +357,7 @@ namespace Chummer
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static StringBuilder AppendJoin([NotNull] this StringBuilder sbdInput, char chrSeparator, IEnumerable<string> lstValues)
         {
-            if (lstValues == null)
-                throw new ArgumentNullException(nameof(lstValues));
+            ArgumentNullException.ThrowIfNull(lstValues);
             bool blnFirst = true;
             foreach (string strValue in lstValues)
             {
@@ -388,8 +381,7 @@ namespace Chummer
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static StringBuilder AppendJoin([NotNull] this StringBuilder sbdInput, char chrSeparator, string[] astrValues, int intStartIndex, int intCount)
         {
-            if (astrValues == null)
-                throw new ArgumentNullException(nameof(astrValues));
+            ArgumentNullException.ThrowIfNull(astrValues);
             if (intStartIndex < 0)
                 throw new ArgumentOutOfRangeException(nameof(intStartIndex));
             if (intCount < 0)
@@ -416,8 +408,7 @@ namespace Chummer
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static StringBuilder AppendJoin([NotNull] this StringBuilder sbdInput, char chrSeparator, params string[] astrValues)
         {
-            if (astrValues == null)
-                throw new ArgumentNullException(nameof(astrValues));
+            ArgumentNullException.ThrowIfNull(astrValues);
             for (int i = 0; i < astrValues.Length; ++i)
             {
                 if (i > 0)
@@ -438,8 +429,7 @@ namespace Chummer
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static StringBuilder AppendJoin([NotNull] this StringBuilder sbdInput, char chrSeparator, params object[] aobjValues)
         {
-            if (aobjValues == null)
-                throw new ArgumentNullException(nameof(aobjValues));
+            ArgumentNullException.ThrowIfNull(aobjValues);
             for (int i = 0; i < aobjValues.Length; ++i)
             {
                 string strLoop = aobjValues[i].ToString();
@@ -462,8 +452,7 @@ namespace Chummer
         public static async Task<StringBuilder> AppendJoinAsync<T>([NotNull] this StringBuilder sbdInput, string strSeparator, IEnumerable<Task<T>> lstValues, CancellationToken token = default)
         {
             token.ThrowIfCancellationRequested();
-            if (lstValues == null)
-                throw new ArgumentNullException(nameof(lstValues));
+            ArgumentNullException.ThrowIfNull(lstValues);
             bool blnFirst = true;
             foreach (Task<T> tskValue in lstValues)
             {
@@ -488,8 +477,7 @@ namespace Chummer
         public static async Task<StringBuilder> AppendJoinAsync([NotNull] this StringBuilder sbdInput, string strSeparator, IEnumerable<Task<string>> lstValues, CancellationToken token = default)
         {
             token.ThrowIfCancellationRequested();
-            if (lstValues == null)
-                throw new ArgumentNullException(nameof(lstValues));
+            ArgumentNullException.ThrowIfNull(lstValues);
             bool blnFirst = true;
             foreach (Task<string> tskValue in lstValues)
             {
@@ -516,8 +504,7 @@ namespace Chummer
         public static async Task<StringBuilder> AppendJoinAsync([NotNull] this StringBuilder sbdInput, string strSeparator, Task<string>[] astrValues, int intStartIndex, int intCount, CancellationToken token = default)
         {
             token.ThrowIfCancellationRequested();
-            if (astrValues == null)
-                throw new ArgumentNullException(nameof(astrValues));
+            ArgumentNullException.ThrowIfNull(astrValues);
             if (intStartIndex < 0)
                 throw new ArgumentOutOfRangeException(nameof(intStartIndex));
             if (intCount < 0)
@@ -546,8 +533,7 @@ namespace Chummer
         public static async Task<StringBuilder> AppendJoinAsync([NotNull] this StringBuilder sbdInput, string strSeparator, CancellationToken token = default, params Task<string>[] astrValues)
         {
             token.ThrowIfCancellationRequested();
-            if (astrValues == null)
-                throw new ArgumentNullException(nameof(astrValues));
+            ArgumentNullException.ThrowIfNull(astrValues);
             for (int i = 0; i < astrValues.Length; ++i)
             {
                 token.ThrowIfCancellationRequested();
@@ -570,8 +556,7 @@ namespace Chummer
         public static async Task<StringBuilder> AppendJoinAsync([NotNull] this StringBuilder sbdInput, string strSeparator, CancellationToken token = default, params Task<object>[] aobjValues)
         {
             token.ThrowIfCancellationRequested();
-            if (aobjValues == null)
-                throw new ArgumentNullException(nameof(aobjValues));
+            ArgumentNullException.ThrowIfNull(aobjValues);
             for (int i = 0; i < aobjValues.Length; ++i)
             {
                 token.ThrowIfCancellationRequested();
@@ -595,8 +580,7 @@ namespace Chummer
         public static async Task<StringBuilder> AppendJoinAsync<T>([NotNull] this StringBuilder sbdInput, char chrSeparator, IEnumerable<Task<T>> lstValues, CancellationToken token = default)
         {
             token.ThrowIfCancellationRequested();
-            if (lstValues == null)
-                throw new ArgumentNullException(nameof(lstValues));
+            ArgumentNullException.ThrowIfNull(lstValues);
             bool blnFirst = true;
             foreach (Task<T> tskValue in lstValues)
             {
@@ -621,8 +605,7 @@ namespace Chummer
         public static async Task<StringBuilder> AppendJoinAsync([NotNull] this StringBuilder sbdInput, char chrSeparator, IEnumerable<Task<string>> lstValues, CancellationToken token = default)
         {
             token.ThrowIfCancellationRequested();
-            if (lstValues == null)
-                throw new ArgumentNullException(nameof(lstValues));
+            ArgumentNullException.ThrowIfNull(lstValues);
             bool blnFirst = true;
             foreach (Task<string> tskValue in lstValues)
             {
@@ -649,8 +632,7 @@ namespace Chummer
         public static async Task<StringBuilder> AppendJoinAsync([NotNull] this StringBuilder sbdInput, char chrSeparator, Task<string>[] astrValues, int intStartIndex, int intCount, CancellationToken token = default)
         {
             token.ThrowIfCancellationRequested();
-            if (astrValues == null)
-                throw new ArgumentNullException(nameof(astrValues));
+            ArgumentNullException.ThrowIfNull(astrValues);
             if (intStartIndex < 0)
                 throw new ArgumentOutOfRangeException(nameof(intStartIndex));
             if (intCount < 0)
@@ -679,8 +661,7 @@ namespace Chummer
         public static async Task<StringBuilder> AppendJoinAsync([NotNull] this StringBuilder sbdInput, char chrSeparator, CancellationToken token = default, params Task<string>[] astrValues)
         {
             token.ThrowIfCancellationRequested();
-            if (astrValues == null)
-                throw new ArgumentNullException(nameof(astrValues));
+            ArgumentNullException.ThrowIfNull(astrValues);
             for (int i = 0; i < astrValues.Length; ++i)
             {
                 token.ThrowIfCancellationRequested();
@@ -703,8 +684,7 @@ namespace Chummer
         public static async Task<StringBuilder> AppendJoinAsync([NotNull] this StringBuilder sbdInput, char chrSeparator, CancellationToken token = default, params Task<object>[] aobjValues)
         {
             token.ThrowIfCancellationRequested();
-            if (aobjValues == null)
-                throw new ArgumentNullException(nameof(aobjValues));
+            ArgumentNullException.ThrowIfNull(aobjValues);
             for (int i = 0; i < aobjValues.Length; ++i)
             {
                 token.ThrowIfCancellationRequested();

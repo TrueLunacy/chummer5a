@@ -160,8 +160,7 @@ namespace Chummer
 
         public static int LastIndexOf<T>(this IReadOnlyList<T> lstCollection, T objItem)
         {
-            if (lstCollection == null)
-                throw new ArgumentNullException(nameof(lstCollection));
+            ArgumentNullException.ThrowIfNull(lstCollection);
             if (objItem == null)
                 throw new ArgumentNullException(nameof(objItem));
             for (int i = lstCollection.Count - 1; i >= 0; --i)
@@ -177,8 +176,7 @@ namespace Chummer
 
         public static int IndexOf<T>(this IReadOnlyList<T> lstCollection, T objItem)
         {
-            if (lstCollection == null)
-                throw new ArgumentNullException(nameof(lstCollection));
+            ArgumentNullException.ThrowIfNull(lstCollection);
             if (objItem == null)
                 throw new ArgumentNullException(nameof(objItem));
             for (int i = 0; i < lstCollection.Count; ++i)

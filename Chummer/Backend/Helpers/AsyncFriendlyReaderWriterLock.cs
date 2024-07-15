@@ -980,8 +980,7 @@ namespace Chummer
                 bool blnIsInReadLock, AsyncFriendlyReaderWriterLock objReaderWriterLock,
                 bool blnSkipUnlockOnDispose = false, IDisposable objParentRelease = null, IAsyncDisposable objParentReleaseAsync = null)
             {
-                if (objCurrentHelper == null)
-                    throw new ArgumentNullException(nameof(objCurrentHelper));
+                ArgumentNullException.ThrowIfNull(objCurrentHelper);
 #if DEBUG
                 LinkedAsyncRWLockHelper objLastHelper = objCurrentHelper.ParentLinkedHelper;
                 if (objLastHelper != null && objLastHelper == objCurrentHelper)
@@ -1115,8 +1114,7 @@ namespace Chummer
                 LinkedAsyncRWLockHelper objPreviousTopMostHeldWriter, AsyncFriendlyReaderWriterLock objReaderWriterLock,
                 bool blnSkipUnlockOnDispose = false, IDisposable objParentRelease = null, IAsyncDisposable objParentReleaseAsync = null)
             {
-                if (objNextHelper == null)
-                    throw new ArgumentNullException(nameof(objNextHelper));
+                ArgumentNullException.ThrowIfNull(objNextHelper);
 #if DEBUG
                 LinkedAsyncRWLockHelper objCurrentHelper = objNextHelper.ParentLinkedHelper;
                 if (objCurrentHelper != null)
@@ -1388,8 +1386,7 @@ namespace Chummer
                 LinkedAsyncRWLockHelper objPreviousTopMostHeldWriter, AsyncFriendlyReaderWriterLock objReaderWriterLock,
                 bool blnSkipUnlockOnDispose = false, IDisposable objParentRelease = null, IAsyncDisposable objParentReleaseAsync = null)
             {
-                if (objNextHelper == null)
-                    throw new ArgumentNullException(nameof(objNextHelper));
+                ArgumentNullException.ThrowIfNull(objNextHelper);
 #if DEBUG
                 LinkedAsyncRWLockHelper objCurrentHelper = objNextHelper.ParentLinkedHelper;
                 if (objCurrentHelper != null)

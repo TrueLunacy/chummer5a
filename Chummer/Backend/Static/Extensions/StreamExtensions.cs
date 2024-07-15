@@ -35,10 +35,7 @@ namespace Chummer
         /// <param name="objStream">Stream to convert to a byte array.</param>
         public static byte[] ToPooledArray(this Stream objStream)
         {
-            if (objStream == null)
-            {
-                throw new ArgumentNullException(nameof(objStream));
-            }
+            ArgumentNullException.ThrowIfNull(objStream);
             objStream.Position = 0;
             int intLength = Convert.ToInt32(objStream.Length);
             byte[] achrReturn = ArrayPool<byte>.Shared.Rent(intLength);
@@ -63,10 +60,7 @@ namespace Chummer
         public static Task<byte[]> ToPooledArrayAsync(this Stream objStream, CancellationToken token = default)
         {
             token.ThrowIfCancellationRequested();
-            if (objStream == null)
-            {
-                throw new ArgumentNullException(nameof(objStream));
-            }
+            ArgumentNullException.ThrowIfNull(objStream);
             return ToPooledArrayAsyncInner();
             async Task<byte[]> ToPooledArrayAsyncInner()
             {
@@ -112,10 +106,7 @@ namespace Chummer
                                             CancellationToken token = default)
         {
             token.ThrowIfCancellationRequested();
-            if (objStream == null)
-            {
-                throw new ArgumentNullException(nameof(objStream));
-            }
+            ArgumentNullException.ThrowIfNull(objStream);
 
             long intLength = objStream.Length;
             if (intLength == 0)
@@ -249,10 +240,7 @@ namespace Chummer
                                             CancellationToken token = default)
         {
             token.ThrowIfCancellationRequested();
-            if (objStream == null)
-            {
-                throw new ArgumentNullException(nameof(objStream));
-            }
+            ArgumentNullException.ThrowIfNull(objStream);
 
             long intLength = objStream.Length;
             if (intLength == 0)

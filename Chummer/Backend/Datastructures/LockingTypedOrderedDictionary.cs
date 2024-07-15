@@ -2433,8 +2433,7 @@ namespace Chummer
 
         public void Insert(int index, Tuple<TKey, TValue> item)
         {
-            if (item == null)
-                throw new ArgumentNullException(nameof(item));
+            ArgumentNullException.ThrowIfNull(item);
             using (LockObject.EnterReadLock())
             {
                 if (_dicUnorderedData.ContainsKey(item.Item1))

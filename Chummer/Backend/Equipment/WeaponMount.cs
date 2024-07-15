@@ -604,8 +604,7 @@ namespace Chummer.Backend.Equipment
         /// <param name="decMarkup">Discount or markup that applies to the base cost of the mod.</param>
         public void CreateByName(XmlNode xmlNode, decimal decMarkup = 0)
         {
-            if (xmlNode == null)
-                throw new ArgumentNullException(nameof(xmlNode));
+            ArgumentNullException.ThrowIfNull(xmlNode);
             XmlDocument xmlDoc = _objCharacter.LoadData("vehicles.xml");
             string strSize = xmlNode["size"]?.InnerText;
             if (string.IsNullOrEmpty(strSize))
@@ -687,8 +686,7 @@ namespace Chummer.Backend.Equipment
         public async Task CreateByNameAsync(XmlNode xmlNode, decimal decMarkup = 0, CancellationToken token = default)
         {
             token.ThrowIfCancellationRequested();
-            if (xmlNode == null)
-                throw new ArgumentNullException(nameof(xmlNode));
+            ArgumentNullException.ThrowIfNull(xmlNode);
             XmlDocument xmlDoc = await _objCharacter.LoadDataAsync("vehicles.xml", token: token).ConfigureAwait(false);
             string strSize = xmlNode["size"]?.InnerText;
             if (string.IsNullOrEmpty(strSize))

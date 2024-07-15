@@ -38,8 +38,7 @@ namespace Chummer
         /// interface implementation of each element.</param>
         public static void Sort<T>(this BindingList<T> lstCollection, int index, int length, IComparer<T> objComparer = null) where T : IComparable
         {
-            if (lstCollection == null)
-                throw new ArgumentNullException(nameof(lstCollection));
+            ArgumentNullException.ThrowIfNull(lstCollection);
             if (index < 0)
                 throw new ArgumentOutOfRangeException(nameof(index));
             if (length < 0)
@@ -107,10 +106,8 @@ namespace Chummer
         /// <param name="funcComparison">The System.Comparison`1 to use when comparing elements.</param>
         public static void Sort<T>(this BindingList<T> lstCollection, Comparison<T> funcComparison)
         {
-            if (lstCollection == null)
-                throw new ArgumentNullException(nameof(lstCollection));
-            if (funcComparison == null)
-                throw new ArgumentNullException(nameof(funcComparison));
+            ArgumentNullException.ThrowIfNull(lstCollection);
+            ArgumentNullException.ThrowIfNull(funcComparison);
             T[] aobjSorted = new T[lstCollection.Count];
             for (int i = 0; i < lstCollection.Count; ++i)
                 aobjSorted[i] = lstCollection[i];
@@ -173,8 +170,7 @@ namespace Chummer
         /// interface implementation of each element.</param>
         public static void Sort<T>(this BindingList<T> lstCollection, IComparer<T> objComparer = null) where T : IComparable
         {
-            if (lstCollection == null)
-                throw new ArgumentNullException(nameof(lstCollection));
+            ArgumentNullException.ThrowIfNull(lstCollection);
             T[] aobjSorted = new T[lstCollection.Count];
             for (int i = 0; i < lstCollection.Count; ++i)
                 aobjSorted[i] = lstCollection[i];

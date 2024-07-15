@@ -51,8 +51,7 @@ namespace Chummer
 
         public SelectWeaponAccessory(Character objCharacter)
         {
-            if (objCharacter == null)
-                throw new ArgumentNullException(nameof(objCharacter));
+            ArgumentNullException.ThrowIfNull(objCharacter);
             Disposed += (sender, args) => Utils.StringHashSetPool.Return(ref _setBlackMarketMaps);
             InitializeComponent();
             this.UpdateLightDarkMode();

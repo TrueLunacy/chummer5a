@@ -77,8 +77,7 @@ namespace Chummer
         {
             if (string.IsNullOrEmpty(strInput) || string.IsNullOrEmpty(strOldValue))
                 return strInput;
-            if (strNewValue == null)
-                throw new ArgumentNullException(nameof(strNewValue));
+            ArgumentNullException.ThrowIfNull(strNewValue);
             // Built-in Replace method uses Ordinal comparison, so just defer to that if that is what we have defined
             if (eStringComparison == StringComparison.Ordinal)
                 return strInput.Replace(strOldValue, strNewValue);
@@ -534,8 +533,7 @@ namespace Chummer
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static string[] Split(this string strInput, char chrSeparator, StringSplitOptions eSplitOptions)
         {
-            if (strInput == null)
-                throw new ArgumentNullException(nameof(strInput));
+            ArgumentNullException.ThrowIfNull(strInput);
             return strInput.Split(new[] {chrSeparator}, eSplitOptions);
         }
 
@@ -549,8 +547,7 @@ namespace Chummer
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static string[] Split(this string strInput, string strSeparator, StringSplitOptions eSplitOptions)
         {
-            if (strInput == null)
-                throw new ArgumentNullException(nameof(strInput));
+            ArgumentNullException.ThrowIfNull(strInput);
             return strInput.Split(new[] {strSeparator}, eSplitOptions);
         }
 
@@ -563,8 +560,7 @@ namespace Chummer
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool Contains(this string strHaystack, char chrNeedle)
         {
-            if (strHaystack == null)
-                throw new ArgumentNullException(nameof(strHaystack));
+            ArgumentNullException.ThrowIfNull(strHaystack);
             return strHaystack.IndexOf(chrNeedle) != -1;
         }
 
@@ -578,8 +574,7 @@ namespace Chummer
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool Contains(this string strHaystack, string strNeedle, StringComparison eComparison)
         {
-            if (strHaystack == null)
-                throw new ArgumentNullException(nameof(strHaystack));
+            ArgumentNullException.ThrowIfNull(strHaystack);
             return strHaystack.IndexOf(strNeedle, eComparison) != -1;
         }
 
@@ -1438,8 +1433,7 @@ namespace Chummer
         /// <param name="sbdInput">StringBuilder to clean.</param>
         public static StringBuilder CleanStylisticLigatures(this StringBuilder sbdInput)
         {
-            if (sbdInput == null)
-                throw new ArgumentNullException(nameof(sbdInput));
+            ArgumentNullException.ThrowIfNull(sbdInput);
             foreach (KeyValuePair<string, string> kvpLigature in s_DicLigaturesMap)
                 sbdInput.Replace(kvpLigature.Key, kvpLigature.Value);
             return sbdInput;
@@ -1510,8 +1504,7 @@ namespace Chummer
         /// </summary>
         public static bool IsAllLettersUpperCase(this string strText)
         {
-            if (strText == null)
-                throw new ArgumentNullException(nameof(strText));
+            ArgumentNullException.ThrowIfNull(strText);
             return string.IsNullOrEmpty(strText) || strText.All(x => !char.IsLetter(x) || char.IsUpper(x));
         }
 
@@ -2082,10 +2075,7 @@ namespace Chummer
         public static byte[] ToBase64PooledByteArray(this string s, out int arrayLength, CancellationToken token = default)
         {
             token.ThrowIfCancellationRequested();
-            if (s == null)
-            {
-                throw new ArgumentNullException(nameof(s));
-            }
+            ArgumentNullException.ThrowIfNull(s);
 
             arrayLength = 0;
 
@@ -2353,10 +2343,7 @@ namespace Chummer
         public static void ToBase64Stream(this string s, Stream stream, CancellationToken token = default)
         {
             token.ThrowIfCancellationRequested();
-            if (s == null)
-            {
-                throw new ArgumentNullException(nameof(s));
-            }
+            ArgumentNullException.ThrowIfNull(s);
 
             unchecked
             {

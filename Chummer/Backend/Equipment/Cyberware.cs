@@ -183,8 +183,7 @@ namespace Chummer.Backend.Equipment
         public static Grade ConvertToCyberwareGrade(string strValue, Improvement.ImprovementSource objSource,
             Character objCharacter)
         {
-            if (objCharacter == null)
-                throw new ArgumentNullException(nameof(objCharacter));
+            ArgumentNullException.ThrowIfNull(objCharacter);
             Grade objStandardGrade = null;
             foreach (Grade objGrade in objCharacter.GetGrades(objSource, true))
             {

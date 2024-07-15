@@ -26,6 +26,7 @@
     <Configurations>Debug;Release;Debuggable Release</Configurations>
     <EmbeddedResourceUseDependentUponConvention>true</EmbeddedResourceUseDependentUponConvention>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
   <ItemGroup>
     <AssemblyAttribute Include="System.Runtime.InteropServices.ComVisible">

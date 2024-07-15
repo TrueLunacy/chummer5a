@@ -61,8 +61,7 @@ namespace Chummer
 
         public SelectVehicle(Character objCharacter)
         {
-            if (objCharacter == null)
-                throw new ArgumentNullException(nameof(objCharacter));
+            ArgumentNullException.ThrowIfNull(objCharacter);
             _objGenericToken = _objGenericCancellationTokenSource.Token;
             Disposed += (sender, args) =>
             {

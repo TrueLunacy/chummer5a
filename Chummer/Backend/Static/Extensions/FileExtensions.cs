@@ -386,8 +386,7 @@ namespace Chummer
             token.ThrowIfCancellationRequested();
             if (string.IsNullOrEmpty(strPath))
                 throw new ArgumentException("Path is empty.", nameof(strPath));
-            if (achrBytes == null)
-                throw new ArgumentNullException(nameof(achrBytes));
+            ArgumentNullException.ThrowIfNull(achrBytes);
 
             using (FileStream objFileStream = new FileStream(strPath, FileMode.Create, FileAccess.Write, FileShare.Write, 4096, true))
             {

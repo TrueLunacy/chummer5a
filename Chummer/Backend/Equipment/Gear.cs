@@ -1112,10 +1112,8 @@ namespace Chummer.Backend.Equipment
         public bool CreateFromNode(XmlDocument xmlGearsDocument, XmlNode xmlGearNode, ICollection<Weapon> lstWeapons,
             bool blnAddImprovements = true, bool blnSkipSelectForms = false)
         {
-            if (xmlGearsDocument == null)
-                throw new ArgumentNullException(nameof(xmlGearsDocument));
-            if (xmlGearNode == null)
-                throw new ArgumentNullException(nameof(xmlGearNode));
+            ArgumentNullException.ThrowIfNull(xmlGearsDocument);
+            ArgumentNullException.ThrowIfNull(xmlGearNode);
             XmlNode xmlGearDataNode;
             List<Gear> lstChildGears = new List<Gear>(1);
             XmlAttributeCollection lstGearAttributes = xmlGearNode.Attributes;
@@ -1215,10 +1213,8 @@ namespace Chummer.Backend.Equipment
             bool blnAddImprovements = true, bool blnSkipSelectForms = false, CancellationToken token = default)
         {
             token.ThrowIfCancellationRequested();
-            if (xmlGearsDocument == null)
-                throw new ArgumentNullException(nameof(xmlGearsDocument));
-            if (xmlGearNode == null)
-                throw new ArgumentNullException(nameof(xmlGearNode));
+            ArgumentNullException.ThrowIfNull(xmlGearsDocument);
+            ArgumentNullException.ThrowIfNull(xmlGearNode);
             XmlNode xmlGearDataNode;
             List<Gear> lstChildGears = new List<Gear>(1);
             XmlAttributeCollection lstGearAttributes = xmlGearNode.Attributes;

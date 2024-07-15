@@ -32,8 +32,7 @@ namespace Chummer
             Action<T, T> funcOverrideIfEquals = null, CancellationToken token = default) where T : IComparable
         {
             token.ThrowIfCancellationRequested();
-            if (lstCollection == null)
-                throw new ArgumentNullException(nameof(lstCollection));
+            ArgumentNullException.ThrowIfNull(lstCollection);
             IDisposable objLocker = null;
             if (lstCollection is IHasLockObject objHasLock)
                 objLocker = objHasLock.LockObject.EnterUpgradeableReadLock(token);
@@ -109,10 +108,8 @@ namespace Chummer
             Action<T, T> funcOverrideIfEquals = null, CancellationToken token = default)
         {
             token.ThrowIfCancellationRequested();
-            if (lstCollection == null)
-                throw new ArgumentNullException(nameof(lstCollection));
-            if (comparer == null)
-                throw new ArgumentNullException(nameof(comparer));
+            ArgumentNullException.ThrowIfNull(lstCollection);
+            ArgumentNullException.ThrowIfNull(comparer);
             IDisposable objLocker = null;
             if (lstCollection is IHasLockObject objHasLock)
                 objLocker = objHasLock.LockObject.EnterUpgradeableReadLock(token);
@@ -188,10 +185,8 @@ namespace Chummer
             Action<T, T> funcOverrideIfEquals = null, CancellationToken token = default)
         {
             token.ThrowIfCancellationRequested();
-            if (lstCollection == null)
-                throw new ArgumentNullException(nameof(lstCollection));
-            if (funcComparison == null)
-                throw new ArgumentNullException(nameof(funcComparison));
+            ArgumentNullException.ThrowIfNull(lstCollection);
+            ArgumentNullException.ThrowIfNull(funcComparison);
             IDisposable objLocker = null;
             if (lstCollection is IHasLockObject objHasLock)
                 objLocker = objHasLock.LockObject.EnterUpgradeableReadLock(token);
@@ -266,10 +261,8 @@ namespace Chummer
         public static void AddRangeWithSort<T>(this IList<T> lstCollection, IEnumerable<T> lstToAdd,
             Action<T, T> funcOverrideIfEquals = null, CancellationToken token = default) where T : IComparable
         {
-            if (lstCollection == null)
-                throw new ArgumentNullException(nameof(lstCollection));
-            if (lstToAdd == null)
-                throw new ArgumentNullException(nameof(lstToAdd));
+            ArgumentNullException.ThrowIfNull(lstCollection);
+            ArgumentNullException.ThrowIfNull(lstToAdd);
             foreach (T objItem in lstToAdd)
                 AddWithSort(lstCollection, objItem, funcOverrideIfEquals, token);
         }
@@ -277,12 +270,9 @@ namespace Chummer
         public static void AddRangeWithSort<T>(this IList<T> lstCollection, IEnumerable<T> lstToAdd,
             IComparer<T> comparer, Action<T, T> funcOverrideIfEquals = null, CancellationToken token = default)
         {
-            if (lstCollection == null)
-                throw new ArgumentNullException(nameof(lstCollection));
-            if (lstToAdd == null)
-                throw new ArgumentNullException(nameof(lstToAdd));
-            if (comparer == null)
-                throw new ArgumentNullException(nameof(comparer));
+            ArgumentNullException.ThrowIfNull(lstCollection);
+            ArgumentNullException.ThrowIfNull(lstToAdd);
+            ArgumentNullException.ThrowIfNull(comparer);
             foreach (T objItem in lstToAdd)
                 AddWithSort(lstCollection, objItem, comparer, funcOverrideIfEquals, token);
         }
@@ -290,12 +280,9 @@ namespace Chummer
         public static void AddRangeWithSort<T>(this IList<T> lstCollection, IEnumerable<T> lstToAdd,
             Comparison<T> funcComparison, Action<T, T> funcOverrideIfEquals = null, CancellationToken token = default)
         {
-            if (lstCollection == null)
-                throw new ArgumentNullException(nameof(lstCollection));
-            if (lstToAdd == null)
-                throw new ArgumentNullException(nameof(lstToAdd));
-            if (funcComparison == null)
-                throw new ArgumentNullException(nameof(funcComparison));
+            ArgumentNullException.ThrowIfNull(lstCollection);
+            ArgumentNullException.ThrowIfNull(lstToAdd);
+            ArgumentNullException.ThrowIfNull(funcComparison);
             foreach (T objItem in lstToAdd)
                 AddWithSort(lstCollection, objItem, funcComparison, funcOverrideIfEquals, token);
         }
@@ -306,8 +293,7 @@ namespace Chummer
             token.ThrowIfCancellationRequested();
             if (count == 0)
                 return;
-            if (lstCollection == null)
-                throw new ArgumentNullException(nameof(lstCollection));
+            ArgumentNullException.ThrowIfNull(lstCollection);
             if (lstCollection.Count == 0)
                 return;
             if (index < 0 || index >= lstCollection.Count)
@@ -335,10 +321,8 @@ namespace Chummer
             CancellationToken token = default)
         {
             token.ThrowIfCancellationRequested();
-            if (lstCollection == null)
-                throw new ArgumentNullException(nameof(lstCollection));
-            if (predicate == null)
-                throw new ArgumentNullException(nameof(predicate));
+            ArgumentNullException.ThrowIfNull(lstCollection);
+            ArgumentNullException.ThrowIfNull(predicate);
             IDisposable objLocker = lstCollection is IHasLockObject objHasLockObject
                 ? objHasLockObject.LockObject.EnterWriteLock(token)
                 : null;
@@ -363,8 +347,7 @@ namespace Chummer
             CancellationToken token = default)
         {
             token.ThrowIfCancellationRequested();
-            if (lstCollection == null)
-                throw new ArgumentNullException(nameof(lstCollection));
+            ArgumentNullException.ThrowIfNull(lstCollection);
             IDisposable objLocker = lstCollection is IHasLockObject objHasLockObject
                 ? objHasLockObject.LockObject.EnterWriteLock(token)
                 : null;
@@ -392,8 +375,7 @@ namespace Chummer
             Func<T, T, Task<int>> comparer, CancellationToken token = default)
         {
             token.ThrowIfCancellationRequested();
-            if (lstCollection == null)
-                throw new ArgumentNullException(nameof(lstCollection));
+            ArgumentNullException.ThrowIfNull(lstCollection);
             if (length >= 2)
             {
                 IDisposable objLocker = lstCollection is IHasLockObject objHasLockObject

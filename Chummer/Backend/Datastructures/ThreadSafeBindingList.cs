@@ -1349,8 +1349,7 @@ namespace Chummer
         /// <param name="funcComparison">The System.Comparison`1 to use when comparing elements.</param>
         public void Sort(Comparison<T> funcComparison)
         {
-            if (funcComparison == null)
-                throw new ArgumentNullException(nameof(funcComparison));
+            ArgumentNullException.ThrowIfNull(funcComparison);
             if (Count == 0)
                 return;
             using (LockObject.EnterUpgradeableReadLock())
@@ -1651,8 +1650,7 @@ namespace Chummer
         /// <param name="token">Cancellation token to listen to.</param>
         public async Task SortAsync(Comparison<T> funcComparison, CancellationToken token = default)
         {
-            if (funcComparison == null)
-                throw new ArgumentNullException(nameof(funcComparison));
+            ArgumentNullException.ThrowIfNull(funcComparison);
             IAsyncDisposable objLocker = await LockObject.EnterUpgradeableReadLockAsync(token).ConfigureAwait(false);
             try
             {

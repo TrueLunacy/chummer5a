@@ -77,16 +77,14 @@ namespace Chummer
         /// <param name="control">The control to add</param>
         public void AddControl(Control control)
         {
-            if (control == null)
-                throw new ArgumentNullException(nameof(control));
+            ArgumentNullException.ThrowIfNull(control);
             _lstControls.Add(control);
             control.DoThreadSafe(x => x.MouseLeave += control_MouseLeave);
         }
 
         public void AddControlRecursive(Control control)
         {
-            if (control == null)
-                throw new ArgumentNullException(nameof(control));
+            ArgumentNullException.ThrowIfNull(control);
             _lstControls.Add(control);
             control.DoThreadSafe(x =>
             {

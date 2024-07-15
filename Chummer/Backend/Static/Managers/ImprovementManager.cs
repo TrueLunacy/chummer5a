@@ -669,8 +669,7 @@ namespace Chummer
             //Log.Info("strImprovedName = " + ("" + strImprovedName).ToString());
             token.ThrowIfCancellationRequested();
 
-            if (funcValueGetter == null)
-                throw new ArgumentNullException(nameof(funcValueGetter));
+            ArgumentNullException.ThrowIfNull(funcValueGetter);
 
             if (objCharacter == null)
                 return new Tuple<decimal, List<Improvement>>(0, new List<Improvement>());
@@ -1463,10 +1462,8 @@ namespace Chummer
         public static string DoSelectSkill(XmlNode xmlBonusNode, Character objCharacter, int intRating,
                                            string strFriendlyName, ref bool blnIsKnowledgeSkill)
         {
-            if (xmlBonusNode == null)
-                throw new ArgumentNullException(nameof(xmlBonusNode));
-            if (objCharacter == null)
-                throw new ArgumentNullException(nameof(objCharacter));
+            ArgumentNullException.ThrowIfNull(xmlBonusNode);
+            ArgumentNullException.ThrowIfNull(objCharacter);
             string strSelectedSkill;
             blnIsKnowledgeSkill = blnIsKnowledgeSkill
                                   || xmlBonusNode.Attributes?["knowledgeskills"]?.InnerText == bool.TrueString;
@@ -2577,10 +2574,8 @@ namespace Chummer
                                                              IReadOnlyCollection<Improvement> objImprovementList,
                                                              CancellationToken token = default)
         {
-            if (objCharacter == null)
-                throw new ArgumentNullException(nameof(objCharacter));
-            if (objImprovementList == null)
-                throw new ArgumentNullException(nameof(objImprovementList));
+            ArgumentNullException.ThrowIfNull(objCharacter);
+            ArgumentNullException.ThrowIfNull(objImprovementList);
 
             IAsyncDisposable objLocker = await objCharacter.LockObject.EnterWriteLockAsync(token).ConfigureAwait(false);
             try
@@ -3253,10 +3248,8 @@ namespace Chummer
                                                               IReadOnlyCollection<Improvement> objImprovementList,
                                                               CancellationToken token = default)
         {
-            if (objCharacter == null)
-                throw new ArgumentNullException(nameof(objCharacter));
-            if (objImprovementList == null)
-                throw new ArgumentNullException(nameof(objImprovementList));
+            ArgumentNullException.ThrowIfNull(objCharacter);
+            ArgumentNullException.ThrowIfNull(objImprovementList);
 
             IDisposable objLocker = null;
             IAsyncDisposable objAsyncLocker = null;
