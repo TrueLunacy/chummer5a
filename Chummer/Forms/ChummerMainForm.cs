@@ -946,8 +946,6 @@ namespace Chummer
                                                      .ConfigureAwait(false);
                                 }
 
-                                await Program.PluginLoader.CallPlugins(toolsMenu, _objGenericToken).ConfigureAwait(false);
-
                                 // Set the Tag for each ToolStrip item so it can be translated.
                                 await menuStrip.DoThreadSafeAsync(x =>
                                 {

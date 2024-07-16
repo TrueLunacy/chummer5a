@@ -2307,9 +2307,6 @@ namespace Chummer
             clbPlugins.Name = "clbPlugins";
             clbPlugins.Size = new System.Drawing.Size(338, 653);
             clbPlugins.TabIndex = 0;
-            clbPlugins.ItemCheck += clbPlugins_ItemCheck;
-            clbPlugins.SelectedValueChanged += clbPlugins_SelectedValueChanged;
-            clbPlugins.VisibleChanged += clbPlugins_VisibleChanged;
             // 
             // pnlPluginOption
             // 

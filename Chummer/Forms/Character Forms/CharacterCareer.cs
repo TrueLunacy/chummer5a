@@ -1805,8 +1805,6 @@ namespace Chummer
                                     // Clear the Dirty flag which gets set when creating a new Character.
                                     if (!await CharacterObject.GetLoadAsDirtyAsync(GenericToken).ConfigureAwait(false))
                                         IsDirty = false;
-
-                                    await Program.PluginLoader.CallPlugins(this, GenericToken).ConfigureAwait(false);
                                 }
 
                                 ConcurrentBag<string> lstInternalIdsNeedingReapplyImprovements

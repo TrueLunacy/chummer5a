@@ -44,7 +44,6 @@ using Chummer.Backend.Uniques;
 using System.Xml.Serialization;
 using System.Runtime.Serialization;
 using System.Threading;
-using Chummer.Plugins;
 using Microsoft.IO;
 using Newtonsoft.Json;
 using Application = System.Windows.Forms.Application;
@@ -4785,35 +4784,6 @@ namespace Chummer
                             _lstCalendar.ForEach(x => x.Save(objWriter), token);
                             objWriter.WriteEndElement();
 
-                            //Plugins
-                            IReadOnlyList<IPlugin> lstActivePlugins = Program.PluginLoader?.MyActivePlugins;
-                            if (lstActivePlugins?.Count > 0)
-                            {
-                                // <plugins>
-                                objWriter.WriteStartElement("plugins");
-                                foreach (IPlugin plugin in lstActivePlugins)
-                                {
-                                    try
-                                    {
-                                        System.Reflection.AssemblyName objPluginAssemblyName =
-                                            plugin.GetPluginAssembly().GetName();
-                                        objWriter.WriteStartElement(objPluginAssemblyName.Name);
-                                        objWriter.WriteAttributeString(
-                                            "version", objPluginAssemblyName.Version.ToString());
-                                        objWriter.WriteString(plugin.GetSaveToFileElement(this));
-                                        objWriter.WriteEndElement();
-                                    }
-                                    catch (Exception e)
-                                    {
-                                        Log.Warn(
-                                            e, "Exception while writing saveFileElement for plugin " + plugin + ": ");
-                                    }
-                                }
-
-                                //</plugins>
-                                objWriter.WriteEndElement();
-                            }
-
                             //calculatedValues
                             objWriter.WriteStartElement("calculatedvalues");
                             objWriter.WriteComment(
@@ -5536,43 +5506,6 @@ namespace Chummer
                             await objWriter.WriteStartElementAsync("calendar", token: token).ConfigureAwait(false);
                             await _lstCalendar.ForEachAsync(x => x.Save(objWriter), token).ConfigureAwait(false);
                             await objWriter.WriteEndElementAsync().ConfigureAwait(false);
-
-                            //Plugins
-                            IReadOnlyList<IPlugin> lstActivePlugins = Program.PluginLoader != null
-                                ? await Program.PluginLoader.GetMyActivePluginsAsync(token).ConfigureAwait(false)
-                                : null;
-                            if (lstActivePlugins?.Count > 0)
-                            {
-                                // <plugins>
-                                await objWriter.WriteStartElementAsync("plugins", token: token)
-                                    .ConfigureAwait(false);
-                                foreach (IPlugin objPlugin in lstActivePlugins)
-                                {
-                                    try
-                                    {
-                                        System.Reflection.AssemblyName objPluginAssemblyName =
-                                            objPlugin.GetPluginAssembly().GetName();
-                                        await objWriter
-                                            .WriteStartElementAsync(objPluginAssemblyName.Name, token: token)
-                                            .ConfigureAwait(false);
-                                        await objWriter
-                                            .WriteAttributeStringAsync(
-                                                "version", objPluginAssemblyName.Version.ToString(), token: token)
-                                            .ConfigureAwait(false);
-                                        await objWriter.WriteStringAsync(objPlugin.GetSaveToFileElement(this))
-                                            .ConfigureAwait(false);
-                                        await objWriter.WriteEndElementAsync().ConfigureAwait(false);
-                                    }
-                                    catch (Exception e)
-                                    {
-                                        Log.Warn(
-                                            e, "Exception while writing saveFileElement for plugin " + objPlugin + ": ");
-                                    }
-                                }
-
-                                //</plugins>
-                                await objWriter.WriteEndElementAsync().ConfigureAwait(false);
-                            }
 
                             //calculatedValues
                             await objWriter.WriteStartElementAsync("calculatedvalues", token: token)
@@ -10248,22 +10181,6 @@ namespace Chummer
                                                                     token: token)
                                                                 .ConfigureAwait(false), token: token)
                                                         .ConfigureAwait(false);
-                            }
-
-                            //Plugins                            {
-                                foreach (IPlugin plugin in blnSync
-                                             ? Program.PluginLoader.MyActivePlugins
-                                             : await Program.PluginLoader.GetMyActivePluginsAsync(token)
-                                                 .ConfigureAwait(false))
-                                {
-                                    foreach (XmlNode objXmlPlugin in objXmlCharacter.SelectNodes("plugins/" +
-                                                 plugin.GetPluginAssembly().GetName().Name))
-                                    {
-                                        plugin.LoadFileElement(this, objXmlPlugin.InnerText);
-                                    }
-                                }
-
-                                //Timekeeper.Finish("load_plugins");
                             }
 
                             ConcurrentBag<string> lstOldIds = Interlocked.Exchange(ref _lstInternalIdsNeedingReapplyImprovements,

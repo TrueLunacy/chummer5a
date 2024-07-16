@@ -33,7 +33,6 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Chummer.Backend;
 using Chummer.Forms;
-using Chummer.Plugins;
 using Chummer.Properties;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -49,9 +48,6 @@ namespace Chummer
 
         private static readonly Lazy<Process> s_objMyProcess = new Lazy<Process>(Process.GetCurrentProcess);
         public static Process MyProcess => s_objMyProcess.Value;
-
-        private static PluginControl _objPluginLoader;
-        public static PluginControl PluginLoader => _objPluginLoader = _objPluginLoader ?? new PluginControl();
 
         internal static readonly IntPtr CommandLineArgsDataTypeId = (IntPtr)7593599;
 
@@ -323,69 +319,6 @@ namespace Chummer
                         OpenCharacters.CollectionChangedAsync += OpenCharactersOnCollectionChanged;
 
                         MainForm = new ChummerMainForm();
-                        try
-                        {
-                            PluginLoader.LoadPlugins();
-                        }
-                        catch (ApplicationException)
-                        {
-                            showMainForm = false;
-                        }
-
-                        if (!Utils.IsUnitTest)
-                        {
-                            string[] strArgs = Environment.GetCommandLineArgs();
-                            try
-                            {
-                                // Process plugin args synchronously because plugin load order can end up mattering
-                                foreach (string strArg in strArgs)
-                                {
-                                    if (!strArg.Contains("/plugin"))
-                                        continue;
-                                    if (!GlobalSettings.PluginsEnabled)
-                                    {
-                                        const string strMessage =
-                                            "Please enable Plugins to use command-line arguments invoking specific plugin-functions!";
-                                        Log.Warn(strMessage);
-                                        ShowScrollableMessageBox(strMessage, "Plugins not enabled", icon: MessageBoxIcon.Exclamation);
-                                    }
-                                    else
-                                    {
-                                        string strWhatPlugin =
-                                            strArg.Substring(strArg.IndexOf("/plugin", StringComparison.Ordinal) + 8);
-                                        //some external apps choose to add a '/' before a ':' even in the middle of an url...
-                                        strWhatPlugin = strWhatPlugin.TrimStart(':');
-                                        int intEndPlugin = strWhatPlugin.IndexOf(':');
-                                        string strParameter = strWhatPlugin.Substring(intEndPlugin + 1);
-                                        strWhatPlugin = strWhatPlugin.Substring(0, intEndPlugin);
-                                        IPlugin objActivePlugin =
-                                            PluginLoader.MyActivePlugins.Find(a => a.ToString() == strWhatPlugin);
-                                        if (objActivePlugin == null)
-                                        {
-                                            if (PluginLoader.MyPlugins.All(a => a.ToString() != strWhatPlugin))
-                                            {
-                                                string strMessage =
-                                                    "Plugin " + strWhatPlugin + " is not enabled in the options!" +
-                                                    Environment.NewLine
-                                                    + "If you want to use command-line arguments, please enable this plugin and restart the program.";
-                                                Log.Warn(strMessage);
-                                                ShowScrollableMessageBox(strMessage, strWhatPlugin + " not enabled",
-                                                                         MessageBoxButtons.OK,
-                                                                         MessageBoxIcon.Exclamation);
-                                            }
-                                        }
-                                        else
-                                        {
-                                            showMainForm &= objActivePlugin.ProcessCommandLine(strParameter);
-                                        }
-                                    }
-                                }
-                            }
-                            catch (Exception e)
-                            {
-                                Log.Warn(e);
-                            }
-                        }
 
                         // Delete the old executable if it exists (created by the update process).
                         Utils.SafeClearDirectory(Utils.GetStartupPath, "*.old");
@@ -444,7 +377,6 @@ namespace Chummer
                         OpenCharacters.BeforeClearCollectionChangedAsync -= OpenCharactersOnBeforeClearCollectionChanged;
                         OpenCharacters.CollectionChangedAsync -= OpenCharactersOnCollectionChanged;
 
-                        PluginLoader?.Dispose();
                         Log.Info(ExceptionHeatMap.GenerateInfo());
                     }
                     finally

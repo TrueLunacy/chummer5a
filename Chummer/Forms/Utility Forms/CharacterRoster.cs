@@ -32,7 +32,6 @@ using System.Windows.Forms;
 using System.Xml.Serialization;
 using System.Xml.XPath;
 using Chummer.Backend.Equipment;
-using Chummer.Plugins;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.VisualStudio.Threading;
@@ -405,18 +404,11 @@ namespace Chummer
                     try
                     {
                         List<Task> lstTasks =
-                                new List<Task>(2 + await Program.PluginLoader.MyPlugins.GetCountAsync(objTemp.Token)
-                                    .ConfigureAwait(false))
+                                new List<Task>()
                                 {
                                     tskNewRecentlyUsedsRefresh,
                                     tskNewWatchFolderRefresh
                                 };
-                        foreach (IPlugin objPlugin in await Program.PluginLoader
-                                     .GetMyActivePluginsAsync(objTemp.Token)
-                                     .ConfigureAwait(false))
-                        {
-                            lstTasks.Add(RefreshPluginNodesAsync(objPlugin, objTemp.Token));
-                        }
                         await Task.WhenAll(lstTasks).ConfigureAwait(false);
                     }
                     catch (OperationCanceledException)
@@ -1542,103 +1534,6 @@ namespace Chummer
             }, token).ConfigureAwait(false);
         }
 
-        public Task RefreshPluginNodesAsync(IPlugin objPluginToRefresh, CancellationToken objToken = default)
-        {
-            ArgumentNullException.ThrowIfNull(objPluginToRefresh);
-            return RefreshPluginNodesInner(objToken); // Split up this way so that the parameter check happens synchronously
-
-            async Task RefreshPluginNodesInner(CancellationToken token = default)
-            {
-                token.ThrowIfCancellationRequested();
-                int intNodeOffset
-                    = (await Program.PluginLoader.GetMyActivePluginsAsync(token).ConfigureAwait(false)).IndexOf(
-                        objPluginToRefresh);
-                if (intNodeOffset >= 0)
-                {
-                    Log.Info("Starting new Task to get CharacterRosterTreeNodes for plugin:" + objPluginToRefresh);
-                    List<TreeNode> lstNodes =
-                        (await objPluginToRefresh.GetCharacterRosterTreeNode(this, true, token).ConfigureAwait(false))?.ToList();
-                    if (lstNodes != null)
-                    {
-                        lstNodes.Sort((x, y) => string.CompareOrdinal(x.Text, y.Text));
-                        for (int i = 0; i < lstNodes.Count; ++i)
-                        {
-                            TreeNode node = lstNodes[i];
-                            string strNodeText = node.Text;
-                            object objNodeTag = node.Tag;
-                            TreeNode objExistingNode = await treCharacterList.DoThreadSafeFuncAsync(x =>
-                                x.Nodes.Cast<TreeNode>()
-                                 .FirstOrDefault(y => y.Text == strNodeText && y.Tag == objNodeTag), token).ConfigureAwait(false);
-                            try
-                            {
-                                int i1 = i;
-                                await treCharacterList.DoThreadSafeAsync(treList =>
-                                {
-                                    token.ThrowIfCancellationRequested();
-                                    if (objExistingNode != null)
-                                    {
-                                        treList.Nodes.Remove(objExistingNode);
-                                        token.ThrowIfCancellationRequested();
-                                    }
-
-                                    if (node.Nodes.Count > 0 || !string.IsNullOrEmpty(node.ToolTipText)
-                                                             || objNodeTag != null)
-                                    {
-                                        if (treList.Nodes.ContainsKey(node.Name))
-                                            treList.Nodes.RemoveByKey(node.Name);
-                                        TreeNode objFavoriteNode = treList.FindNode("Favorite", false);
-                                        TreeNode objRecentNode = treList.FindNode("Recent", false);
-                                        TreeNode objWatchNode = treList.FindNode("Watch", false);
-                                        token.ThrowIfCancellationRequested();
-                                        if (objFavoriteNode != null && objRecentNode != null
-                                                                    && objWatchNode != null)
-                                            treList.Nodes.Insert(i1 + intNodeOffset + 3, node);
-                                        else if (objFavoriteNode != null || objRecentNode != null
-                                                                         || objWatchNode != null)
-                                        {
-                                            if ((objFavoriteNode != null && objRecentNode != null) ||
-                                                (objFavoriteNode != null && objWatchNode != null) ||
-                                                (objRecentNode != null && objWatchNode != null))
-                                                treList.Nodes.Insert(i1 + intNodeOffset + 2, node);
-                                            else
-                                                treList.Nodes.Insert(i1 + intNodeOffset + 1, node);
-                                        }
-                                        else
-                                            treList.Nodes.Insert(i1 + intNodeOffset, node);
-                                    }
-
-                                    node.Expand();
-                                }, token).ConfigureAwait(false);
-                            }
-                            catch (ObjectDisposedException e)
-                            {
-                                Log.Trace(e);
-                            }
-                            catch (InvalidAsynchronousStateException e)
-                            {
-                                Log.Trace(e);
-                            }
-                            catch (ArgumentException e)
-                            {
-                                Log.Trace(e);
-                            }
-                            catch (Exception e)
-                            {
-                                Log.Warn(e);
-                            }
-                        }
-                    }
-
-                    Log.Info("Task to get and add CharacterRosterTreeNodes for plugin " + objPluginToRefresh
-                             + " finished.");
-                }
-                else
-                {
-                    Utils.BreakIfDebug();
-                }
-            }
-        }
-
         private readonly ConcurrentDictionary<string, CharacterCache> _dicSavedCharacterCaches = new ConcurrentDictionary<string, CharacterCache>();
 
         /// <summary>
@@ -2061,26 +1956,6 @@ namespace Chummer
             {
                 return;
             }
-
-            IPlugin plugintag = null;
-            while (nodDestinationNode?.Tag != null && plugintag == null)
-            {
-                if (nodDestinationNode.Tag is IPlugin temp)
-                    plugintag = temp;
-                nodDestinationNode = nodDestinationNode.Parent;
-            }
-
-            if (plugintag != null)
-            {
-                try
-                {
-                    await plugintag.DoCharacterList_DragDrop(sender, e, treCharacterList, _objGenericToken).ConfigureAwait(false);
-                }
-                catch (OperationCanceledException)
-                {
-                    //swallow this
-                }
-            }
         }
 
         private void treCharacterList_OnDefaultItemDrag(object sender, ItemDragEventArgs e)
@@ -2462,13 +2337,6 @@ namespace Chummer
                         await this.DoThreadSafeAsync(() => e.Node.ContextMenuStrip = objStrip, token: _objGenericToken)
                             .ConfigureAwait(false);
                     }
-                }
-
-                foreach (IPlugin plugin in await Program.PluginLoader.GetMyActivePluginsAsync(_objGenericToken)
-                                                        .ConfigureAwait(false))
-                {
-                    await this.DoThreadSafeAsync(() => plugin.SetCharacterRosterNode(e.Node), token: _objGenericToken)
-                              .ConfigureAwait(false);
                 }
             }
             catch (OperationCanceledException)

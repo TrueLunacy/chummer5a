@@ -32,7 +32,6 @@ using System.Xml;
 using System.Xml.XPath;
 using Chummer.Api.Enums;
 using Chummer.Backend.Equipment;
-using Chummer.Plugins;
 using iText.Kernel.Pdf;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -878,78 +877,6 @@ namespace Chummer
             // Method intentionally left empty.
         }
 #endif
-
-        private async void clbPlugins_VisibleChanged(object sender, EventArgs e)
-        {
-            await clbPlugins.DoThreadSafeAsync(x => x.Items.Clear()).ConfigureAwait(false);
-            if (await Program.PluginLoader.MyPlugins.GetCountAsync().ConfigureAwait(false) == 0)
-                return;
-            CursorWait objCursorWait = await CursorWait.NewAsync(this).ConfigureAwait(false);
-            try
-            {
-                await Program.PluginLoader.MyPlugins.ForEachAsync(async objPlugin =>
-                {
-                    try
-                    {
-                        await Program.MainForm.DoThreadSafeAsync(objPlugin.CustomInitialize)
-                                     .ConfigureAwait(false);
-                        if (GlobalSettings.PluginsEnabledDic.TryGetValue(objPlugin.ToString(), out bool blnChecked))
-                        {
-                            await clbPlugins.DoThreadSafeAsync(x => x.Items.Add(objPlugin, blnChecked))
-                                            .ConfigureAwait(false);
-                        }
-                        else
-                        {
-                            await clbPlugins.DoThreadSafeAsync(x => x.Items.Add(objPlugin)).ConfigureAwait(false);
-                        }
-                    }
-                    catch (ApplicationException ae)
-                    {
-                        Log.Debug(ae);
-                    }
-                }).ConfigureAwait(false);
-
-                await clbPlugins.DoThreadSafeAsync(x =>
-                {
-                    if (x.Items.Count > 0)
-                    {
-                        x.SelectedIndex = 0;
-                    }
-                }).ConfigureAwait(false);
-            }
-            finally
-            {
-                await objCursorWait.DisposeAsync().ConfigureAwait(false);
-            }
-        }
-
-        private void clbPlugins_SelectedValueChanged(object sender, EventArgs e)
-        {
-            UserControl pluginControl = (clbPlugins.SelectedItem as IPlugin)?.GetOptionsControl();
-            if (pluginControl != null)
-            {
-                pnlPluginOption.Controls.Clear();
-                pnlPluginOption.Controls.Add(pluginControl);
-            }
-        }
-
-        private async void clbPlugins_ItemCheck(object sender, ItemCheckEventArgs e)
-        {
-            CursorWait objCursorWait = await CursorWait.NewAsync(this).ConfigureAwait(false);
-            try
-            {
-                string strPlugin = (await clbPlugins.DoThreadSafeFuncAsync(x => x.Items[e.Index]).ConfigureAwait(false))
-                    ?.ToString() ?? string.Empty;
-                bool blnNewValue = e.NewValue == CheckState.Checked;
-                GlobalSettings.PluginsEnabledDic.AddOrUpdate(strPlugin, blnNewValue, (x, y) => blnNewValue);
-                OptionsChanged(sender, e);
-            }
-            finally
-            {
-                await objCursorWait.DisposeAsync().ConfigureAwait(false);
-            }
-        }
-
         private void txtPDFAppPath_TextChanged(object sender, EventArgs e)
         {
             cmdRemovePDFAppPath.Enabled = txtPDFAppPath.TextLength > 0;
