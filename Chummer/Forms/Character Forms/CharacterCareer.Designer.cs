@@ -1281,12 +1281,12 @@ namespace Chummer
             this.colKarmaAmount = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.colKarmaReason = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.cmdKarmaEdit = new System.Windows.Forms.Button();
-            this.chtKarma = new Chummer.UI.Charts.ExpenseChart();
+            this.chtKarma = new Chummer.Controls.Charts.ExpenseChart();
             this.chkShowFreeKarma = new Chummer.ColorableCheckBox();
             this.chkShowKarmaChart = new Chummer.ColorableCheckBox();
             this.cmdKarmaGained = new System.Windows.Forms.Button();
             this.tlpNuyen = new System.Windows.Forms.TableLayoutPanel();
-            this.chtNuyen = new Chummer.UI.Charts.ExpenseChart();
+            this.chtNuyen = new Chummer.Controls.Charts.ExpenseChart();
             this.cmdNuyenSpent = new System.Windows.Forms.Button();
             this.lstNuyen = new System.Windows.Forms.ListView();
             this.colNuyenDate = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -24092,8 +24092,8 @@ namespace Chummer
         private System.Windows.Forms.TableLayoutPanel tlpTechnomancerParagon;
         private Label lblParagonSourceLabel;
         private Label lblParagonSource;
-        private UI.Charts.ExpenseChart chtKarma;
-        private UI.Charts.ExpenseChart chtNuyen;
+        private Controls.Charts.ExpenseChart chtKarma;
+        private Controls.Charts.ExpenseChart chtNuyen;
         private System.Windows.Forms.TableLayoutPanel tlpPhysicalCMBoxes;
         private Label lblPhysicalRecoveryText;
         private Label lblCMPhysicalRecoveryPool;

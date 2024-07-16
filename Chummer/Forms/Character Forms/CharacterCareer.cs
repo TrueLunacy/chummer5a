@@ -35,7 +35,7 @@ using Chummer.Backend.Attributes;
 using Chummer.Backend.Equipment;
 using Chummer.Backend.Skills;
 using Chummer.Backend.Uniques;
-using LiveCharts.Defaults;
+using LiveChartsCore.Defaults;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
@@ -277,7 +277,8 @@ namespace Chummer
                                         await this.DoThreadSafeFuncAsync(x => x.Icon = x.Icon.Clone() as Icon,
                                             GenericToken).ConfigureAwait(false);
                                         return;
-                                    }                                    {
+                                    }
+                                    {
                                         // Set the visibility of the Bioware Suites menu options.
                                         await mnuCreateMenu.DoThreadSafeAsync(
                                                 () => mnuSpecialAddBiowareSuite.Visible
@@ -882,7 +883,8 @@ namespace Chummer
                                                     x => x.Visible = false, GenericToken).ConfigureAwait(false);
                                             }
                                         }
-                                    }                                    {
+                                    }
+                                    {
                                         if (await CharacterObject.GetMetatypeCategoryAsync(GenericToken).ConfigureAwait(false) == "Shapeshifter")
                                         {
                                             await cboAttributeCategory.DoThreadSafeAsync(x => x.Visible = true, GenericToken).ConfigureAwait(false);
@@ -942,7 +944,8 @@ namespace Chummer
                                                 nameof(Character.CanAffordCareerPP),
                                                 x => x.GetCanAffordCareerPPAsync(GenericToken), GenericToken)
                                             .ConfigureAwait(false);
-                                    }                                    {
+                                    }
+                                    {
                                         // Populate vehicle weapon fire mode list.
                                         using (new FetchSafelyFromPool<List<ListItem>>(
                                                    Utils.ListItemListPool, out List<ListItem> lstFireModes))
@@ -961,7 +964,8 @@ namespace Chummer
                                             await cboVehicleWeaponFiringMode.PopulateWithListItemsAsync(
                                                 lstFireModes, GenericToken).ConfigureAwait(false);
                                         }
-                                    }                                    {
+                                    }
+                                    {
                                         TraditionType eTraditionType = await objTradition.GetTypeAsync(GenericToken)
                                             .ConfigureAwait(false);
                                         string strTraditionSourceIdString =
@@ -1562,7 +1566,8 @@ namespace Chummer
                                                 nameof(Character.StunCMNaturalRecovery),
                                                 x => x.GetStunCMNaturalRecoveryAsync(GenericToken), GenericToken)
                                             .ConfigureAwait(false);
-                                    }                                    {
+                                    }
+                                    {
                                         await SetTooltips(GenericToken).ConfigureAwait(false);
 
                                         await RefreshAttributes(pnlAttributes, null, lblAttributes, -1,
@@ -26361,7 +26366,7 @@ namespace Chummer
                         chtKarma.ExpenseValues.Add(new DateTimePoint(DateTime.Now, decimal.ToDouble(decKarmaValue)));
                     }
 
-                    await chtKarma.NormalizeYAxis(token).ConfigureAwait(false);
+                    chtKarma.NormalizeAxisValues();
                 }
                 finally
                 {
@@ -26474,7 +26479,7 @@ namespace Chummer
                         chtNuyen.ExpenseValues.Add(new DateTimePoint(DateTime.Now, decimal.ToDouble(decNuyenValue)));
                     }
 
-                    await chtNuyen.NormalizeYAxis(token).ConfigureAwait(false);
+                    chtNuyen.NormalizeAxisValues();
                 }
                 finally
                 {

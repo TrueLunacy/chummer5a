@@ -4416,7 +4416,7 @@ namespace Chummer
                 return objReturn;
             try
             {
-                foreach (string strArg in strArgs)
+                foreach (string strArg in strArgs.Skip(1)) // first arg is program launch arg, different from framework
                 {
                     if (strArg.EndsWith(Path.GetFileName(Application.ExecutablePath), StringComparison.OrdinalIgnoreCase))
                         continue;

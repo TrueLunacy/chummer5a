@@ -5,7 +5,6 @@
     <TargetFramework>net8.0-windows</TargetFramework>
     <Nullable>disable</Nullable>
     <UseWindowsForms>true</UseWindowsForms>
-	<UseWPF>true</UseWPF>
     <ImplicitUsings>enable</ImplicitUsings>
 	<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 	<ApplicationIcon>chummer.ico</ApplicationIcon>
@@ -16,7 +15,6 @@
     <PackageReference Include="HtmlRenderer.Core" Version="1.5.0.6" />
     <PackageReference Include="HtmlRenderer.WinForms" Version="1.5.0.6" />
     <PackageReference Include="itext" Version="8.0.4" />
-    <PackageReference Include="LiveCharts.WinForms" Version="0.9.7.1" />
     <PackageReference Include="Microsoft.Extensions.ObjectPool" Version="8.0.7" />
     <PackageReference Include="Microsoft.IO.RecyclableMemoryStream" Version="3.0.1" />
     <PackageReference Include="Microsoft.VisualStudio.Threading" Version="17.10.48" />
@@ -24,6 +22,7 @@
     <PackageReference Include="RtfPipe" Version="2.0.7677.4303" />
     <PackageReference Include="System.ComponentModel.Composition" Version="8.0.0" />
 
+    <PackageReference Include="LiveChartsCore.SkiaSharpView.WinForms" Version="2.0.0-rc2" />
     <PackageReference Include="Microsoft.Extensions.Logging" Version="8.0.0" />
     <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="8.0.0" />
     <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="8.0.0" />

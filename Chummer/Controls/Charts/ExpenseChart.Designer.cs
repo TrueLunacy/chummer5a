@@ -1,4 +1,4 @@
-namespace Chummer.UI.Charts
+namespace Chummer.Controls.Charts
 {
     partial class ExpenseChart
     {
@@ -28,31 +28,30 @@ namespace Chummer.UI.Charts
         /// </summary>
         private void InitializeComponent()
         {
-            this.chtCartesian = new LiveCharts.WinForms.CartesianChart();
-            this.SuspendLayout();
+            chart = new LiveChartsCore.SkiaSharpView.WinForms.CartesianChart();
+            SuspendLayout();
             // 
-            // chtCartesian
+            // chart
             // 
-            this.chtCartesian.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.chtCartesian.Location = new System.Drawing.Point(0, 0);
-            this.chtCartesian.Name = "chtCartesian";
-            this.chtCartesian.Size = new System.Drawing.Size(284, 261);
-            this.chtCartesian.TabIndex = 0;
+            chart.Dock = DockStyle.Fill;
+            chart.Location = new Point(0, 0);
+            chart.Name = "chart";
+            chart.Size = new Size(400, 400);
+            chart.TabIndex = 0;
             // 
-            // ExpenseChart
+            // ExpenseChart2
             // 
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
-            this.Controls.Add(this.chtCartesian);
-            this.DoubleBuffered = true;
-            this.Name = "ExpenseChart";
-            this.Size = new System.Drawing.Size(284, 261);
-            this.Load += new System.EventHandler(this.ExpenseChart_Load);
-            this.ResumeLayout(false);
-
+            AutoScaleDimensions = new SizeF(7F, 15F);
+            AutoScaleMode = AutoScaleMode.Font;
+            Controls.Add(chart);
+            Name = "ExpenseChart2";
+            Size = new Size(400, 400);
+            Load += ExpenseChart_Load;
+            ResumeLayout(false);
         }
 
         #endregion
 
-        private LiveCharts.WinForms.CartesianChart chtCartesian;
+        private LiveChartsCore.SkiaSharpView.WinForms.CartesianChart chart;
     }
 }

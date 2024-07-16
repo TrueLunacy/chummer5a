@@ -1,180 +1,134 @@
-/*  This file is part of Chummer5a.
- *
- *  Chummer5a is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  Chummer5a is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with Chummer5a.  If not, see <http://www.gnu.org/licenses/>.
- *
- *  You can obtain the full source code for Chummer5a at
- *  https://github.com/chummer5a/chummer5a
- */
-
+using LiveChartsCore.Defaults;
+using LiveChartsCore.Measure;
+using LiveChartsCore.SkiaSharpView;
+using LiveChartsCore.SkiaSharpView.Painting;
+using LiveChartsCore.SkiaSharpView.VisualElements;
+using LiveChartsCore.Drawing;
+using SkiaSharp;
 using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
 using System.Linq;
-using System.Threading;
+using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Windows.Media;
-using LiveCharts;
-using LiveCharts.Defaults;
-using LiveCharts.Wpf;
-using Brushes = System.Windows.Media.Brushes;
-using Color = System.Windows.Media.Color;
+using Padding = LiveChartsCore.Drawing.Padding;
 
-namespace Chummer.UI.Charts
+namespace Chummer.Controls.Charts
 {
     public partial class ExpenseChart : UserControl
     {
-        private Character _objCharacter;
-        private readonly LineSeries _objMainSeries;
-        private readonly Axis _objYAxis;
-        private static readonly SolidColorBrush s_ObjKarmaFillBrush = new SolidColorBrush(Color.FromArgb(0x7F, 0, 0, 0xFF));
-        private static readonly SolidColorBrush s_ObjNuyenFillBrush = new SolidColorBrush(Color.FromArgb(0x7F, 0xFF, 0, 0));
+        private readonly LineSeries<DateTimePoint> series;
+        private readonly LabelVisual title;
+        // also used as default karma format
+        private const string DefaultFormat = "#,0.##";
+        private string nuyenFormat = DefaultFormat;
+        private Axis YAxis;
+        private DateTimeAxis XAxis;
+
+        public List<DateTimePoint> ExpenseValues { get; } = new List<DateTimePoint>();
 
         public ExpenseChart()
         {
             InitializeComponent();
-            _objMainSeries = new LineSeries
+            series = new LineSeries<DateTimePoint>
             {
-                Title = LanguageManager.GetString("String_KarmaRemaining"),
+                AnimationsSpeed = TimeSpan.FromMilliseconds(200),
+                LineSmoothness = 0,
                 Values = ExpenseValues,
-                LineSmoothness = 0.1,
-                Stroke = Brushes.Blue,
-                Fill = s_ObjKarmaFillBrush,
-                PointGeometrySize = 8
+                GeometrySize = 10,
+                GeometryFill = new SolidColorPaint(SKColors.White),
+                DataPadding = new LvcPoint(0, 0),
             };
-            chtCartesian.Series = new SeriesCollection
+            chart.Series = [series];
+            XAxis = new DateTimeAxis(TimeSpan.FromSeconds(1), dt =>
             {
-                _objMainSeries
-            };
-            chtCartesian.AxisX.Add(new Axis
-            {
-                LabelFormatter = val => new DateTime((long)val, DateTimeKind.Local).ToString(GlobalSettings.CustomDateTimeFormats
+                return dt.ToString(GlobalSettings.CustomDateTimeFormats
                     ? GlobalSettings.CustomDateFormat
                       + ' ' + GlobalSettings.CustomTimeFormat
                     : GlobalSettings.CultureInfo.DateTimeFormat.ShortDatePattern
-                      + ' ' + GlobalSettings.CultureInfo.DateTimeFormat.ShortTimePattern, GlobalSettings.CultureInfo)
-            });
-            _objYAxis = new Axis
+                      + ' ' + GlobalSettings.CultureInfo.DateTimeFormat.ShortTimePattern, GlobalSettings.CultureInfo);
+            })
             {
-                Title = LanguageManager.GetString("String_Karma"),
-                LabelFormatter = val => val.ToString("#,0.##", GlobalSettings.CultureInfo)
+                TextSize = 11,
             };
-            chtCartesian.AxisY.Add(_objYAxis);
+            chart.XAxes = [XAxis];
+            YAxis = new Axis()
+            {
+                TextSize = 11,
+                NameTextSize = 11,
+                NamePadding = new Padding(10),
+            };
+            chart.YAxes = [YAxis];
+            SetKarmaMode();
         }
 
-        private async void ExpenseChart_Load(object sender, EventArgs e)
+        private bool _NuyenMode;
+
+        private void ExpenseChart_Load(object _, EventArgs __)
         {
-            if (ParentForm is CharacterShared frmParent && frmParent.CharacterObject != null)
+            if (ParentForm is CharacterShared charform
+                && charform.CharacterObject?.Settings.NuyenFormat is not null)
             {
-                if (Interlocked.CompareExchange(ref _objCharacter, frmParent.CharacterObject, null) != null)
-                    return;
+                nuyenFormat = charform.CharacterObject.Settings.NuyenFormat;
             }
             else
             {
-                Character objCharacter = new Character();
-                if (Interlocked.CompareExchange(ref _objCharacter, objCharacter, null) != null)
-                {
-                    await objCharacter.DisposeAsync().ConfigureAwait(false);
-                    return;
-                }
-                await this.DoThreadSafeAsync(x => x.Disposed += (o, args) => objCharacter.Dispose()).ConfigureAwait(false);
-                Utils.BreakIfDebug();
-            }
-            if (NuyenMode)
-            {
-                string strNuyen = await LanguageManager.GetStringAsync("String_NuyenSymbol").ConfigureAwait(false);
-                await _objYAxis.DoThreadSafeAsync(x => x.LabelFormatter = val =>
-                                                      val.ToString((_objCharacter?.Settings.NuyenFormat ?? "#,0.##") + strNuyen,
-                                                                   GlobalSettings.CultureInfo)).ConfigureAwait(false);
+                nuyenFormat = DefaultFormat;
             }
         }
 
-        public Task NormalizeYAxis(CancellationToken token = default)
+        public void NormalizeAxisValues()
         {
-            if (token.IsCancellationRequested)
-                return Task.FromCanceled(token);
             if (ExpenseValues.Count == 0)
-                return Task.CompletedTask;
-            double dblActualMin = ExpenseValues[0].Value;
-            double dblActualMax = dblActualMin;
-            foreach (double dblValue in ExpenseValues.Select(x => x.Value))
-            {
-                if (dblActualMax < dblValue)
-                    dblActualMax = dblValue;
-                else if (dblActualMin > dblValue)
-                    dblActualMin = dblValue;
-            }
-            if (NuyenMode)
-            {
-                dblActualMax = Math.Max(Math.Ceiling(dblActualMax / 5000.0), Math.Floor(dblActualMin / 5000.0) + 1) * 5000.0;
-                dblActualMin = Math.Floor(dblActualMin / 5000.0) * 5000.0;
-            }
-            else
-            {
-                dblActualMax = Math.Max(Math.Ceiling(dblActualMax / 5.0), Math.Floor(dblActualMin / 5.0) + 1) * 5.0;
-                dblActualMin = Math.Floor(dblActualMin / 5.0) * 5.0;
-            }
-
-            return _objYAxis.DoThreadSafeAsync(x =>
-            {
-                x.MinValue = dblActualMin;
-                x.MaxValue = dblActualMax;
-            }, token);
+                return;
+            var max = ExpenseValues.Select(v => v.Value).Max().Value;
+            var min = ExpenseValues.Select(v => v.Value).Min().Value;
+            var interval = NuyenMode ? 5000 : 5;
+            max = Math.Max(
+                Math.Ceiling(max / interval),
+                Math.Floor(min / interval) + 1
+            ) * interval;
+            min = Math.Floor(min / interval) * interval;
+            YAxis.MaxLimit = max;
+            YAxis.MinLimit = min;
         }
 
-        #region Properties
+        private void SetNuyenMode()
+        {
+            series.GeometryStroke = new SolidColorPaint(SKColors.Red, 3);
+            series.Stroke = new SolidColorPaint(SKColors.Red, 3);
+            series.Fill = new SolidColorPaint(new SKColor(0xFF, 0x00, 0x00, 0x7F));
+            YAxis.Labeler = v => v.ToString(nuyenFormat) + LanguageManager.GetString("String_NuyenSymbol");
+            YAxis.Name = LanguageManager.GetString("Label_SummaryNuyen");
+        }
 
-        [CLSCompliant(false)]
-        public ChartValues<DateTimePoint> ExpenseValues { get; } = new ChartValues<DateTimePoint>();
-
-        private int _intNuyenMode;
+        private void SetKarmaMode()
+        {
+            series.GeometryStroke = new SolidColorPaint(SKColors.Blue, 3);
+            series.Stroke = new SolidColorPaint(SKColors.Blue, 3);
+            series.Fill = new SolidColorPaint(new SKColor(00, 0x00, 0xFF, 0x7F));
+            YAxis.Labeler = v => v.ToString(DefaultFormat);
+            YAxis.Name = LanguageManager.GetString("String_Karma");
+        }
 
         public bool NuyenMode
         {
-            get => _intNuyenMode > 0;
+            get => _NuyenMode;
             set
             {
-                int intNewValue = value.ToInt32();
-                if (Interlocked.Exchange(ref _intNuyenMode, intNewValue) == intNewValue)
+                if (value == _NuyenMode)
                     return;
-                chtCartesian.SuspendLayout();
-                try
-                {
-                    if (value)
-                    {
-                        _objYAxis.Title = LanguageManager.GetString("Label_SummaryNuyen");
-                        _objYAxis.LabelFormatter = val =>
-                            val.ToString((_objCharacter?.Settings.NuyenFormat ?? "#,0.##") + LanguageManager.GetString("String_NuyenSymbol"),
-                                         GlobalSettings.CultureInfo);
-                        _objMainSeries.Title = LanguageManager.GetString("String_NuyenRemaining");
-                        _objMainSeries.Stroke = Brushes.Red;
-                        _objMainSeries.Fill = s_ObjNuyenFillBrush;
-                    }
-                    else
-                    {
-                        _objYAxis.Title = LanguageManager.GetString("String_Karma");
-                        _objYAxis.LabelFormatter = val => val.ToString("#,0.##", GlobalSettings.CultureInfo);
-                        _objMainSeries.Title = LanguageManager.GetString("String_KarmaRemaining");
-                        _objMainSeries.Stroke = Brushes.Blue;
-                        _objMainSeries.Fill = s_ObjKarmaFillBrush;
-                    }
-                }
-                finally
-                {
-                    chtCartesian.ResumeLayout();
-                }
+                _NuyenMode = value;
+                chart.SuspendLayout();
+                if (_NuyenMode)
+                    SetNuyenMode();
+                else
+                    SetKarmaMode();
+                chart.ResumeLayout();
             }
         }
-
-        #endregion Properties
     }
 }
