@@ -26,7 +26,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Microsoft.IO;
 
 namespace Chummer
 {
@@ -206,7 +205,7 @@ namespace Chummer
 
             try
             {
-                using (RecyclableMemoryStream objImageStream = new RecyclableMemoryStream(Utils.MemoryStreamManager))
+                using (MemoryStream objImageStream = new MemoryStream())
                 {
                     bmpClone.Save(objImageStream, s_LzyJpegEncoder.Value, lstJpegParameters);
                     objImageStream.Position = 0;
@@ -259,7 +258,7 @@ namespace Chummer
             {
                 try
                 {
-                    using (RecyclableMemoryStream objImageStream = new RecyclableMemoryStream(Utils.MemoryStreamManager))
+                    using (MemoryStream objImageStream = new MemoryStream())
                     {
                         bmpClone.Save(objImageStream, s_LzyJpegEncoder.Value, lstJpegParameters);
                         token.ThrowIfCancellationRequested();
@@ -284,7 +283,7 @@ namespace Chummer
         {
             if (string.IsNullOrEmpty(strBase64String))
                 return default;
-            using (RecyclableMemoryStream objStream = new RecyclableMemoryStream(Utils.MemoryStreamManager))
+            using (MemoryStream objStream = new MemoryStream())
             {
                 byte[] achrBuffer = strBase64String.ToBase64PooledByteArray(out int intArrayLength);
                 try
@@ -340,7 +339,7 @@ namespace Chummer
                 ? default
                 : await Task.Run(async () =>
                 {
-                    using (RecyclableMemoryStream objStream = new RecyclableMemoryStream(Utils.MemoryStreamManager))
+                    using (MemoryStream objStream = new MemoryStream())
                     {
                         byte[] achrBuffer = strBase64String.ToBase64PooledByteArray(out int intArrayLength, token);
                         try
@@ -416,7 +415,7 @@ namespace Chummer
 
             try
             {
-                using (RecyclableMemoryStream objImageStream = new RecyclableMemoryStream(Utils.MemoryStreamManager))
+                using (MemoryStream objImageStream = new MemoryStream())
                 {
                     if (eOverrideFormat == null)
                     {
@@ -469,7 +468,7 @@ namespace Chummer
 
             try
             {
-                using (RecyclableMemoryStream objImageStream = new RecyclableMemoryStream(Utils.MemoryStreamManager))
+                using (MemoryStream objImageStream = new MemoryStream())
                 {
                     bmpClone.Save(objImageStream, objCodecInfo, lstEncoderParameters);
                     return objImageStream.ToBase64String();
@@ -515,7 +514,7 @@ namespace Chummer
             {
                 try
                 {
-                    using (RecyclableMemoryStream objImageStream = new RecyclableMemoryStream(Utils.MemoryStreamManager))
+                    using (MemoryStream objImageStream = new MemoryStream())
                     {
                         if (eOverrideFormat == null)
                         {
@@ -575,7 +574,7 @@ namespace Chummer
             {
                 try
                 {
-                    using (RecyclableMemoryStream objImageStream = new RecyclableMemoryStream(Utils.MemoryStreamManager))
+                    using (MemoryStream objImageStream = new MemoryStream())
                     {
                         bmpClone.Save(objImageStream, objCodecInfo, lstEncoderParameters);
                         token.ThrowIfCancellationRequested();
@@ -623,7 +622,7 @@ namespace Chummer
 
             try
             {
-                using (RecyclableMemoryStream objImageStream = new RecyclableMemoryStream(Utils.MemoryStreamManager))
+                using (MemoryStream objImageStream = new MemoryStream())
                 {
                     bmpClone.Save(objImageStream, s_LzyJpegEncoder.Value, lstJpegParameters);
                     return objImageStream.ToBase64String();
@@ -674,7 +673,7 @@ namespace Chummer
             {
                 try
                 {
-                    using (RecyclableMemoryStream objImageStream = new RecyclableMemoryStream(Utils.MemoryStreamManager))
+                    using (MemoryStream objImageStream = new MemoryStream())
                     {
                         bmpClone.Save(objImageStream, s_LzyJpegEncoder.Value, lstJpegParameters);
                         token.ThrowIfCancellationRequested();

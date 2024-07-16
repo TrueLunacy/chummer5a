@@ -44,7 +44,6 @@ using Chummer.Backend.Uniques;
 using System.Xml.Serialization;
 using System.Runtime.Serialization;
 using System.Threading;
-using Microsoft.IO;
 using Newtonsoft.Json;
 using Application = System.Windows.Forms.Application;
 using Microsoft.Extensions.Logging;
@@ -4231,7 +4230,7 @@ namespace Chummer
 
             bool blnErrorFree = true;
             token.ThrowIfCancellationRequested();
-            using (RecyclableMemoryStream objStream = new RecyclableMemoryStream(Utils.MemoryStreamManager))
+            using (MemoryStream objStream = new MemoryStream())
             {
                 token.ThrowIfCancellationRequested();
                 using (XmlWriter objWriter = Utils.GetStandardXmlWriter(objStream))
@@ -8532,7 +8531,8 @@ namespace Chummer
                                                                   .GetStringAsync("Tab_Armor", token: token)
                                                                   .ConfigureAwait(false), token: token)
                                                         .ConfigureAwait(false);
-                            }                            {
+                            }
+                            {
                                 // Armor.
                                 objXmlNodeList = objXmlCharacter.SelectNodes("armors/armor");
                                 foreach (XmlNode objXmlArmor in objXmlNodeList)
@@ -8593,7 +8593,8 @@ namespace Chummer
                                                                   .GetStringAsync("Tab_Cyberware", token: token)
                                                                   .ConfigureAwait(false), token: token)
                                                         .ConfigureAwait(false);
-                            }                            {
+                            }
+                            {
                                 // Cyberware/Bioware.
                                 objXmlNodeList = objXmlCharacter.SelectNodes("cyberwares/cyberware");
                                 // Dictionary for instantly re-applying outdated improvements for 'ware with pair bonuses in legacy shim
@@ -8995,7 +8996,8 @@ namespace Chummer
                                                                     token: token)
                                                                 .ConfigureAwait(false), token: token)
                                                         .ConfigureAwait(false);
-                            }                            {
+                            }
+                            {
                                 // Spells.
                                 objXmlNodeList = objXmlCharacter.SelectNodes("spells/spell");
                                 foreach (XmlNode objXmlSpell in objXmlNodeList)
@@ -9023,7 +9025,8 @@ namespace Chummer
                                                                   .GetStringAsync("Tab_Adept", token: token)
                                                                   .ConfigureAwait(false), token: token)
                                                         .ConfigureAwait(false);
-                            }                            {
+                            }
+                            {
                                 // Powers.
                                 objXmlNodeList = objXmlCharacter.SelectNodes("powers/power");
                                 if (objXmlNodeList.Count > 0)
@@ -9177,7 +9180,8 @@ namespace Chummer
                                                                     token: token)
                                                                 .ConfigureAwait(false), token: token)
                                                         .ConfigureAwait(false);
-                            }                            {
+                            }
+                            {
                                 // Complex Forms/Technomancer Programs.
                                 objXmlNodeList = objXmlCharacter.SelectNodes("complexforms/complexform");
                                 foreach (XmlNode objXmlComplexForm in objXmlNodeList)
@@ -9239,7 +9243,8 @@ namespace Chummer
                                                                     token: token)
                                                                 .ConfigureAwait(false), token: token)
                                                         .ConfigureAwait(false);
-                            }                            {
+                            }
+                            {
                                 // Martial Arts.
                                 objXmlNodeList = objXmlCharacter.SelectNodes("martialarts/martialart");
                                 foreach (XmlNode objXmlArt in objXmlNodeList)
@@ -9268,7 +9273,8 @@ namespace Chummer
                                                                   .GetStringAsync("Tab_Limits", token: token)
                                                                   .ConfigureAwait(false), token: token)
                                                         .ConfigureAwait(false);
-                            }                            {
+                            }
+                            {
                                 // Limit Modifiers.
                                 objXmlNodeList = objXmlCharacter.SelectNodes("limitmodifiers/limitmodifier");
                                 foreach (XmlNode objXmlLimit in objXmlNodeList)
@@ -9297,7 +9303,8 @@ namespace Chummer
                                         await LanguageManager
                                               .GetStringAsync("String_SelectPACKSKit_Lifestyles", token: token)
                                               .ConfigureAwait(false), token: token).ConfigureAwait(false);
-                            }                            {
+                            }
+                            {
                                 // Lifestyles.
                                 objXmlNodeList = objXmlCharacter.SelectNodes("lifestyles/lifestyle");
                                 foreach (XmlNode objXmlLifestyle in objXmlNodeList)
@@ -9326,7 +9333,8 @@ namespace Chummer
                                                                   .GetStringAsync("Tab_Gear", token: token)
                                                                   .ConfigureAwait(false), token: token)
                                                         .ConfigureAwait(false);
-                            }                            {
+                            }
+                            {
                                 // <gears>
                                 objXmlNodeList = objXmlCharacter.SelectNodes("gears/gear");
                                 foreach (XmlNode objXmlGear in objXmlNodeList)
@@ -9486,7 +9494,8 @@ namespace Chummer
                                                                     token: token)
                                                                 .ConfigureAwait(false), token: token)
                                                         .ConfigureAwait(false);
-                            }                            {
+                            }
+                            {
                                 // Vehicles.
                                 objXmlNodeList = objXmlCharacter.SelectNodes("vehicles/vehicle");
                                 foreach (XmlNode objXmlVehicle in objXmlNodeList)
@@ -9515,7 +9524,8 @@ namespace Chummer
                                                                   .GetStringAsync("Tab_Weapons", token: token)
                                                                   .ConfigureAwait(false), token: token)
                                                         .ConfigureAwait(false);
-                            }                            {
+                            }
+                            {
                                 // Weapons.
                                 objXmlNodeList = objXmlCharacter.SelectNodes("weapons/weapon");
                                 foreach (XmlNode objXmlWeapon in objXmlNodeList)
@@ -9545,7 +9555,8 @@ namespace Chummer
                                                                     token: token)
                                                                 .ConfigureAwait(false), token: token)
                                                         .ConfigureAwait(false);
-                            }                            {
+                            }
+                            {
                                 // Metamagics/Echoes.
                                 objXmlNodeList = objXmlCharacter.SelectNodes("metamagics/metamagic");
                                 foreach (XmlNode objXmlMetamagic in objXmlNodeList)
@@ -9574,7 +9585,8 @@ namespace Chummer
                                                                   .GetStringAsync("String_Arts", token: token)
                                                                   .ConfigureAwait(false), token: token)
                                                         .ConfigureAwait(false);
-                            }                            {
+                            }
+                            {
                                 // Arts
                                 objXmlNodeList = objXmlCharacter.SelectNodes("arts/art");
                                 foreach (XmlNode objXmlArt in objXmlNodeList)
@@ -9604,7 +9616,8 @@ namespace Chummer
                                                                     token: token)
                                                                 .ConfigureAwait(false), token: token)
                                                         .ConfigureAwait(false);
-                            }                            {
+                            }
+                            {
                                 // Enhancements
                                 objXmlNodeList = objXmlCharacter.SelectNodes("enhancements/enhancement");
                                 foreach (XmlNode objXmlEnhancement in objXmlNodeList)
@@ -9633,7 +9646,8 @@ namespace Chummer
                                                                   .GetStringAsync("Tab_Critter", token: token)
                                                                   .ConfigureAwait(false), token: token)
                                                         .ConfigureAwait(false);
-                            }                            {
+                            }
+                            {
                                 // Critter Powers.
                                 objXmlNodeList = objXmlCharacter.SelectNodes("critterpowers/critterpower");
                                 foreach (XmlNode objXmlPower in objXmlNodeList)
@@ -9663,7 +9677,8 @@ namespace Chummer
                                                                     token: token)
                                                                 .ConfigureAwait(false), token: token)
                                                         .ConfigureAwait(false);
-                            }                            {
+                            }
+                            {
                                 // Foci.
                                 objXmlNodeList = objXmlCharacter.SelectNodes("foci/focus");
                                 foreach (XmlNode objXmlFocus in objXmlNodeList)
@@ -9700,7 +9715,8 @@ namespace Chummer
                                                                       token: token)
                                                                   .ConfigureAwait(false), token: token)
                                                         .ConfigureAwait(false);
-                            }                            {
+                            }
+                            {
                                 // Initiation Grades.
                                 objXmlNodeList = objXmlCharacter.SelectNodes("initiationgrades/initiationgrade");
                                 foreach (XmlNode objXmlGrade in objXmlNodeList)
@@ -9735,7 +9751,8 @@ namespace Chummer
                             // While expenses are to be saved in create mode due to starting nuyen and starting karma being logged as expense log entries,
                             // they shouldn't get loaded in create mode because they shouldn't be there.
                             if (Created)
-                            {                                {
+                            {
+                                {
                                     // Expense Log Entries.
                                     XmlNodeList objXmlExpenseList = objXmlCharacter.SelectNodes("expenses/expense");
                                     foreach (XmlNode objXmlExpense in objXmlExpenseList)
@@ -9775,7 +9792,8 @@ namespace Chummer
                                                         .ConfigureAwait(false);
                             }
 
-                            // Need to load these after everything else so that we can properly link them up during loading                            {
+                            // Need to load these after everything else so that we can properly link them up during loading
+                            {
                                 objXmlNodeList = objXmlCharacter.SelectNodes("sustainedobjects");
                                 foreach (XmlNode objXmlSustained in objXmlNodeList)
                                 {
@@ -9807,7 +9825,8 @@ namespace Chummer
                                                                     token: token)
                                                                 .ConfigureAwait(false), token: token)
                                                         .ConfigureAwait(false);
-                            }                            {
+                            }
+                            {
                                 // Improvement Groups.
                                 XmlNodeList objXmlGroupList =
                                     objXmlCharacter.SelectNodes("improvementgroups/improvementgroup");
@@ -9843,7 +9862,8 @@ namespace Chummer
                                                                   .GetStringAsync("Tab_Calendar", token: token)
                                                                   .ConfigureAwait(false), token: token)
                                                         .ConfigureAwait(false);
-                            }                            {
+                            }
+                            {
                                 // Calendar.
                                 XmlNodeList objXmlWeekList = objXmlCharacter.SelectNodes("calendar/week");
                                 foreach (XmlNode objXmlWeek in objXmlWeekList)
@@ -9884,7 +9904,8 @@ namespace Chummer
                                                                     token: token)
                                                                 .ConfigureAwait(false), token: token)
                                                         .ConfigureAwait(false);
-                            }                            {
+                            }
+                            {
                                 // Look for the unarmed attack
                                 bool blnFoundUnarmed = false;
                                 foreach (Weapon objWeapon in _lstWeapons)
@@ -9924,7 +9945,8 @@ namespace Chummer
                                 }
 
                                 //Timekeeper.Finish("load_char_unarmed");
-                            }                            {
+                            }
+                            {
                                 // converting from old dwarven resistance to new dwarven resistance
                                 if (Metatype.Equals("dwarf", StringComparison.OrdinalIgnoreCase))
                                 {
@@ -9999,7 +10021,8 @@ namespace Chummer
                                 }
 
                                 //Timekeeper.Finish("load_char_dwarffix");
-                            }                            {
+                            }
+                            {
                                 //Sweep through grades if we have any cyberadept improvements that need reassignment
                                 if (lstCyberadeptSweepGrades.Count > 0)
                                 {
@@ -10061,7 +10084,8 @@ namespace Chummer
                                 }
 
                                 //Timekeeper.Finish("load_char_cyberadeptfix");
-                            }                            {
+                            }
+                            {
                                 if (blnSync)
                                 {
                                     Quality objMentorQuality = Qualities.FirstOrDefault(q => q.Name == "Mentor Spirit");
@@ -10089,7 +10113,8 @@ namespace Chummer
                                 }
 
                                 //Timekeeper.Finish("load_char_mentorspiritfix");
-                            }                            {
+                            }
+                            {
                                 if (blnSync)
                                 {
                                     if (!Created)
@@ -10106,7 +10131,8 @@ namespace Chummer
                                 }
                             }
 
-                            // Fix legacy cases where characters have more attribute points assigned than allowed                            {
+                            // Fix legacy cases where characters have more attribute points assigned than allowed
+                            {
                                 if (blnSync)
                                 {
                                     if (!Created)
@@ -10123,7 +10149,8 @@ namespace Chummer
                                 }
                             }
 
-                            // Fix skills that shouldn't be allowed to have specializations having them anyway (needed at the last step because improvements and skill groups can affect this)                            {
+                            // Fix skills that shouldn't be allowed to have specializations having them anyway (needed at the last step because improvements and skill groups can affect this)
+                            {
                                 if (blnSync)
                                 {
                                     if (!Created)
@@ -10209,7 +10236,8 @@ namespace Chummer
                                                          .ConfigureAwait(false), token: token).ConfigureAwait(false);
                         }
 
-                        // Refresh certain improvements                        {
+                        // Refresh certain improvements
+                        {
                             // Process all events related to improvements
                             using (new FetchSafelyFromPool<
                                        Dictionary<INotifyMultiplePropertiesChangedAsync, HashSet<string>>>(

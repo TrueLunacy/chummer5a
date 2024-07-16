@@ -37,7 +37,6 @@ using Chummer.Backend.Equipment;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas.Parser;
 using iText.Kernel.Pdf.Canvas.Parser.Listener;
-using Microsoft.IO;
 
 namespace Chummer
 {
@@ -1874,7 +1873,7 @@ namespace Chummer
             objToken.ThrowIfCancellationRequested();
             XmlDocument objReturn = new XmlDocument { XmlResolver = null };
             // Write the Character information to a RecyclableMemoryStream so we don't need to create any files.
-            using (RecyclableMemoryStream objStream = new RecyclableMemoryStream(Utils.MemoryStreamManager))
+            using (MemoryStream objStream = new MemoryStream())
             {
                 bool blnWriterError = false;
                 using (XmlWriter objWriter = Utils.GetStandardXmlWriter(objStream))

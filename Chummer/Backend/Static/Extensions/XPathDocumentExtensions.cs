@@ -23,7 +23,6 @@ using System.Threading.Tasks;
 using System.Threading;
 using System.Xml;
 using System.Xml.XPath;
-using Microsoft.IO;
 
 namespace Chummer
 {
@@ -103,9 +102,7 @@ namespace Chummer
                    = new FileStream(strFileName, FileMode.Open, FileAccess.Read, FileShare.Read))
             {
                 token.ThrowIfCancellationRequested();
-                using (RecyclableMemoryStream objMemoryStream
-                       = new RecyclableMemoryStream(Utils.MemoryStreamManager, "LzmaMemoryStream",
-                                                    (int) objFileStream.Length))
+                using (MemoryStream objMemoryStream = new MemoryStream())
                 {
                     token.ThrowIfCancellationRequested();
                     objFileStream.DecompressLzmaFile(objMemoryStream);
@@ -143,7 +140,7 @@ namespace Chummer
                 using (FileStream objFileStream = new FileStream(strFileName, FileMode.Open, FileAccess.Read, FileShare.Read))
                 {
                     token.ThrowIfCancellationRequested();
-                    using (RecyclableMemoryStream objMemoryStream = new RecyclableMemoryStream(Utils.MemoryStreamManager, "LzmaMemoryStream", (int)objFileStream.Length))
+                    using (MemoryStream objMemoryStream = new MemoryStream())
                     {
                         await objFileStream.DecompressLzmaFileAsync(objMemoryStream, token: token).ConfigureAwait(false);
                         token.ThrowIfCancellationRequested();

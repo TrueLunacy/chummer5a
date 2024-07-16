@@ -24,7 +24,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.XPath;
-using Microsoft.IO;
 
 namespace Chummer
 {
@@ -87,7 +86,7 @@ namespace Chummer
         public static void LoadStandardFromLzmaCompressed(this XmlDocument xmlDocument, string strFileName, bool blnSafe = true)
         {
             using (FileStream objFileStream = new FileStream(strFileName, FileMode.Open, FileAccess.Read, FileShare.Read))
-            using (RecyclableMemoryStream objMemoryStream = new RecyclableMemoryStream(Utils.MemoryStreamManager, "LzmaMemoryStream", (int)objFileStream.Length))
+            using (MemoryStream objMemoryStream = new MemoryStream())
             {
                 objFileStream.DecompressLzmaFile(objMemoryStream);
                 objMemoryStream.Seek(0, SeekOrigin.Begin);
@@ -115,7 +114,7 @@ namespace Chummer
             using (FileStream objFileStream = new FileStream(strFileName, FileMode.Open, FileAccess.Read, FileShare.Read))
             {
                 token.ThrowIfCancellationRequested();
-                using (RecyclableMemoryStream objMemoryStream = new RecyclableMemoryStream(Utils.MemoryStreamManager, "LzmaMemoryStream", (int)objFileStream.Length))
+                using (MemoryStream objMemoryStream = new MemoryStream())
                 {
                     await objFileStream.DecompressLzmaFileAsync(objMemoryStream, token: token).ConfigureAwait(false);
                     token.ThrowIfCancellationRequested();
@@ -149,7 +148,7 @@ namespace Chummer
         {
             if (xmlDocument == null)
                 return null;
-            using (RecyclableMemoryStream objMemoryStream = new RecyclableMemoryStream(Utils.MemoryStreamManager))
+            using (MemoryStream objMemoryStream = new MemoryStream())
             {
                 xmlDocument.Save(objMemoryStream);
                 objMemoryStream.Seek(0, SeekOrigin.Begin);
@@ -172,7 +171,7 @@ namespace Chummer
                 ? Task.FromResult<XPathNavigator>(null)
                 : Task.Run(() =>
                 {
-                    using (RecyclableMemoryStream objMemoryStream = new RecyclableMemoryStream(Utils.MemoryStreamManager))
+                    using (MemoryStream objMemoryStream = new MemoryStream())
                     {
                         token.ThrowIfCancellationRequested();
                         xmlDocument.Save(objMemoryStream);

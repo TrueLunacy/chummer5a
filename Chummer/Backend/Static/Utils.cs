@@ -41,7 +41,6 @@ using System.Xml;
 using Microsoft.Extensions.ObjectPool;
 using Microsoft.VisualStudio.Threading;
 using Microsoft.Win32;
-using Microsoft.IO;
 using Chummer.Forms;
 using System.Xml.XPath;
 using Microsoft.Extensions.DependencyInjection;
@@ -2704,9 +2703,5 @@ namespace Chummer
         public static SafeDisposableObjectPool<DebuggableSemaphoreSlim> SemaphorePool { get; }
             = new SafeDisposableObjectPool<DebuggableSemaphoreSlim>(Math.Max(MaxParallelBatchSize, ushort.MaxValue + 1), () => new DebuggableSemaphoreSlim());
 
-        /// <summary>
-        /// RecyclableMemoryStreamManager to be used for all RecyclableMemoryStream constructors.
-        /// </summary>
-        public static RecyclableMemoryStreamManager MemoryStreamManager { get; } = new RecyclableMemoryStreamManager();
     }
 }

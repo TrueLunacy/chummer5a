@@ -38,7 +38,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
 #if DEBUG
-using Microsoft.IO;
 #endif
 using Application = System.Windows.Forms.Application;
 
@@ -860,7 +859,7 @@ namespace Chummer
                     return;
                 }
 
-                using (RecyclableMemoryStream objStream = new RecyclableMemoryStream(Utils.MemoryStreamManager))
+                using (MemoryStream objStream = new MemoryStream())
                 {
                     await objStream.WriteAsync(bytes).ConfigureAwait(false);
                     using (StreamReader reader = new StreamReader(objStream, Encoding.UTF8, true))

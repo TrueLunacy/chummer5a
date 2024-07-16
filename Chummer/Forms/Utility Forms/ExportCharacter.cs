@@ -36,7 +36,6 @@ using System.Xml.Xsl;
 using Chummer.Backend.Equipment;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Microsoft.IO;
 using Newtonsoft.Json;
 using Formatting = Newtonsoft.Json.Formatting;
 
@@ -757,7 +756,7 @@ namespace Chummer
 
                     string strText = await Task.Run(async () =>
                     {
-                        using (RecyclableMemoryStream objStream = new RecyclableMemoryStream(Utils.MemoryStreamManager))
+                        using (MemoryStream objStream = new MemoryStream())
                         {
                             using (XmlWriter objWriter = objSettings != null
                                        ? XmlWriter.Create(objStream, objSettings)

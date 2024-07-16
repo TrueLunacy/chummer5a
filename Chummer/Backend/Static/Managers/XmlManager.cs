@@ -31,7 +31,6 @@ using System.Xml;
 using System.Xml.XPath;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Microsoft.IO;
 
 namespace Chummer
 {
@@ -144,7 +143,7 @@ namespace Chummer
                         Interlocked.Increment(ref _intInitialLoadComplete);
                         if (objContent != null)
                         {
-                            using (RecyclableMemoryStream objStream = new RecyclableMemoryStream(Utils.MemoryStreamManager))
+                            using (MemoryStream objStream = new MemoryStream())
                             {
                                 objContent.Save(objStream);
                                 objStream.Position = 0;
@@ -179,8 +178,7 @@ namespace Chummer
                         Interlocked.Increment(ref _intInitialLoadComplete);
                         if (objContent != null)
                         {
-                            using (RecyclableMemoryStream objStream =
-                                   new RecyclableMemoryStream(Utils.MemoryStreamManager))
+                            using (MemoryStream objStream = new MemoryStream())
                             {
                                 objContent.Save(objStream);
                                 objStream.Position = 0;
@@ -608,7 +606,7 @@ namespace Chummer
             if (blnHasCustomData && (strFileName == "packs.xml" || (GlobalSettings.LiveCustomData && strFileName != "improvements.xml")) && xmlDocumentOfReturn != null)
             {
                 token.ThrowIfCancellationRequested();
-                using (RecyclableMemoryStream objStream = new RecyclableMemoryStream(Utils.MemoryStreamManager))
+                using (MemoryStream objStream = new MemoryStream())
                 {
                     xmlDocumentOfReturn.Save(objStream);
                     objStream.Position = 0;

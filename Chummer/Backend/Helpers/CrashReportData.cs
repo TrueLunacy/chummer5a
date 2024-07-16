@@ -25,7 +25,6 @@ using System.Linq;
 using System.Net;
 using System.Net.Mail;
 using System.Text;
-using Microsoft.IO;
 using Microsoft.Win32;
 
 namespace Chummer
@@ -177,7 +176,7 @@ namespace Chummer
         public CrashReportData AddData(string title, string contents)
         {
             //Convert string to stream
-            RecyclableMemoryStream stream = new RecyclableMemoryStream(Utils.MemoryStreamManager);
+            MemoryStream stream = new MemoryStream();
             using (StreamWriter writer = new StreamWriter(stream))
             {
                 writer.Write(contents);

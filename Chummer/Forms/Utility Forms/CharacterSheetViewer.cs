@@ -38,7 +38,6 @@ using Chummer.Backend.Equipment;
 using Codaxy.WkHtmlToPdf;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Microsoft.IO;
 using Microsoft.Win32;
 
 namespace Chummer
@@ -1052,7 +1051,7 @@ namespace Chummer
 
                 string strOutput = await Task.Run(async () =>
                 {
-                    using (RecyclableMemoryStream objStream = new RecyclableMemoryStream(Utils.MemoryStreamManager))
+                    using (MemoryStream objStream = new MemoryStream())
                     {
                         using (XmlWriter objWriter = objSettings != null
                                    ? XmlWriter.Create(objStream, objSettings)

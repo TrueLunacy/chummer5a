@@ -38,7 +38,6 @@ using Chummer.Backend.Equipment;
 using Chummer.UI.Attributes;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Microsoft.IO;
 using OperationCanceledException = System.OperationCanceledException;
 
 namespace Chummer
@@ -9090,8 +9089,8 @@ namespace Chummer
                         case Armor objCopyArmor:
                         {
                             XmlDocument objCharacterXml = new XmlDocument { XmlResolver = null };
-                            using (RecyclableMemoryStream objStream =
-                                   new RecyclableMemoryStream(Utils.MemoryStreamManager))
+                            using (MemoryStream objStream =
+                                   new MemoryStream())
                             {
                                 using (XmlWriter objWriter = Utils.GetStandardXmlWriter(objStream))
                                 {
@@ -9144,8 +9143,8 @@ namespace Chummer
                         case ArmorMod objCopyArmorMod:
                         {
                             XmlDocument objCharacterXml = new XmlDocument { XmlResolver = null };
-                            using (RecyclableMemoryStream objStream =
-                                   new RecyclableMemoryStream(Utils.MemoryStreamManager))
+                            using (MemoryStream objStream =
+                                   new MemoryStream())
                             {
                                 using (XmlWriter objWriter = Utils.GetStandardXmlWriter(objStream))
                                 {
@@ -9198,8 +9197,8 @@ namespace Chummer
                         case Cyberware objCopyCyberware:
                         {
                             XmlDocument objCharacterXml = new XmlDocument { XmlResolver = null };
-                            using (RecyclableMemoryStream objStream =
-                                   new RecyclableMemoryStream(Utils.MemoryStreamManager))
+                            using (MemoryStream objStream =
+                                   new MemoryStream())
                             {
                                 using (XmlWriter objWriter = Utils.GetStandardXmlWriter(objStream))
                                 {
@@ -9269,8 +9268,8 @@ namespace Chummer
                         case Gear objCopyGear:
                         {
                             XmlDocument objCharacterXml = new XmlDocument { XmlResolver = null };
-                            using (RecyclableMemoryStream objStream =
-                                   new RecyclableMemoryStream(Utils.MemoryStreamManager))
+                            using (MemoryStream objStream =
+                                   new MemoryStream())
                             {
                                 using (XmlWriter objWriter = Utils.GetStandardXmlWriter(objStream))
                                 {
@@ -9323,8 +9322,8 @@ namespace Chummer
                         case Lifestyle objCopyLifestyle:
                         {
                             XmlDocument objCharacterXml = new XmlDocument { XmlResolver = null };
-                            using (RecyclableMemoryStream objStream =
-                                   new RecyclableMemoryStream(Utils.MemoryStreamManager))
+                            using (MemoryStream objStream =
+                                   new MemoryStream())
                             {
                                 using (XmlWriter objWriter = Utils.GetStandardXmlWriter(objStream))
                                 {
@@ -9361,8 +9360,8 @@ namespace Chummer
                         case Vehicle objCopyVehicle:
                         {
                             XmlDocument objCharacterXml = new XmlDocument { XmlResolver = null };
-                            using (RecyclableMemoryStream objStream =
-                                   new RecyclableMemoryStream(Utils.MemoryStreamManager))
+                            using (MemoryStream objStream =
+                                   new MemoryStream())
                             {
                                 using (XmlWriter objWriter = Utils.GetStandardXmlWriter(objStream))
                                 {
@@ -9403,8 +9402,8 @@ namespace Chummer
                                 return;
 
                             XmlDocument objCharacterXml = new XmlDocument { XmlResolver = null };
-                            using (RecyclableMemoryStream objStream =
-                                   new RecyclableMemoryStream(Utils.MemoryStreamManager))
+                            using (MemoryStream objStream =
+                                   new MemoryStream())
                             {
                                 using (XmlWriter objWriter = Utils.GetStandardXmlWriter(objStream))
                                 {
@@ -9445,8 +9444,8 @@ namespace Chummer
                                 return;
 
                             XmlDocument objCharacterXml = new XmlDocument { XmlResolver = null };
-                            using (RecyclableMemoryStream objStream =
-                                   new RecyclableMemoryStream(Utils.MemoryStreamManager))
+                            using (MemoryStream objStream =
+                                   new MemoryStream())
                             {
                                 using (XmlWriter objWriter = Utils.GetStandardXmlWriter(objStream))
                                 {
