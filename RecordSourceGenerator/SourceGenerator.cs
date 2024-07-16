@@ -210,26 +210,28 @@ namespace RecordSourceGenerator
                     writer.WriteStartElement("{{prop.XmlName}}");
                     foreach (var _elementProbablyNotPropertyNameString in {{prop.ParameterName}})
                     """);
-                    using var foreachbrace = isb.Brace();
-                    IDisposable? foreachelembrace = null;
-                    if (!prop.TypeIsValueType)
+                    using (var foreachbrace = isb.Brace())
                     {
-                        isb.WriteLine($"if (_elementProbablyNotPropertyNameString is not null)");
-                        foreachelembrace = isb.Brace();
+                        IDisposable? foreachelembrace = null;
+                        if (!prop.TypeIsValueType)
+                        {
+                            isb.WriteLine($"if (_elementProbablyNotPropertyNameString is not null)");
+                            foreachelembrace = isb.Brace();
+                        }
+                        if (prop.TryParseable || prop.StringType)
+                        {
+                            isb.WriteLine($$"""
+                            writer.WriteStartElement("{{prop.XmlChildName}}");
+                            writer.WriteValue(_elementProbablyNotPropertyNameString.ToString());
+                            writer.WriteEndElement();
+                            """);
+                        }
+                        else
+                        {
+                            isb.WriteLine(prop.WriteStatement("writer", prop.XmlChildName!, "_elementProbablyNotPropertyNameString"));
+                        }
+                        foreachelembrace?.Dispose();
                     }
-                    if (prop.TryParseable || prop.StringType)
-                    {
-                        isb.WriteLine($$"""
-                        writer.WriteStartElement("{{prop.XmlChildName}}");
-                        writer.WriteValue(_elementProbablyNotPropertyNameString.ToString());
-                        writer.WriteEndElement();
-                        """);
-                    }
-                    else
-                    {
-                        isb.WriteLine(prop.WriteStatement("writer", prop.XmlChildName!, "_elementProbablyNotPropertyNameString"));
-                    }
-                    foreachelembrace?.Dispose();
                     isb.WriteLine("writer.WriteEndElement();");
                 }
                 else
@@ -363,7 +365,7 @@ namespace RecordSourceGenerator
                             if (param.ImmutableArrayOf)
                             {
                                 isb.WriteLine($"List<{param.FullyQualifiedType}> list = new();");
-                                isb.WriteLine("while (reader.Read())");
+                                isb.WriteLine("while (true)");
                                 using (var innerreadbrace = isb.Brace())
                                 {
                                     isb.WriteLine($"if (reader.NodeType == XmlNodeType.Element && reader.Name == \"{param.XmlChildName}\")");
@@ -397,8 +399,11 @@ namespace RecordSourceGenerator
                                         }
                                     }
                                     isb.WriteLine($$"""
+                                    else reader.Read();
                                     if (reader.NodeType == XmlNodeType.EndElement && reader.Name == "{{param.XmlName}}")
                                         break;
+                                    else if (reader.NodeType == XmlNodeType.None)
+                                        throw new InvalidOperationException("Unexpected end of XML");
                                     """);
                                 }
                                 isb.WriteLine($$"""

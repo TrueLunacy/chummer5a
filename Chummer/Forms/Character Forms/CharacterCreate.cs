@@ -277,7 +277,8 @@ namespace Chummer
                                                 mnuSpecialChangeMetatype.Text = strText;
                                             }, GenericToken).ConfigureAwait(false);
                                         }
-                                    }                                    {
+                                    }
+                                    {
                                         await lblNuyenTotal.RegisterOneWayAsyncDataBindingAsync(
                                                 (x, y) => x.Text = y, CharacterObject,
                                                 nameof(Character.DisplayTotalStartingNuyen),
@@ -596,7 +597,8 @@ namespace Chummer
                                         GenericToken).ConfigureAwait(false);
 
                                     Tradition objTradition = await CharacterObject
-                                        .GetMagicTraditionAsync(GenericToken).ConfigureAwait(false);                                    {
+                                        .GetMagicTraditionAsync(GenericToken).ConfigureAwait(false);
+                                    {
                                         // Populate the Magician Traditions list.
                                         XPathNavigator xmlTraditionsBaseChummerNode =
                                             (await CharacterObject.LoadDataXPathAsync(
@@ -952,7 +954,8 @@ namespace Chummer
                                             x => x.GetNameAsync(GenericToken),
                                             (x, y) => x.SetNameAsync(y, GenericToken),
                                             1000, GenericToken, GenericToken).ConfigureAwait(false);
-                                    }                                    {
+                                    }
+                                    {
                                         await this.DoThreadSafeAsync(() =>
                                         {
                                             treGear.ItemDrag += treGear_ItemDrag;
@@ -1488,7 +1491,8 @@ namespace Chummer
                                                 nameof(Character.Initiative),
                                                 x => x.GetInitiativeAsync(GenericToken), GenericToken)
                                             .ConfigureAwait(false);
-                                    }                                    {
+                                    }
+                                    {
                                         // Populate vehicle weapon fire mode list.
                                         using (new FetchSafelyFromPool<List<ListItem>>(Utils.ListItemListPool,
                                                    out List<ListItem> lstFireModes))
@@ -1507,7 +1511,8 @@ namespace Chummer
                                             await cboVehicleWeaponFiringMode.PopulateWithListItemsAsync(
                                                 lstFireModes, GenericToken).ConfigureAwait(false);
                                         }
-                                    }                                    {
+                                    }
+                                    {
                                         await SetTooltips(GenericToken).ConfigureAwait(false);
                                         await RefreshAttributes(pnlAttributes, null, lblAttributes,
                                             await lblKarma.DoThreadSafeFuncAsync(x =>
@@ -1551,7 +1556,8 @@ namespace Chummer
                                             await tabSkillsUc.RealLoad(GenericToken, GenericToken)
                                                 .ConfigureAwait(false);
                                         }
-                                    }                                    {
+                                    }
+                                    {
                                         await cmdAddMetamagic.RegisterOneWayAsyncDataBindingAsync(
                                                 (x, y) => x.Enabled = y, CharacterObject,
                                                 nameof(Character.AddInitiationsAllowed),
@@ -1655,7 +1661,8 @@ namespace Chummer
                                             cmsVehicleCyberware, cmsVehicleCyberwareGear,
                                             token: GenericToken).ConfigureAwait(false);
                                         await RefreshDrugs(treCustomDrugs, token: GenericToken).ConfigureAwait(false);
-                                    }                                    {
+                                    }
+                                    {
                                         await treWeapons.DoThreadSafeAsync(x => x.SortCustomOrder(), GenericToken)
                                             .ConfigureAwait(false);
                                         await treArmor.DoThreadSafeAsync(x => x.SortCustomOrder(), GenericToken)
@@ -1732,7 +1739,8 @@ namespace Chummer
                                 finally
                                 {
                                     IsLoading = false;
-                                }                                {
+                                }
+                                {
                                     // Directly awaiting here so that we can properly unset the dirty flag after the update
                                     await RequestAndProcessCharacterUpdate(GenericToken).ConfigureAwait(false);
                                     // Clear the Dirty flag which gets set when creating a new Character.

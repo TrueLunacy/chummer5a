@@ -1,5 +1,6 @@
 using Chummer.Api.Enums;
 using Chummer.Api.Models.GlobalSettings;
+using Microsoft.Extensions.Logging;
 using System.Globalization;
 using System.Text;
 using System.Xml;
@@ -7,7 +8,7 @@ using System.Xml.Linq;
 
 namespace Chummer.Api
 {
-    public class GlobalSettingsManager : IGlobalSettingsManager
+    public class GlobalSettingsManager(ILogger<GlobalSettingsManager> Logger) : IGlobalSettingsManager
     {
         public GlobalSettings DefaultGlobalSettings => new(
             new Update(ShouldAutoUpdate: false, PreferNightly: false),
@@ -24,7 +25,7 @@ namespace Chummer.Api
                 DefaultMasterIndexSettingsFile: Guid.Parse("67e25032-2a4e-42ca-97fa-69f7f608236c")),
             new Saving(SaveCompressionLevel: CompressionLevel.Balanced, ImageCompressionLevel: ImageCompression.Png,
                 LastMugshotFolder: null),
-            new Logging(LogLevel: LogLevel.NoLogging, LoggingResetCountdown: 0),
+            new Logging(LogLevel: Enums.LogLevel.NoLogging, LoggingResetCountdown: 0),
             new Character(RosterPath: null, CreateBackupOnCareer: true,
                 DefaultSettingsFile: Guid.Parse("223a11ff-80e0-428b-89a9-6ef1c243b8b6"), LiveRefresh: false,
                 EnableLifeModules: false),
@@ -37,13 +38,23 @@ namespace Chummer.Api
         public GlobalSettings LoadGlobalSettings(Stream stream)
         {
             XmlReader reader = XmlReader.Create(stream);
-            return GlobalSettings.Read(reader, DefaultGlobalSettings);
+            try
+            {
+                return GlobalSettings.Read(reader, DefaultGlobalSettings);
+            }
+            catch (XmlException e)
+            {
+                Logger.LogError(e, "Settings file is corrupt, or bug in the program.");
+                return DefaultGlobalSettings;
+            }
         }
 
         public void SerializeGlobalSettings(GlobalSettings globalSettings, Stream stream)
         {
             XmlWriter writer = XmlWriter.Create(stream);
+            writer.WriteStartDocument();
             globalSettings.Write(writer);
+            writer.WriteEndDocument();
             writer.Flush();
         }
     }

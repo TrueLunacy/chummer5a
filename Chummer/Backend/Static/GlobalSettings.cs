@@ -350,6 +350,8 @@ namespace Chummer
         /// <summary>
         /// Should Chummer present Easter Eggs to the user?
         /// </summary>
+        ///
+        [Obsolete("Bye, Chummy")]
         public static bool AllowEasterEggs
         {
             get => settings.UX.AllowEasterEggs;

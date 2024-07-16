@@ -61,7 +61,6 @@ namespace Chummer
         private ConcurrentStringHashSet _setCharactersToOpen;
         private readonly Timer _tmrCharactersToOpenCheck = new Timer();
         private readonly string _strCurrentVersion;
-        private Chummy _mascotChummy;
         private readonly CancellationTokenSource _objGenericCancellationTokenSource = new CancellationTokenSource();
         private readonly CancellationToken _objGenericToken;
         private readonly DebuggableSemaphoreSlim _objFormOpeningSemaphore = new DebuggableSemaphoreSlim();
@@ -890,27 +889,6 @@ namespace Chummer
                                                             .ConfigureAwait(false);
                                 }
 
-                                if (GlobalSettings.AllowEasterEggs)
-                                {
-                                    await frmLoadingBar.MyForm.PerformStepAsync(
-                                        await LanguageManager.GetStringAsync(
-                                            "String_Chummy", token: _objGenericToken).ConfigureAwait(false),
-                                        token: _objGenericToken).ConfigureAwait(false);
-                                    _mascotChummy = await this.DoThreadSafeFuncAsync(x =>
-                                    {
-                                        Chummy objReturn = new Chummy(null);
-                                        x.Disposed += (o, args) =>
-                                        {
-                                            if (Interlocked.CompareExchange(ref _mascotChummy, null, objReturn)
-                                                == objReturn)
-                                                objReturn.Dispose();
-                                        };
-                                        return objReturn;
-                                    }, token: _objGenericToken).ConfigureAwait(false);
-                                    await _mascotChummy.DoThreadSafeAsync(
-                                        x => x.Show(), token: _objGenericToken).ConfigureAwait(false);
-                                }
-
                                 // This weird ordering of WindowState after Show() is meant to counteract a weird WinForms issue where form handle creation crashes
                                 frmMasterIndex = MasterIndex;
                                 frmCharacterRoster = CharacterRoster;
@@ -1696,8 +1674,6 @@ namespace Chummer
                             if (objTabPage.Tag != x)
                                 continue;
                             tabForms.SelectTab(objTabPage);
-                            if (_mascotChummy != null)
-                                _mascotChummy.CharacterObject = null;
                             return;
                         }
                         x.BringToFront();
@@ -1770,8 +1746,6 @@ namespace Chummer
                             if (objTabPage.Tag != x)
                                 continue;
                             tabForms.SelectTab(objTabPage);
-                            if (_mascotChummy != null)
-                                _mascotChummy.CharacterObject = null;
                             return;
                         }
                         x.BringToFront();
@@ -2026,11 +2000,6 @@ namespace Chummer
                             case CharacterShared frmCharacterShared:
                             {
                                 await objTabPage.DoThreadSafeAsync(x => x.Text = frmCharacterShared.CharacterObject.CharacterName, token: _objGenericToken).ConfigureAwait(false);
-                                if (GlobalSettings.AllowEasterEggs && _mascotChummy != null)
-                                {
-                                    _mascotChummy.CharacterObject = frmCharacterShared.CharacterObject;
-                                }
-
                                 break;
                             }
                             case CharacterSheetViewer frmSheetViewer:
@@ -2042,10 +2011,6 @@ namespace Chummer
                                         strSheet,
                                         string.Join(',' + strSpace,
                                                     frmSheetViewer.CharacterObjects.Select(y => y.CharacterName.Trim()))), token: _objGenericToken).ConfigureAwait(false);
-                                if (GlobalSettings.AllowEasterEggs && _mascotChummy != null)
-                                {
-                                    _mascotChummy.CharacterObject = null;
-                                }
 
                                 break;
                             }
@@ -2056,11 +2021,6 @@ namespace Chummer
                                     x => x.Text = string.Format(
                                         strExport,
                                         frmExportCharacter.CharacterObject.CharacterName.Trim()), token: _objGenericToken).ConfigureAwait(false);
-                                if (GlobalSettings.AllowEasterEggs && _mascotChummy != null)
-                                {
-                                    _mascotChummy.CharacterObject = null;
-                                }
-
                                 break;
                             }
                             default:
@@ -2073,11 +2033,6 @@ namespace Chummer
                                     if (!string.IsNullOrEmpty(strTagText))
                                         await objTabPage.DoThreadSafeAsync(x => x.Text = strTagText, token: _objGenericToken).ConfigureAwait(false);
                                 }
-                                if (GlobalSettings.AllowEasterEggs && _mascotChummy != null)
-                                {
-                                    _mascotChummy.CharacterObject = null;
-                                }
-
                                 break;
                             }
                         }
@@ -2241,8 +2196,6 @@ namespace Chummer
                             if (objTabPage.Tag != x)
                                 continue;
                             tabForms.SelectTab(objTabPage);
-                            if (_mascotChummy != null)
-                                _mascotChummy.CharacterObject = objCharacter;
                             return;
                         }
 
@@ -2296,8 +2249,6 @@ namespace Chummer
                             if (objTabPage.Tag != x)
                                 continue;
                             tabForms.SelectTab(objTabPage);
-                            if (_mascotChummy != null)
-                                _mascotChummy.CharacterObject = objCharacter;
                             return;
                         }
 
@@ -2350,8 +2301,6 @@ namespace Chummer
                             if (objTabPage.Tag != x)
                                 continue;
                             tabForms.SelectTab(objTabPage);
-                            if (_mascotChummy != null)
-                                _mascotChummy.CharacterObject = objCharacter;
                             return;
                         }
 

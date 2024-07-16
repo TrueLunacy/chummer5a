@@ -45,7 +45,7 @@ namespace Chummer
                 value = _intToolTipWrap > 0 ? value.WordWrap(_intToolTipWrap) : value.WordWrap();
                 if (Interlocked.Exchange(ref _strToolTipText, value) == value)
                     return;
-                _objToolTip.SetToolTip(this, value.CleanForHtml());
+                _objToolTip.SetToolTip(this, value);
             }
         }
 
@@ -55,7 +55,7 @@ namespace Chummer
                 return Task.FromCanceled(token);
             value = _intToolTipWrap > 0 ? value.WordWrap(_intToolTipWrap) : value.WordWrap();
             return Interlocked.Exchange(ref _strToolTipText, value) != value
-                ? this.DoThreadSafeAsync(x => _objToolTip.SetToolTip(x, value.CleanForHtml()), token: token)
+                ? this.DoThreadSafeAsync(x => _objToolTip.SetToolTip(x, value), token: token)
                 : Task.CompletedTask;
         }
 
