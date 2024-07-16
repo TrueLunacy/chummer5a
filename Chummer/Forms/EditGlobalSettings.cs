@@ -31,20 +31,24 @@ using System.Windows.Forms;
 using System.Xml;
 using System.Xml.XPath;
 using Chummer.Api.Enums;
+using Chummer.Backend.Equipment;
 using Chummer.Plugins;
 using iText.Kernel.Pdf;
+using Microsoft.Extensions.DependencyInjection;
+
+using Microsoft.Extensions.Logging;
+
 #if DEBUG
 using Microsoft.IO;
 #endif
-using NLog;
 using Application = System.Windows.Forms.Application;
 
 namespace Chummer
 {
     public partial class EditGlobalSettings : Form
     {
-        private static readonly Lazy<Logger> s_ObjLogger = new Lazy<Logger>(LogManager.GetCurrentClassLogger);
-        private static Logger Log => s_ObjLogger.Value;
+        private static readonly ILogger<EditGlobalSettings> Log = TemporaryServiceLocator.Services
+            .GetRequiredService<ILogger<EditGlobalSettings>>();
 
         // List of custom data directories possible to be added to a character
         private readonly HashSet<CustomDataDirectoryInfo> _setCustomDataDirectoryInfos;

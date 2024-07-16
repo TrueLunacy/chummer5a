@@ -29,8 +29,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.XPath;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Microsoft.IO;
-using NLog;
 
 namespace Chummer
 {
@@ -263,8 +264,8 @@ namespace Chummer
         };
         private static readonly Dictionary<string, HashSet<string>> s_DicPathsWithCustomFiles = new Dictionary<string, HashSet<string>>();
 
-        private static readonly Lazy<Logger> s_ObjLogger = new Lazy<Logger>(LogManager.GetCurrentClassLogger);
-        private static Logger Log => s_ObjLogger.Value;
+        private static readonly ILogger Log = TemporaryServiceLocator.Services
+            .GetRequiredService<ILoggerFactory>().CreateLogger("XmlManager");
 
         #region Methods
 

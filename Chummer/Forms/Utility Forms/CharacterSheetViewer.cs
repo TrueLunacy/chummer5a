@@ -34,17 +34,19 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml;
 using System.Xml.Xsl;
+using Chummer.Backend.Equipment;
 using Codaxy.WkHtmlToPdf;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Microsoft.IO;
 using Microsoft.Win32;
-using NLog;
 
 namespace Chummer
 {
     public partial class CharacterSheetViewer : Form, IHasCharacterObjects
     {
-        private static readonly Lazy<Logger> s_ObjLogger = new Lazy<Logger>(LogManager.GetCurrentClassLogger);
-        private static Logger Log => s_ObjLogger.Value;
+        private static readonly ILogger<CharacterSheetViewer> Log = TemporaryServiceLocator.Services
+            .GetRequiredService<ILogger<CharacterSheetViewer>>();
         private readonly ThreadSafeList<Character> _lstCharacters = new ThreadSafeList<Character>(1);
         private XmlDocument _objCharacterXml = new XmlDocument { XmlResolver = null };
         private string _strSelectedSheet = GlobalSettings.DefaultCharacterSheet;

@@ -33,7 +33,6 @@ using System.Xml;
 using iText.Kernel.Pdf;
 using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.Win32;
-using NLog;
 using Xoshiro.PRNG64;
 using Chummer.Api;
 using Chummer.Api.Enums;
@@ -42,6 +41,8 @@ using Image = System.Drawing.Image;
 using System.Collections.Immutable;
 using Microsoft.Extensions.DependencyInjection;
 using System.Diagnostics;
+using Chummer.Backend.Equipment;
+using Microsoft.Extensions.Logging;
 
 #nullable enable
 #pragma warning disable CS1998
@@ -88,8 +89,8 @@ namespace Chummer
 
     public sealed class SourcebookInfo : IDisposable
     {
-        private static readonly Lazy<Logger> s_ObjLogger = new Lazy<Logger>(LogManager.GetCurrentClassLogger);
-        private static Logger Log => s_ObjLogger.Value;
+        private static readonly ILogger<SourcebookInfo> Log = TemporaryServiceLocator.Services
+            .GetRequiredService<ILogger<SourcebookInfo>>();
         private string _strPath = string.Empty;
         private PdfReader? _objPdfReader;
         private PdfDocument? _objPdfDocument;
@@ -583,6 +584,7 @@ namespace Chummer
         /// <summary>
         /// Whether the app should use logging.
         /// </summary>
+        [Obsolete("Removing this flag")]
         public static bool UseLogging
         {
             get => settings.Logging.LogLevel != Api.Enums.LogLevel.NoLogging;
@@ -595,13 +597,6 @@ namespace Chummer
                         LogLevel = value ? Api.Enums.LogLevel.OnlyMetric : Api.Enums.LogLevel.NoLogging
                     }
                 };
-                if (value)
-                {
-                    if (!LogManager.IsLoggingEnabled())
-                        LogManager.ResumeLogging();
-                }
-                else if (LogManager.IsLoggingEnabled())
-                    LogManager.SuspendLogging();
             }
         }
 

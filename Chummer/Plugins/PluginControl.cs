@@ -29,10 +29,12 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Chummer.Backend.Equipment;
 using Microsoft.ApplicationInsights;
 using Microsoft.ApplicationInsights.Channel;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Microsoft.Win32;
-using NLog;
 
 namespace Chummer.Plugins
 {
@@ -74,8 +76,8 @@ namespace Chummer.Plugins
 
     public class PluginControl : IHasLockObject
     {
-        private static readonly Lazy<Logger> s_ObjLogger = new Lazy<Logger>(LogManager.GetCurrentClassLogger);
-        private static Logger Log => s_ObjLogger.Value;
+        private static readonly ILogger<PluginControl> Log = TemporaryServiceLocator.Services
+            .GetRequiredService<ILogger<PluginControl>>();
         private static CompositionContainer _container;
         public static CompositionContainer Container => _container;
         public string PathToPlugins { get; set; }

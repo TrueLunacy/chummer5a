@@ -31,17 +31,19 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml.Serialization;
 using System.Xml.XPath;
+using Chummer.Backend.Equipment;
 using Chummer.Plugins;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Microsoft.VisualStudio.Threading;
 using Newtonsoft.Json;
-using NLog;
 
 namespace Chummer
 {
     public partial class CharacterRoster : Form
     {
-        private static readonly Lazy<Logger> s_ObjLogger = new Lazy<Logger>(LogManager.GetCurrentClassLogger);
-        private static Logger Log => s_ObjLogger.Value;
+        private static readonly ILogger<CharacterRoster> Log = TemporaryServiceLocator.Services
+            .GetRequiredService<ILogger<CharacterRoster>>();
 
         private readonly FileSystemWatcher _watcherCharacterRosterFolderRawSaves;
         private readonly FileSystemWatcher _watcherCharacterRosterFolderCompressedSaves;

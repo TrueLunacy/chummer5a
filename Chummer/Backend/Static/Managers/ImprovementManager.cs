@@ -20,7 +20,8 @@
 using Chummer.Backend.Attributes;
 using Chummer.Backend.Equipment;
 using Chummer.Backend.Skills;
-using NLog;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -37,8 +38,8 @@ namespace Chummer
 {
     public static class ImprovementManager
     {
-        private static readonly Lazy<Logger> s_ObjLogger = new Lazy<Logger>(LogManager.GetCurrentClassLogger);
-        private static Logger Log => s_ObjLogger.Value;
+        private static readonly ILogger Log = TemporaryServiceLocator.Services
+            .GetRequiredService<ILoggerFactory>().CreateLogger("ImprovementManager");
 
         // String that will be used to limit the selection in Pick forms.
         private static string _strLimitSelection = string.Empty;
@@ -2412,7 +2413,7 @@ namespace Chummer
                     objSyncLocker?.Dispose();
                     if (objAsyncLocker != null)
                         await objAsyncLocker.DisposeAsync().ConfigureAwait(false);
-                    Log.Trace(sbdTrace.ToString);
+                    Log.Trace(sbdTrace.ToString());
                     Log.Debug("CreateImprovements exit");
                 }
             }
@@ -5429,7 +5430,7 @@ namespace Chummer
                 sbdTrace.Append("strExclude = ").AppendLine(strExclude);
                 sbdTrace.Append("blnAddToRating = ").AppendLine(blnAddToRating.ToString(GlobalSettings.InvariantCultureInfo));
                 sbdTrace.Append("strCondition = ").AppendLine(strCondition);
-                Log.Trace(sbdTrace.ToString);
+                Log.Trace(sbdTrace.ToString());
             }
 
             Improvement objImprovement = null;
@@ -5527,7 +5528,7 @@ namespace Chummer
                 sbdTrace.Append("strExclude = ").AppendLine(strExclude);
                 sbdTrace.Append("blnAddToRating = ").AppendLine(blnAddToRating.ToString(GlobalSettings.InvariantCultureInfo));
                 sbdTrace.Append("strCondition = ").AppendLine(strCondition);
-                Log.Trace(sbdTrace.ToString);
+                Log.Trace(sbdTrace.ToString());
             }
 
             Improvement objImprovement = null;

@@ -18,17 +18,19 @@
  */
 
 using System;
+using Chummer.Backend.Equipment;
 using Chummer.Plugins;
 using Microsoft.ApplicationInsights.Channel;
 using Microsoft.ApplicationInsights.Extensibility;
-using NLog;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 namespace Chummer
 {
     public class CustomTelemetryInitializer : ITelemetryInitializer
     {
-        private static readonly Lazy<Logger> s_ObjLogger = new Lazy<Logger>(LogManager.GetCurrentClassLogger);
-        private static Logger Log => s_ObjLogger.Value;
+        private static readonly ILogger<CustomTelemetryInitializer> Log = TemporaryServiceLocator.Services
+            .GetRequiredService<ILogger<CustomTelemetryInitializer>>();
 
         // Set session data:
         //private static string Hostname =  Dns.GetHostName();

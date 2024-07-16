@@ -27,16 +27,17 @@ using System.Runtime.InteropServices;
 using System.Runtime.Serialization;
 using System.Text;
 using System.Windows.Forms;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Microsoft.Win32;
 using Newtonsoft.Json;
-using NLog;
 
 namespace Chummer.Backend
 {
-    public static class CrashHandler
+    public class CrashHandler
     {
-        private static readonly Lazy<Logger> s_ObjLogger = new Lazy<Logger>(LogManager.GetCurrentClassLogger);
-        private static Logger Log => s_ObjLogger.Value;
+        private static readonly ILogger<CrashHandler> Log = TemporaryServiceLocator.Services
+            .GetRequiredService<ILogger<CrashHandler>>();
 
         private sealed class DumpData : ISerializable, IDeserializationCallback
         {

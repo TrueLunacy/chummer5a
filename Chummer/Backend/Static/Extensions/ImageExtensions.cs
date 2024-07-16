@@ -24,8 +24,9 @@ using System.Drawing.Imaging;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Microsoft.IO;
-using NLog;
 
 namespace Chummer
 {
@@ -34,8 +35,8 @@ namespace Chummer
         private static readonly Lazy<ImageCodecInfo> s_LzyJpegEncoder =
             new Lazy<ImageCodecInfo>(() => GetEncoder(ImageFormat.Jpeg));
 
-        private static readonly Lazy<Logger> s_ObjLogger = new Lazy<Logger>(LogManager.GetCurrentClassLogger);
-        private static Logger Log => s_ObjLogger.Value;
+        private static readonly ILogger Log = TemporaryServiceLocator.Services
+            .GetRequiredService<ILoggerFactory>().CreateLogger("ImageExtensions");
 
         /// <summary>
         /// Takes a Base64 String that is meant to represent an Image and turns it into a Base64 String that is meant to represent a JPEG

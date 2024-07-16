@@ -29,15 +29,17 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Chummer.Annotations;
-using NLog;
+using Chummer.Backend.Equipment;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Timer = System.Windows.Forms.Timer;
 
 namespace Chummer
 {
     public static class WinFormsExtensions
     {
-        private static readonly Lazy<Logger> s_ObjLogger = new Lazy<Logger>(LogManager.GetCurrentClassLogger);
-        private static Logger Log => s_ObjLogger.Value;
+        private static readonly ILogger Log = TemporaryServiceLocator.Services
+            .GetRequiredService<ILoggerFactory>().CreateLogger("WinFormsExtensions");
 
         #region Forms Extensions
 

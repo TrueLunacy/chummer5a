@@ -28,17 +28,18 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Xml;
 using System.Runtime.CompilerServices;
-using NLog;
 using System.Threading.Tasks;
 using System.Threading;
 using System.Xml.XPath;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 namespace Chummer
 {
     internal static class XmlNodeExtensions
     {
-        private static readonly Lazy<Logger> s_ObjLogger = new Lazy<Logger>(LogManager.GetCurrentClassLogger);
-        private static Logger Log => s_ObjLogger.Value;
+        private static readonly ILogger Log = TemporaryServiceLocator.Services
+            .GetRequiredService<ILoggerFactory>().CreateLogger("XmlNodeExtensions");
         //QUESTION: TrySelectField<T> that uses SelectSingleNode instead of this[node]?
 
         public delegate bool TryParseFunction<T>(string input, out T result);

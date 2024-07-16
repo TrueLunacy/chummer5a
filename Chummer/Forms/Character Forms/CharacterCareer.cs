@@ -36,15 +36,16 @@ using Chummer.Backend.Equipment;
 using Chummer.Backend.Skills;
 using Chummer.Backend.Uniques;
 using LiveCharts.Defaults;
-using NLog;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 namespace Chummer
 {
     [DesignerCategory("Form")]
     public partial class CharacterCareer : CharacterShared
     {
-        private static readonly Lazy<Logger> s_ObjLogger = new Lazy<Logger>(LogManager.GetCurrentClassLogger);
-        private static Logger Log => s_ObjLogger.Value;
+        private static readonly ILogger<CharacterCareer> Log = TemporaryServiceLocator.Services
+            .GetRequiredService<ILogger<CharacterCareer>>();
 
         private bool _blnReapplyImprovements;
         private int _intDragLevel;

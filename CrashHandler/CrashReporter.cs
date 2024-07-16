@@ -23,7 +23,6 @@ using System.IO;
 using System.Text;
 using System.Windows.Forms;
 using Chummer;
-using NLog;
 
 namespace CrashHandler
 {

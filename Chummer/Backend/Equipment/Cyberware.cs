@@ -31,8 +31,9 @@ using System.Windows.Forms;
 using System.Xml;
 using System.Xml.XPath;
 using Chummer.Backend.Attributes;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Microsoft.VisualStudio.Threading;
-using NLog;
 using IAsyncDisposable = System.IAsyncDisposable;
 using Version = System.Version;
 
@@ -48,8 +49,8 @@ namespace Chummer.Backend.Equipment
         IHasMatrixAttributes, IHasNotes, ICanSell, IHasRating, IHasSource, ICanSort, IHasStolenProperty,
         IHasWirelessBonus, ICanBlackMarketDiscount, IHasLockObject
     {
-        private static readonly Lazy<Logger> s_ObjLogger = new Lazy<Logger>(LogManager.GetCurrentClassLogger);
-        private static Logger Log => s_ObjLogger.Value;
+        private static readonly ILogger<Cyberware> Log = TemporaryServiceLocator.Services
+            .GetRequiredService<ILogger<Cyberware>>();
 
         private Guid _guiSourceID = Guid.Empty;
         private Guid _guiID;
@@ -847,7 +848,7 @@ namespace Chummer.Backend.Equipment
 
                     if (!objXmlCyberware.TryGetField("id", Guid.TryParse, out _guiSourceID))
                     {
-                        Log.Warn(new object[] { "Missing id field for cyberware xmlnode", objXmlCyberware });
+                        Log.Warn("Missing id field for cyberware xmlnode" + objXmlCyberware.ToString());
                         Utils.BreakIfDebug();
                     }
                     else

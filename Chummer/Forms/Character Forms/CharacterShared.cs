@@ -38,8 +38,9 @@ using Chummer.Backend.Equipment;
 using Chummer.UI.Attributes;
 using Microsoft.ApplicationInsights;
 using Microsoft.ApplicationInsights.DataContracts;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Microsoft.IO;
-using NLog;
 using OperationCanceledException = System.OperationCanceledException;
 
 namespace Chummer
@@ -50,8 +51,8 @@ namespace Chummer
     [DesignerCategory("")]
     public class CharacterShared : Form, IHasCharacterObjects
     {
-        private static readonly Lazy<Logger> s_ObjLogger = new Lazy<Logger>(LogManager.GetCurrentClassLogger);
-        private static Logger Log => s_ObjLogger.Value;
+        private static readonly ILogger<CharacterShared> Log = TemporaryServiceLocator.Services
+            .GetRequiredService<ILogger<CharacterShared>>();
         private static TelemetryClient TelemetryClient { get; } = new TelemetryClient();
         private readonly Character _objCharacter;
         private int _intIsDirty;

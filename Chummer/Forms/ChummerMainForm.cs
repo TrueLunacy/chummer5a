@@ -31,8 +31,10 @@ using System.Security;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Chummer.Backend.Equipment;
 using Microsoft.ApplicationInsights.DataContracts;
-using NLog;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Application = System.Windows.Forms.Application;
 using DataFormats = System.Windows.Forms.DataFormats;
 using DragDropEffects = System.Windows.Forms.DragDropEffects;
@@ -47,8 +49,8 @@ namespace Chummer
     {
         private bool _blnAbleToReceiveData;
         private int _intFormClosing;
-        private static readonly Lazy<Logger> s_ObjLogger = new Lazy<Logger>(LogManager.GetCurrentClassLogger);
-        private static Logger Log => s_ObjLogger.Value;
+        private static readonly ILogger<ChummerMainForm> Log = TemporaryServiceLocator.Services
+            .GetRequiredService<ILogger<ChummerMainForm>>();
         private ChummerUpdater _frmUpdate;
         private DiceRoller _frmDiceRoller;
         private ThreadSafeObservableCollection<CharacterShared> _lstOpenCharacterEditorForms

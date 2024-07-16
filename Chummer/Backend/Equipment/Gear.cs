@@ -33,7 +33,8 @@ using System.Windows.Forms;
 using System.Xml;
 using System.Xml.XPath;
 using Chummer.Annotations;
-using NLog;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 namespace Chummer.Backend.Equipment
 {
@@ -46,8 +47,8 @@ namespace Chummer.Backend.Equipment
         IHasNotes, ICanSell, IHasLocation, ICanEquip, IHasSource, IHasRating, INotifyMultiplePropertiesChangedAsync, ICanSort,
         IHasStolenProperty, ICanPaste, IHasWirelessBonus, IHasGear, ICanBlackMarketDiscount, IDisposable, IAsyncDisposable
     {
-        private static readonly Lazy<Logger> s_ObjLogger = new Lazy<Logger>(LogManager.GetCurrentClassLogger);
-        private static Logger Log => s_ObjLogger.Value;
+        private static readonly ILogger<Gear> Log = TemporaryServiceLocator.Services
+            .GetRequiredService<ILogger<Gear>>();
         private Guid _guiID;
         private Guid _guiSourceID;
         private string _strName = string.Empty;
@@ -210,7 +211,7 @@ namespace Chummer.Backend.Equipment
             _strForcedValue = strForceValue;
             if (!objXmlGear.TryGetField("id", Guid.TryParse, out _guiSourceID))
             {
-                Log.Warn(new object[] { "Missing id field for armor xmlnode", objXmlGear });
+                Log.Warn("Missing id field for armor xmlnode " + objXmlGear.ToString());
                 Utils.BreakIfDebug();
             }
             else

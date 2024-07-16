@@ -31,7 +31,6 @@ using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using Chummer.Api;
 using Chummer.Backend;
 using Chummer.Forms;
 using Chummer.Plugins;
@@ -40,32 +39,16 @@ using Microsoft.ApplicationInsights;
 using Microsoft.ApplicationInsights.DataContracts;
 using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.ApplicationInsights.Metrics;
-using Microsoft.ApplicationInsights.NLogTarget;
 using Microsoft.Extensions.DependencyInjection;
-using NLog;
-using NLog.Config;
+using Microsoft.Extensions.Logging;
 
 [assembly: CLSCompliant(true)]
 
 namespace Chummer
 {
-    public static class TemporaryServiceLocator
+    public class Program
     {
-        public static IServiceProvider Services { get; }
-        static TemporaryServiceLocator()
-        {
-            IServiceCollection collection = new ServiceCollection();
-            collection.AddSingleton<ILegacySettingsManager, WindowsLegacySettingsManager>();
-            collection.AddSingleton<IGlobalSettingsManager, GlobalSettingsManager>();
-            collection.AddSingleton<IXmlFileProvider, XmlFileProvider>(s => new XmlFileProvider(new DirectoryInfo(Utils.GetDataFolderPath)));
-            collection.AddSingleton<IDataLoader, ChummerDataLoader>();
-            Services = collection.BuildServiceProvider();
-        }
-    }
-
-    public static class Program
-    {
-        private static Logger Log;
+        private static readonly ILogger<Program> Log = TemporaryServiceLocator.Services.GetRequiredService<ILogger<Program>>();
         private const string ChummerGuid = "eb0759c1-3599-495e-8bc5-57c8b3e1b31c";
 
         private static readonly Lazy<Process> s_objMyProcess = new Lazy<Process>(Process.GetCurrentProcess);
@@ -371,36 +354,10 @@ namespace Chummer
 
                         try
                         {
-                            LogManager.ThrowExceptions = true;
                             if (IsMono)
                             {
                                 //Mono Crashes because of Application Insights. Set Logging to local, when Mono Runtime is detected
                                 GlobalSettings.UseLoggingApplicationInsights = UseAILogging.OnlyLocal;
-                            }
-
-                            if (GlobalSettings.UseLoggingApplicationInsights > UseAILogging.OnlyMetric)
-                            {
-                                LogManager.Setup()
-                                          .SetupExtensions(
-                                              ext => ext.RegisterTarget<ApplicationInsightsTarget>(
-                                                  "ApplicationInsightsTarget"));
-                            }
-
-                            LogManager.ThrowExceptions = false;
-                            Log = LogManager.GetCurrentClassLogger();
-                            if (GlobalSettings.UseLogging)
-                            {
-                                foreach (LoggingRule objRule in LogManager.Configuration.LoggingRules)
-                                {
-#if DEBUG
-                                    //enable logging to EventLog when Debugging
-                                    if (objRule.Levels.Count == 0 && objRule.RuleName == "ELChummer")
-                                        objRule.EnableLoggingForLevels(LogLevel.Trace, LogLevel.Fatal);
-#endif
-                                    //only change the loglevel, if it's off - otherwise it has been changed manually
-                                    if (objRule.Levels.Count == 0)
-                                        objRule.EnableLoggingForLevels(LogLevel.Debug, LogLevel.Fatal);
-                                }
                             }
 
                             if (Settings.Default.UploadClientId == Guid.Empty)

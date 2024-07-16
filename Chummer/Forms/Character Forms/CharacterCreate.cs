@@ -36,15 +36,16 @@ using Chummer.Backend.Attributes;
 using Chummer.Backend.Equipment;
 using Chummer.Backend.Skills;
 using Chummer.Backend.Uniques;
-using NLog;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 namespace Chummer
 {
     [DesignerCategory("Form")]
     public partial class CharacterCreate : CharacterShared
     {
-        private static readonly Lazy<Logger> s_ObjLogger = new Lazy<Logger>(LogManager.GetCurrentClassLogger);
-        private static Logger Log => s_ObjLogger.Value;
+        private static readonly ILogger<CharacterCreate> Log = TemporaryServiceLocator.Services
+            .GetRequiredService<ILogger<CharacterCreate>>();
 
         private bool _blnReapplyImprovements;
         private bool _blnFreestyle;

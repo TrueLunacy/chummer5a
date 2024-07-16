@@ -41,17 +41,18 @@ using System.Xml;
 using Microsoft.Extensions.ObjectPool;
 using Microsoft.VisualStudio.Threading;
 using Microsoft.Win32;
-using NLog;
 using Microsoft.IO;
 using Chummer.Forms;
 using System.Xml.XPath;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 namespace Chummer
 {
     public static class Utils
     {
-        private static readonly Lazy<Logger> s_ObjLogger = new Lazy<Logger>(LogManager.GetCurrentClassLogger);
-        private static Logger Log => s_ObjLogger.Value;
+        private static readonly ILogger Log = TemporaryServiceLocator.Services
+            .GetRequiredService<ILoggerFactory>().CreateLogger("Utils");
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void BreakIfDebug()

@@ -17,6 +17,9 @@
  *  https://github.com/chummer5a/chummer5a
  */
 
+using Chummer.Backend.Equipment;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Buffers;
 using System.Collections.Concurrent;
@@ -29,14 +32,13 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using NLog;
 
 namespace Chummer.Controls.Shared
 {
     public partial class ObservableCollectionDisplay<TType> : UserControl
     {
-        private static readonly Logger Log = LogManager.GetCurrentClassLogger(typeof(ObservableCollectionDisplay<TType>));
-        public PropertyChangedEventHandler ChildPropertyChanged { get; set; }
+        private static readonly ILogger<ObservableCollectionDisplay<TType>> Log = TemporaryServiceLocator.Services
+            .GetRequiredService<ILogger<ObservableCollectionDisplay<TType>>>(); public PropertyChangedEventHandler ChildPropertyChanged { get; set; }
         private readonly ConcurrentHashSet<PropertyChangedAsyncEventHandler> _setChildPropertyChangedAsync =
             new ConcurrentHashSet<PropertyChangedAsyncEventHandler>();
 

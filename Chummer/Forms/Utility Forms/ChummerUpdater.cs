@@ -17,6 +17,9 @@
  *  https://github.com/chummer5a/chummer5a
  */
 
+using Chummer.Backend.Equipment;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -28,15 +31,14 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using NLog;
 using Application = System.Windows.Forms.Application;
 
 namespace Chummer
 {
     public partial class ChummerUpdater : Form
     {
-        private static readonly Lazy<Logger> s_ObjLogger = new Lazy<Logger>(LogManager.GetCurrentClassLogger);
-        private static Logger Log => s_ObjLogger.Value;
+        private static readonly ILogger<ChummerUpdater> Log = TemporaryServiceLocator.Services
+            .GetRequiredService<ILogger<ChummerUpdater>>();
         private int _intSilentMode;
         private bool _blnSilentModeUpdateWasDenied;
         private string _strDownloadFile = string.Empty;

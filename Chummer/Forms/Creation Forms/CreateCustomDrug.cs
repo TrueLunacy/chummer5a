@@ -25,14 +25,15 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml;
 using Chummer.Backend.Equipment;
-using NLog;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 namespace Chummer
 {
     public partial class CreateCustomDrug : Form, IHasCharacterObject
     {
-        private static readonly Lazy<Logger> s_ObjLogger = new Lazy<Logger>(LogManager.GetCurrentClassLogger);
-        private static Logger Log => s_ObjLogger.Value;
+        private static readonly ILogger<CreateCustomDrug> Log = TemporaryServiceLocator.Services
+            .GetRequiredService<ILogger<CreateCustomDrug>>();
         private readonly Dictionary<string, DrugComponent> _dicDrugComponents = new Dictionary<string, DrugComponent>();
         private readonly List<DrugNodeData> _lstSelectedDrugComponents;
         private List<ListItem> _lstGrade = Utils.ListItemListPool.Get();

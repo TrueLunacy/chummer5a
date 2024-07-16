@@ -26,14 +26,15 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml.XPath;
 using Chummer.Backend.Equipment;
-using NLog;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 namespace Chummer
 {
     public partial class SelectCyberware : Form
     {
-        private static readonly Lazy<Logger> s_ObjLogger = new Lazy<Logger>(LogManager.GetCurrentClassLogger);
-        private static Logger Log => s_ObjLogger.Value;
+        private static readonly ILogger<SelectCyberware> Log = TemporaryServiceLocator.Services
+            .GetRequiredService<ILogger<SelectCyberware>>();
         private readonly Character _objCharacter;
         private readonly List<Grade> _lstGrades;
         private readonly string _strNoneGradeId;

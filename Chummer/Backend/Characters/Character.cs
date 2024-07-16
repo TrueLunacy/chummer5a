@@ -48,8 +48,9 @@ using Chummer.Plugins;
 using Microsoft.ApplicationInsights;
 using Microsoft.IO;
 using Newtonsoft.Json;
-using NLog;
 using Application = System.Windows.Forms.Application;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Chummer
 {
@@ -60,8 +61,9 @@ namespace Chummer
     public sealed class Character : INotifyMultiplePropertiesChangedAsync, IHasMugshots, IHasName, IHasSource, IHasXmlDataNode, IHasLockObject, IHasCharacterObject
     {
         private static readonly TelemetryClient TelemetryClient = new TelemetryClient();
-        private static readonly Lazy<Logger> s_ObjLogger = new Lazy<Logger>(LogManager.GetCurrentClassLogger);
-        private static Logger Log => s_ObjLogger.Value;
+        private static readonly ILogger<Character> Log = TemporaryServiceLocator.Services
+            .GetRequiredService<ILogger<Character>>();
+
         private XmlNode _oldSkillsBackup;
         private XmlNode _oldSkillGroupBackup;
         private string _strFileName = string.Empty;

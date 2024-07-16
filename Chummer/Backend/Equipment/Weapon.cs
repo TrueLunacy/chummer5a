@@ -34,8 +34,9 @@ using System.Xml;
 using System.Xml.XPath;
 using Chummer.Backend.Attributes;
 using Chummer.Backend.Skills;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Microsoft.VisualStudio.Threading;
-using NLog;
 using IAsyncDisposable = System.IAsyncDisposable;
 
 namespace Chummer.Backend.Equipment
@@ -50,8 +51,8 @@ namespace Chummer.Backend.Equipment
         IHasWirelessBonus, IHasStolenProperty, ICanPaste, IHasRating, ICanBlackMarketDiscount, IDisposable,
         IAsyncDisposable
     {
-        private static readonly Lazy<Logger> s_ObjLogger = new Lazy<Logger>(LogManager.GetCurrentClassLogger);
-        private static Logger Log => s_ObjLogger.Value;
+        private static readonly ILogger<Weapon> Log = TemporaryServiceLocator.Services
+            .GetRequiredService<ILogger<Weapon>>();
         private Guid _guiSourceID = Guid.Empty;
         private Guid _guiID;
         private string _strName = string.Empty;
@@ -460,7 +461,7 @@ namespace Chummer.Backend.Equipment
             token.ThrowIfCancellationRequested();
             if (!objXmlWeapon.TryGetField("id", Guid.TryParse, out _guiSourceID))
             {
-                Log.Warn(new object[] { "Missing id field for weapon xmlnode", objXmlWeapon });
+                Log.Warn("Missing id field for weapon xmlnode " + objXmlWeapon.ToString());
                 Utils.BreakIfDebug();
             }
             else

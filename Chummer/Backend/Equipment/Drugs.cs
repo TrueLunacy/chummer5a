@@ -29,14 +29,15 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml;
 using System.Xml.XPath;
-using NLog;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 namespace Chummer.Backend.Equipment
 {
     public sealed class Drug : IHasName, IHasSourceId, IHasXmlDataNode, ICanSort, IHasStolenProperty, ICanRemove, IDisposable, IAsyncDisposable, IHasCharacterObject
     {
-        private static readonly Lazy<Logger> s_ObjLogger = new Lazy<Logger>(LogManager.GetCurrentClassLogger);
-        private static Logger Log => s_ObjLogger.Value;
+        private static readonly ILogger<Drug> Log = TemporaryServiceLocator.Services
+            .GetRequiredService<ILogger<Drug>>();
         private Guid _guiSourceID = Guid.Empty;
         private Guid _guiID;
         private string _strName = string.Empty;
@@ -1617,8 +1618,8 @@ namespace Chummer.Backend.Equipment
     /// </summary>
     public class DrugComponent : IHasName, IHasInternalId, IHasXmlDataNode, IHasCharacterObject
     {
-        private static readonly Lazy<Logger> s_ObjLogger = new Lazy<Logger>(LogManager.GetCurrentClassLogger);
-        private static Logger Log => s_ObjLogger.Value;
+        private static readonly ILogger<DrugComponent> Log = TemporaryServiceLocator.Services
+            .GetRequiredService<ILogger<DrugComponent>>();
         private Guid _guidId;
         private Guid _guiSourceID;
         private string _strName;

@@ -17,6 +17,9 @@
  *  https://github.com/chummer5a/chummer5a
  */
 
+using Chummer.Backend.Equipment;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -24,7 +27,6 @@ using System.Drawing.Drawing2D;
 using System.Threading;
 using System.Windows.Forms;
 using System.Xml.XPath;
-using NLog;
 using TheArtOfDev.HtmlRenderer.WinForms;
 using Timer = System.Windows.Forms.Timer;
 
@@ -32,8 +34,8 @@ namespace Chummer
 {
     public partial class Chummy : Form, IHasCharacterObject
     {
-        private static readonly Lazy<Logger> s_ObjLogger = new Lazy<Logger>(LogManager.GetCurrentClassLogger);
-        private static Logger Log => s_ObjLogger.Value;
+        private static readonly ILogger<Chummy> Log = TemporaryServiceLocator.Services
+            .GetRequiredService<ILogger<Chummy>>();
         private const int EyeBallWidth = 20;
         private const int EyeBallHeight = 32;
         private const int DistanceBetweenEyes = 10;

@@ -17,6 +17,9 @@
  *  https://github.com/chummer5a/chummer5a
  */
 
+using Chummer.Backend.Equipment;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Diagnostics;
 using System.Drawing;
@@ -25,7 +28,6 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml;
 using System.Xml.XPath;
-using NLog;
 
 namespace Chummer
 {
@@ -33,8 +35,8 @@ namespace Chummer
     [DebuggerDisplay("{DisplayNameShort(GlobalSettings.DefaultLanguage)}")]
     public sealed class MentorSpirit : IHasInternalId, IHasName, IHasSourceId, IHasXmlDataNode, IHasSource, IHasNotes, IHasLockObject, IHasCharacterObject
     {
-        private static readonly Lazy<Logger> s_ObjLogger = new Lazy<Logger>(LogManager.GetCurrentClassLogger);
-        private static Logger Log => s_ObjLogger.Value;
+        private static readonly ILogger<MentorSpirit> Log = TemporaryServiceLocator.Services
+            .GetRequiredService<ILogger<MentorSpirit>>();
 
         private Guid _guiID;
         private string _strName = string.Empty;

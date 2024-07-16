@@ -17,20 +17,23 @@
  *  https://github.com/chummer5a/chummer5a
  */
 
+
+using Chummer.Backend.Equipment;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Threading;
-using NLog;
 
 namespace Chummer
 {
     public static class DispatcherExtensions
     {
-        private static readonly Lazy<Logger> s_ObjLogger = new Lazy<Logger>(LogManager.GetCurrentClassLogger);
-        private static Logger Log => s_ObjLogger.Value;
+        private static readonly ILogger Log = TemporaryServiceLocator.Services
+            .GetRequiredService<ILoggerFactory>().CreateLogger("DispatcherExtensions");
 
         /// <summary>
         /// Runs code on a DispatcherObject (i.e. any WPF control) in a thread-safe manner and waits for it to complete.

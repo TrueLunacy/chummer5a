@@ -18,9 +18,11 @@
  */
 
 using Chummer.Backend.Attributes;
+using Chummer.Backend.Equipment;
 using Chummer.Backend.Skills;
 using Chummer.Backend.Uniques;
-using NLog;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -36,8 +38,8 @@ namespace Chummer
     [DebuggerDisplay("{" + nameof(DisplayDebug) + "()}")]
     public class Improvement : IHasNotes, IHasInternalId, ICanSort, IHasCharacterObject
     {
-        private static readonly Lazy<Logger> s_ObjLogger = new Lazy<Logger>(LogManager.GetCurrentClassLogger);
-        private static Logger Log => s_ObjLogger.Value;
+        private static readonly ILogger<Improvement> Log = TemporaryServiceLocator.Services
+            .GetRequiredService<ILogger<Improvement>>();
 
         private string DisplayDebug()
         {
