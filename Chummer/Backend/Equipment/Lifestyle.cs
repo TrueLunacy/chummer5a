@@ -614,7 +614,7 @@ namespace Chummer.Backend.Equipment
                 if (!objNode.TryGetBoolFieldQuickly("allowbonuslp", ref _blnAllowBonusLP))
                     objMyNode.Value?.TryGetBoolFieldQuickly("allowbonuslp", ref _blnAllowBonusLP);
                 if (!objNode.TryGetInt32FieldQuickly("bonuslp", ref _intBonusLP) && _strBaseLifestyle == "Traveler")
-                    _intBonusLP = GlobalSettings.RandomGenerator.NextD6ModuloBiasRemoved();
+                    _intBonusLP = GlobalSettings.RandomGenerator.NextD6();
 
                 if (!objNode.TryGetInt32FieldQuickly("lp", ref _intLP))
                 {

@@ -17,23 +17,15 @@
  *  https://github.com/chummer5a/chummer5a
  */
 
-using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Globalization;
 using System.IO;
-using System.Linq;
 using System.Text.RegularExpressions;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 using System.Xml;
 using iText.Kernel.Pdf;
 using Microsoft.ApplicationInsights.Extensibility;
-using Microsoft.Win32;
-using Xoshiro.PRNG64;
 using Chummer.Api;
 using Chummer.Api.Enums;
 using Chummer.Api.Models.GlobalSettings;
@@ -41,7 +33,6 @@ using Image = System.Drawing.Image;
 using System.Collections.Immutable;
 using Microsoft.Extensions.DependencyInjection;
 using System.Diagnostics;
-using Chummer.Backend.Equipment;
 using Microsoft.Extensions.Logging;
 
 #nullable enable
@@ -214,7 +205,8 @@ namespace Chummer
             = LzmaHelper.ChummerCompressionPreset.Balanced;
 
         public const int MaxStackLimit = 1024;
-        public static ThreadSafeCachedRandom RandomGenerator { get; } = new ThreadSafeCachedRandom(new XoRoShiRo128starstar(), true);
+
+        public static Random RandomGenerator => Random.Shared;
 
         public static ConcurrentDictionary<string, bool> PluginsEnabledDic => new ConcurrentDictionary<string, bool>();
 
@@ -232,7 +224,6 @@ namespace Chummer
         {
             gsm = TemporaryServiceLocator.Services.GetRequiredService<IGlobalSettingsManager>();
             cdl = TemporaryServiceLocator.Services.GetRequiredService<IDataLoader>();
-            var legacy = TemporaryServiceLocator.Services.GetRequiredService<ILegacySettingsManager>();
             if (Utils.IsDesignerMode)
             {
                 settings = gsm.DefaultGlobalSettings;
@@ -244,6 +235,7 @@ namespace Chummer
                 "Chummer5", "GlobalSettings.xml"));
             if (!settingsFile.Exists)
             {
+                var legacy = TemporaryServiceLocator.Services.GetRequiredService<ILegacySettingsManager>();
                 settings = legacy.LoadLegacyRegistrySettings();
                 Debug.Assert(settings is not null);
                 if (!settingsFile.Directory!.Exists)

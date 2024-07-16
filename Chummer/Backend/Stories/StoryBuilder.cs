@@ -258,10 +258,7 @@ namespace Chummer
                                     if (xmlPossibleNodeList.Count > 0)
                                     {
                                         int intUseIndex = xmlPossibleNodeList.Count > 1
-                                            ? await GlobalSettings.RandomGenerator
-                                                .NextModuloBiasRemovedAsync(
-                                                    xmlPossibleNodeList.Count, token: token)
-                                                .ConfigureAwait(false)
+                                            ? GlobalSettings.RandomGenerator.Next(xmlPossibleNodeList.Count)
                                             : 0;
                                         int i = 0;
                                         foreach (XPathNavigator xmlLoopNode in xmlPossibleNodeList)
@@ -287,10 +284,7 @@ namespace Chummer
                                     if (xmlPossibleNodeList.Count > 0)
                                     {
                                         int intUseIndex = xmlPossibleNodeList.Count > 1
-                                            ? await GlobalSettings.RandomGenerator
-                                                .NextModuloBiasRemovedAsync(
-                                                    xmlPossibleNodeList.Count, token: token)
-                                                .ConfigureAwait(false)
+                                            ? GlobalSettings.RandomGenerator.Next(xmlPossibleNodeList.Count)
                                             : 0;
                                         int i = 0;
                                         foreach (XPathNavigator xmlLoopNode in xmlPossibleNodeList)

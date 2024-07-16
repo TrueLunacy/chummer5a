@@ -90,7 +90,7 @@ namespace Chummer
             int intResult = 0;
             for (int i = 0; i < Dice; ++i)
             {
-                intResult += await GlobalSettings.RandomGenerator.NextD6ModuloBiasRemovedAsync(token: token).ConfigureAwait(false);
+                intResult += GlobalSettings.RandomGenerator.NextD6();
             }
 
             await nudDiceResult.DoThreadSafeAsync(x => x.ValueAsInt = intResult, token: token).ConfigureAwait(false);

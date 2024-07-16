@@ -92,13 +92,13 @@ namespace Chummer
                     int intResult;
                     do
                     {
-                        intResult = await GlobalSettings.RandomGenerator.NextD6ModuloBiasRemovedAsync().ConfigureAwait(false);
+                        intResult = GlobalSettings.RandomGenerator.NextD6();
                         lstRandom.Add(intResult);
                     } while (intResult == 6);
                 }
                 else
                 {
-                    int intResult = await GlobalSettings.RandomGenerator.NextD6ModuloBiasRemovedAsync().ConfigureAwait(false);
+                    int intResult = GlobalSettings.RandomGenerator.NextD6();
                     lstRandom.Add(intResult);
                 }
             }
@@ -128,7 +128,7 @@ namespace Chummer
                     || (intGlitchCount == intGlitchThreshold - 1
                         && (intDice & 1) == 0)))
             {
-                int intBubbleDieResult = await GlobalSettings.RandomGenerator.NextD6ModuloBiasRemovedAsync().ConfigureAwait(false);
+                int intBubbleDieResult = GlobalSettings.RandomGenerator.NextD6();
                 DiceRollerListViewItem lviCur = new DiceRollerListViewItem(intBubbleDieResult, intTarget, intGlitchMin, true);
                 if (lviCur.IsGlitch)
                     ++intGlitchCount;
@@ -286,13 +286,13 @@ namespace Chummer
                     int intLoopResult;
                     do
                     {
-                        intLoopResult = await GlobalSettings.RandomGenerator.NextD6ModuloBiasRemovedAsync().ConfigureAwait(false);
+                        intLoopResult = GlobalSettings.RandomGenerator.NextD6();
                         lstRandom.Add(intLoopResult);
                     } while (intLoopResult == 6);
                 }
                 else
                 {
-                    int intLoopResult = await GlobalSettings.RandomGenerator.NextD6ModuloBiasRemovedAsync().ConfigureAwait(false);
+                    int intLoopResult = GlobalSettings.RandomGenerator.NextD6();
                     lstRandom.Add(intLoopResult);
                 }
             }
@@ -320,8 +320,7 @@ namespace Chummer
                         || (intGlitchCount == intGlitchThreshold - 1
                             && (_lstResults.Count & 1) == 0)))
                 {
-                    int intBubbleDieResult = await GlobalSettings.RandomGenerator.NextD6ModuloBiasRemovedAsync()
-                        .ConfigureAwait(false);
+                    int intBubbleDieResult = GlobalSettings.RandomGenerator.NextD6();
                     DiceRollerListViewItem lviCur =
                         new DiceRollerListViewItem(intBubbleDieResult, intTarget, intGlitchMin, true);
                     if (lviCur.IsGlitch)
