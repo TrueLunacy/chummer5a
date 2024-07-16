@@ -28,85 +28,9 @@ namespace Chummer
 {
     internal static class NativeMethods
     {
-        [DllImport("dbghelp.dll", EntryPoint = "MiniDumpWriteDump", CallingConvention = CallingConvention.StdCall, CharSet = CharSet.Unicode, SetLastError = true)]
-        [DefaultDllImportSearchPaths(DllImportSearchPath.SafeDirectories)]
-        internal static extern bool MiniDumpWriteDump
-        (
-            IntPtr hProcess,
-            uint ProcessId,
-            SafeHandle hFile,
-            MINIDUMP_TYPE DumpType,
-            ref MiniDumpExceptionInformation ExceptionParam,
-            IntPtr UserStreamParam,
-            IntPtr CallbackParam
-        );
-
-        [DllImport("dbghelp.dll", EntryPoint = "MiniDumpWriteDump", CallingConvention = CallingConvention.StdCall, CharSet = CharSet.Unicode, SetLastError = true)]
-        [DefaultDllImportSearchPaths(DllImportSearchPath.SafeDirectories)]
-        internal static extern bool MiniDumpWriteDump
-        (
-            IntPtr hProcess,
-            uint ProcessId,
-            SafeHandle hFile,
-            MINIDUMP_TYPE DumpType,
-            IntPtr ExceptionParam,
-            IntPtr UserStreamParam,
-            IntPtr CallbackParam
-        );
-
-        [StructLayout(LayoutKind.Sequential, Pack = 4)] // Pack=4 is important! So it works also for x64!
-        internal struct MiniDumpExceptionInformation
-        {
-            internal readonly uint ThreadId;
-            internal IntPtr ExceptionPointers;
-
-            [MarshalAs(UnmanagedType.Bool)]
-            internal readonly bool ClientPointers;
-        }
-
-        [Flags]
-        internal enum MINIDUMP_TYPE
-        {
-            MiniDumpNormal = 0x00000000,
-            MiniDumpWithDataSegs = 0x00000001,
-            MiniDumpWithFullMemory = 0x00000002,
-            MiniDumpWithHandleData = 0x00000004,
-            MiniDumpFilterMemory = 0x00000008,
-            MiniDumpScanMemory = 0x00000010,
-            MiniDumpWithUnloadedModules = 0x00000020,
-            MiniDumpWithIndirectlyReferencedMemory = 0x00000040,
-            MiniDumpFilterModulePaths = 0x00000080,
-            MiniDumpWithProcessThreadData = 0x00000100,
-            MiniDumpWithPrivateReadWriteMemory = 0x00000200,
-            MiniDumpWithoutOptionalData = 0x00000400,
-            MiniDumpWithFullMemoryInfo = 0x00000800,
-            MiniDumpWithThreadInfo = 0x00001000,
-            MiniDumpWithCodeSegs = 0x00002000,
-            MiniDumpWithoutAuxiliaryState = 0x00004000,
-            MiniDumpWithFullAuxiliaryState = 0x00008000,
-            MiniDumpWithPrivateWriteCopyMemory = 0x00010000,
-            MiniDumpIgnoreInaccessibleMemory = 0x00020000,
-            MiniDumpWithTokenInformation = 0x00040000,
-            MiniDumpWithModuleHeaders = 0x00080000,
-            MiniDumpFilterTriage = 0x00100000,
-            MiniDumpValidTypeFlags = 0x001fffff
-        }
-
-        [DllImport("kernel32.dll", EntryPoint = "DebugActiveProcess", CallingConvention = CallingConvention.StdCall, SetLastError = true)]
-        [DefaultDllImportSearchPaths(DllImportSearchPath.SafeDirectories)]
-        internal static extern bool DebugActiveProcess(IntPtr hProcess);
-
         [DllImport("kernel32.dll", EntryPoint = "GetCurrentThreadId", CharSet = CharSet.Auto)]
         [DefaultDllImportSearchPaths(DllImportSearchPath.SafeDirectories)]
         internal static extern uint GetCurrentThreadId();
-
-        [DllImport("kernel32.dll", EntryPoint = "GetCurrentProcess", CharSet = CharSet.Auto)]
-        [DefaultDllImportSearchPaths(DllImportSearchPath.SafeDirectories)]
-        internal static extern IntPtr GetCurrentProcess();
-
-        [DllImport("kernel32.dll", EntryPoint = "GetCurrentProcessId", CharSet = CharSet.Auto)]
-        [DefaultDllImportSearchPaths(DllImportSearchPath.SafeDirectories)]
-        internal static extern uint GetCurrentProcessId();
 
         [DllImport("kernel32", CharSet = CharSet.Unicode, SetLastError = true)]
         [DefaultDllImportSearchPaths(DllImportSearchPath.SafeDirectories)]
@@ -120,18 +44,6 @@ namespace Chummer
         [DllImport("winspool.drv", CharSet = CharSet.Unicode, SetLastError = true)]
         [DefaultDllImportSearchPaths(DllImportSearchPath.SafeDirectories)]
         internal static extern bool GetDefaultPrinter(StringBuilder sbdBuffer, ref int ptrBuffer);
-
-        [DllImport("user32.dll", SetLastError = true)]
-        [DefaultDllImportSearchPaths(DllImportSearchPath.SafeDirectories)]
-        internal static extern IntPtr GetWindowDpiAwarenessContext(IntPtr hWnd);
-
-        [DllImport("user32.dll", SetLastError = true)]
-        [DefaultDllImportSearchPaths(DllImportSearchPath.SafeDirectories)]
-        internal static extern IntPtr GetThreadDpiAwarenessContext();
-
-        [DllImport("user32.dll", SetLastError = true)]
-        [DefaultDllImportSearchPaths(DllImportSearchPath.SafeDirectories)]
-        internal static extern int GetAwarenessFromDpiAwarenessContext(IntPtr dpiAwarenessContext);
 
         [DllImport("SHCore.dll", SetLastError = true)]
         [DefaultDllImportSearchPaths(DllImportSearchPath.SafeDirectories)]
@@ -157,70 +69,6 @@ namespace Chummer
         [DefaultDllImportSearchPaths(DllImportSearchPath.SafeDirectories)]
         internal static extern int MoveWindow(IntPtr hWnd, int x, int y, int nWidth, int nHeight, bool bRepaint);
 
-        [DllImport("user32.dll")]
-        [DefaultDllImportSearchPaths(DllImportSearchPath.SafeDirectories)]
-        internal static extern UIntPtr SetTimer(IntPtr hWnd, UIntPtr nIDEvent, uint uElapse, TimerProc lpTimerFunc);
-
-        /// <summary>
-        /// Sends the specified message to a window or windows.
-        /// </summary>
-        /// <param name="hWnd">A handle to the window whose window procedure will receive the message.
-        /// If this parameter is HWND_BROADCAST ((HWND)0xffff), the message is sent to all top-level
-        /// windows in the system.</param>
-        /// <param name="msg">The message to be sent.</param>
-        /// <param name="wParam">Additional message-specific information.</param>
-        /// <param name="lParam">Additional message-specific information.</param>
-        /// <returns>The return value specifies the result of the message processing;
-        /// it depends on the message sent.</returns>
-        [DllImport("user32.dll", CharSet = CharSet.Unicode)]
-        [DefaultDllImportSearchPaths(DllImportSearchPath.SafeDirectories)]
-        internal static extern IntPtr SendMessage(IntPtr hWnd, int msg, IntPtr wParam, StringBuilder lParam);
-
-        /// <summary>
-        /// Sends the specified message to a window or windows.
-        /// </summary>
-        /// <param name="hWnd">A handle to the window whose window procedure will receive the message.
-        /// If this parameter is HWND_BROADCAST ((HWND)0xffff), the message is sent to all top-level
-        /// windows in the system.</param>
-        /// <param name="msg">The message to be sent.</param>
-        /// <param name="wParam">Additional message-specific information.</param>
-        /// <param name="lParam">Additional message-specific information.</param>
-        /// <returns>The return value specifies the result of the message processing;
-        /// it depends on the message sent.</returns>
-        [DllImport("user32.dll", CharSet = CharSet.Unicode)]
-        [DefaultDllImportSearchPaths(DllImportSearchPath.SafeDirectories)]
-        internal static extern IntPtr SendMessage(IntPtr hWnd, int msg, IntPtr wParam, [MarshalAs(UnmanagedType.LPWStr)] string lParam);
-
-        /// <summary>
-        /// Sends the specified message to a window or windows.
-        /// </summary>
-        /// <param name="hWnd">A handle to the window whose window procedure will receive the message.
-        /// If this parameter is HWND_BROADCAST ((HWND)0xffff), the message is sent to all top-level
-        /// windows in the system.</param>
-        /// <param name="msg">The message to be sent.</param>
-        /// <param name="wParam">Additional message-specific information.</param>
-        /// <param name="lParam">Additional message-specific information.</param>
-        /// <returns>The return value specifies the result of the message processing;
-        /// it depends on the message sent.</returns>
-        [DllImport("user32.dll", CharSet = CharSet.Unicode)]
-        [DefaultDllImportSearchPaths(DllImportSearchPath.SafeDirectories)]
-        internal static extern IntPtr SendMessage(IntPtr hWnd, int msg, int wParam, [MarshalAs(UnmanagedType.LPWStr)] string lParam);
-
-        /// <summary>
-        /// Sends the specified message to a window or windows.
-        /// </summary>
-        /// <param name="hWnd">A handle to the window whose window procedure will receive the message.
-        /// If this parameter is HWND_BROADCAST ((HWND)0xffff), the message is sent to all top-level
-        /// windows in the system.</param>
-        /// <param name="msg">The message to be sent.</param>
-        /// <param name="wParam">Additional message-specific information.</param>
-        /// <param name="lParam">Additional message-specific information.</param>
-        /// <returns>The return value specifies the result of the message processing;
-        /// it depends on the message sent.</returns>
-        [DllImport("user32.dll", CharSet = CharSet.Unicode)]
-        [DefaultDllImportSearchPaths(DllImportSearchPath.SafeDirectories)]
-        internal static extern IntPtr SendMessage(IntPtr hWnd, int msg, int wParam, ref IntPtr lParam);
-
         /// <summary>
         /// Sends the specified message to a window or windows.
         /// </summary>
@@ -236,21 +84,6 @@ namespace Chummer
         [DefaultDllImportSearchPaths(DllImportSearchPath.SafeDirectories)]
         internal static extern IntPtr SendMessage(IntPtr hWnd, int msg, int wParam, IntPtr lParam);
 
-        /// <summary>
-        /// Sends the specified message to a window or windows.
-        /// </summary>
-        /// <param name="hWnd">A handle to the window whose window procedure will receive the message.
-        /// If this parameter is HWND_BROADCAST ((HWND)0xffff), the message is sent to all top-level
-        /// windows in the system.</param>
-        /// <param name="msg">The message to be sent.</param>
-        /// <param name="wParam">Additional message-specific information.</param>
-        /// <param name="lParam">Additional message-specific information.</param>
-        /// <returns>The return value specifies the result of the message processing;
-        /// it depends on the message sent.</returns>
-        [DllImport("user32.dll", CharSet = CharSet.Unicode, SetLastError = false)]
-        [DefaultDllImportSearchPaths(DllImportSearchPath.SafeDirectories)]
-        internal static extern IntPtr SendMessage(IntPtr hWnd, int msg, IntPtr wParam, ref CopyDataStruct lParam);
-
         [DllImport("user32.dll")]
         [DefaultDllImportSearchPaths(DllImportSearchPath.SafeDirectories)]
         internal static extern IntPtr SetWindowsHookEx(int idHook, HookProc lpfn, IntPtr hInstance, int threadId);
@@ -265,18 +98,6 @@ namespace Chummer
 
         [DllImport("user32.dll")]
         [DefaultDllImportSearchPaths(DllImportSearchPath.SafeDirectories)]
-        internal static extern int GetWindowTextLength(IntPtr hWnd);
-
-        [DllImport("user32.dll", CharSet = CharSet.Unicode)]
-        [DefaultDllImportSearchPaths(DllImportSearchPath.SafeDirectories)]
-        internal static extern int GetWindowText(IntPtr hWnd, StringBuilder text, int maxLength);
-
-        [DllImport("user32.dll")]
-        [DefaultDllImportSearchPaths(DllImportSearchPath.SafeDirectories)]
-        internal static extern int EndDialog(IntPtr hDlg, IntPtr nResult);
-
-        [DllImport("user32.dll")]
-        [DefaultDllImportSearchPaths(DllImportSearchPath.SafeDirectories)]
         [return: MarshalAs(UnmanagedType.Bool)]
         internal static extern bool ShowWindow(IntPtr hWnd, ShowWindowMode flags);
 
@@ -286,19 +107,7 @@ namespace Chummer
 
         [DllImport("user32", CharSet = CharSet.Unicode)]
         [DefaultDllImportSearchPaths(DllImportSearchPath.SafeDirectories)]
-        internal static extern bool PostMessage(IntPtr hWnd, int msg, IntPtr wParam, IntPtr lParam);
-
-        [DllImport("user32", CharSet = CharSet.Unicode)]
-        [DefaultDllImportSearchPaths(DllImportSearchPath.SafeDirectories)]
-        internal static extern bool PostMessage(IntPtr hWnd, int msg, IntPtr wParam, [MarshalAs(UnmanagedType.LPWStr)] string lParam);
-
-        [DllImport("user32", CharSet = CharSet.Unicode)]
-        [DefaultDllImportSearchPaths(DllImportSearchPath.SafeDirectories)]
         internal static extern int RegisterWindowMessage(string message);
-
-        [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = false)]
-        [DefaultDllImportSearchPaths(DllImportSearchPath.SafeDirectories)]
-        internal static extern bool ReleaseCapture();
 
         /// <summary>
         /// Modifies the User Interface Privilege Isolation (UIPI) message filter for a specified window
@@ -484,8 +293,6 @@ namespace Chummer
 
         internal delegate IntPtr HookProc(int nCode, IntPtr wParam, IntPtr lParam);
 
-        internal delegate void TimerProc(IntPtr hWnd, uint uMsg, UIntPtr nIDEvent, uint dwTime);
-
         internal static string GetDefaultPrinter()
         {
             int ptrBuffer = 0;
@@ -514,18 +321,6 @@ namespace Chummer
             throw new Win32Exception(Marshal.GetLastWin32Error());
         }
 
-        internal static void ShowProcessWindow(Process objProcess)
-        {
-            ArgumentNullException.ThrowIfNull(objProcess);
-            if (objProcess.MainWindowHandle == IntPtr.Zero)
-            {
-                // the window is hidden so try to restore it before setting focus.
-                ShowWindow(objProcess.Handle, ShowWindowMode.Restore);
-            }
-            // set user the focus to the window
-            Marshal.ThrowExceptionForHR(SetForegroundWindow(objProcess.MainWindowHandle));
-        }
-
         internal enum SystemString
         {
             OK = 0,
@@ -547,23 +342,6 @@ namespace Chummer
         [DefaultDllImportSearchPaths(DllImportSearchPath.SafeDirectories)]
         internal static extern IntPtr MB_GetString(int strId);
 
-        /// <summary>
-        /// Get a system string that is localized to the user's currently-set Windows language.
-        /// </summary>
-        /// <param name="intSystemStringId">Id of the system string to use.</param>
-        internal static string GetSystemString(int intSystemStringId)
-        {
-            if (intSystemStringId < 0 || intSystemStringId > 10)
-                throw new ArgumentOutOfRangeException(nameof(intSystemStringId));
-            try
-            {
-                return Marshal.PtrToStringAuto(MB_GetString(intSystemStringId));
-            } // MB_GetString is not implemented in WINE, so this is a workaround
-            catch (EntryPointNotFoundException)
-            {
-                return DefaultSystemString[intSystemStringId];
-            }
-        }
 
         /// <summary>
         /// Get a system string that is localized to the user's currently-set Windows language.
