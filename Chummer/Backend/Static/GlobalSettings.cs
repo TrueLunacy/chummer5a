@@ -25,7 +25,6 @@ using System.IO;
 using System.Text.RegularExpressions;
 using System.Xml;
 using iText.Kernel.Pdf;
-using Microsoft.ApplicationInsights.Extensibility;
 using Chummer.Api;
 using Chummer.Api.Enums;
 using Chummer.Api.Models.GlobalSettings;
@@ -611,37 +610,20 @@ namespace Chummer
         /// What Logging Level are we "allowed" to use by the user. The actual used Level is the UseLoggingApplicationInsights and depends on
         /// nightly/stable and ResetLoggingCounter
         /// </summary>
+        [Obsolete("We're killing this too", true)]
         public static UseAILogging UseLoggingApplicationInsightsPreference
         {
             // dirty dirty hack
             get => UseLogging ? Enum.Parse<UseAILogging>(settings.Logging.LogLevel.ToString()) : UseAILogging.OnlyLocal;
             set
             {
-                bool blnNewDisableTelemetry = value < UseAILogging.OnlyMetric;
-                bool blnOldDisableTelemetry = UseLoggingApplicationInsightsPreference < UseAILogging.OnlyMetric;
-                if (settings.Logging.LogLevel != Api.Enums.LogLevel.NoLogging)
-                {
-                    settings = settings with
-                    {
-                        Logging = settings.Logging with
-                        {
-                            LogLevel = Enum.Parse<Api.Enums.LogLevel>(value.ToString())
-                        }
-                    };
-                }
-                if (blnOldDisableTelemetry != blnNewDisableTelemetry && Program.ChummerTelemetryClient.IsValueCreated)
-                {
-                    // Sets up logging if the option is changed during runtime
-                    TelemetryConfiguration objConfiguration = Program.ActiveTelemetryConfiguration;
-                    if (objConfiguration != null)
-                        objConfiguration.DisableTelemetry = blnNewDisableTelemetry;
-                }
             }
         }
 
         /// <summary>
         /// Whether the app should use logging.
         /// </summary>
+        [Obsolete("We're killing this too", true)]
         public static UseAILogging UseLoggingApplicationInsights
         {
             get

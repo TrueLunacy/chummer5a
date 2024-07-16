@@ -36,8 +36,6 @@ using System.Xml.XPath;
 using Chummer.Backend.Attributes;
 using Chummer.Backend.Equipment;
 using Chummer.UI.Attributes;
-using Microsoft.ApplicationInsights;
-using Microsoft.ApplicationInsights.DataContracts;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.IO;
@@ -53,7 +51,6 @@ namespace Chummer
     {
         private static readonly ILogger<CharacterShared> Log = TemporaryServiceLocator.Services
             .GetRequiredService<ILogger<CharacterShared>>();
-        private static TelemetryClient TelemetryClient { get; } = new TelemetryClient();
         private readonly Character _objCharacter;
         private int _intIsDirty;
         private int _intRefreshingCount;
@@ -78,25 +75,7 @@ namespace Chummer
             Load += OnLoad;
             Program.MainForm.OpenCharacterEditorForms?.Add(this);
             string name = "Show_Form_" + GetType();
-            PageViewTelemetry pvt = new PageViewTelemetry(name)
-            {
-                Id = Guid.NewGuid().ToString(),
-                Name = name,
-                Timestamp = DateTimeOffset.UtcNow
-            };
-            pvt.Context.Operation.Name = "Operation CharacterShared.Constructor()";
-            pvt.Properties.Add("Name", objCharacter?.Name);
             string strCharacterFileName = objCharacter?.FileName; // Store this in a local so that we avoid possible weird semaphore collisions in the Shown delegate
-            pvt.Properties.Add("Path", strCharacterFileName);
-            Shown += (o, args) =>
-            {
-                pvt.Duration = DateTimeOffset.UtcNow - pvt.Timestamp;
-                if (strCharacterFileName != null && Uri.TryCreate(strCharacterFileName, UriKind.Absolute, out Uri uriResult))
-                {
-                    pvt.Url = uriResult;
-                }
-                TelemetryClient.TrackPageView(pvt);
-            };
             if (GlobalSettings.LiveUpdateCleanCharacterFiles && !string.IsNullOrEmpty(strCharacterFileName) && File.Exists(strCharacterFileName))
             {
                 _objCharacterFileWatcher = new FileSystemWatcher(Path.GetDirectoryName(strCharacterFileName) ?? Path.GetPathRoot(strCharacterFileName), Path.GetFileName(strCharacterFileName));

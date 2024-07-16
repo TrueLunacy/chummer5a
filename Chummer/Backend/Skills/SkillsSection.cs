@@ -1222,18 +1222,17 @@ namespace Chummer.Backend.Skills
             }
         }
 
-        internal void Load(XmlNode xmlSkillNode, bool blnLegacy, CustomActivity parentActivity, CancellationToken token = default)
+        internal void Load(XmlNode xmlSkillNode, bool blnLegacy, CancellationToken token = default)
         {
-            Utils.SafelyRunSynchronously(() => LoadCoreAsync(true, xmlSkillNode, blnLegacy, parentActivity, token), token);
+            Utils.SafelyRunSynchronously(() => LoadCoreAsync(true, xmlSkillNode, blnLegacy, token), token);
         }
 
-        internal Task LoadAsync(XmlNode xmlSkillNode, bool blnLegacy, CustomActivity parentActivity, CancellationToken token = default)
+        internal Task LoadAsync(XmlNode xmlSkillNode, bool blnLegacy, CancellationToken token = default)
         {
-            return LoadCoreAsync(false, xmlSkillNode, blnLegacy, parentActivity, token);
+            return LoadCoreAsync(false, xmlSkillNode, blnLegacy, token);
         }
 
-        private async Task LoadCoreAsync(bool blnSync, XmlNode xmlSkillNode, bool blnLegacy,
-                                         CustomActivity parentActivity, CancellationToken token = default)
+        private async Task LoadCoreAsync(bool blnSync, XmlNode xmlSkillNode, bool blnLegacy, CancellationToken token = default)
         {
             if (xmlSkillNode == null)
                 return;
@@ -1251,8 +1250,6 @@ namespace Chummer.Backend.Skills
                 try
                 {
                     bool blnDidInitializeInLoad = false;
-                    using (CustomActivity opLoadCharSkills =
-                           Timekeeper.StartSyncron("load_char_skills_skillnode", parentActivity))
                     {
                         _lstSkills.RaiseListChangedEvents = false;
                         _lstKnowledgeSkills.RaiseListChangedEvents = false;
@@ -1269,7 +1266,6 @@ namespace Chummer.Backend.Skills
                                 {
                                     // Special loading procedure where we initialize our skills list at the same time as loading it
                                     // This is faster than doing the initialize first and then loading of all our skills afterwards
-                                    using (_ = Timekeeper.StartSyncron("load_char_skills_initialize", opLoadCharSkills))
                                     {
                                         token.ThrowIfCancellationRequested();
                                         if (blnSync)
@@ -1509,7 +1505,6 @@ namespace Chummer.Backend.Skills
                                         }
                                     }
 
-                                    using (_ = Timekeeper.StartSyncron("load_char_skills_groups", opLoadCharSkills))
                                     {
                                         using (XmlNodeList xmlGroupsList = xmlSkillNode.SelectNodes("groups/group"))
                                         {
@@ -1552,7 +1547,6 @@ namespace Chummer.Backend.Skills
                                         //Timekeeper.Finish("load_char_skills_groups");
                                     }
 
-                                    using (_ = Timekeeper.StartSyncron("load_char_skills_normal", opLoadCharSkills))
                                     {
                                         using (XmlNodeList xmlSkillsList = xmlSkillNode.SelectNodes("skills/skill"))
                                         {
@@ -1607,7 +1601,6 @@ namespace Chummer.Backend.Skills
                                         //Timekeeper.Finish("load_char_skills_normal");
                                     }
 
-                                    using (_ = Timekeeper.StartSyncron("load_char_skills_kno", opLoadCharSkills))
                                     {
                                         using (XmlNodeList xmlSkillsList = xmlSkillNode.SelectNodes("knoskills/skill"))
                                         {
@@ -1687,7 +1680,6 @@ namespace Chummer.Backend.Skills
                                     }
                                 }
 
-                                using (_ = Timekeeper.StartSyncron("load_char_knowsoft_buffer", opLoadCharSkills))
                                 {
                                     // Knowsoft Buffer.
                                     using (XmlNodeList xmlSkillsList
@@ -2079,14 +2071,13 @@ namespace Chummer.Backend.Skills
             }
         }
 
-        internal void LoadFromHeroLab(XPathNavigator xmlSkillNode, CustomActivity parentActivity, CancellationToken token = default)
+        internal void LoadFromHeroLab(XPathNavigator xmlSkillNode, CancellationToken token = default)
         {
             using (LockObject.EnterWriteLock(token))
             {
                 Interlocked.Increment(ref _intLoading);
                 try
                 {
-                    using (_ = Timekeeper.StartSyncron("load_char_skills_groups", parentActivity))
                     {
                         foreach (XPathNavigator xmlNode in xmlSkillNode.SelectAndCacheExpression("groups/skill", token))
                         {
@@ -2107,7 +2098,6 @@ namespace Chummer.Backend.Skills
                         //Timekeeper.Finish("load_char_skills_groups");
                     }
 
-                    using (_ = Timekeeper.StartSyncron("load_char_skills", parentActivity))
                     {
                         List<Skill> lstTempSkillList = new List<Skill>(Skills.Count);
                         foreach (XPathNavigator xmlNode in xmlSkillNode.SelectAndCacheExpression("active/skill", token))

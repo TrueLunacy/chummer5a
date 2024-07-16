@@ -32,7 +32,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Chummer.Backend.Equipment;
-using Microsoft.ApplicationInsights.DataContracts;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Application = System.Windows.Forms.Application;
@@ -672,21 +671,9 @@ namespace Chummer
                     = await CursorWait.NewAsync(this, token: _objGenericToken).ConfigureAwait(false);
                 try
                 {
-                    using (CustomActivity opFrmChummerMain = Timekeeper.StartSyncron(
-                               "frmChummerMain_Load", null, CustomActivity.OperationType.DependencyOperation,
-                               _strCurrentVersion))
                     {
                         try
                         {
-                            opFrmChummerMain.MyDependencyTelemetry.Type = "loadfrmChummerMain";
-                            opFrmChummerMain.MyDependencyTelemetry.Target = _strCurrentVersion;
-
-                            if (MyStartupPvt != null)
-                            {
-                                MyStartupPvt.Duration = DateTimeOffset.UtcNow - MyStartupPvt.Timestamp;
-                                opFrmChummerMain.MyTelemetryClient.TrackPageView(MyStartupPvt);
-                            }
-
                             NativeMethods.ChangeFilterStruct changeFilter = default;
                             changeFilter.size = (uint) Marshal.SizeOf(changeFilter);
                             changeFilter.info = 0;
@@ -754,8 +741,7 @@ namespace Chummer
                                 {
                                     string[] strArgs = Environment.GetCommandLineArgs();
                                     using (ProcessCommandLineArguments(strArgs, out blnShowTest,
-                                               out HashSet<string> setFilesToLoad,
-                                               opFrmChummerMain))
+                                               out HashSet<string> setFilesToLoad))
                                     {
                                         if (Directory.Exists(Utils.GetAutosavesFolderPath))
                                         {
@@ -960,8 +946,7 @@ namespace Chummer
                                                      .ConfigureAwait(false);
                                 }
 
-                                await Program.PluginLoader.CallPlugins(
-                                    toolsMenu, opFrmChummerMain, _objGenericToken).ConfigureAwait(false);
+                                await Program.PluginLoader.CallPlugins(toolsMenu, _objGenericToken).ConfigureAwait(false);
 
                                 // Set the Tag for each ToolStrip item so it can be translated.
                                 await menuStrip.DoThreadSafeAsync(x =>
@@ -1009,12 +994,6 @@ namespace Chummer
                         }
                         catch (Exception ex)
                         {
-                            if (opFrmChummerMain != null)
-                            {
-                                opFrmChummerMain.SetSuccess(false);
-                                opFrmChummerMain.MyTelemetryClient.TrackException(ex);
-                            }
-
                             Log.Error(ex);
                             throw;
                         }
@@ -1097,9 +1076,6 @@ namespace Chummer
                 //swallow this
             }
         }
-
-        [CLSCompliant(false)]
-        public PageViewTelemetry MyStartupPvt { get; set; }
 
         private void OpenCharactersOnBeforeClearCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
@@ -3020,24 +2996,6 @@ namespace Chummer
             }
         }
 
-        private async void mnuHeroLabImporter_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                if (await Program.ShowScrollableMessageBoxAsync(await LanguageManager.GetStringAsync("Message_HeroLabImporterWarning", token: _objGenericToken).ConfigureAwait(false),
-                        await LanguageManager.GetStringAsync("Message_HeroLabImporterWarning_Title", token: _objGenericToken).ConfigureAwait(false),
-                        MessageBoxButtons.YesNo, MessageBoxIcon.Warning, token: _objGenericToken).ConfigureAwait(false) != DialogResult.Yes)
-                    return;
-
-                HeroLabImporter frmImporter = await this.DoThreadSafeFuncAsync(() => new HeroLabImporter(), token: _objGenericToken).ConfigureAwait(false);
-                await frmImporter.DoThreadSafeAsync(x => x.Show(), token: _objGenericToken).ConfigureAwait(false);
-            }
-            catch (OperationCanceledException)
-            {
-                //swallow this
-            }
-        }
-
         private void tabForms_MouseClick(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Right)
@@ -4452,7 +4410,7 @@ namespace Chummer
             }
         }
 
-        private static FetchSafelyFromPool<HashSet<string>> ProcessCommandLineArguments(IReadOnlyCollection<string> strArgs, out bool blnShowTest, out HashSet<string> setFilesToLoad, CustomActivity opLoadActivity = null)
+        private static FetchSafelyFromPool<HashSet<string>> ProcessCommandLineArguments(IReadOnlyCollection<string> strArgs, out bool blnShowTest, out HashSet<string> setFilesToLoad)
         {
             blnShowTest = false;
             FetchSafelyFromPool<HashSet<string>> objReturn = new FetchSafelyFromPool<HashSet<string>>(Utils.StringHashSetPool, out setFilesToLoad);
@@ -4511,15 +4469,6 @@ namespace Chummer
             }
             catch (Exception ex)
             {
-                if (opLoadActivity != null)
-                {
-                    opLoadActivity.SetSuccess(false);
-                    ExceptionTelemetry ext = new ExceptionTelemetry(ex)
-                    {
-                        SeverityLevel = SeverityLevel.Warning
-                    };
-                    opLoadActivity.MyTelemetryClient.TrackException(ext);
-                }
                 Log.Warn(ex);
             }
 

@@ -863,9 +863,6 @@ namespace Chummer.Backend.Attributes
                 Interlocked.Increment(ref _intLoading);
                 try
                 {
-                    using (Timekeeper.StartSyncron("create_char_attrib", null,
-                                                       CustomActivity.OperationType.RequestOperation,
-                                                       charNode.InnerText))
                     {
                         CharacterAttrib objBod = GetAttributeByName("BOD", token);
                         int intOldBODBase = objBod?.Base ?? 0;
@@ -1071,9 +1068,6 @@ namespace Chummer.Backend.Attributes
                 Interlocked.Increment(ref _intLoading);
                 try
                 {
-                    using (Timekeeper.StartSyncron("create_char_attrib", null,
-                               CustomActivity.OperationType.RequestOperation,
-                               charNode.InnerText))
                     {
                         CharacterAttrib objBod = await GetAttributeByNameAsync("BOD", token).ConfigureAwait(false);
                         int intOldBODBase = objBod != null ? await objBod.GetBaseAsync(token).ConfigureAwait(false) : 0;
@@ -1585,12 +1579,11 @@ namespace Chummer.Backend.Attributes
         }
 
         [CLSCompliant(false)]
-        public void LoadFromHeroLab(XPathNavigator xmlStatBlockBaseNode, CustomActivity parentActivity, CancellationToken token = default)
+        public void LoadFromHeroLab(XPathNavigator xmlStatBlockBaseNode, CancellationToken token = default)
         {
             if (xmlStatBlockBaseNode == null)
                 return;
             using (LockObject.EnterWriteLock(token))
-            using (Timekeeper.StartSyncron("load_char_attrib", parentActivity))
             {
                 Interlocked.Increment(ref _intLoading);
                 try

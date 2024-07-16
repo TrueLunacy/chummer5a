@@ -452,8 +452,6 @@ namespace Chummer
                 await _objLoadContentLocker.WaitAsync(token).ConfigureAwait(false);
                 try
                 {
-                    using (CustomActivity opLoadMasterindex = Timekeeper.StartSyncron(
-                               "op_load_frm_masterindex", null, CustomActivity.OperationType.RequestOperation, null))
                     {
                         Interlocked.Decrement(ref _intIsFinishedLoading);
                         try
@@ -488,14 +486,10 @@ namespace Chummer
                                     : "source";
                             }
 
-                            using (Timekeeper.StartSyncron("load_frm_masterindex_load_andpopulate_entries",
-                                                           opLoadMasterindex))
                             {
                                 if (_objSelectedSetting != null)
                                 {
                                     ConcurrentBag<ListItem> lstItemsForLoading = new ConcurrentBag<ListItem>();
-                                    using (Timekeeper.StartSyncron("load_frm_masterindex_load_entries",
-                                                                   opLoadMasterindex))
                                     {
                                         ConcurrentBag<ListItem> lstFileNamesWithItemsForLoading
                                             = new ConcurrentBag<ListItem>();
@@ -593,8 +587,6 @@ namespace Chummer
                                         _lstFileNamesWithItems.AddRange(lstFileNamesWithItemsForLoading);
                                     }
 
-                                    using (Timekeeper.StartSyncron("load_frm_masterindex_populate_entries",
-                                                                   opLoadMasterindex))
                                     {
                                         string strSpace = await LanguageManager
                                                                 .GetStringAsync("String_Space", token: token)
@@ -695,13 +687,11 @@ namespace Chummer
                                 }
                             }
 
-                            using (Timekeeper.StartSyncron("load_frm_masterindex_sort_entries", opLoadMasterindex))
                             {
                                 _lstItems.Sort(CompareListItems.CompareNames);
                                 _lstFileNamesWithItems.Sort(CompareListItems.CompareNames);
                             }
 
-                            using (Timekeeper.StartSyncron("load_frm_masterindex_populate_controls", opLoadMasterindex))
                             {
                                 _lstFileNamesWithItems.Insert(
                                     0,

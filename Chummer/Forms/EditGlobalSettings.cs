@@ -375,56 +375,6 @@ namespace Chummer
             }
         }
 
-        private async void cboUseLoggingApplicationInsights_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (_intLoading > 0)
-                return;
-            UseAILogging useAI = await cboUseLoggingApplicationInsights
-                                       .DoThreadSafeFuncAsync(x => (UseAILogging)((ListItem) x.SelectedItem).Value)
-                                       .ConfigureAwait(false);
-            GlobalSettings.UseLoggingResetCounter = 10;
-            if (useAI > UseAILogging.Info
-                && GlobalSettings.UseLoggingApplicationInsightsPreference <= UseAILogging.Info
-                && await Program.ShowScrollableMessageBoxAsync(this,
-                    (await LanguageManager
-                        .GetStringAsync(
-                            "Message_Options_ConfirmTelemetry",
-                            _strSelectedLanguage).ConfigureAwait(false))
-                    .WordWrap(),
-                    await LanguageManager
-                        .GetStringAsync(
-                            "MessageTitle_Options_ConfirmTelemetry",
-                            _strSelectedLanguage).ConfigureAwait(false),
-                    MessageBoxButtons.YesNo).ConfigureAwait(false) != DialogResult.Yes)
-            {
-                int intLoading = Interlocked.Increment(ref _intLoading);
-                try
-                {
-                    if (intLoading == 1)
-                    {
-                        CursorWait objCursorWait = await CursorWait.NewAsync(this).ConfigureAwait(false);
-                        try
-                        {
-                            await cboUseLoggingApplicationInsights
-                                  .DoThreadSafeAsync(x => x.SelectedItem = UseAILogging.Info).ConfigureAwait(false);
-                        }
-                        finally
-                        {
-                            await objCursorWait.DisposeAsync().ConfigureAwait(false);
-                        }
-                    }
-                }
-                finally
-                {
-                    Interlocked.Decrement(ref _intLoading);
-                }
-
-                return;
-            }
-
-            OptionsChanged(sender, e);
-        }
-
         private async void chkUseLogging_CheckedChanged(object sender, EventArgs e)
         {
             if (_intLoading > 0)
@@ -1283,7 +1233,6 @@ namespace Chummer
 
             await PopulatePdfParameters(token).ConfigureAwait(false);
             await PopulateCustomDataDirectoryListBox(token).ConfigureAwait(false);
-            await PopulateApplicationInsightsOptions(token).ConfigureAwait(false);
             await PopulateColorModes(token).ConfigureAwait(false);
             await PopulateDpiScalingMethods(token).ConfigureAwait(false);
         }
@@ -1429,7 +1378,6 @@ namespace Chummer
                                .ConfigureAwait(false);
             await cboUseLoggingApplicationInsights.DoThreadSafeAsync(x => x.Enabled = GlobalSettings.UseLogging, token)
                                                   .ConfigureAwait(false);
-            await PopulateApplicationInsightsOptions(token).ConfigureAwait(false);
             await PopulateColorModes(token).ConfigureAwait(false);
             await PopulateDpiScalingMethods(token).ConfigureAwait(false);
 
@@ -1529,13 +1477,6 @@ namespace Chummer
             GlobalSettings.LiveUpdateCleanCharacterFiles = await chkLiveUpdateCleanCharacterFiles
                                                                  .DoThreadSafeFuncAsync(x => x.Checked, token)
                                                                  .ConfigureAwait(false);
-            GlobalSettings.UseLogging
-                = await chkUseLogging.DoThreadSafeFuncAsync(x => x.Checked, token).ConfigureAwait(false);
-            if (Enum.TryParse(
-                    await cboUseLoggingApplicationInsights.DoThreadSafeFuncAsync(x => x.SelectedValue.ToString(), token)
-                                                          .ConfigureAwait(false), out UseAILogging useAI))
-                GlobalSettings.UseLoggingApplicationInsightsPreference = useAI;
-
             if (string.IsNullOrEmpty(_strSelectedLanguage))
             {
                 // We have this set differently because changing the selected language also changes the selected default character sheet
@@ -1876,41 +1817,6 @@ namespace Chummer
                         if (x.SelectedIndex == -1 && lstPdfParameters.Count > 0)
                             x.SelectedIndex = 0;
                     }
-                }, token).ConfigureAwait(false);
-            }
-        }
-
-        private async Task PopulateApplicationInsightsOptions(CancellationToken token = default)
-        {
-            string strOldSelected
-                = await cboUseLoggingApplicationInsights.DoThreadSafeFuncAsync(x => x.SelectedValue?.ToString(), token)
-                                                        .ConfigureAwait(false)
-                  ?? GlobalSettings.UseLoggingApplicationInsights.ToString();
-
-            using (new FetchSafelyFromPool<List<ListItem>>(Utils.ListItemListPool,
-                                                           out List<ListItem> lstUseAIOptions))
-            {
-                foreach (UseAILogging eOption in Enum.GetValues(typeof(UseAILogging)))
-                {
-                    //we don't want to allow the user to set the logging options in stable builds to higher than "not set".
-                    if (Utils.IsMilestoneVersion && !Debugger.IsAttached
-                                                 && eOption > UseAILogging.NotSet)
-                        continue;
-                    lstUseAIOptions.Add(new ListItem(
-                                            eOption,
-                                            await LanguageManager.GetStringAsync(
-                                                "String_ApplicationInsights_" + eOption,
-                                                _strSelectedLanguage, token: token).ConfigureAwait(false)));
-                }
-
-                await cboUseLoggingApplicationInsights.PopulateWithListItemsAsync(lstUseAIOptions, token)
-                                                      .ConfigureAwait(false);
-                await cboUseLoggingApplicationInsights.DoThreadSafeAsync(x =>
-                {
-                    if (!string.IsNullOrEmpty(strOldSelected))
-                        x.SelectedValue = Enum.Parse(typeof(UseAILogging), strOldSelected);
-                    if (x.SelectedIndex == -1 && lstUseAIOptions.Count > 0)
-                        x.SelectedIndex = 0;
                 }, token).ConfigureAwait(false);
             }
         }

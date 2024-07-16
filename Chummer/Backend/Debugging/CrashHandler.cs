@@ -61,7 +61,6 @@ namespace Chummer.Backend
                     {"visible-error-friendly", ex?.Message.Replace(Utils.GetStartupPath, "[Chummer Path]").Replace(Utils.GetEscapedStartupPath, "[Chummer Path]") ?? "No description available"},
                     {"visible-stacktrace", ex?.StackTrace.Replace(Utils.GetStartupPath, "[Chummer Path]").Replace(Utils.GetEscapedStartupPath, "[Chummer Path]") ?? "No stack trace available"},
                     {"installation-id", Properties.Settings.Default.UploadClientId.ToString() },
-                    {"option-upload-logs-set", GlobalSettings.UseLoggingApplicationInsights.ToString() }
                 };
 
                 try

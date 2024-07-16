@@ -1011,7 +1011,6 @@ namespace Chummer
             cboUseLoggingApplicationInsights.Size = new System.Drawing.Size(267, 23);
             cboUseLoggingApplicationInsights.TabIndex = 55;
             cboUseLoggingApplicationInsights.TooltipText = "";
-            cboUseLoggingApplicationInsights.SelectedIndexChanged += cboUseLoggingApplicationInsights_SelectedIndexChanged;
             // 
             // cmdUseLoggingHelp
             // 

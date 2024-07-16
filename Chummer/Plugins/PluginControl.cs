@@ -30,8 +30,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Chummer.Backend.Equipment;
-using Microsoft.ApplicationInsights;
-using Microsoft.ApplicationInsights.Channel;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Win32;
@@ -49,11 +47,6 @@ namespace Chummer.Plugins
         Task<ICollection<TabPage>> GetTabPages(CharacterCreate input, CancellationToken token = default);
 
         Task<ICollection<ToolStripMenuItem>> GetMenuItems(ToolStripMenuItem menu, CancellationToken token = default);
-
-        [CLSCompliant(false)]
-#pragma warning disable CS3010 // CLS-compliant interfaces must have only CLS-compliant members
-        ITelemetry SetTelemetryInitialize(ITelemetry telemetry);
-#pragma warning restore CS3010 // CLS-compliant interfaces must have only CLS-compliant members
 
         bool ProcessCommandLine(string parameter);
 
@@ -311,54 +304,9 @@ namespace Chummer.Plugins
                     }
                     catch (ReflectionTypeLoadException e)
                     {
-                        TelemetryClient objTelemetry = Program.ChummerTelemetryClient.Value;
-                        if (objTelemetry != null)
-                        {
-                            using (new FetchSafelyFromPool<StringBuilder>(Utils.StringBuilderPool,
-                                                                          out StringBuilder sbdLoaderExceptions))
-                            {
-                                int counter = 0;
-                                foreach (Exception except in e.LoaderExceptions)
-                                {
-                                    counter++;
-                                    sbdLoaderExceptions
-                                        .AppendLine().Append("LoaderException ").Append(counter).Append(": ")
-                                        .Append(except.Message);
-                                    objTelemetry.TrackException(except);
-                                }
-
-                                try
-                                {
-                                    using (CancellationTokenSource objTimeout
-                                           = new CancellationTokenSource(TimeSpan.FromSeconds(30)))
-                                    {
-                                        CancellationToken objTimeoutToken = objTimeout.Token;
-                                        Utils.SafelyRunSynchronously(() => objTelemetry.FlushAsync(objTimeoutToken),
-                                                                     objTimeoutToken);
-                                    }
-                                }
-                                catch (OperationCanceledException)
-                                {
-                                    //swallow this, we timed out on the flush
-                                    Utils.BreakIfDebug();
-                                }
-
-                                string msg
-                                    = "Plugins (at least not all of them) could not be loaded. Logs are uploaded to the ChummerDevs. Maybe ping one of the Devs on Discord and provide your Installation-id: "
-                                      + Properties.Settings.Default.UploadClientId + Environment.NewLine + "Exception: "
-                                      + Environment.NewLine + Environment.NewLine + e + Environment.NewLine
-                                      + Environment.NewLine + "The LoaderExceptions are: " + Environment.NewLine
-                                      + sbdLoaderExceptions + Environment.NewLine + Environment.NewLine;
-
-                                Log.Info(e, msg);
-                            }
-                        }
-                        else
-                        {
-                            Log.Error(
-                                e,
-                                "Plugins (at least not all of them) could not be loaded. Please allow logging to upload logs.");
-                        }
+                        Log.Error(
+                            e,
+                            "Plugins (at least not all of them) could not be loaded. Please allow logging to upload logs.");
                     }
 
                     if (MyPlugins.Count == 0)
@@ -488,15 +436,12 @@ namespace Chummer.Plugins
                 dCatalog.Refresh();
         }
 
-        internal void LoadPlugins(CustomActivity parentActivity = null)
+        internal void LoadPlugins()
         {
             using (LockObject.EnterWriteLock())
             {
                 try
                 {
-                    using (Timekeeper.StartSyncron("LoadPlugins", parentActivity,
-                                                       CustomActivity.OperationType.DependencyOperation,
-                                                       _objMyDirectoryCatalog?.FullPath))
                         Initialize();
                 }
                 catch (System.Security.SecurityException e)
@@ -549,7 +494,7 @@ namespace Chummer.Plugins
             }
         }
 
-        internal async Task CallPlugins(CharacterCareer frmCareer, CustomActivity parentActivity, CancellationToken token = default)
+        internal async Task CallPlugins(CharacterCareer frmCareer, CancellationToken token = default)
         {
             IAsyncDisposable objLocker = await LockObject.EnterReadLockAsync(token).ConfigureAwait(false);
             try
@@ -557,10 +502,6 @@ namespace Chummer.Plugins
                 token.ThrowIfCancellationRequested();
                 foreach (IPlugin plugin in await GetMyActivePluginsAsync(token).ConfigureAwait(false))
                 {
-                    using (Timekeeper.StartSyncron("load_plugin_GetTabPage_Career_" + plugin,
-                                                       parentActivity,
-                                                       CustomActivity.OperationType.DependencyOperation,
-                                                       plugin.ToString()))
                     {
                         ICollection<TabPage> pages = await plugin.GetTabPages(frmCareer, token).ConfigureAwait(false);
                         if (pages == null)
@@ -585,7 +526,7 @@ namespace Chummer.Plugins
             }
         }
 
-        internal async Task CallPlugins(CharacterCreate frmCreate, CustomActivity parentActivity,
+        internal async Task CallPlugins(CharacterCreate frmCreate,
                                         CancellationToken token = default)
         {
             IAsyncDisposable objLocker = await LockObject.EnterReadLockAsync(token).ConfigureAwait(false);
@@ -594,9 +535,6 @@ namespace Chummer.Plugins
                 token.ThrowIfCancellationRequested();
                 foreach (IPlugin plugin in await GetMyActivePluginsAsync(token).ConfigureAwait(false))
                 {
-                    using (Timekeeper.StartSyncron("load_plugin_GetTabPage_Create_" + plugin, parentActivity,
-                                                       CustomActivity.OperationType.DependencyOperation,
-                                                       plugin.ToString()))
                     {
                         ICollection<TabPage> pages = await plugin.GetTabPages(frmCreate, token).ConfigureAwait(false);
                         if (pages == null)
@@ -621,7 +559,7 @@ namespace Chummer.Plugins
             }
         }
 
-        internal async Task CallPlugins(ToolStripMenuItem menu, CustomActivity parentActivity,
+        internal async Task CallPlugins(ToolStripMenuItem menu,
                                         CancellationToken token = default)
         {
             IAsyncDisposable objLocker = await LockObject.EnterReadLockAsync(token).ConfigureAwait(false);
@@ -630,10 +568,6 @@ namespace Chummer.Plugins
                 token.ThrowIfCancellationRequested();
                 foreach (IPlugin plugin in await GetMyActivePluginsAsync(token).ConfigureAwait(false))
                 {
-                    using (Timekeeper.StartSyncron("load_plugin_GetMenuItems_" + plugin,
-                                                       parentActivity,
-                                                       CustomActivity.OperationType.DependencyOperation,
-                                                       plugin.ToString()))
                     {
                         ICollection<ToolStripMenuItem> menuitems
                             = await plugin.GetMenuItems(menu, token).ConfigureAwait(false);

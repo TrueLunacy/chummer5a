@@ -35,10 +35,6 @@ using Chummer.Backend;
 using Chummer.Forms;
 using Chummer.Plugins;
 using Chummer.Properties;
-using Microsoft.ApplicationInsights;
-using Microsoft.ApplicationInsights.DataContracts;
-using Microsoft.ApplicationInsights.Extensibility;
-using Microsoft.ApplicationInsights.Metrics;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
@@ -53,43 +49,6 @@ namespace Chummer
 
         private static readonly Lazy<Process> s_objMyProcess = new Lazy<Process>(Process.GetCurrentProcess);
         public static Process MyProcess => s_objMyProcess.Value;
-
-        private static Lazy<TelemetryConfiguration> s_objActiveTelemetryConfiguration = new Lazy<TelemetryConfiguration>(TelemetryConfiguration.CreateDefault);
-        [CLSCompliant(false)]
-        public static TelemetryConfiguration ActiveTelemetryConfiguration => s_objActiveTelemetryConfiguration?.Value;
-
-        private static readonly Lazy<CustomTelemetryInitializer> s_objTelemetryInitializer
-            = new Lazy<CustomTelemetryInitializer>(() => new CustomTelemetryInitializer());
-
-        [CLSCompliant(false)]
-        public static Lazy<TelemetryClient> ChummerTelemetryClient { get; } = new Lazy<TelemetryClient>(
-            () =>
-            {
-                if (IsMono
-                    || Utils.IsUnitTest
-                    || GlobalSettings.UseLoggingApplicationInsights == UseAILogging.OnlyLocal)
-                    return null;
-
-                TelemetryConfiguration objActiveConfiguration = ActiveTelemetryConfiguration;
-                if (objActiveConfiguration == null)
-                    return null;
-                objActiveConfiguration.ConnectionString = "InstrumentationKey=012fd080-80dc-4c10-97df-4f2cf8c805d5;IngestionEndpoint=https://westeurope-0.in.applicationinsights.azure.com/;LiveEndpoint=https://westeurope.livediagnostics.monitor.azure.com/";
-#if DEBUG
-                //If you set true as DeveloperMode (see above), you can see the sending telemetry in the debugging output window in IDE.
-                objActiveConfiguration.TelemetryChannel.DeveloperMode = true;
-#else
-                objActiveConfiguration.TelemetryChannel.DeveloperMode = false;
-#endif
-                objActiveConfiguration.TelemetryInitializers.Add(s_objTelemetryInitializer.Value);
-                objActiveConfiguration.TelemetryProcessorChainBuilder.Use(next =>
-                                                                              new TranslateExceptionTelemetryProcessor(
-                                                                                  next));
-                objActiveConfiguration.TelemetryProcessorChainBuilder.Use(next =>
-                                                                              new DropUserdataTelemetryProcessor(
-                                                                                  next, Environment.UserName));
-                objActiveConfiguration.TelemetryProcessorChainBuilder.Build();
-                return new TelemetryClient(objActiveConfiguration);
-            });
 
         private static PluginControl _objPluginLoader;
         public static PluginControl PluginLoader => _objPluginLoader = _objPluginLoader ?? new PluginControl();
@@ -176,8 +135,6 @@ namespace Chummer
                             return;
                         }
 
-                        //for some fun try out this command line parameter: chummer://plugin:SINners:Load:5ff55b9d-7d1c-4067-a2f5-774127346f4e
-                        PageViewTelemetry pvt = null;
                         DateTimeOffset startTime = DateTimeOffset.UtcNow;
                         // Set default cultures based on the currently set language
                         CultureInfo.DefaultThreadCurrentCulture = GlobalSettings.CultureInfo;
@@ -255,56 +212,6 @@ namespace Chummer
                             if (!(exa.ExceptionObject is Exception ex))
                                 return;
                             ex = ex.Demystify();
-                            if (GlobalSettings.UseLoggingApplicationInsights >= UseAILogging.Crashes
-                                && !Utils.IsMilestoneVersion)
-                            {
-                                TelemetryClient objLocalTelemetryClient = ChummerTelemetryClient.Value;
-                                if (objLocalTelemetryClient != null)
-                                {
-                                    try
-                                    {
-                                        ExceptionTelemetry et = new ExceptionTelemetry(ex)
-                                        {
-                                            SeverityLevel = SeverityLevel.Critical
-                                        };
-                                        //we have to enable the uploading of THIS message, so it isn't filtered out in the DropUserdataTelemetryProcessos
-                                        foreach (DictionaryEntry d in ex.Data)
-                                        {
-                                            object objValue = d.Value;
-                                            if (objValue != null)
-                                            {
-                                                object objKey = d.Key;
-                                                et.Properties.Add(objKey.ToString(), objValue.ToString());
-                                            }
-                                        }
-
-                                        et.Properties.Add("IsCrash", exa.IsTerminating.ToString());
-                                        s_objTelemetryInitializer.Value.Initialize(et);
-
-                                        objLocalTelemetryClient.TrackException(et);
-                                        try
-                                        {
-                                            using (CancellationTokenSource objTimeout
-                                                   = new CancellationTokenSource(TimeSpan.FromSeconds(30)))
-                                            {
-                                                CancellationToken objTimeoutToken = objTimeout.Token;
-                                                Utils.SafelyRunSynchronously(
-                                                    () => objLocalTelemetryClient.FlushAsync(objTimeoutToken),
-                                                    objTimeoutToken);
-                                            }
-                                        }
-                                        catch (OperationCanceledException)
-                                        {
-                                            //swallow this, we timed out on the flush
-                                            Utils.BreakIfDebug();
-                                        }
-                                    }
-                                    catch (Exception ex1)
-                                    {
-                                        Log.Error(ex1);
-                                    }
-                                }
-                            }
 #if DEBUG
                             if (!Debugger.IsAttached)
                                 Debugger.Launch();
@@ -354,61 +261,13 @@ namespace Chummer
 
                         try
                         {
-                            if (IsMono)
-                            {
-                                //Mono Crashes because of Application Insights. Set Logging to local, when Mono Runtime is detected
-                                GlobalSettings.UseLoggingApplicationInsights = UseAILogging.OnlyLocal;
-                            }
-
                             if (Settings.Default.UploadClientId == Guid.Empty)
                             {
                                 Settings.Default.UploadClientId = Guid.NewGuid();
                                 Settings.Default.Save();
                             }
 
-                            if (!Utils.IsUnitTest
-                                && GlobalSettings.UseLoggingApplicationInsights >= UseAILogging.OnlyMetric)
-                            {
-                                TelemetryClient objLocalTelemetryClient = ChummerTelemetryClient.Value;
-                                if (objLocalTelemetryClient != null)
-                                {
-                                    //for now lets disable live view.We may make another GlobalOption to enable it at a later stage...
-                                    //var live = new LiveStreamProvider(ApplicationInsightsConfig);
-                                    //live.Enable();
-
-                                    //Log an Event with AssemblyVersion and CultureInfo
-                                    MetricIdentifier objMetricIdentifier = new MetricIdentifier(
-                                        "Chummer", "Program Start",
-                                        "Version", "Culture", "AISetting", "OSVersion");
-                                    string strOSVersion = Utils.HumanReadableOSVersion;
-                                    Metric objMetric = objLocalTelemetryClient.GetMetric(objMetricIdentifier);
-                                    objMetric.TrackValue(1,
-                                                         Utils.CurrentChummerVersion.ToString(),
-                                                         CultureInfo.CurrentUICulture.TwoLetterISOLanguageName,
-                                                         GlobalSettings.UseLoggingApplicationInsights.ToString(),
-                                                         strOSVersion);
-
-                                    //Log a page view:
-                                    pvt = new PageViewTelemetry("frmChummerMain()")
-                                    {
-                                        Name = "Chummer Startup: " +
-                                               Utils.CurrentChummerVersion,
-                                        Id = Settings.Default.UploadClientId.ToString(),
-                                        Timestamp = startTime
-                                    };
-                                    pvt.Context.Operation.Name = "Operation Program.Main()";
-                                    pvt.Properties.Add("parameters", Environment.CommandLine);
-
-                                    UploadObjectAsMetric.UploadObject(objLocalTelemetryClient, typeof(GlobalSettings));
-                                }
-                            }
-
                             Log.Info(strInfo);
-                            Log.Info("Logging options are set to " + GlobalSettings.UseLogging +
-                                     " and Upload-Options are set to "
-                                     + GlobalSettings.UseLoggingApplicationInsights + " (Installation-Id: "
-                                     + Settings.Default.UploadClientId.ToString("D",
-                                         GlobalSettings.InvariantCultureInfo) + ").");
 
                             //make sure the Settings are upgraded/preserved after an upgrade
                             //see for details: https://stackoverflow.com/questions/534261/how-do-you-keep-user-config-settings-across-different-assembly-versions-in-net/534335#534335
@@ -524,11 +383,6 @@ namespace Chummer
                             }
                             catch (Exception e)
                             {
-                                ExceptionTelemetry ex = new ExceptionTelemetry(e)
-                                {
-                                    SeverityLevel = SeverityLevel.Warning
-                                };
-                                ChummerTelemetryClient.Value?.TrackException(ex);
                                 Log.Warn(e);
                             }
                         }
@@ -543,9 +397,6 @@ namespace Chummer
                         if (showMainForm)
                         {
                             // Attempt to cache all XML files that are used the most.
-                            using (Timekeeper.StartSyncron("cache_load", null,
-                                                           CustomActivity.OperationType.DependencyOperation,
-                                                           Utils.CurrentChummerVersion.ToString(3)))
                             using (ThreadSafeForm<LoadingBar> frmLoadingBar
                                    = CreateAndShowProgressBar(Application.ProductName, Utils.BasicDataFileNames.Count))
                             {
@@ -586,7 +437,6 @@ namespace Chummer
                                 }
                             }
 
-                            MainForm.MyStartupPvt = pvt;
                             Application.Run(MainForm);
                         }
 
@@ -596,34 +446,9 @@ namespace Chummer
 
                         PluginLoader?.Dispose();
                         Log.Info(ExceptionHeatMap.GenerateInfo());
-                        TelemetryClient objTelemetryClient = ChummerTelemetryClient.Value;
-                        if (objTelemetryClient != null)
-                        {
-                            try
-                            {
-                                // Note: Flush is now synchronous and blocking. If we want to flush without blocking or with a timeout (like here), we need FlushAsync instead
-                                using (CancellationTokenSource objTimeout
-                                       = new CancellationTokenSource(TimeSpan.FromSeconds(30)))
-                                {
-                                    CancellationToken objTimeoutToken = objTimeout.Token;
-                                    Utils.SafelyRunSynchronously(() => objTelemetryClient.FlushAsync(objTimeoutToken),
-                                                                 objTimeoutToken);
-                                }
-                            }
-                            catch (OperationCanceledException)
-                            {
-                                //swallow this, we timed out on the flush
-                                Utils.BreakIfDebug();
-                            }
-                        }
                     }
                     finally
                     {
-                        // Manually dispose of the active telemetry configuration to also flush its metric managers
-                        Lazy<TelemetryConfiguration> objOldConfiguration
-                            = Interlocked.Exchange(ref s_objActiveTelemetryConfiguration, null);
-                        if (objOldConfiguration?.IsValueCreated == true)
-                            objOldConfiguration.Value.Dispose();
                     }
                 }
                 finally

@@ -45,7 +45,6 @@ using System.Xml.Serialization;
 using System.Runtime.Serialization;
 using System.Threading;
 using Chummer.Plugins;
-using Microsoft.ApplicationInsights;
 using Microsoft.IO;
 using Newtonsoft.Json;
 using Application = System.Windows.Forms.Application;
@@ -60,7 +59,6 @@ namespace Chummer
     [DebuggerDisplay("{CharacterName} ({FileName})")]
     public sealed class Character : INotifyMultiplePropertiesChangedAsync, IHasMugshots, IHasName, IHasSource, IHasXmlDataNode, IHasLockObject, IHasCharacterObject
     {
-        private static readonly TelemetryClient TelemetryClient = new TelemetryClient();
         private static readonly ILogger<Character> Log = TemporaryServiceLocator.Services
             .GetRequiredService<ILogger<Character>>();
 
@@ -6107,17 +6105,10 @@ namespace Chummer
                     LoadAsDirty = false;
                 else
                     await SetLoadAsDirtyAsync(false, token).ConfigureAwait(false);
-                using (CustomActivity loadActivity = Timekeeper.StartSyncron("clsCharacter.Load", null,
-                                                                             CustomActivity.OperationType
-                                                                                 .DependencyOperation, strFileName))
                 {
                     try
                     {
                         token.ThrowIfCancellationRequested();
-                        using (Timekeeper.StartSyncron("upload_AI_options", loadActivity))
-                        {
-                            UploadObjectAsMetric.UploadObject(TelemetryClient, Settings);
-                        }
 
                         XmlDocument objXmlDocument = new XmlDocument {XmlResolver = null};
                         XmlNode objXmlCharacter = null;
@@ -6133,7 +6124,6 @@ namespace Chummer
                                 await frmLoadingForm.PerformStepAsync("XML", token: token).ConfigureAwait(false);
                         }
 
-                        using (Timekeeper.StartSyncron("load_xml", loadActivity))
                         {
                             bool blnKeepLoading = blnSync
                                 ? LoadSaveFileDocument()
@@ -6305,7 +6295,6 @@ namespace Chummer
                                                         .ConfigureAwait(false);
                             }
 
-                            using (Timekeeper.StartSyncron("load_char_misc", loadActivity))
                             {
                                 xmlCharacterNavigator.TryGetBoolFieldQuickly("ignorerules", ref _blnIgnoreRules);
                                 xmlCharacterNavigator.TryGetBoolFieldQuickly("created", ref _blnCreated);
@@ -7388,7 +7377,6 @@ namespace Chummer
                                                         .ConfigureAwait(false);
                             }
 
-                            using (Timekeeper.StartSyncron("load_char_mentorspirit", loadActivity))
                             {
                                 // Improvements.
                                 using (objXmlNodeList = objXmlCharacter.SelectNodes("mentorspirits/mentorspirit"))
@@ -7430,7 +7418,6 @@ namespace Chummer
                                                         .ConfigureAwait(false);
                             }
 
-                            using (Timekeeper.StartSyncron("load_char_imp", loadActivity))
                             {
                                 // Improvements.
                                 objXmlNodeList = objXmlCharacter.SelectNodes("improvements/improvement");
@@ -7636,7 +7623,6 @@ namespace Chummer
                                                         .ConfigureAwait(false);
                             }
 
-                            using (Timekeeper.StartSyncron("load_char_contacts", loadActivity))
                             {
                                 // Contacts.
                                 foreach (XPathNavigator xmlContact in
@@ -7675,7 +7661,6 @@ namespace Chummer
                                                         .ConfigureAwait(false);
                             }
 
-                            using (Timekeeper.StartSyncron("load_char_quality", loadActivity))
                             {
                                 // Qualities
 
@@ -8188,7 +8173,6 @@ namespace Chummer
                                                         .ConfigureAwait(false);
                             }
 
-                            using (Timekeeper.StartSyncron("load_char_attributes", loadActivity))
                             {
                                 if (blnSync)
                                     // ReSharper disable once MethodHasAsyncOverload
@@ -8212,7 +8196,6 @@ namespace Chummer
                                                         .ConfigureAwait(false);
                             }
 
-                            using (Timekeeper.StartSyncron("load_char_misc2", loadActivity))
                             {
                                 // Attempt to load the split MAG CharacterAttribute information for Mystic Adepts.
                                 if (_blnAdeptEnabled && _blnMagicianEnabled)
@@ -8447,7 +8430,6 @@ namespace Chummer
                                                         .ConfigureAwait(false);
                             }
 
-                            using (Timekeeper.StartSyncron("load_char_skills", loadActivity)) //slightly messy
                             {
                                 _oldSkillsBackup = objXmlCharacter["skills"]?.Clone();
                                 _oldSkillGroupBackup = objXmlCharacter["skillgroups"]?.Clone();
@@ -8458,22 +8440,22 @@ namespace Chummer
                                     if (objSkillNode != null)
                                     {
                                         // ReSharper disable once MethodHasAsyncOverload
-                                        SkillsSection.Load(objSkillNode, false, loadActivity, token);
+                                        SkillsSection.Load(objSkillNode, false, token);
                                     }
                                     else
                                     {
                                         // ReSharper disable once MethodHasAsyncOverload
-                                        SkillsSection.Load(objXmlCharacter, true, loadActivity, token);
+                                        SkillsSection.Load(objXmlCharacter, true, token);
                                     }
                                 }
                                 else if (objSkillNode != null)
                                 {
-                                    await SkillsSection.LoadAsync(objSkillNode, false, loadActivity, token)
+                                    await SkillsSection.LoadAsync(objSkillNode, false, token)
                                                        .ConfigureAwait(false);
                                 }
                                 else
                                 {
-                                    await SkillsSection.LoadAsync(objXmlCharacter, true, loadActivity, token)
+                                    await SkillsSection.LoadAsync(objXmlCharacter, true, token)
                                                        .ConfigureAwait(false);
                                 }
 
@@ -8495,7 +8477,6 @@ namespace Chummer
                                                         .ConfigureAwait(false);
                             }
 
-                            using (Timekeeper.StartSyncron("load_char_loc", loadActivity))
                             {
                                 // Locations.
                                 objXmlLocationList = objXmlCharacter.SelectNodes("gearlocations/gearlocation");
@@ -8522,7 +8503,6 @@ namespace Chummer
                                 //Timekeeper.Finish("load_char_loc");
                             }
 
-                            using (Timekeeper.StartSyncron("load_char_abundle", loadActivity))
                             {
                                 // Armor Bundles.
                                 objXmlLocationList = objXmlCharacter.SelectNodes("armorbundles/armorbundle");
@@ -8549,7 +8529,6 @@ namespace Chummer
                                 //Timekeeper.Finish("load_char_abundle");
                             }
 
-                            using (Timekeeper.StartSyncron("load_char_vloc", loadActivity))
                             {
                                 // Vehicle Locations.
                                 XmlNodeList objXmlVehicleLocationList =
@@ -8571,7 +8550,6 @@ namespace Chummer
                                 //Timekeeper.Finish("load_char_vloc");
                             }
 
-                            using (Timekeeper.StartSyncron("load_char_wloc", loadActivity))
                             {
                                 // Weapon Locations.
                                 XmlNodeList objXmlWeaponLocationList =
@@ -8592,7 +8570,6 @@ namespace Chummer
                                 //Timekeeper.Finish("load_char_wloc");
                             }
 
-                            using (Timekeeper.StartSyncron("load_char_sfoci", loadActivity))
                             {
                                 // Stacked Foci.
                                 objXmlNodeList = objXmlCharacter.SelectNodes("stackedfoci/stackedfocus");
@@ -8622,10 +8599,7 @@ namespace Chummer
                                                                   .GetStringAsync("Tab_Armor", token: token)
                                                                   .ConfigureAwait(false), token: token)
                                                         .ConfigureAwait(false);
-                            }
-
-                            using (Timekeeper.StartSyncron("load_char_armor", loadActivity))
-                            {
+                            }                            {
                                 // Armor.
                                 objXmlNodeList = objXmlCharacter.SelectNodes("armors/armor");
                                 foreach (XmlNode objXmlArmor in objXmlNodeList)
@@ -8656,7 +8630,6 @@ namespace Chummer
                                                         .ConfigureAwait(false);
                             }
 
-                            using (Timekeeper.StartSyncron("load_char_drugs", loadActivity))
                             {
                                 // Drugs.
                                 objXmlNodeList = objXmlDocument.SelectNodes("/character/drugs/drug");
@@ -8687,10 +8660,7 @@ namespace Chummer
                                                                   .GetStringAsync("Tab_Cyberware", token: token)
                                                                   .ConfigureAwait(false), token: token)
                                                         .ConfigureAwait(false);
-                            }
-
-                            using (Timekeeper.StartSyncron("load_char_ware", loadActivity))
-                            {
+                            }                            {
                                 // Cyberware/Bioware.
                                 objXmlNodeList = objXmlCharacter.SelectNodes("cyberwares/cyberware");
                                 // Dictionary for instantly re-applying outdated improvements for 'ware with pair bonuses in legacy shim
@@ -9092,10 +9062,7 @@ namespace Chummer
                                                                     token: token)
                                                                 .ConfigureAwait(false), token: token)
                                                         .ConfigureAwait(false);
-                            }
-
-                            using (Timekeeper.StartSyncron("load_char_spells", loadActivity))
-                            {
+                            }                            {
                                 // Spells.
                                 objXmlNodeList = objXmlCharacter.SelectNodes("spells/spell");
                                 foreach (XmlNode objXmlSpell in objXmlNodeList)
@@ -9123,10 +9090,7 @@ namespace Chummer
                                                                   .GetStringAsync("Tab_Adept", token: token)
                                                                   .ConfigureAwait(false), token: token)
                                                         .ConfigureAwait(false);
-                            }
-
-                            using (Timekeeper.StartSyncron("load_char_powers", loadActivity))
-                            {
+                            }                            {
                                 // Powers.
                                 objXmlNodeList = objXmlCharacter.SelectNodes("powers/power");
                                 if (objXmlNodeList.Count > 0)
@@ -9216,7 +9180,6 @@ namespace Chummer
                                                         .ConfigureAwait(false);
                             }
 
-                            using (Timekeeper.StartSyncron("load_char_spirits", loadActivity))
                             {
                                 // Spirits/Sprites.
                                 foreach (XPathNavigator xmlSpirit in xmlCharacterNavigator.SelectAndCacheExpression("spirits/spirit", token))
@@ -9281,10 +9244,7 @@ namespace Chummer
                                                                     token: token)
                                                                 .ConfigureAwait(false), token: token)
                                                         .ConfigureAwait(false);
-                            }
-
-                            using (Timekeeper.StartSyncron("load_char_complex", loadActivity))
-                            {
+                            }                            {
                                 // Complex Forms/Technomancer Programs.
                                 objXmlNodeList = objXmlCharacter.SelectNodes("complexforms/complexform");
                                 foreach (XmlNode objXmlComplexForm in objXmlNodeList)
@@ -9316,7 +9276,6 @@ namespace Chummer
                                                         .ConfigureAwait(false);
                             }
 
-                            using (Timekeeper.StartSyncron("load_char_aiprogram", loadActivity))
                             {
                                 // Complex Forms/Technomancer Programs.
                                 objXmlNodeList = objXmlCharacter.SelectNodes("aiprograms/aiprogram");
@@ -9347,10 +9306,7 @@ namespace Chummer
                                                                     token: token)
                                                                 .ConfigureAwait(false), token: token)
                                                         .ConfigureAwait(false);
-                            }
-
-                            using (Timekeeper.StartSyncron("load_char_martialarts", loadActivity))
-                            {
+                            }                            {
                                 // Martial Arts.
                                 objXmlNodeList = objXmlCharacter.SelectNodes("martialarts/martialart");
                                 foreach (XmlNode objXmlArt in objXmlNodeList)
@@ -9379,10 +9335,7 @@ namespace Chummer
                                                                   .GetStringAsync("Tab_Limits", token: token)
                                                                   .ConfigureAwait(false), token: token)
                                                         .ConfigureAwait(false);
-                            }
-
-                            using (Timekeeper.StartSyncron("load_char_mod", loadActivity))
-                            {
+                            }                            {
                                 // Limit Modifiers.
                                 objXmlNodeList = objXmlCharacter.SelectNodes("limitmodifiers/limitmodifier");
                                 foreach (XmlNode objXmlLimit in objXmlNodeList)
@@ -9411,10 +9364,7 @@ namespace Chummer
                                         await LanguageManager
                                               .GetStringAsync("String_SelectPACKSKit_Lifestyles", token: token)
                                               .ConfigureAwait(false), token: token).ConfigureAwait(false);
-                            }
-
-                            using (Timekeeper.StartSyncron("load_char_lifestyle", loadActivity))
-                            {
+                            }                            {
                                 // Lifestyles.
                                 objXmlNodeList = objXmlCharacter.SelectNodes("lifestyles/lifestyle");
                                 foreach (XmlNode objXmlLifestyle in objXmlNodeList)
@@ -9443,10 +9393,7 @@ namespace Chummer
                                                                   .GetStringAsync("Tab_Gear", token: token)
                                                                   .ConfigureAwait(false), token: token)
                                                         .ConfigureAwait(false);
-                            }
-
-                            using (Timekeeper.StartSyncron("load_char_gear", loadActivity))
-                            {
+                            }                            {
                                 // <gears>
                                 objXmlNodeList = objXmlCharacter.SelectNodes("gears/gear");
                                 foreach (XmlNode objXmlGear in objXmlNodeList)
@@ -9606,10 +9553,7 @@ namespace Chummer
                                                                     token: token)
                                                                 .ConfigureAwait(false), token: token)
                                                         .ConfigureAwait(false);
-                            }
-
-                            using (Timekeeper.StartSyncron("load_char_car", loadActivity))
-                            {
+                            }                            {
                                 // Vehicles.
                                 objXmlNodeList = objXmlCharacter.SelectNodes("vehicles/vehicle");
                                 foreach (XmlNode objXmlVehicle in objXmlNodeList)
@@ -9638,10 +9582,7 @@ namespace Chummer
                                                                   .GetStringAsync("Tab_Weapons", token: token)
                                                                   .ConfigureAwait(false), token: token)
                                                         .ConfigureAwait(false);
-                            }
-
-                            using (Timekeeper.StartSyncron("load_char_weapons", loadActivity))
-                            {
+                            }                            {
                                 // Weapons.
                                 objXmlNodeList = objXmlCharacter.SelectNodes("weapons/weapon");
                                 foreach (XmlNode objXmlWeapon in objXmlNodeList)
@@ -9671,10 +9612,7 @@ namespace Chummer
                                                                     token: token)
                                                                 .ConfigureAwait(false), token: token)
                                                         .ConfigureAwait(false);
-                            }
-
-                            using (Timekeeper.StartSyncron("load_char_metamagics", loadActivity))
-                            {
+                            }                            {
                                 // Metamagics/Echoes.
                                 objXmlNodeList = objXmlCharacter.SelectNodes("metamagics/metamagic");
                                 foreach (XmlNode objXmlMetamagic in objXmlNodeList)
@@ -9703,10 +9641,7 @@ namespace Chummer
                                                                   .GetStringAsync("String_Arts", token: token)
                                                                   .ConfigureAwait(false), token: token)
                                                         .ConfigureAwait(false);
-                            }
-
-                            using (Timekeeper.StartSyncron("load_char_arts", loadActivity))
-                            {
+                            }                            {
                                 // Arts
                                 objXmlNodeList = objXmlCharacter.SelectNodes("arts/art");
                                 foreach (XmlNode objXmlArt in objXmlNodeList)
@@ -9736,10 +9671,7 @@ namespace Chummer
                                                                     token: token)
                                                                 .ConfigureAwait(false), token: token)
                                                         .ConfigureAwait(false);
-                            }
-
-                            using (Timekeeper.StartSyncron("load_char_enhancements", loadActivity))
-                            {
+                            }                            {
                                 // Enhancements
                                 objXmlNodeList = objXmlCharacter.SelectNodes("enhancements/enhancement");
                                 foreach (XmlNode objXmlEnhancement in objXmlNodeList)
@@ -9768,10 +9700,7 @@ namespace Chummer
                                                                   .GetStringAsync("Tab_Critter", token: token)
                                                                   .ConfigureAwait(false), token: token)
                                                         .ConfigureAwait(false);
-                            }
-
-                            using (Timekeeper.StartSyncron("load_char_critterpowers", loadActivity))
-                            {
+                            }                            {
                                 // Critter Powers.
                                 objXmlNodeList = objXmlCharacter.SelectNodes("critterpowers/critterpower");
                                 foreach (XmlNode objXmlPower in objXmlNodeList)
@@ -9801,10 +9730,7 @@ namespace Chummer
                                                                     token: token)
                                                                 .ConfigureAwait(false), token: token)
                                                         .ConfigureAwait(false);
-                            }
-
-                            using (Timekeeper.StartSyncron("load_char_foci", loadActivity))
-                            {
+                            }                            {
                                 // Foci.
                                 objXmlNodeList = objXmlCharacter.SelectNodes("foci/focus");
                                 foreach (XmlNode objXmlFocus in objXmlNodeList)
@@ -9841,10 +9767,7 @@ namespace Chummer
                                                                       token: token)
                                                                   .ConfigureAwait(false), token: token)
                                                         .ConfigureAwait(false);
-                            }
-
-                            using (Timekeeper.StartSyncron("load_char_init", loadActivity))
-                            {
+                            }                            {
                                 // Initiation Grades.
                                 objXmlNodeList = objXmlCharacter.SelectNodes("initiationgrades/initiationgrade");
                                 foreach (XmlNode objXmlGrade in objXmlNodeList)
@@ -9879,9 +9802,7 @@ namespace Chummer
                             // While expenses are to be saved in create mode due to starting nuyen and starting karma being logged as expense log entries,
                             // they shouldn't get loaded in create mode because they shouldn't be there.
                             if (Created)
-                            {
-                                using (Timekeeper.StartSyncron("load_char_elog", loadActivity))
-                                {
+                            {                                {
                                     // Expense Log Entries.
                                     XmlNodeList objXmlExpenseList = objXmlCharacter.SelectNodes("expenses/expense");
                                     foreach (XmlNode objXmlExpense in objXmlExpenseList)
@@ -9921,9 +9842,7 @@ namespace Chummer
                                                         .ConfigureAwait(false);
                             }
 
-                            // Need to load these after everything else so that we can properly link them up during loading
-                            using (Timekeeper.StartSyncron("load_char_sustainedobjects", loadActivity))
-                            {
+                            // Need to load these after everything else so that we can properly link them up during loading                            {
                                 objXmlNodeList = objXmlCharacter.SelectNodes("sustainedobjects");
                                 foreach (XmlNode objXmlSustained in objXmlNodeList)
                                 {
@@ -9955,10 +9874,7 @@ namespace Chummer
                                                                     token: token)
                                                                 .ConfigureAwait(false), token: token)
                                                         .ConfigureAwait(false);
-                            }
-
-                            using (Timekeeper.StartSyncron("load_char_igroup", loadActivity))
-                            {
+                            }                            {
                                 // Improvement Groups.
                                 XmlNodeList objXmlGroupList =
                                     objXmlCharacter.SelectNodes("improvementgroups/improvementgroup");
@@ -9994,10 +9910,7 @@ namespace Chummer
                                                                   .GetStringAsync("Tab_Calendar", token: token)
                                                                   .ConfigureAwait(false), token: token)
                                                         .ConfigureAwait(false);
-                            }
-
-                            using (Timekeeper.StartSyncron("load_char_calendar", loadActivity))
-                            {
+                            }                            {
                                 // Calendar.
                                 XmlNodeList objXmlWeekList = objXmlCharacter.SelectNodes("calendar/week");
                                 foreach (XmlNode objXmlWeek in objXmlWeekList)
@@ -10038,10 +9951,7 @@ namespace Chummer
                                                                     token: token)
                                                                 .ConfigureAwait(false), token: token)
                                                         .ConfigureAwait(false);
-                            }
-
-                            using (Timekeeper.StartSyncron("load_char_unarmed", loadActivity))
-                            {
+                            }                            {
                                 // Look for the unarmed attack
                                 bool blnFoundUnarmed = false;
                                 foreach (Weapon objWeapon in _lstWeapons)
@@ -10081,10 +9991,7 @@ namespace Chummer
                                 }
 
                                 //Timekeeper.Finish("load_char_unarmed");
-                            }
-
-                            using (Timekeeper.StartSyncron("load_char_dwarffix", loadActivity))
-                            {
+                            }                            {
                                 // converting from old dwarven resistance to new dwarven resistance
                                 if (Metatype.Equals("dwarf", StringComparison.OrdinalIgnoreCase))
                                 {
@@ -10159,10 +10066,7 @@ namespace Chummer
                                 }
 
                                 //Timekeeper.Finish("load_char_dwarffix");
-                            }
-
-                            using (Timekeeper.StartSyncron("load_char_cyberadeptfix", loadActivity))
-                            {
+                            }                            {
                                 //Sweep through grades if we have any cyberadept improvements that need reassignment
                                 if (lstCyberadeptSweepGrades.Count > 0)
                                 {
@@ -10224,10 +10128,7 @@ namespace Chummer
                                 }
 
                                 //Timekeeper.Finish("load_char_cyberadeptfix");
-                            }
-
-                            using (Timekeeper.StartSyncron("load_char_mentorspiritfix", loadActivity))
-                            {
+                            }                            {
                                 if (blnSync)
                                 {
                                     Quality objMentorQuality = Qualities.FirstOrDefault(q => q.Name == "Mentor Spirit");
@@ -10255,10 +10156,7 @@ namespace Chummer
                                 }
 
                                 //Timekeeper.Finish("load_char_mentorspiritfix");
-                            }
-
-                            using (Timekeeper.StartSyncron("load_char_startingnuyenfix", loadActivity))
-                            {
+                            }                            {
                                 if (blnSync)
                                 {
                                     if (!Created)
@@ -10275,9 +10173,7 @@ namespace Chummer
                                 }
                             }
 
-                            // Fix legacy cases where characters have more attribute points assigned than allowed
-                            using (Timekeeper.StartSyncron("load_char_badattributesfix", loadActivity))
-                            {
+                            // Fix legacy cases where characters have more attribute points assigned than allowed                            {
                                 if (blnSync)
                                 {
                                     if (!Created)
@@ -10294,9 +10190,7 @@ namespace Chummer
                                 }
                             }
 
-                            // Fix skills that shouldn't be allowed to have specializations having them anyway (needed at the last step because improvements and skill groups can affect this)
-                            using (Timekeeper.StartSyncron("load_char_badskillspecsfix", loadActivity))
-                            {
+                            // Fix skills that shouldn't be allowed to have specializations having them anyway (needed at the last step because improvements and skill groups can affect this)                            {
                                 if (blnSync)
                                 {
                                     if (!Created)
@@ -10356,9 +10250,7 @@ namespace Chummer
                                                         .ConfigureAwait(false);
                             }
 
-                            //Plugins
-                            using (Timekeeper.StartSyncron("load_char_plugins", loadActivity))
-                            {
+                            //Plugins                            {
                                 foreach (IPlugin plugin in blnSync
                                              ? Program.PluginLoader.MyActivePlugins
                                              : await Program.PluginLoader.GetMyActivePluginsAsync(token)
@@ -10400,9 +10292,7 @@ namespace Chummer
                                                          .ConfigureAwait(false), token: token).ConfigureAwait(false);
                         }
 
-                        // Refresh certain improvements
-                        using (Timekeeper.StartSyncron("load_char_improvementrefreshers1", loadActivity))
-                        {
+                        // Refresh certain improvements                        {
                             // Process all events related to improvements
                             using (new FetchSafelyFromPool<
                                        Dictionary<INotifyMultiplePropertiesChangedAsync, HashSet<string>>>(
@@ -10559,11 +10449,9 @@ namespace Chummer
                         //    Save();
                         //    Timekeeper.Finish("load_char_resav");
                         //}
-                        loadActivity.SetSuccess(true);
                     }
                     catch (Exception e)
                     {
-                        loadActivity.SetSuccess(false);
                         Log.Error(e);
                         throw;
                     }
@@ -45032,3119 +44920,6 @@ namespace Chummer
                 return Task.CompletedTask;
             }, token).ConfigureAwait(false);
         }
-
-        #region Hero Lab Importing
-
-        public static readonly ReadOnlyCollection<string> HeroLabPluginNodeNames = Array.AsReadOnly(new[]
-            {"modifications", "accessories", "ammunition", "programs", "othergear"});
-
-        /// <summary>
-        /// Load the Character from an XML file.
-        /// </summary>
-        public bool LoadFromHeroLabFile(string strPorFile, string strCharacterId, string strSettingsKey = "")
-        {
-            return Utils.SafelyRunSynchronously(() => LoadFromHeroLabFileCoreAsync(true, strPorFile, strCharacterId, strSettingsKey));
-        }
-
-        /// <summary>
-        /// Load the Character from an XML file.
-        /// </summary>
-        public Task<bool> LoadFromHeroLabFileAsync(string strPorFile, string strCharacterId, string strSettingsKey = "")
-        {
-            return LoadFromHeroLabFileCoreAsync(false, strPorFile, strCharacterId, strSettingsKey);
-        }
-
-        /// <summary>
-        /// Load the Character from an XML file.
-        /// </summary>
-        public async Task<bool> LoadFromHeroLabFileCoreAsync(bool blnSync, string strPorFile, string strCharacterId, string strSettingsKey = "", CancellationToken token = default)
-        {
-            if (!File.Exists(strPorFile))
-                return false;
-
-            IDisposable objLocker = null;
-            IAsyncDisposable objLockerAsync = null;
-            if (blnSync)
-                // ReSharper disable once MethodHasAsyncOverload
-                objLocker = LockObject.EnterWriteLock(token);
-            else
-                objLockerAsync = await LockObject.EnterWriteLockAsync(token).ConfigureAwait(false);
-            try
-            {
-                token.ThrowIfCancellationRequested();
-                Dictionary<string, Bitmap> dicImages = new Dictionary<string, Bitmap>(1);
-                XPathNavigator xmlStatBlockDocument = null;
-                XPathNavigator xmlLeadsDocument = null;
-                List<string> lstTextStatBlockLines = null;
-                using (CustomActivity op_load = Timekeeper.StartSyncron("LoadFromHeroLabFile", null,
-                                                                        CustomActivity.OperationType
-                                                                            .DependencyOperation, strPorFile))
-                {
-                    try
-                    {
-                        token.ThrowIfCancellationRequested();
-                        op_load.MyDependencyTelemetry.Type = "loadHeroLab";
-                        op_load.MyDependencyTelemetry.Target = strPorFile;
-
-                        try
-                        {
-                            token.ThrowIfCancellationRequested();
-                            string strLeadsName = string.Empty;
-                            using (ZipArchive zipArchive = ZipFile.Open(strPorFile, ZipArchiveMode.Read,
-                                                                        Encoding.GetEncoding(850)))
-                            {
-                                token.ThrowIfCancellationRequested();
-                                foreach (ZipArchiveEntry objEntry in zipArchive.Entries)
-                                {
-                                    token.ThrowIfCancellationRequested();
-                                    string strEntryFullName = objEntry.FullName;
-                                    string strKey = Path.GetFileName(strEntryFullName);
-                                    if ((xmlStatBlockDocument == null && strEntryFullName.StartsWith(
-                                            "statblocks_xml",
-                                            StringComparison.OrdinalIgnoreCase)) ||
-                                        (string.IsNullOrEmpty(strLeadsName) &&
-                                         strEntryFullName.EndsWith("portfolio.xml",
-                                                                   StringComparison.OrdinalIgnoreCase)) ||
-                                        lstTextStatBlockLines == null && strEntryFullName.StartsWith(
-                                            "statblocks_txt",
-                                            StringComparison.OrdinalIgnoreCase))
-                                    {
-                                        if (strEntryFullName.EndsWith(".xml", StringComparison.OrdinalIgnoreCase))
-                                        {
-                                            try
-                                            {
-                                                token.ThrowIfCancellationRequested();
-                                                if (blnSync)
-                                                    DoLoadStatblocks();
-                                                else
-                                                    await Task.Run(DoLoadStatblocks, token).ConfigureAwait(false);
-                                                void DoLoadStatblocks()
-                                                {
-                                                    using (Stream objStream = objEntry.Open())
-                                                    {
-                                                        token.ThrowIfCancellationRequested();
-                                                        using (StreamReader objStreamReader =
-                                                               new StreamReader(objStream, true))
-                                                        {
-                                                            token.ThrowIfCancellationRequested();
-                                                            using (XmlReader objReader = XmlReader.Create(
-                                                                       objStreamReader,
-                                                                       GlobalSettings.SafeXmlReaderSettings))
-                                                            {
-                                                                token.ThrowIfCancellationRequested();
-                                                                XPathDocument xmlSourceDoc
-                                                                    = new XPathDocument(objReader);
-                                                                XPathNavigator objDummy
-                                                                    = xmlSourceDoc.CreateNavigator();
-                                                                if (strEntryFullName.StartsWith("statblocks_xml",
-                                                                        StringComparison.Ordinal))
-                                                                {
-                                                                    if (objDummy.SelectSingleNode(
-                                                                            "/document/public/character[@name = " +
-                                                                            strCharacterId.CleanXPath() + ']') != null)
-                                                                        xmlStatBlockDocument = objDummy;
-                                                                }
-                                                                else
-                                                                {
-                                                                    strLeadsName = objDummy.SelectSingleNode(
-                                                                            "/document/portfolio/hero[@heroname = " +
-                                                                            strCharacterId.CleanXPath() + "]/@leadfile")
-                                                                        ?.Value;
-                                                                }
-                                                            }
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                            // If we run into any problems loading the character xml files, fail out early.
-                                            catch (IOException e)
-                                            {
-                                                Log.Info(e);
-                                                Utils.BreakIfDebug();
-                                            }
-                                            catch (XmlException e)
-                                            {
-                                                Log.Info(e);
-                                                Utils.BreakIfDebug();
-                                            }
-                                        }
-                                        else if (strEntryFullName.EndsWith(".txt",
-                                                                           StringComparison.OrdinalIgnoreCase)
-                                                 && !strKey.Contains('.'))
-                                        {
-                                            lstTextStatBlockLines = new List<string>(30);
-                                            using (Stream objStream = objEntry.Open())
-                                            {
-                                                token.ThrowIfCancellationRequested();
-                                                using (StreamReader objReader = new StreamReader(objStream))
-                                                {
-                                                    token.ThrowIfCancellationRequested();
-                                                    for (string strLine = blnSync
-                                                             // ReSharper disable once MethodHasAsyncOverload
-                                                             ? objReader.ReadLine()
-                                                             : await objReader.ReadLineAsync(token).ConfigureAwait(false);
-                                                         strLine != null;
-                                                         strLine = blnSync
-                                                             // ReSharper disable once MethodHasAsyncOverload
-                                                             ? objReader.ReadLine()
-                                                             : await objReader.ReadLineAsync(token).ConfigureAwait(false))
-                                                    {
-                                                        token.ThrowIfCancellationRequested();
-                                                        // Trim away the newlines and empty spaces at the beginning and end of lines
-                                                        strLine = strLine.Trim('\n', '\r', ' ').Trim();
-
-                                                        lstTextStatBlockLines.Add(strLine);
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                    else if (strEntryFullName.StartsWith("images", StringComparison.Ordinal) &&
-                                             strEntryFullName.Contains('.'))
-                                    {
-                                        using (Stream objStream = objEntry.Open())
-                                        {
-                                            token.ThrowIfCancellationRequested();
-                                            using (Bitmap bmpMugshot = new Bitmap(objStream, true))
-                                            {
-                                                token.ThrowIfCancellationRequested();
-                                                Bitmap bmpNewMugshot =
-                                                    bmpMugshot.PixelFormat == PixelFormat.Format32bppPArgb
-                                                        ? bmpMugshot
-                                                            .Clone() as Bitmap // Clone makes sure file handle is closed
-                                                        : bmpMugshot.ConvertPixelFormat(PixelFormat.Format32bppPArgb);
-                                                if (dicImages.TryGetValue(strKey, out Bitmap bmpExistingMugshot))
-                                                {
-                                                    bmpExistingMugshot.Dispose();
-                                                    dicImages[strKey] = bmpNewMugshot;
-                                                }
-                                                else
-                                                    dicImages.Add(strKey, bmpNewMugshot);
-                                            }
-                                        }
-                                    }
-                                }
-
-                                if (!string.IsNullOrEmpty(strLeadsName))
-                                {
-                                    // Need a second sweep for the Leads file
-                                    foreach (ZipArchiveEntry objEntry in zipArchive.Entries)
-                                    {
-                                        token.ThrowIfCancellationRequested();
-                                        string strEntryFullName = objEntry.FullName;
-                                        if (strEntryFullName.EndsWith(strLeadsName,
-                                                                      StringComparison.OrdinalIgnoreCase))
-                                        {
-                                            try
-                                            {
-                                                token.ThrowIfCancellationRequested();
-                                                if (blnSync)
-                                                    DoLoadLeads();
-                                                else
-                                                    await Task.Run(DoLoadLeads, token).ConfigureAwait(false);
-                                                void DoLoadLeads()
-                                                {
-                                                    using (Stream objStream = objEntry.Open())
-                                                    {
-                                                        token.ThrowIfCancellationRequested();
-                                                        using (StreamReader objStreamReader =
-                                                               new StreamReader(objStream, true))
-                                                        {
-                                                            token.ThrowIfCancellationRequested();
-                                                            using (XmlReader objReader = XmlReader.Create(
-                                                                       objStreamReader,
-                                                                       GlobalSettings.SafeXmlReaderSettings))
-                                                            {
-                                                                token.ThrowIfCancellationRequested();
-                                                                XPathDocument xmlSourceDoc
-                                                                    = new XPathDocument(objReader);
-                                                                xmlLeadsDocument = xmlSourceDoc.CreateNavigator();
-                                                            }
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                            // If we run into any problems loading the character xml files, fail out early.
-                                            catch (IOException)
-                                            {
-                                                continue;
-                                            }
-                                            catch (XmlException)
-                                            {
-                                                continue;
-                                            }
-
-                                            break;
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                        catch (IOException ex)
-                        {
-                            if (op_load != null)
-                            {
-                                op_load.SetSuccess(false);
-                                op_load.AddBaggage(ex.GetType().Name, ex.Message);
-                                Log.Error(ex);
-                            }
-
-                            if (blnSync)
-                            {
-                                // ReSharper disable once MethodHasAsyncOverloadWithCancellation
-                                Program.ShowScrollableMessageBox(
-                                    string.Format(GlobalSettings.CultureInfo,
-                                        // ReSharper disable once MethodHasAsyncOverload
-                                        LanguageManager.GetString("Message_FailedLoad", token: token),
-                                        ex.Message),
-                                    // ReSharper disable once MethodHasAsyncOverload
-                                    LanguageManager.GetString("MessageTitle_FailedLoad", token: token),
-                                    MessageBoxButtons.OK, MessageBoxIcon.Error);
-                            }
-                            else
-                            {
-                                await Program.ShowScrollableMessageBoxAsync(
-                                    string.Format(GlobalSettings.CultureInfo,
-                                        await LanguageManager.GetStringAsync("Message_FailedLoad", token: token)
-                                            .ConfigureAwait(false),
-                                        ex.Message),
-                                    await LanguageManager.GetStringAsync("MessageTitle_FailedLoad", token: token)
-                                        .ConfigureAwait(false),
-                                    MessageBoxButtons.OK, MessageBoxIcon.Error, token: token).ConfigureAwait(false);
-                            }
-                            return false;
-                        }
-                        catch (NotSupportedException ex)
-                        {
-                            if (op_load != null)
-                            {
-                                op_load.SetSuccess(false);
-                                op_load.AddBaggage(ex.GetType().Name, ex.Message);
-                                Log.Error(ex);
-                            }
-
-                            if (blnSync)
-                            {
-                                // ReSharper disable once MethodHasAsyncOverloadWithCancellation
-                                Program.ShowScrollableMessageBox(
-                                    string.Format(GlobalSettings.CultureInfo,
-                                        // ReSharper disable once MethodHasAsyncOverload
-                                        LanguageManager.GetString("Message_FailedLoad", token: token),
-                                        ex.Message),
-                                    // ReSharper disable once MethodHasAsyncOverload
-                                    LanguageManager.GetString("MessageTitle_FailedLoad", token: token),
-                                    MessageBoxButtons.OK, MessageBoxIcon.Error);
-                            }
-                            else
-                            {
-                                await Program.ShowScrollableMessageBoxAsync(
-                                    string.Format(GlobalSettings.CultureInfo,
-                                        await LanguageManager.GetStringAsync("Message_FailedLoad", token: token)
-                                            .ConfigureAwait(false),
-                                        ex.Message),
-                                    await LanguageManager.GetStringAsync("MessageTitle_FailedLoad", token: token)
-                                        .ConfigureAwait(false),
-                                    MessageBoxButtons.OK, MessageBoxIcon.Error, token: token).ConfigureAwait(false);
-                            }
-                            return false;
-                        }
-                        catch (UnauthorizedAccessException ex)
-                        {
-                            if (op_load != null)
-                            {
-                                op_load.SetSuccess(false);
-                                op_load.AddBaggage(ex.GetType().Name, ex.Message);
-                                Log.Error(ex);
-                            }
-
-                            if (blnSync)
-                            {
-                                // ReSharper disable once MethodHasAsyncOverloadWithCancellation
-                                Program.ShowScrollableMessageBox(
-                                    string.Format(GlobalSettings.CultureInfo,
-                                        // ReSharper disable once MethodHasAsyncOverload
-                                        LanguageManager.GetString("Message_FailedLoad", token: token),
-                                        ex.Message),
-                                    // ReSharper disable once MethodHasAsyncOverload
-                                    LanguageManager.GetString("MessageTitle_FailedLoad", token: token),
-                                    MessageBoxButtons.OK, MessageBoxIcon.Error);
-                            }
-                            else
-                            {
-                                await Program.ShowScrollableMessageBoxAsync(
-                                    string.Format(GlobalSettings.CultureInfo,
-                                        await LanguageManager.GetStringAsync("Message_FailedLoad", token: token)
-                                            .ConfigureAwait(false),
-                                        ex.Message),
-                                    await LanguageManager.GetStringAsync("MessageTitle_FailedLoad", token: token)
-                                        .ConfigureAwait(false),
-                                    MessageBoxButtons.OK, MessageBoxIcon.Error, token: token).ConfigureAwait(false);
-                            }
-
-                            return false;
-                        }
-
-                        if (xmlLeadsDocument == null || xmlStatBlockDocument == null)
-                        {
-                            return false;
-                        }
-
-                        IsLoading = true;
-                        try
-                        {
-                            token.ThrowIfCancellationRequested();
-                            XPathNavigator xmlStatBlockBaseNode;
-                            XPathNavigator xmlLeadsBaseNode;
-
-                            using (Timekeeper.StartSyncron("load_char_misc", op_load))
-                            {
-                                xmlStatBlockBaseNode =
-                                    xmlStatBlockDocument.SelectSingleNode("/document/public/character[@name = " +
-                                                                          strCharacterId.CleanXPath() + ']');
-                                xmlLeadsBaseNode =
-                                    xmlLeadsDocument.SelectSingleNode("/document/hero[@heroname = " +
-                                                                      strCharacterId.CleanXPath() +
-                                                                      "]");
-
-                                _blnCreated =
-                                    (xmlStatBlockBaseNode.SelectSingleNodeAndCacheExpression("karma/@total", token)?.Value ?? "0") !=
-                                    "0";
-                                if (!_blnCreated)
-                                {
-                                    XPathNodeIterator xmlJournalEntries = xmlStatBlockBaseNode.SelectAndCacheExpression("journals/journal", token);
-                                    if (xmlJournalEntries.Count > 1)
-                                    {
-                                        _blnCreated = true;
-                                    }
-                                    else if (xmlJournalEntries.Count == 1 &&
-                                             xmlJournalEntries.Current.SelectSingleNodeAndCacheExpression("@name", token)?.Value != "Title")
-                                    {
-                                        _blnCreated = true;
-                                    }
-                                }
-
-                                if (blnSync)
-                                    // ReSharper disable once MethodHasAsyncOverload
-                                    ResetCharacter(token);
-                                else
-                                    await ResetCharacterAsync(token).ConfigureAwait(false);
-
-                                // Get the name of the settings file in use if possible.
-                                if (!string.IsNullOrEmpty(strSettingsKey))
-                                {
-                                    if (blnSync
-                                            ? !SettingsManager.LoadedCharacterSettings.ContainsKey(strSettingsKey)
-                                            : !(await SettingsManager.GetLoadedCharacterSettingsAsync(token).ConfigureAwait(false)).ContainsKey(strSettingsKey))
-                                        return false;
-
-                                    if (blnSync)
-                                        SettingsKey = strSettingsKey;
-                                    else
-                                        await SetSettingsKeyAsync(strSettingsKey, token).ConfigureAwait(false);
-                                }
-
-                                // Metatype information.
-                                string strRaceString = xmlStatBlockBaseNode.SelectSingleNodeAndCacheExpression("race/@name", token)?.Value;
-                                if (!string.IsNullOrEmpty(strRaceString))
-                                {
-                                    if (strRaceString == "Metasapient")
-                                        strRaceString = "A.I.";
-                                    if (blnSync)
-                                    {
-                                        // ReSharper disable MethodHasAsyncOverload
-                                        foreach (XPathNavigator xmlMetatype in
-                                                     LoadDataXPath("metatypes.xml", token: token)
-                                                         .SelectAndCacheExpression("/chummer/metatypes/metatype", token))
-                                        {
-                                            string strMetatypeName
-                                                = xmlMetatype.SelectSingleNodeAndCacheExpression("name", token).Value;
-                                            if (strMetatypeName == strRaceString)
-                                            {
-                                                _strMetatype = strMetatypeName;
-                                                _strMetatypeCategory = xmlMetatype
-                                                                       .SelectSingleNodeAndCacheExpression("category", token)
-                                                                       .Value;
-                                                _strMetavariant = string.Empty;
-                                                
-                                                XPathNavigator objRunNode
-                                                    = xmlMetatype.SelectSingleNodeAndCacheExpression("run", token);
-                                                XPathNavigator objWalkNode
-                                                    = xmlMetatype.SelectSingleNodeAndCacheExpression("walk", token);
-                                                XPathNavigator objSprintNode
-                                                    = xmlMetatype.SelectSingleNodeAndCacheExpression("sprint", token);
-                                                
-                                                _strMovement
-                                                    = xmlMetatype.SelectSingleNodeAndCacheExpression("movement", token)?.Value
-                                                      ??
-                                                      string.Empty;
-                                                _strRun = objRunNode?.Value ?? string.Empty;
-                                                _strWalk = objWalkNode?.Value ?? string.Empty;
-                                                _strSprint = objSprintNode?.Value ?? string.Empty;
-                                                
-                                                objRunNode = objRunNode?.SelectSingleNodeAndCacheExpression("@alt", token);
-                                                objWalkNode = objWalkNode?.SelectSingleNodeAndCacheExpression("@alt", token);
-                                                objSprintNode
-                                                    = objSprintNode?.SelectSingleNodeAndCacheExpression("@alt", token);
-                                                _strRunAlt = objRunNode?.Value ?? string.Empty;
-                                                _strWalkAlt = objWalkNode?.Value ?? string.Empty;
-                                                _strSprintAlt = objSprintNode?.Value ?? string.Empty;
-                                                break;
-                                            }
-
-                                            foreach (XPathNavigator xmlMetavariant in xmlMetatype.Select(
-                                                         "metavariants/metavariant"))
-                                            {
-                                                string strMetavariantName =
-                                                    xmlMetavariant.SelectSingleNodeAndCacheExpression("name", token).Value;
-                                                if (strMetavariantName == strRaceString)
-                                                {
-                                                    _strMetatype = strMetatypeName;
-                                                    _strMetatypeCategory =
-                                                        xmlMetatype.SelectSingleNodeAndCacheExpression("category", token)
-                                                                   .Value;
-                                                    _strMetavariant = strMetavariantName;
-                                                    
-                                                    XPathNavigator objRunNode =
-                                                        xmlMetavariant?.SelectSingleNodeAndCacheExpression("run", token) ??
-                                                        xmlMetatype?.SelectSingleNodeAndCacheExpression("run", token);
-                                                    XPathNavigator objWalkNode =
-                                                        xmlMetavariant?.SelectSingleNodeAndCacheExpression("walk", token) ??
-                                                        xmlMetatype?.SelectSingleNodeAndCacheExpression("walk", token);
-                                                    XPathNavigator objSprintNode =
-                                                        xmlMetavariant?.SelectSingleNodeAndCacheExpression("sprint", token) ??
-                                                        xmlMetatype?.SelectSingleNodeAndCacheExpression("sprint", token);
-                                                    
-                                                    _strMovement =
-                                                        xmlMetavariant?.SelectSingleNodeAndCacheExpression("movement", token)
-                                                                      ?.Value ??
-                                                        xmlMetatype?.SelectSingleNodeAndCacheExpression("movement", token)
-                                                                   ?.Value ??
-                                                        string.Empty;
-                                                    _strRun = objRunNode?.Value ?? string.Empty;
-                                                    _strWalk = objWalkNode?.Value ?? string.Empty;
-                                                    _strSprint = objSprintNode?.Value ?? string.Empty;
-                                                    
-                                                    objRunNode = objRunNode?.SelectSingleNodeAndCacheExpression("@alt", token);
-                                                    objWalkNode
-                                                        = objWalkNode?.SelectSingleNodeAndCacheExpression("@alt", token);
-                                                    objSprintNode
-                                                        = objSprintNode?.SelectSingleNodeAndCacheExpression("@alt", token);
-                                                    _strRunAlt = objRunNode?.Value ?? string.Empty;
-                                                    _strWalkAlt = objWalkNode?.Value ?? string.Empty;
-                                                    _strSprintAlt = objSprintNode?.Value ?? string.Empty;
-                                                    break;
-                                                }
-                                            }
-                                        }
-                                        // ReSharper restore MethodHasAsyncOverload
-                                    }
-                                    else
-                                    {
-                                        foreach (XPathNavigator xmlMetatype in (await LoadDataXPathAsync("metatypes.xml", token: token)
-                                                                 .ConfigureAwait(false))
-                                                             .SelectAndCacheExpression(
-                                                                 "/chummer/metatypes/metatype", token: token))
-                                        {
-                                            string strMetatypeName
-                                                = xmlMetatype.SelectSingleNodeAndCacheExpression("name", token).Value;
-                                            if (strMetatypeName == strRaceString)
-                                            {
-                                                _strMetatype = strMetatypeName;
-                                                _strMetatypeCategory = xmlMetatype
-                                                    .SelectSingleNodeAndCacheExpression("category", token)
-                                                    .Value;
-                                                _strMetavariant = string.Empty;
-
-                                                XPathNavigator objRunNode
-                                                    = xmlMetatype.SelectSingleNodeAndCacheExpression("run", token);
-                                                XPathNavigator objWalkNode
-                                                    = xmlMetatype.SelectSingleNodeAndCacheExpression("walk", token);
-                                                XPathNavigator objSprintNode
-                                                    = xmlMetatype.SelectSingleNodeAndCacheExpression("sprint", token);
-
-                                                _strMovement
-                                                    = xmlMetatype.SelectSingleNodeAndCacheExpression("movement", token)?.Value
-                                                      ??
-                                                      string.Empty;
-                                                _strRun = objRunNode?.Value ?? string.Empty;
-                                                _strWalk = objWalkNode?.Value ?? string.Empty;
-                                                _strSprint = objSprintNode?.Value ?? string.Empty;
-
-                                                objRunNode = objRunNode?.SelectSingleNodeAndCacheExpression("@alt", token);
-                                                objWalkNode = objWalkNode?.SelectSingleNodeAndCacheExpression("@alt", token);
-                                                objSprintNode
-                                                    = objSprintNode?.SelectSingleNodeAndCacheExpression("@alt", token);
-                                                _strRunAlt = objRunNode?.Value ?? string.Empty;
-                                                _strWalkAlt = objWalkNode?.Value ?? string.Empty;
-                                                _strSprintAlt = objSprintNode?.Value ?? string.Empty;
-                                                break;
-                                            }
-
-                                            foreach (XPathNavigator xmlMetavariant in xmlMetatype.Select(
-                                                         "metavariants/metavariant"))
-                                            {
-                                                string strMetavariantName =
-                                                    xmlMetavariant.SelectSingleNodeAndCacheExpression("name", token).Value;
-                                                if (strMetavariantName == strRaceString)
-                                                {
-                                                    _strMetatype = strMetatypeName;
-                                                    _strMetatypeCategory =
-                                                        xmlMetatype.SelectSingleNodeAndCacheExpression("category", token)
-                                                            .Value;
-                                                    _strMetavariant = strMetavariantName;
-
-                                                    XPathNavigator objRunNode =
-                                                        xmlMetavariant?.SelectSingleNodeAndCacheExpression("run", token) ??
-                                                        xmlMetatype?.SelectSingleNodeAndCacheExpression("run", token);
-                                                    XPathNavigator objWalkNode =
-                                                        xmlMetavariant?.SelectSingleNodeAndCacheExpression("walk", token) ??
-                                                        xmlMetatype?.SelectSingleNodeAndCacheExpression("walk", token);
-                                                    XPathNavigator objSprintNode =
-                                                        xmlMetavariant?.SelectSingleNodeAndCacheExpression("sprint", token) ??
-                                                        xmlMetatype?.SelectSingleNodeAndCacheExpression("sprint", token);
-
-                                                    _strMovement =
-                                                        xmlMetavariant?.SelectSingleNodeAndCacheExpression("movement", token)
-                                                            ?.Value ??
-                                                        xmlMetatype?.SelectSingleNodeAndCacheExpression("movement", token)
-                                                            ?.Value ??
-                                                        string.Empty;
-                                                    _strRun = objRunNode?.Value ?? string.Empty;
-                                                    _strWalk = objWalkNode?.Value ?? string.Empty;
-                                                    _strSprint = objSprintNode?.Value ?? string.Empty;
-
-                                                    objRunNode = objRunNode?.SelectSingleNodeAndCacheExpression("@alt", token);
-                                                    objWalkNode
-                                                        = objWalkNode?.SelectSingleNodeAndCacheExpression("@alt", token);
-                                                    objSprintNode
-                                                        = objSprintNode?.SelectSingleNodeAndCacheExpression("@alt", token);
-                                                    _strRunAlt = objRunNode?.Value ?? string.Empty;
-                                                    _strWalkAlt = objWalkNode?.Value ?? string.Empty;
-                                                    _strSprintAlt = objSprintNode?.Value ?? string.Empty;
-                                                    break;
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-
-                                // General character information.
-                                int intAsIndex = strCharacterId.IndexOf(" as ", StringComparison.Ordinal);
-                                if (intAsIndex != -1)
-                                {
-                                    _strName = strCharacterId.Substring(0, intAsIndex);
-                                    _strAlias = strCharacterId.Substring(intAsIndex).TrimStart(" as ").Trim('\'');
-                                }
-                                else
-                                {
-                                    _strAlias = strCharacterId;
-                                }
-
-                                XPathNavigator xmlPersonalNode = xmlStatBlockBaseNode.SelectSingleNodeAndCacheExpression("personal", token);
-                                if (xmlPersonalNode != null)
-                                {
-                                    _strBackground = xmlPersonalNode.SelectSingleNodeAndCacheExpression("description", token)?.Value;
-                                    _strHeight = xmlPersonalNode.SelectSingleNodeAndCacheExpression("charheight/@text", token)?.Value;
-                                    _strWeight = xmlPersonalNode.SelectSingleNodeAndCacheExpression("charweight/@text", token)?.Value;
-                                    if (xmlPersonalNode.HasAttributes)
-                                    {
-                                        _strGender = xmlPersonalNode.SelectSingleNodeAndCacheExpression("@gender", token)?.Value;
-                                        _strAge = xmlPersonalNode.SelectSingleNodeAndCacheExpression("@age", token)?.Value;
-                                        _strHair = xmlPersonalNode.SelectSingleNodeAndCacheExpression("@hair", token)?.Value;
-                                        _strEyes = xmlPersonalNode.SelectSingleNodeAndCacheExpression("@eyes", token)?.Value;
-                                        _strSkin = xmlPersonalNode.SelectSingleNodeAndCacheExpression("@skin", token)?.Value;
-                                    }
-                                }
-
-                                _strPlayerName
-                                    = xmlStatBlockBaseNode.SelectSingleNodeAndCacheExpression("@playername", token)?.Value;
-
-                                foreach (XPathNavigator xmlImageFileNameNode in xmlStatBlockBaseNode.SelectAndCacheExpression(
-                                             "images/image/@filename", token))
-                                {
-                                    if (dicImages.TryGetValue(xmlImageFileNameNode.Value, out Bitmap objOutput))
-                                    {
-                                        if (blnSync)
-                                            // ReSharper disable once MethodHasAsyncOverloadWithCancellation
-                                            _lstMugshots.Add(objOutput);
-                                        else
-                                            await _lstMugshots.AddAsync(objOutput, token).ConfigureAwait(false);
-                                    }
-                                }
-
-                                if (_lstMugshots.Count > 0)
-                                    _intMainMugshotIndex = 0;
-
-                                if (string.IsNullOrEmpty(strSettingsKey))
-                                {
-                                    string strSettingsSummary =
-                                        xmlStatBlockBaseNode.SelectSingleNodeAndCacheExpression(
-                                            "settings/@summary", token)?.Value;
-                                    if (!string.IsNullOrEmpty(strSettingsSummary))
-                                    {
-                                        int intCharCreationSystemsIndex =
-                                            strSettingsSummary.IndexOf("Character Creation Systems:",
-                                                                       StringComparison.OrdinalIgnoreCase);
-                                        if (intCharCreationSystemsIndex != -1)
-                                        {
-                                            int intSemicolonIndex
-                                                = strSettingsSummary.IndexOf(';', intCharCreationSystemsIndex);
-                                            if (intCharCreationSystemsIndex + 28 <= intSemicolonIndex)
-                                            {
-                                                string strHeroLabSettingsName = strSettingsSummary.Substring(
-                                                        intCharCreationSystemsIndex + 28,
-                                                        strSettingsSummary.IndexOf(';', intCharCreationSystemsIndex)
-                                                        - 28 - intCharCreationSystemsIndex)
-                                                    .Trim();
-                                                if (strHeroLabSettingsName == "Established Runners")
-                                                    strHeroLabSettingsName = "Standard";
-
-                                                if (strHeroLabSettingsName == "Standard")
-                                                {
-                                                    bool blnDoFullHouse = false;
-                                                    int intSourcebooksIndex
-                                                        = strSettingsSummary.IndexOf(
-                                                            "Core Rulebooks:", StringComparison.OrdinalIgnoreCase);
-                                                    if (intSourcebooksIndex != -1)
-                                                    {
-                                                        intSemicolonIndex
-                                                            = strSettingsSummary.IndexOf(';', intSourcebooksIndex);
-                                                        if (intSourcebooksIndex + 16 < intSemicolonIndex)
-                                                        {
-                                                            blnDoFullHouse
-                                                                = true; // We probably have multiple books enabled, so use Full House instead
-                                                        }
-                                                    }
-
-                                                    bool blnIsKarmaBased = xmlStatBlockBaseNode
-                                                                           .SelectSingleNodeAndCacheExpression("creation/bp/@total", token)
-                                                                           ?.ValueAsInt > 100;
-                                                    if (blnDoFullHouse)
-                                                    {
-                                                        strHeroLabSettingsName = blnIsKarmaBased
-                                                            ? "Full House (Point Buy)"
-                                                            : "Full House";
-                                                    }
-                                                    else if (blnIsKarmaBased)
-                                                        strHeroLabSettingsName = "Point Buy";
-                                                }
-
-                                                if (blnSync)
-                                                {
-                                                    CharacterSettings objHeroLabSettings =
-                                                        SettingsManager.LoadedCharacterSettings.FirstOrDefault(
-                                                            x => x.Value.Name == strHeroLabSettingsName).Value;
-                                                    if (objHeroLabSettings != null)
-                                                    {
-                                                        strSettingsKey = objHeroLabSettings.DictionaryKey;
-                                                        SettingsKey = strSettingsKey;
-                                                    }
-                                                }
-                                                else
-                                                {
-                                                    CharacterSettings objHeroLabSettings =
-                                                        (await SettingsManager.GetLoadedCharacterSettingsAsync(token)
-                                                            .ConfigureAwait(false))
-                                                        .FirstOrDefault(x =>
-                                                            x.Value.Name == strHeroLabSettingsName).Value;
-                                                    if (objHeroLabSettings != null)
-                                                    {
-                                                        strSettingsKey = await objHeroLabSettings
-                                                                               .GetDictionaryKeyAsync(token)
-                                                                               .ConfigureAwait(false);
-                                                        await SetSettingsKeyAsync(strSettingsKey, token: token)
-                                                            .ConfigureAwait(false);
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-
-                                if (string.IsNullOrEmpty(strSettingsKey))
-                                {
-                                    if (blnSync)
-                                    {
-                                        // ReSharper disable MethodHasAsyncOverload
-                                        // ReSharper disable MethodHasAsyncOverloadWithCancellation
-                                        if (Program.ShowScrollableMessageBox(
-                                                string.Format(GlobalSettings.CultureInfo,
-                                                    LanguageManager.GetString(
-                                                        "Message_MissingGameplayOption", token: token),
-                                                    SettingsKey),
-                                                LanguageManager.GetString(
-                                                    "Message_MissingGameplayOption_Title", token: token),
-                                                MessageBoxButtons.OKCancel, MessageBoxIcon.Error)
-                                            == DialogResult.OK)
-                                        {
-                                            using (ThreadSafeForm<SelectBuildMethod> frmPickBP
-                                                   = ThreadSafeForm<SelectBuildMethod>.Get(
-                                                       () => new SelectBuildMethod(this, true)))
-                                            {
-                                                if (frmPickBP.ShowDialogSafe(this, token) != DialogResult.OK)
-                                                    return false;
-                                            }
-                                        }
-                                        else
-                                            return false;
-                                        // ReSharper restore MethodHasAsyncOverloadWithCancellation
-                                        // ReSharper restore MethodHasAsyncOverload
-                                    }
-                                    else if (await Program.ShowScrollableMessageBoxAsync(
-                                                 string.Format(GlobalSettings.CultureInfo,
-                                                     await LanguageManager
-                                                         .GetStringAsync(
-                                                             "Message_MissingGameplayOption", token: token)
-                                                         .ConfigureAwait(false),
-                                                     await GetSettingsKeyAsync(token).ConfigureAwait(false)),
-                                                 await LanguageManager.GetStringAsync(
-                                                         "Message_MissingGameplayOption_Title", token: token)
-                                                     .ConfigureAwait(false),
-                                                 MessageBoxButtons.OKCancel, MessageBoxIcon.Error, token: token).ConfigureAwait(false)
-                                             == DialogResult.OK)
-                                    {
-                                        using (ThreadSafeForm<SelectBuildMethod> frmPickBP =
-                                               await ThreadSafeForm<SelectBuildMethod>.GetAsync(
-                                                       () => new SelectBuildMethod(this, true), token)
-                                                   .ConfigureAwait(false))
-                                        {
-                                            if (await frmPickBP.ShowDialogSafeAsync(this, token)
-                                                    .ConfigureAwait(false) != DialogResult.OK)
-                                                return false;
-                                        }
-                                    }
-                                    else
-                                        return false;
-                                }
-
-                                if (EffectiveBuildMethodUsesPriorityTables)
-                                {
-                                    if (strRaceString == "A.I.")
-                                        _strPriorityTalent = "AI";
-                                    XPathNavigator xmlPriorityTalentPick =
-                                        xmlLeadsBaseNode.SelectSingleNodeAndCacheExpression(
-                                            "container/pick[starts-with(@thing, \"qu\") and @source = \"heritage\"]", token);
-                                    if (xmlPriorityTalentPick != null)
-                                    {
-                                        switch (xmlPriorityTalentPick.SelectSingleNodeAndCacheExpression("@thing", token)?.Value)
-                                        {
-                                            case "quAware":
-                                                _strPriorityTalent = "Aware";
-                                                break;
-
-                                            case "quEnchanter":
-                                                _strPriorityTalent = "Enchanter";
-                                                break;
-
-                                            case "quExplorer":
-                                                _strPriorityTalent = "Explorer";
-                                                break;
-
-                                            case "quApprentice":
-                                                _strPriorityTalent = "Apprentice";
-                                                break;
-
-                                            case "quAspectedMagician":
-                                                _strPriorityTalent = "Aspected Magician";
-                                                break;
-
-                                            case "quAdept":
-                                                _strPriorityTalent = "Adept";
-                                                break;
-
-                                            case "quMagician":
-                                                _strPriorityTalent = "Magician";
-                                                break;
-
-                                            case "quMysticAdept":
-                                                _strPriorityTalent = "Mystic Adept";
-                                                break;
-
-                                            case "quTechnoma":
-                                                _strPriorityTalent = "Technomancer";
-                                                break;
-                                        }
-
-                                        if (blnSync)
-                                            // ReSharper disable once MethodHasAsyncOverloadWithCancellation
-                                            _lstPrioritySkills.Clear();
-                                        else
-                                            await _lstPrioritySkills.ClearAsync(token).ConfigureAwait(false);
-                                        foreach (XPathNavigator xmlField in xmlPriorityTalentPick.SelectAndCacheExpression("field", token))
-                                        {
-                                            string strInnerText = xmlField.Value;
-                                            if (!string.IsNullOrEmpty(strInnerText))
-                                            {
-                                                if (blnSync)
-                                                    // ReSharper disable once MethodHasAsyncOverloadWithCancellation
-                                                    _lstPrioritySkills.Add(strInnerText);
-                                                else
-                                                    await _lstPrioritySkills.AddAsync(strInnerText, token).ConfigureAwait(false);
-                                            }
-                                        }
-                                    }
-
-                                    if (blnSync)
-                                    {
-                                        // ReSharper disable MethodHasAsyncOverload
-                                        // ReSharper disable MethodHasAsyncOverloadWithCancellation
-                                        using (ThreadSafeForm<SelectMetatypePriority> frmSelectMetatype =
-                                               ThreadSafeForm<SelectMetatypePriority>.Get(
-                                                   () => new SelectMetatypePriority(this)))
-                                        {
-                                            if (frmSelectMetatype.ShowDialogSafe(this, token) != DialogResult.OK)
-                                                return false;
-                                        }
-                                        // ReSharper restore MethodHasAsyncOverloadWithCancellation
-                                        // ReSharper restore MethodHasAsyncOverload
-                                    }
-                                    else
-                                    {
-                                        using (ThreadSafeForm<SelectMetatypePriority> frmSelectMetatype =
-                                               await ThreadSafeForm<SelectMetatypePriority>.GetAsync(
-                                                   () => new SelectMetatypePriority(this), token).ConfigureAwait(false))
-                                        {
-                                            if (await frmSelectMetatype.ShowDialogSafeAsync(this, token).ConfigureAwait(false) != DialogResult.OK)
-                                                return false;
-                                        }
-                                    }
-                                }
-                                else
-                                {
-                                    if (blnSync)
-                                    {
-                                        // ReSharper disable MethodHasAsyncOverload
-                                        // ReSharper disable MethodHasAsyncOverloadWithCancellation
-                                        using (ThreadSafeForm<SelectMetatypeKarma> frmSelectMetatype =
-                                               ThreadSafeForm<SelectMetatypeKarma>.Get(
-                                                   () => new SelectMetatypeKarma(this)))
-                                        {
-                                            if (frmSelectMetatype.ShowDialogSafe(this, token) != DialogResult.OK)
-                                                return false;
-                                        }
-                                        // ReSharper restore MethodHasAsyncOverloadWithCancellation
-                                        // ReSharper restore MethodHasAsyncOverload
-                                    }
-                                    else
-                                    {
-                                        using (ThreadSafeForm<SelectMetatypeKarma> frmSelectMetatype =
-                                               await ThreadSafeForm<SelectMetatypeKarma>.GetAsync(
-                                                   () => new SelectMetatypeKarma(this), token).ConfigureAwait(false))
-                                        {
-                                            if (await frmSelectMetatype.ShowDialogSafeAsync(this, token: token).ConfigureAwait(false) != DialogResult.OK)
-                                                return false;
-                                        }
-                                    }
-                                }
-
-                                XPathNavigator xmlKarmaNode = xmlStatBlockBaseNode.SelectSingleNodeAndCacheExpression("karma", token);
-                                if (xmlKarmaNode != null)
-                                {
-                                    int.TryParse(xmlKarmaNode.SelectSingleNodeAndCacheExpression("@left", token)?.Value, NumberStyles.Any,
-                                                 GlobalSettings.InvariantCultureInfo, out _intKarma);
-                                    int.TryParse(xmlKarmaNode.SelectSingleNodeAndCacheExpression("@total", token)?.Value, NumberStyles.Any,
-                                                 GlobalSettings.InvariantCultureInfo, out _intTotalKarma);
-                                }
-
-                                XPathNavigator xmlReputationsNode =
-                                    xmlStatBlockBaseNode.SelectSingleNodeAndCacheExpression("reputations", token);
-                                if (xmlReputationsNode != null)
-                                {
-                                    int.TryParse(
-                                        xmlReputationsNode
-                                            .SelectSingleNodeAndCacheExpression("reputation[@name = \"Street Cred\"]/@value", token)
-                                            .Value,
-                                        NumberStyles.Any, GlobalSettings.InvariantCultureInfo,
-                                        out _intStreetCred);
-                                    int.TryParse(
-                                        xmlReputationsNode
-                                            .SelectSingleNodeAndCacheExpression("reputation[@name = \"Notoriety\"]/@value", token)
-                                            .Value,
-                                        NumberStyles.Any, GlobalSettings.InvariantCultureInfo,
-                                        out _intNotoriety);
-                                    int.TryParse(
-                                        xmlReputationsNode
-                                            .SelectSingleNodeAndCacheExpression("reputation[@name = \"Public Awareness\"]/@value", token)
-                                            .Value, NumberStyles.Any, GlobalSettings.InvariantCultureInfo,
-                                        out _intPublicAwareness);
-                                }
-
-                                if (Created)
-                                {
-                                    decimal.TryParse(xmlStatBlockBaseNode.SelectSingleNodeAndCacheExpression("cash/@total", token)?.Value,
-                                                     NumberStyles.Any,
-                                                     GlobalSettings.InvariantCultureInfo, out _decNuyen);
-                                }
-
-                                /* TODO: Initiation, Submersion Grades
-                                objXmlCharacter.TryGetInt32FieldQuickly("initiategrade", ref _intInitiateGrade);
-                                objXmlCharacter.TryGetInt32FieldQuickly("submersiongrade", ref _intSubmersionGrade);
-                                */
-                                //Timekeeper.Finish("load_char_misc");
-                            }
-
-                            List<Weapon> lstWeapons = new List<Weapon>(1);
-                            List<Vehicle> lstVehicles = new List<Vehicle>(1);
-
-                            using (Timekeeper.StartSyncron("load_char_quality", op_load))
-                            {
-                                string[] astrLevelLabels =
-                                {
-                                    " (0)",
-                                    " (1)",
-                                    " (2)",
-                                    " (3)",
-                                    " (4)",
-                                    " (5)",
-                                    " (6)",
-                                    " (7)",
-                                    " (8)",
-                                    " (9)",
-                                    " (10)",
-                                    " (11)",
-                                    " (12)",
-                                    " (13)",
-                                    " (14)",
-                                    " (15)"
-                                };
-                                // Qualities
-                                XmlDocument xmlQualitiesDocument = blnSync
-                                    // ReSharper disable once MethodHasAsyncOverload
-                                    ? LoadData("qualities.xml", token: token)
-                                    : await LoadDataAsync("qualities.xml", token: token).ConfigureAwait(false);
-                                foreach (XPathNavigator xmlQualityToImport in xmlStatBlockBaseNode
-                                             .SelectAndCacheExpression(
-                                                 "qualities/positive/quality[traitcost/@bp != \"0\"]", token))
-                                {
-                                    string strQualityName = xmlQualityToImport.SelectSingleNodeAndCacheExpression(
-                                        "@name", token)?.Value;
-                                    if (!string.IsNullOrEmpty(strQualityName))
-                                    {
-                                        int intDicepoolLabelIndex =
-                                            strQualityName.LastIndexOf("dicepool", StringComparison.Ordinal);
-                                        if (intDicepoolLabelIndex != -1)
-                                        {
-                                            int intCullIndex =
-                                                strQualityName.LastIndexOf('(', intDicepoolLabelIndex);
-                                            if (intCullIndex != -1)
-                                                strQualityName = strQualityName.Substring(0, intCullIndex).Trim();
-                                        }
-
-                                        int intQuantity = 1;
-                                        for (int i = 0; i < astrLevelLabels.Length; ++i)
-                                        {
-                                            string strLoopString = astrLevelLabels[i];
-                                            if (strQualityName.EndsWith(strLoopString, StringComparison.Ordinal))
-                                            {
-                                                strQualityName = strQualityName.TrimEndOnce(strLoopString, true);
-                                                intQuantity = i;
-                                                break;
-                                            }
-                                        }
-
-                                        string strForcedValue = string.Empty;
-                                        XmlNode xmlQualityDataNode =
-                                            xmlQualitiesDocument.TryGetNodeByNameOrId(
-                                                "/chummer/qualities/quality", strQualityName);
-                                        if (xmlQualityDataNode == null)
-                                        {
-                                            string[] astrOriginalNameSplit =
-                                                strQualityName.Split(':', StringSplitOptions.RemoveEmptyEntries);
-                                            if (astrOriginalNameSplit.Length > 1)
-                                            {
-                                                string strName = astrOriginalNameSplit[0].Trim();
-                                                xmlQualityDataNode =
-                                                    xmlQualitiesDocument.TryGetNodeByNameOrId(
-                                                        "/chummer/qualities/quality", strName);
-                                                if (xmlQualityDataNode != null)
-                                                    strForcedValue = astrOriginalNameSplit[1].Trim();
-                                            }
-                                        }
-
-                                        if (xmlQualityDataNode == null)
-                                        {
-                                            string[] astrOriginalNameSplit =
-                                                strQualityName.Split(',', StringSplitOptions.RemoveEmptyEntries);
-                                            if (astrOriginalNameSplit.Length > 1)
-                                            {
-                                                string strName = astrOriginalNameSplit[0].Trim();
-                                                xmlQualityDataNode =
-                                                    xmlQualitiesDocument.TryGetNodeByNameOrId(
-                                                        "/chummer/qualities/quality", strName);
-                                                if (xmlQualityDataNode != null)
-                                                    strForcedValue = astrOriginalNameSplit[1].Trim();
-                                            }
-                                        }
-
-                                        if (xmlQualityDataNode != null)
-                                        {
-                                            for (int i = 0; i < intQuantity; ++i)
-                                            {
-                                                Quality objQuality = new Quality(this);
-                                                try
-                                                {
-                                                    token.ThrowIfCancellationRequested();
-                                                    if (blnSync)
-                                                    {
-                                                        // ReSharper disable once MethodHasAsyncOverload
-                                                        objQuality.Create(xmlQualityDataNode, QualitySource.Selected,
-                                                            lstWeapons,
-                                                            strForcedValue, token: token);
-                                                        objQuality.Notes =
-                                                            xmlQualityToImport
-                                                                .SelectSingleNodeAndCacheExpression(
-                                                                    "description", token)?.Value ??
-                                                            string.Empty;
-                                                        // ReSharper disable once MethodHasAsyncOverloadWithCancellation
-                                                        _lstQualities.Add(objQuality);
-                                                    }
-                                                    else
-                                                    {
-                                                        await objQuality.CreateAsync(xmlQualityDataNode,
-                                                            QualitySource.Selected,
-                                                            lstWeapons,
-                                                            strForcedValue, token: token).ConfigureAwait(false);
-                                                        await objQuality.SetNotesAsync(xmlQualityToImport
-                                                                .SelectSingleNodeAndCacheExpression(
-                                                                    "description", token)?.Value ??
-                                                            string.Empty, token).ConfigureAwait(false);
-                                                        await _lstQualities.AddAsync(objQuality, token: token)
-                                                            .ConfigureAwait(false);
-                                                    }
-                                                }
-                                                catch
-                                                {
-                                                    if (blnSync)
-                                                        // ReSharper disable once MethodHasAsyncOverload
-                                                        objQuality.Dispose();
-                                                    else
-                                                        await objQuality.DisposeAsync().ConfigureAwait(false);
-                                                    throw;
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-
-                                foreach (XPathNavigator xmlQualityToImport in xmlStatBlockBaseNode.SelectAndCacheExpression(
-                                             "qualities/negative/quality[traitcost/@bp != \"0\"]", token))
-                                {
-                                    string strQualityName = xmlQualityToImport.SelectSingleNodeAndCacheExpression(
-                                        "@name", token)?.Value;
-                                    if (!string.IsNullOrEmpty(strQualityName))
-                                    {
-                                        int intDicepoolLabelIndex =
-                                            strQualityName.LastIndexOf("dicepool", StringComparison.Ordinal);
-                                        if (intDicepoolLabelIndex != -1)
-                                        {
-                                            int intCullIndex =
-                                                strQualityName.LastIndexOf('(', intDicepoolLabelIndex);
-                                            if (intCullIndex != -1)
-                                                strQualityName = strQualityName.Substring(0, intCullIndex).Trim();
-                                        }
-
-                                        switch (strQualityName)
-                                        {
-                                            case "Reduced (hearing)":
-                                                strQualityName = "Reduced Sense (Hearing)";
-                                                break;
-
-                                            case "Reduced (smell)":
-                                                strQualityName = "Reduced Sense (Smell)";
-                                                break;
-
-                                            case "Reduced (taste)":
-                                                strQualityName = "Reduced Sense (Taste)";
-                                                break;
-
-                                            case "Reduced (touch)":
-                                                strQualityName = "Reduced Sense (Touch)";
-                                                break;
-
-                                            case "Reduced (sight)":
-                                                strQualityName = "Reduced Sense (Sight)";
-                                                break;
-                                        }
-
-                                        int intQuantity = 1;
-                                        for (int i = 0; i < astrLevelLabels.Length; ++i)
-                                        {
-                                            string strLoopString = astrLevelLabels[i];
-                                            if (strQualityName.EndsWith(strLoopString, StringComparison.Ordinal))
-                                            {
-                                                strQualityName = strQualityName.TrimEndOnce(strLoopString, true);
-                                                intQuantity = i;
-                                                break;
-                                            }
-                                        }
-
-                                        string strForcedValue = string.Empty;
-                                        XmlNode xmlQualityDataNode =
-                                            xmlQualitiesDocument.TryGetNodeByNameOrId(
-                                                "/chummer/qualities/quality", strQualityName);
-                                        if (xmlQualityDataNode == null)
-                                        {
-                                            string[] astrOriginalNameSplit =
-                                                strQualityName.Split(':', StringSplitOptions.RemoveEmptyEntries);
-                                            if (astrOriginalNameSplit.Length > 1)
-                                            {
-                                                string strName = astrOriginalNameSplit[0].Trim();
-                                                xmlQualityDataNode =
-                                                    xmlQualitiesDocument.TryGetNodeByNameOrId(
-                                                        "/chummer/qualities/quality", strName);
-                                                if (xmlQualityDataNode != null)
-                                                    strForcedValue = astrOriginalNameSplit[1].Trim();
-                                            }
-                                        }
-
-                                        if (xmlQualityDataNode == null)
-                                        {
-                                            string[] astrOriginalNameSplit =
-                                                strQualityName.Split(',', StringSplitOptions.RemoveEmptyEntries);
-                                            if (astrOriginalNameSplit.Length > 1)
-                                            {
-                                                string strName = astrOriginalNameSplit[0].Trim();
-                                                xmlQualityDataNode =
-                                                    xmlQualitiesDocument.TryGetNodeByNameOrId(
-                                                        "/chummer/qualities/quality", strName);
-                                                if (xmlQualityDataNode != null)
-                                                    strForcedValue = astrOriginalNameSplit[1].Trim();
-                                            }
-                                        }
-
-                                        if (xmlQualityDataNode != null)
-                                        {
-                                            for (int i = 0; i < intQuantity; ++i)
-                                            {
-                                                Quality objQuality = new Quality(this);
-                                                try
-                                                {
-                                                    token.ThrowIfCancellationRequested();
-                                                    if (blnSync)
-                                                    {
-                                                        // ReSharper disable once MethodHasAsyncOverload
-                                                        objQuality.Create(xmlQualityDataNode, QualitySource.Selected,
-                                                            lstWeapons,
-                                                            strForcedValue, token: token);
-                                                        objQuality.Notes =
-                                                            xmlQualityToImport
-                                                                .SelectSingleNodeAndCacheExpression(
-                                                                    "description", token)?.Value ??
-                                                            string.Empty;
-                                                        // ReSharper disable once MethodHasAsyncOverloadWithCancellation
-                                                        _lstQualities.Add(objQuality);
-                                                    }
-                                                    else
-                                                    {
-                                                        await objQuality.CreateAsync(xmlQualityDataNode,
-                                                            QualitySource.Selected,
-                                                            lstWeapons,
-                                                            strForcedValue, token: token).ConfigureAwait(false);
-                                                        await objQuality.SetNotesAsync(xmlQualityToImport
-                                                                .SelectSingleNodeAndCacheExpression(
-                                                                    "description", token)?.Value ??
-                                                            string.Empty, token).ConfigureAwait(false);
-                                                        await _lstQualities.AddAsync(objQuality, token: token)
-                                                            .ConfigureAwait(false);
-                                                    }
-                                                }
-                                                catch
-                                                {
-                                                    if (blnSync)
-                                                        // ReSharper disable once MethodHasAsyncOverload
-                                                        objQuality.Dispose();
-                                                    else
-                                                        await objQuality.DisposeAsync().ConfigureAwait(false);
-                                                    throw;
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-
-                                //Timekeeper.Finish("load_char_quality");
-                            }
-
-                            AttributeSection.LoadFromHeroLab(xmlStatBlockBaseNode, op_load, token);
-                            using (Timekeeper.StartSyncron("load_char_misc2", op_load))
-                            {
-                                /* TODO: Find some way to get Mystic Adept PPs from Hero Lab files
-                                // Attempt to load the split MAG CharacterAttribute information for Mystic Adepts.
-                                if (_blnAdeptEnabled && _blnMagicianEnabled)
-                                {
-                                    xmlCharacterNavigator.TryGetInt32FieldQuickly("magsplitadept", ref _intMAGAdept);
-                                    xmlCharacterNavigator.TryGetInt32FieldQuickly("magsplitmagician", ref _intMAGMagician);
-                                }
-                                */
-
-                                // Attempt to load in the character's tradition
-                                XPathNavigator xmlTemp
-                                    = xmlStatBlockBaseNode.SelectSingleNodeAndCacheExpression(
-                                        "magic/tradition", token);
-                                if (xmlTemp != null)
-                                {
-                                    _objTradition.LoadFromHeroLab(xmlTemp);
-                                }
-
-                                // Attempt to load Condition Monitor Progress.
-                                XPathNavigator xmlPhysicalCMFilledNode =
-                                    xmlLeadsBaseNode.SelectSingleNodeAndCacheExpression(
-                                        "usagepool[@id = \"DmgNet\" and @pickindex=\"5\"]/@quantity", token);
-                                if (xmlPhysicalCMFilledNode != null)
-                                    int.TryParse(xmlPhysicalCMFilledNode.Value, NumberStyles.Any,
-                                                 GlobalSettings.InvariantCultureInfo, out _intPhysicalCMFilled);
-                                XPathNavigator xmlStunCMFilledNode =
-                                    xmlLeadsBaseNode.SelectSingleNodeAndCacheExpression(
-                                        "usagepool[@id = \"DmgNet\" and @pickindex=\"6\"]/@quantity", token);
-                                if (xmlStunCMFilledNode != null)
-                                    int.TryParse(xmlStunCMFilledNode.Value, NumberStyles.Any,
-                                                 GlobalSettings.InvariantCultureInfo, out _intStunCMFilled);
-                                //Timekeeper.Finish("load_char_misc2");
-                            }
-
-                            using (CustomActivity op_load_char_skills = Timekeeper.StartSyncron("load_char_skills", op_load)) //slightly messy
-                            {
-                                SkillsSection.LoadFromHeroLab(xmlStatBlockBaseNode.SelectSingleNodeAndCacheExpression("skills", token),
-                                    op_load_char_skills, token);
-
-                                //Timekeeper.Finish("load_char_skills");
-                            }
-
-                            /* TODO: Add support for locations from HeroLab
-                            Timekeeper.Start("load_char_loc");
-
-                            // Locations.
-                            XmlNodeList objXmlLocationList = objXmlCharacter.SelectNodes("gearlocations/gearlocation");
-                            foreach (XmlNode objXmlLocation in objXmlLocationList)
-                            {
-                                Location objLocation = new Location(this, _lstGearLocations, string.Empty, false);
-                                objLocation.Load(objXmlLocation);
-                            }
-
-                            objXmlLocationList = objXmlCharacter.SelectNodes("locations/location");
-                            foreach (XmlNode objXmlLocation in objXmlLocationList)
-                            {
-                                Location objLocation = new Location(this, _lstGearLocations, string.Empty, false);
-                                objLocation.Load(objXmlLocation);
-                            }
-
-                            objXmlLocationList = objXmlCharacter.SelectNodes("gearlocations/location");
-                            foreach (XmlNode objXmlLocation in objXmlLocationList)
-                            {
-                                Location objLocation = new Location(this, _lstGearLocations, string.Empty, false);
-                                objLocation.Load(objXmlLocation);
-                            }
-
-                            Timekeeper.Finish("load_char_loc");
-                            Timekeeper.Start("load_char_abundle");
-
-                            // Armor Bundles.
-                            objXmlLocationList = objXmlCharacter.SelectNodes("armorbundles/armorbundle");
-                            foreach (XmlNode objXmlLocation in objXmlLocationList)
-                            {
-                                Location objLocation = new Location(this, _lstArmorLocations, string.Empty, false);
-                                objLocation.Load(objXmlLocation);
-                            }
-
-                            objXmlLocationList = objXmlCharacter.SelectNodes("armorlocations/armorlocation");
-                            foreach (XmlNode objXmlLocation in objXmlLocationList)
-                            {
-                                Location objLocation = new Location(this, _lstArmorLocations, string.Empty, false);
-                                objLocation.Load(objXmlLocation);
-                            }
-
-                            objXmlLocationList = objXmlCharacter.SelectNodes("armorlocations/location");
-                            foreach (XmlNode objXmlLocation in objXmlLocationList)
-                            {
-                                Location objLocation = new Location(this, _lstArmorLocations, string.Empty, false);
-                                objLocation.Load(objXmlLocation);
-                            }
-
-                            Timekeeper.Finish("load_char_abundle");
-                            Timekeeper.Start("load_char_vloc");
-
-                            // Vehicle Locations.
-                            XmlNodeList objXmlVehicleLocationList = objXmlCharacter.SelectNodes("vehiclelocations/vehiclelocation");
-                            foreach (XmlNode objXmlLocation in objXmlVehicleLocationList)
-                            {
-                                Location objLocation = new Location(this, _lstVehicleLocations, string.Empty, false);
-                                objLocation.Load(objXmlLocation);
-                            }
-
-                            objXmlVehicleLocationList = objXmlCharacter.SelectNodes("vehiclelocations/location");
-                            foreach (XmlNode objXmlLocation in objXmlVehicleLocationList)
-                            {
-                                Location objLocation = new Location(this, _lstVehicleLocations, string.Empty, false);
-                                objLocation.Load(objXmlLocation);
-                            }
-
-                            Timekeeper.Finish("load_char_vloc");
-                            Timekeeper.Start("load_char_wloc");
-
-                            // Weapon Locations.
-                            XmlNodeList objXmlWeaponLocationList = objXmlCharacter.SelectNodes("weaponlocations/weaponlocation");
-                            foreach (XmlNode objXmlLocation in objXmlWeaponLocationList)
-                            {
-                                Location objLocation = new Location(this, _lstWeaponLocations, string.Empty, false);
-                                objLocation.Load(objXmlLocation);
-                            }
-
-                            objXmlWeaponLocationList = objXmlCharacter.SelectNodes("weaponlocations/location");
-                            foreach (XmlNode objXmlLocation in objXmlWeaponLocationList)
-                            {
-                                Location objLocation = new Location(this, _lstWeaponLocations, string.Empty, false);
-                                objLocation.Load(objXmlLocation);
-                            }
-
-                            Timekeeper.Finish("load_char_wloc");
-                            */
-                            using (Timekeeper.StartSyncron("load_char_contacts", op_load))
-                            {
-                                // Contacts.
-                                foreach (XPathNavigator xmlContactToImport in xmlStatBlockBaseNode.SelectAndCacheExpression(
-                                             "contacts/contact[@useradded != \"no\"]", token))
-                                {
-                                    Contact objContact = new Contact(this)
-                                    {
-                                        EntityType = ContactType.Contact,
-                                        Name
-                                            = xmlContactToImport.SelectSingleNodeAndCacheExpression("@name", token)
-                                                ?.Value ?? string.Empty,
-                                        Role
-                                            = xmlContactToImport.SelectSingleNodeAndCacheExpression("@type", token)
-                                                ?.Value ?? string.Empty,
-                                        Connection =
-                                            xmlContactToImport.SelectSingleNodeAndCacheExpression("@connection", token)
-                                                ?.ValueAsInt ?? 1,
-                                        Loyalty = xmlContactToImport
-                                            .SelectSingleNodeAndCacheExpression("@loyalty", token)
-                                            ?.ValueAsInt ?? 1
-                                    };
-
-                                    string strDescription =
-                                        xmlContactToImport.SelectSingleNodeAndCacheExpression(
-                                            "description", token)?.Value;
-                                    using (new FetchSafelyFromPool<StringBuilder>(
-                                               Utils.StringBuilderPool, out StringBuilder sbdNotes))
-                                    {
-                                        foreach (string strLine in strDescription.SplitNoAlloc('\n',
-                                                     StringSplitOptions.RemoveEmptyEntries))
-                                        {
-                                            string[] astrLineColonSplit =
-                                                strLine.Split(':', StringSplitOptions.RemoveEmptyEntries);
-                                            switch (astrLineColonSplit[0])
-                                            {
-                                                case "Metatype":
-                                                    objContact.Metatype = astrLineColonSplit[1].Trim();
-                                                    break;
-
-                                                case "Gender":
-                                                    objContact.Gender = astrLineColonSplit[1].Trim();
-                                                    break;
-
-                                                case "Age":
-                                                    objContact.Age = astrLineColonSplit[1].Trim();
-                                                    break;
-
-                                                case "Preferred Payment Method":
-                                                    objContact.PreferredPayment = astrLineColonSplit[1].Trim();
-                                                    break;
-
-                                                case "Hobbies/Vice":
-                                                    objContact.HobbiesVice = astrLineColonSplit[1].Trim();
-                                                    break;
-
-                                                case "Personal Life":
-                                                    objContact.PersonalLife = astrLineColonSplit[1].Trim();
-                                                    break;
-
-                                                case "Type":
-                                                    objContact.Type = astrLineColonSplit[1].Trim();
-                                                    break;
-
-                                                default:
-                                                    sbdNotes.AppendLine(strLine);
-                                                    break;
-                                            }
-                                        }
-
-                                        if (sbdNotes.Length > 0)
-                                            sbdNotes.Length -= Environment.NewLine.Length;
-                                        objContact.Notes = sbdNotes.ToString();
-                                    }
-
-                                    if (blnSync)
-                                        // ReSharper disable once MethodHasAsyncOverloadWithCancellation
-                                        _lstContacts.Add(objContact);
-                                    else
-                                        await _lstContacts.AddAsync(objContact, token).ConfigureAwait(false);
-                                }
-
-                                //Timekeeper.Finish("load_char_contacts");
-                            }
-
-                            XmlDocument xmlGearDocument;
-                            using (Timekeeper.StartSyncron("load_char_armor", op_load))
-                            {
-                                // Armor.
-                                xmlGearDocument = blnSync
-                                    // ReSharper disable once MethodHasAsyncOverload
-                                    ? LoadData("gear.xml", token: token)
-                                    : await LoadDataAsync("gear.xml", token: token).ConfigureAwait(false);
-                                XmlDocument xmlArmorDocument = blnSync
-                                    // ReSharper disable once MethodHasAsyncOverload
-                                    ? LoadData("armor.xml", token: token)
-                                    : await LoadDataAsync("armor.xml", token: token).ConfigureAwait(false);
-                                foreach (XPathNavigator xmlArmorToImport in xmlStatBlockBaseNode
-                                             .SelectAndCacheExpression(
-                                                 "gear/armor/item[@useradded != \"no\"]", token))
-                                {
-                                    string strArmorName = xmlArmorToImport.SelectSingleNodeAndCacheExpression(
-                                        "@name", token)?.Value;
-                                    if (!string.IsNullOrEmpty(strArmorName))
-                                    {
-                                        XmlNode xmlArmorData =
-                                            xmlArmorDocument.TryGetNodeByNameOrId(
-                                                "/chummer/armors/armor", strArmorName);
-                                        if (xmlArmorData == null)
-                                        {
-                                            string[] astrOriginalNameSplit =
-                                                strArmorName.Split(':', StringSplitOptions.RemoveEmptyEntries);
-                                            if (astrOriginalNameSplit.Length > 1)
-                                            {
-                                                string strName = astrOriginalNameSplit[0].Trim();
-                                                xmlArmorData =
-                                                    xmlArmorDocument.TryGetNodeByNameOrId(
-                                                        "/chummer/armors/armor", strName);
-                                            }
-
-                                            if (xmlArmorData == null)
-                                            {
-                                                astrOriginalNameSplit = strArmorName.Split(',',
-                                                    StringSplitOptions.RemoveEmptyEntries);
-                                                if (astrOriginalNameSplit.Length > 1)
-                                                {
-                                                    string strName = astrOriginalNameSplit[0].Trim();
-                                                    xmlArmorData =
-                                                        xmlArmorDocument.TryGetNodeByNameOrId(
-                                                            "/chummer/armors/armor", strName);
-                                                }
-                                            }
-                                        }
-
-                                        if (xmlArmorData != null)
-                                        {
-                                            Armor objArmor = new Armor(this);
-                                            if (blnSync)
-                                                // ReSharper disable once MethodHasAsyncOverload
-                                                objArmor.Create(xmlArmorData,
-                                                    xmlArmorToImport.SelectSingleNodeAndCacheExpression(
-                                                            "@rating", token)
-                                                        ?.ValueAsInt
-                                                    ?? 0,
-                                                    lstWeapons, token: token);
-                                            else
-                                                await objArmor.CreateAsync(xmlArmorData,
-                                                    xmlArmorToImport.SelectSingleNodeAndCacheExpression(
-                                                            "@rating", token)
-                                                        ?.ValueAsInt
-                                                    ?? 0,
-                                                    lstWeapons, token: token).ConfigureAwait(false);
-                                            objArmor.Notes = xmlArmorToImport.SelectSingleNodeAndCacheExpression(
-                                                    "description", token)
-                                                ?.Value;
-                                            if (blnSync)
-                                                // ReSharper disable once MethodHasAsyncOverloadWithCancellation
-                                                _lstArmor.Add(objArmor);
-                                            else
-                                                await _lstArmor.AddAsync(objArmor, token).ConfigureAwait(false);
-
-                                            foreach (string strName in HeroLabPluginNodeNames)
-                                            {
-                                                foreach (XPathNavigator xmlArmorModToImport in xmlArmorToImport
-                                                             .Select(
-                                                                 strName + "/item[@useradded != \"no\"]"))
-                                                {
-                                                    string strArmorModName =
-                                                        xmlArmorModToImport.SelectSingleNodeAndCacheExpression(
-                                                            "@name", token)?.Value;
-                                                    if (!string.IsNullOrEmpty(strArmorModName))
-                                                    {
-                                                        XmlNode xmlArmorModData =
-                                                            xmlArmorDocument.TryGetNodeByNameOrId(
-                                                                "chummer/mods/mod", strArmorModName);
-                                                        if (xmlArmorModData != null)
-                                                        {
-                                                            ArmorMod objArmorMod = new ArmorMod(this);
-                                                            if (blnSync)
-                                                                // ReSharper disable once MethodHasAsyncOverload
-                                                                objArmorMod.Create(xmlArmorModData,
-                                                                    xmlArmorModToImport
-                                                                        .SelectSingleNodeAndCacheExpression(
-                                                                            "@rating", token)
-                                                                                   ?.ValueAsInt ?? 0, lstWeapons, token: token);
-                                                            else
-                                                                await objArmorMod.CreateAsync(xmlArmorModData,
-                                                                    xmlArmorModToImport
-                                                                        .SelectSingleNodeAndCacheExpression(
-                                                                            "@rating", token)
-                                                                        ?.ValueAsInt ?? 0, lstWeapons, token: token).ConfigureAwait(false);
-                                                            objArmorMod.Notes = xmlArmorModToImport
-                                                                .SelectSingleNodeAndCacheExpression(
-                                                                    "description", token)
-                                                                ?.Value;
-                                                            objArmorMod.Parent = objArmor;
-                                                            if (blnSync)
-                                                                // ReSharper disable once MethodHasAsyncOverloadWithCancellation
-                                                                objArmor.ArmorMods.Add(objArmorMod);
-                                                            else
-                                                                await objArmor.ArmorMods.AddAsync(objArmorMod, token)
-                                                                              .ConfigureAwait(false);
-
-                                                            foreach (string strPluginNodeName in
-                                                                     HeroLabPluginNodeNames)
-                                                            {
-                                                                foreach (XPathNavigator xmlPluginToAdd in
-                                                                         xmlArmorModToImport
-                                                                             .Select(strPluginNodeName +
-                                                                                 "/item[@useradded != \"no\"]"))
-                                                                {
-                                                                    Gear objPlugin = new Gear(this);
-                                                                    if (blnSync)
-                                                                    {
-                                                                        // ReSharper disable once MethodHasAsyncOverload
-                                                                        if (objPlugin.ImportHeroLabGear(xmlPluginToAdd,
-                                                                                xmlArmorModData,
-                                                                                lstWeapons, token))
-                                                                        {
-                                                                            // ReSharper disable once MethodHasAsyncOverloadWithCancellation
-                                                                            objArmorMod.GearChildren.Add(objPlugin);
-                                                                        }
-                                                                        else
-                                                                            // ReSharper disable once MethodHasAsyncOverload
-                                                                            objPlugin.Dispose();
-                                                                    }
-                                                                    else
-                                                                    {
-                                                                        if (await objPlugin.ImportHeroLabGearAsync(
-                                                                                    xmlPluginToAdd,
-                                                                                    xmlArmorModData,
-                                                                                    lstWeapons, token)
-                                                                                .ConfigureAwait(false))
-                                                                            await objArmorMod.GearChildren
-                                                                                .AddAsync(objPlugin, token)
-                                                                                .ConfigureAwait(false);
-                                                                        else
-                                                                            await objPlugin.DisposeAsync()
-                                                                                .ConfigureAwait(false);
-                                                                    }
-                                                                }
-
-                                                                foreach (XPathNavigator xmlPluginToAdd in
-                                                                         xmlArmorModToImport
-                                                                             .Select(strPluginNodeName +
-                                                                                 "/item[@useradded = \"no\"]"))
-                                                                {
-                                                                    string strGearName = xmlPluginToAdd
-                                                                        .SelectSingleNodeAndCacheExpression(
-                                                                            "@name", token)?.Value;
-                                                                    if (!string.IsNullOrEmpty(strGearName))
-                                                                    {
-                                                                        if (blnSync)
-                                                                        {
-                                                                            // ReSharper disable MethodHasAsyncOverload
-                                                                            Gear objPlugin
-                                                                                = objArmorMod.GearChildren
-                                                                                    .FirstOrDefault(
-                                                                                        x =>
-                                                                                            x.IncludedInParent &&
-                                                                                            (x.Name.Contains(
-                                                                                                    strGearName) ||
-                                                                                                strGearName.Contains(
-                                                                                                    x.Name)));
-                                                                            if (objPlugin != null)
-                                                                            {
-                                                                                objPlugin.Quantity = xmlPluginToAdd
-                                                                                        .SelectSingleNodeAndCacheExpression(
-                                                                                            "@quantity", token)
-                                                                                        ?.ValueAsInt
-                                                                                    ?? 1;
-                                                                                objPlugin.Notes = xmlPluginToAdd
-                                                                                    .SelectSingleNodeAndCacheExpression(
-                                                                                        "description", token)?.Value;
-                                                                                objPlugin.ProcessHeroLabGearPlugins(
-                                                                                    xmlPluginToAdd,
-                                                                                    lstWeapons, token);
-                                                                            }
-                                                                            // ReSharper restore MethodHasAsyncOverload
-                                                                        }
-                                                                        else
-                                                                        {
-                                                                            Gear objPlugin = await objArmorMod
-                                                                                .GearChildren
-                                                                                .FirstOrDefaultAsync(
-                                                                                    x =>
-                                                                                        x.IncludedInParent &&
-                                                                                        (x.Name.Contains(strGearName) ||
-                                                                                            strGearName.Contains(
-                                                                                                x.Name)), token)
-                                                                                .ConfigureAwait(false);
-                                                                            if (objPlugin != null)
-                                                                            {
-                                                                                objPlugin.Quantity
-                                                                                    = (xmlPluginToAdd
-                                                                                        .SelectSingleNodeAndCacheExpression(
-                                                                                            "@quantity", token))
-                                                                                    ?.ValueAsInt ?? 1;
-                                                                                objPlugin.Notes
-                                                                                    = (xmlPluginToAdd
-                                                                                        .SelectSingleNodeAndCacheExpression(
-                                                                                            "description", token))
-                                                                                    ?.Value;
-                                                                                await objPlugin
-                                                                                    .ProcessHeroLabGearPluginsAsync(
-                                                                                        xmlPluginToAdd,
-                                                                                        lstWeapons, token).ConfigureAwait(false);
-                                                                            }
-                                                                        }
-                                                                    }
-                                                                }
-                                                            }
-                                                        }
-                                                        else
-                                                        {
-                                                            Gear objPlugin = new Gear(this);
-                                                            if (blnSync)
-                                                            {
-                                                                // ReSharper disable once MethodHasAsyncOverload
-                                                                if (objPlugin.ImportHeroLabGear(xmlArmorModToImport,
-                                                                        xmlArmorData,
-                                                                        lstWeapons, token))
-                                                                {
-                                                                    // ReSharper disable once MethodHasAsyncOverloadWithCancellation
-                                                                    objArmor.GearChildren.Add(objPlugin);
-                                                                }
-                                                                else
-                                                                    // ReSharper disable once MethodHasAsyncOverload
-                                                                    objPlugin.Dispose();
-                                                            }
-                                                            else if (await objPlugin.ImportHeroLabGearAsync(xmlArmorModToImport,
-                                                                         xmlArmorData,
-                                                                         lstWeapons, token).ConfigureAwait(false))
-                                                            {
-                                                                await objArmor.GearChildren
-                                                                        .AddAsync(objPlugin, token)
-                                                                        .ConfigureAwait(false);
-                                                            }
-                                                            else
-                                                                await objPlugin.DisposeAsync().ConfigureAwait(false);
-                                                        }
-                                                    }
-                                                }
-
-                                                foreach (XPathNavigator xmlArmorModToImport in xmlArmorToImport
-                                                             .Select(
-                                                                 strName + "/item[@useradded = \"no\"]"))
-                                                {
-                                                    string strArmorModName =
-                                                        xmlArmorModToImport.SelectSingleNodeAndCacheExpression(
-                                                            "@name", token)?.Value;
-                                                    if (!string.IsNullOrEmpty(strArmorModName))
-                                                    {
-                                                        ArmorMod objArmorMod = blnSync
-                                                            ? objArmor.ArmorMods.FirstOrDefault(
-                                                                x =>
-                                                                    x.IncludedInArmor &&
-                                                                    (x.Name.Contains(strArmorModName) ||
-                                                                     strArmorModName.Contains(x.Name)))
-                                                            : await objArmor.ArmorMods.FirstOrDefaultAsync(
-                                                                                x =>
-                                                                                    x.IncludedInArmor &&
-                                                                                    (x.Name.Contains(strArmorModName) ||
-                                                                                        strArmorModName
-                                                                                            .Contains(x.Name)), token)
-                                                                            .ConfigureAwait(false);
-                                                        if (objArmorMod != null)
-                                                        {
-                                                            objArmorMod.Notes = xmlArmorModToImport
-                                                                .SelectSingleNodeAndCacheExpression(
-                                                                    "description", token)
-                                                                ?.Value;
-                                                            foreach (string strPluginNodeName in
-                                                                     HeroLabPluginNodeNames)
-                                                            {
-                                                                foreach (XPathNavigator xmlPluginToAdd in
-                                                                         xmlArmorModToImport
-                                                                             .Select(strPluginNodeName +
-                                                                                 "/item[@useradded != \"no\"]"))
-                                                                {
-                                                                    Gear objPlugin = new Gear(this);
-                                                                    if (blnSync)
-                                                                    {
-                                                                        // ReSharper disable once MethodHasAsyncOverload
-                                                                        if (objPlugin.ImportHeroLabGear(xmlPluginToAdd,
-                                                                                // ReSharper disable once MethodHasAsyncOverload
-                                                                                objArmorMod.GetNode(token),
-                                                                                lstWeapons, token))
-                                                                        {
-                                                                            // ReSharper disable once MethodHasAsyncOverloadWithCancellation
-                                                                            objArmorMod.GearChildren.Add(objPlugin);
-                                                                        }
-                                                                        else
-                                                                            // ReSharper disable once MethodHasAsyncOverload
-                                                                            objPlugin.Dispose();
-                                                                    }
-                                                                    else if (await objPlugin.ImportHeroLabGearAsync(xmlPluginToAdd,
-                                                                                 await objArmorMod.GetNodeAsync(token)
-                                                                                     .ConfigureAwait(false),
-                                                                                 lstWeapons, token).ConfigureAwait(false))
-                                                                    {
-                                                                        await objArmorMod.GearChildren
-                                                                            .AddAsync(objPlugin, token)
-                                                                            .ConfigureAwait(false);
-                                                                    }
-                                                                    else
-                                                                        await objPlugin.DisposeAsync().ConfigureAwait(false);
-                                                                }
-
-                                                                foreach (XPathNavigator xmlPluginToAdd in
-                                                                         xmlArmorModToImport
-                                                                             .Select(strPluginNodeName +
-                                                                                 "/item[@useradded = \"no\"]"))
-                                                                {
-                                                                    string strGearName = xmlPluginToAdd
-                                                                        .SelectSingleNodeAndCacheExpression(
-                                                                            "@name", token)?.Value;
-                                                                    if (!string.IsNullOrEmpty(strGearName))
-                                                                    {
-                                                                        if (blnSync)
-                                                                        {
-                                                                            // ReSharper disable MethodHasAsyncOverload
-                                                                            Gear objPlugin
-                                                                                = objArmor.GearChildren.FirstOrDefault(
-                                                                                    x =>
-                                                                                        x.IncludedInParent &&
-                                                                                        (x.Name.Contains(strGearName) ||
-                                                                                            strGearName.Contains(
-                                                                                                x.Name)));
-                                                                            if (objPlugin != null)
-                                                                            {
-                                                                                objPlugin.Quantity = xmlPluginToAdd
-                                                                                        .SelectSingleNodeAndCacheExpression(
-                                                                                            "@quantity", token)
-                                                                                        ?.ValueAsInt
-                                                                                    ?? 1;
-                                                                                objPlugin.Notes = xmlPluginToAdd
-                                                                                    .SelectSingleNodeAndCacheExpression(
-                                                                                        "description", token)?.Value;
-                                                                                objPlugin.ProcessHeroLabGearPlugins(
-                                                                                    xmlPluginToAdd,
-                                                                                    lstWeapons, token);
-                                                                            }
-                                                                            // ReSharper restore MethodHasAsyncOverload
-                                                                        }
-                                                                        else
-                                                                        {
-                                                                            Gear objPlugin = await objArmor.GearChildren
-                                                                                .FirstOrDefaultAsync(
-                                                                                    x =>
-                                                                                        x.IncludedInParent &&
-                                                                                        (x.Name.Contains(strGearName) ||
-                                                                                            strGearName.Contains(
-                                                                                                x.Name)), token)
-                                                                                .ConfigureAwait(false);
-                                                                            if (objPlugin != null)
-                                                                            {
-                                                                                objPlugin.Quantity
-                                                                                    = (xmlPluginToAdd
-                                                                                        .SelectSingleNodeAndCacheExpression(
-                                                                                            "@quantity", token))
-                                                                                    ?.ValueAsInt ?? 1;
-                                                                                objPlugin.Notes
-                                                                                    = (xmlPluginToAdd
-                                                                                        .SelectSingleNodeAndCacheExpression(
-                                                                                            "description", token))
-                                                                                    ?.Value;
-                                                                                await objPlugin
-                                                                                    .ProcessHeroLabGearPluginsAsync(
-                                                                                        xmlPluginToAdd,
-                                                                                        lstWeapons, token).ConfigureAwait(false);
-                                                                            }
-                                                                        }
-                                                                    }
-                                                                }
-                                                            }
-                                                        }
-                                                        else if (blnSync)
-                                                        {
-                                                            // ReSharper disable MethodHasAsyncOverload
-                                                            Gear objPlugin = objArmor.GearChildren.FirstOrDefault(
-                                                                x =>
-                                                                    x.IncludedInParent &&
-                                                                    (x.Name.Contains(strArmorModName) ||
-                                                                     strArmorModName.Contains(x.Name)));
-                                                            if (objPlugin != null)
-                                                            {
-                                                                objPlugin.Quantity = xmlArmorModToImport
-                                                                    .SelectSingleNodeAndCacheExpression(
-                                                                        "@quantity", token)?.ValueAsInt ?? 1;
-                                                                objPlugin.Notes = xmlArmorModToImport
-                                                                    .SelectSingleNodeAndCacheExpression(
-                                                                        "description", token)?.Value;
-                                                                objPlugin.ProcessHeroLabGearPlugins(
-                                                                    xmlArmorModToImport,
-                                                                    lstWeapons, token);
-                                                            }
-                                                            // ReSharper restore MethodHasAsyncOverload
-                                                        }
-                                                        else
-                                                        {
-                                                            Gear objPlugin = await objArmor.GearChildren
-                                                                .FirstOrDefaultAsync(
-                                                                    x =>
-                                                                        x.IncludedInParent &&
-                                                                        (x.Name.Contains(strArmorModName) ||
-                                                                         strArmorModName.Contains(x.Name)), token)
-                                                                .ConfigureAwait(false);
-                                                            if (objPlugin != null)
-                                                            {
-                                                                objPlugin.Quantity = (xmlArmorModToImport
-                                                                    .SelectSingleNodeAndCacheExpression(
-                                                                        "@quantity", token))?.ValueAsInt ?? 1;
-                                                                objPlugin.Notes = (xmlArmorModToImport
-                                                                    .SelectSingleNodeAndCacheExpression(
-                                                                        "description", token))?.Value;
-                                                                await objPlugin.ProcessHeroLabGearPluginsAsync(
-                                                                    xmlArmorModToImport,
-                                                                    lstWeapons, token).ConfigureAwait(false);
-                                                            }
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-
-                                //Timekeeper.Finish("load_char_armor");
-                            }
-
-                            using (Timekeeper.StartSyncron("load_char_weapons", op_load))
-                            {
-                                // Weapons.
-                                foreach (XPathNavigator xmlWeaponToImport in xmlStatBlockBaseNode.Select(
-                                             "gear/weapons/item[@useradded != \"no\"]"))
-                                {
-                                    Weapon objWeapon = new Weapon(this);
-                                    if (objWeapon.ImportHeroLabWeapon(xmlWeaponToImport, lstWeapons))
-                                    {
-                                        if (blnSync)
-                                            // ReSharper disable once MethodHasAsyncOverloadWithCancellation
-                                            _lstWeapons.Add(objWeapon);
-                                        else
-                                            await _lstWeapons.AddAsync(objWeapon, token).ConfigureAwait(false);
-                                    }
-                                    else if (blnSync)
-                                        // ReSharper disable once MethodHasAsyncOverload
-                                        objWeapon.Dispose();
-                                    else
-                                        await objWeapon.DisposeAsync().ConfigureAwait(false);
-                                }
-
-                                foreach (XPathNavigator xmlPluginToAdd in xmlStatBlockBaseNode.Select(
-                                             "gear/weapons/item[@useradded = \"no\"]"))
-                                {
-                                    string strName
-                                        = xmlPluginToAdd.SelectSingleNodeAndCacheExpression("@name", token)?.Value;
-                                    if (!string.IsNullOrEmpty(strName))
-                                    {
-                                        Weapon objWeapon = _lstWeapons.FirstOrDefault(x =>
-                                            !string.IsNullOrEmpty(x.ParentID) &&
-                                            (x.Name.Contains(strName) || strName.Contains(x.Name)));
-                                        if (objWeapon != null)
-                                        {
-                                            objWeapon.Notes = xmlPluginToAdd.SelectSingleNodeAndCacheExpression(
-                                                "description", token)?.Value;
-                                            objWeapon.ProcessHeroLabWeaponPlugins(xmlPluginToAdd, lstWeapons);
-                                        }
-                                    }
-                                }
-
-                                //Timekeeper.Finish("load_char_weapons");
-                            }
-
-                            using (Timekeeper.StartSyncron("load_char_ware", op_load))
-                            {
-                                // Cyberware/Bioware.
-                                foreach (XPathNavigator xmlCyberwareToImport in xmlStatBlockBaseNode.Select(
-                                             "gear/augmentations/cyberware/item[@useradded != \"no\"]"))
-                                {
-                                    Cyberware objCyberware = new Cyberware(this);
-                                    if (objCyberware.ImportHeroLabCyberware(xmlCyberwareToImport, null, lstWeapons,
-                                                                            lstVehicles))
-                                    {
-                                        if (blnSync)
-                                            // ReSharper disable once MethodHasAsyncOverloadWithCancellation
-                                            _lstCyberware.Add(objCyberware);
-                                        else
-                                            await _lstCyberware.AddAsync(objCyberware, token).ConfigureAwait(false);
-                                    }
-                                    else if (blnSync)
-                                        // ReSharper disable once MethodHasAsyncOverload
-                                        objCyberware.Dispose();
-                                    else
-                                        await objCyberware.DisposeAsync().ConfigureAwait(false);
-                                }
-
-                                foreach (XPathNavigator xmlPluginToAdd in xmlStatBlockBaseNode.Select(
-                                             "gear/augmentations/cyberware/item[@useradded = \"no\"]"))
-                                {
-                                    string strName
-                                        = xmlPluginToAdd.SelectSingleNodeAndCacheExpression("@name", token)?.Value;
-                                    if (!string.IsNullOrEmpty(strName))
-                                    {
-                                        Cyberware objPlugin = _lstCyberware.FirstOrDefault(x =>
-                                            !string.IsNullOrEmpty(x.ParentID) &&
-                                            (x.Name.Contains(strName) || strName.Contains(x.Name)));
-                                        if (objPlugin != null)
-                                        {
-                                            objPlugin.Notes = xmlPluginToAdd.SelectSingleNodeAndCacheExpression(
-                                                "description", token)?.Value;
-                                            objPlugin.ProcessHeroLabCyberwarePlugins(xmlPluginToAdd,
-                                                blnSync ? objPlugin.Grade : await objPlugin.GetGradeAsync(token).ConfigureAwait(false),
-                                                lstWeapons,
-                                                lstVehicles);
-                                        }
-                                    }
-                                }
-
-                                foreach (XPathNavigator xmlCyberwareToImport in xmlStatBlockBaseNode.Select(
-                                             "gear/augmentations/bioware/item[@useradded != \"no\"]"))
-                                {
-                                    Cyberware objCyberware = new Cyberware(this);
-                                    if (objCyberware.ImportHeroLabCyberware(xmlCyberwareToImport, null, lstWeapons,
-                                                                            lstVehicles))
-                                    {
-                                        if (blnSync)
-                                            // ReSharper disable once MethodHasAsyncOverloadWithCancellation
-                                            _lstCyberware.Add(objCyberware);
-                                        else
-                                            await _lstCyberware.AddAsync(objCyberware, token).ConfigureAwait(false);
-                                    }
-                                    else if (blnSync)
-                                        // ReSharper disable once MethodHasAsyncOverload
-                                        objCyberware.Dispose();
-                                    else
-                                        await objCyberware.DisposeAsync().ConfigureAwait(false);
-                                }
-
-                                foreach (XPathNavigator xmlPluginToAdd in xmlStatBlockBaseNode.Select(
-                                             "gear/augmentations/bioware/item[@useradded = \"no\"]"))
-                                {
-                                    string strName
-                                        = xmlPluginToAdd.SelectSingleNodeAndCacheExpression("@name", token)?.Value;
-                                    if (!string.IsNullOrEmpty(strName))
-                                    {
-                                        Cyberware objPlugin = _lstCyberware.FirstOrDefault(x =>
-                                            !string.IsNullOrEmpty(x.ParentID) &&
-                                            (x.Name.Contains(strName) || strName.Contains(x.Name)));
-                                        if (objPlugin != null)
-                                        {
-                                            objPlugin.Notes = xmlPluginToAdd.SelectSingleNodeAndCacheExpression(
-                                                "description", token)?.Value;
-                                            objPlugin.ProcessHeroLabCyberwarePlugins(xmlPluginToAdd,
-                                                blnSync ? objPlugin.Grade : await objPlugin.GetGradeAsync(token).ConfigureAwait(false),
-                                                lstWeapons,
-                                                lstVehicles);
-                                        }
-                                    }
-                                }
-
-                                //Timekeeper.Finish("load_char_ware");
-                            }
-
-                            XPathNodeIterator xmlNodeList;
-                            using (Timekeeper.StartSyncron("load_char_spells", op_load))
-                            {
-                                // Spells.
-                                xmlNodeList = xmlStatBlockBaseNode.SelectAndCacheExpression("magic/spells/spell", token);
-                                XmlDocument xmlSpellDocument = blnSync
-                                    // ReSharper disable once MethodHasAsyncOverload
-                                    ? LoadData("spells.xml", token: token)
-                                    : await LoadDataAsync("spells.xml", token: token).ConfigureAwait(false);
-                                foreach (XPathNavigator xmlHeroLabSpell in xmlNodeList)
-                                {
-                                    string strSpellName
-                                        = xmlHeroLabSpell.SelectSingleNodeAndCacheExpression("@name", token)?.Value;
-                                    if (!string.IsNullOrEmpty(strSpellName))
-                                    {
-                                        bool blnIsLimited =
-                                            strSpellName.EndsWith(" (limited)", StringComparison.Ordinal);
-                                        if (blnIsLimited)
-                                            strSpellName = strSpellName.TrimEndOnce(" (limited)");
-                                        string strForcedValue = string.Empty;
-                                        switch (strSpellName)
-                                        {
-                                            case "Increase Body":
-                                                strForcedValue = "BOD";
-                                                strSpellName = "Increase [Attribute]";
-                                                break;
-
-                                            case "Increase Agility":
-                                                strForcedValue = "AGI";
-                                                strSpellName = "Increase [Attribute]";
-                                                break;
-
-                                            case "Increase Reaction":
-                                                strForcedValue = "REA";
-                                                strSpellName = "Increase [Attribute]";
-                                                break;
-
-                                            case "Increase Strength":
-                                                strForcedValue = "STR";
-                                                strSpellName = "Increase [Attribute]";
-                                                break;
-
-                                            case "Increase Charisma":
-                                                strForcedValue = "CHA";
-                                                strSpellName = "Increase [Attribute]";
-                                                break;
-
-                                            case "Increase Intuition":
-                                                strForcedValue = "INT";
-                                                strSpellName = "Increase [Attribute]";
-                                                break;
-
-                                            case "Increase Logic":
-                                                strForcedValue = "LOG";
-                                                strSpellName = "Increase [Attribute]";
-                                                break;
-
-                                            case "Increase Willpower":
-                                                strForcedValue = "WIL";
-                                                strSpellName = "Increase [Attribute]";
-                                                break;
-
-                                            case "Decrease Body":
-                                                strForcedValue = "BOD";
-                                                strSpellName = "Decrease [Attribute]";
-                                                break;
-
-                                            case "Decrease Agility":
-                                                strForcedValue = "AGI";
-                                                strSpellName = "Decrease [Attribute]";
-                                                break;
-
-                                            case "Decrease Reaction":
-                                                strForcedValue = "REA";
-                                                strSpellName = "Decrease [Attribute]";
-                                                break;
-
-                                            case "Decrease Strength":
-                                                strForcedValue = "STR";
-                                                strSpellName = "Decrease [Attribute]";
-                                                break;
-
-                                            case "Decrease Charisma":
-                                                strForcedValue = "CHA";
-                                                strSpellName = "Decrease [Attribute]";
-                                                break;
-
-                                            case "Decrease Intuition":
-                                                strForcedValue = "INT";
-                                                strSpellName = "Decrease [Attribute]";
-                                                break;
-
-                                            case "Decrease Logic":
-                                                strForcedValue = "LOG";
-                                                strSpellName = "Decrease [Attribute]";
-                                                break;
-
-                                            case "Decrease Willpower":
-                                                strForcedValue = "WIL";
-                                                strSpellName = "Decrease [Attribute]";
-                                                break;
-                                        }
-
-                                        if (strSpellName.StartsWith("Detect ", StringComparison.Ordinal) &&
-                                            strSpellName != "Detect Life" &&
-                                            strSpellName != "Detect Life, Extended" &&
-                                            strSpellName != "Detect Magic" &&
-                                            strSpellName != "Detect Magic, Extended" &&
-                                            strSpellName != "Detect Enemies" &&
-                                            strSpellName != "Detect Enemies, Extended" &&
-                                            strSpellName != "Detect Individual" &&
-                                            strSpellName != "Detect Life, Extended")
-                                        {
-                                            strForcedValue = strSpellName.TrimStartOnce("Clean ")
-                                                                         .TrimEndOnce(", Extended");
-                                            if (xmlHeroLabSpell.SelectSingleNodeAndCacheExpression("@type", token)?.Value == "Physical")
-                                                strSpellName = "Detect [Object]";
-                                            else if (strSpellName.EndsWith(", Extended", StringComparison.Ordinal))
-                                                strSpellName = "Detect [Life Form], Extended";
-                                            else
-                                                strSpellName = "Detect [Life Form]";
-                                        }
-                                        else if (strSpellName.StartsWith("Corrode ", StringComparison.Ordinal))
-                                        {
-                                            strForcedValue = strSpellName.TrimStartOnce("Corrode ");
-                                            strSpellName = "Corrode [Object]";
-                                        }
-                                        else if (strSpellName.StartsWith("Melt ", StringComparison.Ordinal))
-                                        {
-                                            strForcedValue = strSpellName.TrimStartOnce("Melt ");
-                                            strSpellName = "Melt [Object]";
-                                        }
-                                        else if (strSpellName.StartsWith("Sludge ", StringComparison.Ordinal))
-                                        {
-                                            strForcedValue = strSpellName.TrimStartOnce("Sludge ");
-                                            strSpellName = "Sludge [Object]";
-                                        }
-                                        else if (strSpellName.StartsWith("Disrupt ", StringComparison.Ordinal))
-                                        {
-                                            strForcedValue = strSpellName.TrimStartOnce("Disrupt ");
-                                            strSpellName = "Disrupt [Object]";
-                                        }
-                                        else if (strSpellName.StartsWith("Destroy ", StringComparison.Ordinal))
-                                        {
-                                            strForcedValue = strSpellName.TrimStartOnce("Destroy ");
-                                            strSpellName
-                                                = xmlHeroLabSpell.SelectSingleNodeAndCacheExpression(
-                                                      "@type", token)?.Value ==
-                                                  "Physical"
-                                                    ? "Destroy [Vehicle]"
-                                                    : "Destroy [Free Spirit]";
-                                        }
-                                        else if (strSpellName.StartsWith("Insecticide ", StringComparison.Ordinal))
-                                        {
-                                            strForcedValue = strSpellName.TrimStartOnce("Insecticide ");
-                                            strSpellName = "Insecticide [Insect Spirit]";
-                                        }
-                                        else if (strSpellName.StartsWith("One Less ", StringComparison.Ordinal))
-                                        {
-                                            strForcedValue = strSpellName.TrimStartOnce("One Less ");
-                                            strSpellName = "One Less [Metatype/Species]";
-                                        }
-                                        else if (strSpellName.StartsWith("Slay ", StringComparison.Ordinal))
-                                        {
-                                            strForcedValue = strSpellName.TrimStartOnce("Slay ");
-                                            strSpellName = "Slay [Metatype/Species]";
-                                        }
-                                        else if (strSpellName.StartsWith("Slaughter ", StringComparison.Ordinal))
-                                        {
-                                            strForcedValue = strSpellName.TrimStartOnce("Slaughter ");
-                                            strSpellName = "Slaughter [Metatype/Species]";
-                                        }
-                                        else if (strSpellName.StartsWith("Ram ", StringComparison.Ordinal))
-                                        {
-                                            strForcedValue = strSpellName.TrimStartOnce("Ram ");
-                                            strSpellName = "Ram [Object]";
-                                        }
-                                        else if (strSpellName.StartsWith("Wreck ", StringComparison.Ordinal))
-                                        {
-                                            strForcedValue = strSpellName.TrimStartOnce("Wreck ");
-                                            strSpellName = "Wreck [Object]";
-                                        }
-                                        else if (strSpellName.StartsWith("Demolish ", StringComparison.Ordinal))
-                                        {
-                                            strForcedValue = strSpellName.TrimStartOnce("Demolish ");
-                                            strSpellName = "Demolish [Object]";
-                                        }
-                                        else if (strSpellName.EndsWith(" Cryptesthesia", StringComparison.Ordinal))
-                                        {
-                                            strForcedValue = strSpellName.TrimEndOnce(" Cryptesthesia");
-                                            strSpellName = "[Sense] Cryptesthesia";
-                                        }
-                                        else if (strSpellName.EndsWith(" Removal", StringComparison.Ordinal))
-                                        {
-                                            strForcedValue = strSpellName.TrimStartOnce("Mass ")
-                                                                         .TrimEndOnce(" Removal");
-                                            strSpellName =
-                                                strSpellName.StartsWith("Mass ", StringComparison.Ordinal)
-                                                    ? "Mass [Sense] Removal"
-                                                    : "[Sense] Removal";
-                                        }
-                                        else if (strSpellName.StartsWith("Alleviate ", StringComparison.Ordinal) &&
-                                                 strSpellName != "Alleviate Addiction")
-                                        {
-                                            strForcedValue = strSpellName.TrimStartOnce("Alleviate ");
-                                            strSpellName = "Alleviate [Allergy]";
-                                        }
-                                        else if (strSpellName.StartsWith("Clean ", StringComparison.Ordinal))
-                                        {
-                                            strForcedValue = strSpellName.TrimStartOnce("Clean ");
-                                            strSpellName = "Clean [Element]";
-                                        }
-                                        else if (strSpellName.EndsWith(" Grenade", StringComparison.Ordinal))
-                                        {
-                                            strForcedValue = strSpellName.TrimEndOnce(" Grenade");
-                                            strSpellName = "[Element] Grenade";
-                                        }
-                                        else if (strSpellName.EndsWith(" Aura", StringComparison.Ordinal))
-                                        {
-                                            strForcedValue = strSpellName.TrimEndOnce(" Aura");
-                                            strSpellName = "[Element] Aura";
-                                        }
-                                        else if (strSpellName != "Napalm Wall" &&
-                                                 strSpellName.EndsWith(" Wall", StringComparison.Ordinal))
-                                        {
-                                            strForcedValue = strSpellName.TrimEndOnce(" Wall");
-                                            strSpellName = "[Element] Wall";
-                                        }
-                                        else if (strSpellName.StartsWith("Shape ", StringComparison.Ordinal))
-                                        {
-                                            strForcedValue = strSpellName.TrimStartOnce("Shape ");
-                                            strSpellName = "Shape [Material]";
-                                        }
-                                        else if (strSpellName.EndsWith(" Form", StringComparison.Ordinal))
-                                        {
-                                            strForcedValue = strSpellName.TrimEndOnce(" Form");
-                                            strSpellName = "[Critter] Form";
-                                        }
-                                        else if (strSpellName.StartsWith("Calling ", StringComparison.Ordinal))
-                                        {
-                                            strForcedValue = strSpellName.TrimStartOnce("Calling ");
-                                            strSpellName = "Calling [Spirit Type]";
-                                        }
-                                        else if (strSpellName != "Symbolic Link" &&
-                                                 strSpellName.EndsWith(" Link", StringComparison.Ordinal))
-                                        {
-                                            strForcedValue = strSpellName.TrimEndOnce(" Link");
-                                            strSpellName = "[Sense] Link";
-                                        }
-
-                                        string strSpellCategory =
-                                            xmlHeroLabSpell.SelectSingleNodeAndCacheExpression("@category", token)?.Value;
-                                        XmlNode xmlSpellData = xmlSpellDocument.TryGetNodeByNameOrId(
-                                            "chummer/spells/spell", strSpellName,
-                                            "category = " + strSpellCategory.CleanXPath());
-                                        if (xmlSpellData == null)
-                                        {
-                                            string[] astrOriginalNameSplit =
-                                                strSpellName.Split(':', StringSplitOptions.RemoveEmptyEntries);
-                                            if (astrOriginalNameSplit.Length > 1)
-                                            {
-                                                string strName = astrOriginalNameSplit[0].Trim();
-                                                xmlSpellData = xmlSpellDocument.TryGetNodeByNameOrId(
-                                                    "chummer/spells/spell", strName,
-                                                    "category = " + strSpellCategory.CleanXPath());
-                                            }
-
-                                            if (xmlSpellData == null)
-                                            {
-                                                astrOriginalNameSplit = strSpellName.Split(',',
-                                                    StringSplitOptions.RemoveEmptyEntries);
-                                                if (astrOriginalNameSplit.Length > 1)
-                                                {
-                                                    string strName = astrOriginalNameSplit[0].Trim();
-                                                    xmlSpellData = xmlSpellDocument.TryGetNodeByNameOrId(
-                                                        "chummer/spells/spell", strName,
-                                                        "category = " + strSpellCategory.CleanXPath());
-                                                }
-                                            }
-                                        }
-
-                                        if (xmlSpellData != null)
-                                        {
-                                            Spell objSpell = new Spell(this);
-                                            if (blnSync)
-                                                // ReSharper disable once MethodHasAsyncOverloadWithCancellation
-                                                objSpell.Create(xmlSpellData, strForcedValue, blnIsLimited);
-                                            else
-                                                await objSpell.CreateAsync(xmlSpellData, strForcedValue, blnIsLimited, token: token).ConfigureAwait(false);
-                                            objSpell.Notes = xmlHeroLabSpell.SelectSingleNodeAndCacheExpression(
-                                                "description", token)?.Value;
-                                            if (blnSync)
-                                                // ReSharper disable once MethodHasAsyncOverloadWithCancellation
-                                                _lstSpells.Add(objSpell);
-                                            else
-                                                await _lstSpells.AddAsync(objSpell, token).ConfigureAwait(false);
-                                        }
-                                    }
-                                }
-
-                                //Timekeeper.Finish("load_char_spells");
-                            }
-
-                            using (Timekeeper.StartSyncron("load_char_powers", op_load))
-                            {
-                                // Powers.
-                                xmlNodeList = xmlStatBlockBaseNode.SelectAndCacheExpression("magic/adeptpowers/adeptpower", token);
-                                XmlDocument xmlPowersDocument = blnSync
-                                    // ReSharper disable once MethodHasAsyncOverload
-                                    ? LoadData("powers.xml", token: token)
-                                    : await LoadDataAsync("powers.xml", token: token).ConfigureAwait(false);
-                                foreach (XPathNavigator xmlHeroLabPower in xmlNodeList)
-                                {
-                                    string strPowerName = xmlHeroLabPower.SelectSingleNodeAndCacheExpression(
-                                        "@name", token)?.Value;
-                                    if (!string.IsNullOrEmpty(strPowerName))
-                                    {
-                                        int intRating = 1;
-                                        string strForcedValue = string.Empty;
-                                        XmlNode xmlPowerData =
-                                            xmlPowersDocument.SelectSingleNode(
-                                                "chummer/powers/power[contains(name, " + strPowerName.CleanXPath() +
-                                                ")]");
-                                        if (xmlPowerData == null)
-                                        {
-                                            string[] astrOriginalNameSplit =
-                                                strPowerName.Split(':', StringSplitOptions.RemoveEmptyEntries);
-                                            if (astrOriginalNameSplit.Length > 1)
-                                            {
-                                                string strName = astrOriginalNameSplit[0].Trim();
-                                                xmlPowerData =
-                                                    xmlPowersDocument.SelectSingleNode(
-                                                        "/chummer/powers/power[contains(name, " +
-                                                        strName.CleanXPath() +
-                                                        ")]");
-
-                                                strForcedValue = astrOriginalNameSplit[1].Trim();
-                                                int intForcedValueParenthesesStart = strForcedValue.IndexOf('(');
-                                                if (intForcedValueParenthesesStart != -1)
-                                                    strForcedValue =
-                                                        strForcedValue.Substring(0, intForcedValueParenthesesStart);
-                                            }
-
-                                            if (xmlPowerData == null)
-                                            {
-                                                astrOriginalNameSplit = strPowerName.Split('(',
-                                                    StringSplitOptions.RemoveEmptyEntries);
-                                                if (astrOriginalNameSplit.Length > 1)
-                                                {
-                                                    string strName = astrOriginalNameSplit[0].Trim();
-                                                    xmlPowerData =
-                                                        xmlPowersDocument.SelectSingleNode(
-                                                            "/chummer/powers/power[contains(name, " +
-                                                            strName.CleanXPath() +
-                                                            ")]");
-
-                                                    string strSecondPart = astrOriginalNameSplit[1].Trim();
-                                                    int intSecondPartParenthesesEnd = strSecondPart.IndexOf(')');
-                                                    if (intSecondPartParenthesesEnd != -1
-                                                        && !int.TryParse(
-                                                            strSecondPart.AsSpan(0, intSecondPartParenthesesEnd),
-                                                            out intRating))
-                                                        intRating = 1;
-
-                                                    astrOriginalNameSplit = strSecondPart.Split(':',
-                                                        StringSplitOptions.RemoveEmptyEntries);
-                                                    if (astrOriginalNameSplit.Length >= 2)
-                                                    {
-                                                        strForcedValue = astrOriginalNameSplit[1].Trim();
-                                                        int intForcedValueParenthesesStart =
-                                                            strForcedValue.IndexOf('(');
-                                                        if (intForcedValueParenthesesStart != -1)
-                                                            strForcedValue =
-                                                                strForcedValue.Substring(0,
-                                                                    intForcedValueParenthesesStart);
-                                                    }
-                                                }
-                                            }
-                                        }
-
-                                        if (xmlPowerData != null)
-                                        {
-                                            Power objPower = new Power(this);
-                                            if (blnSync)
-                                                objPower.Extra = strForcedValue;
-                                            else
-                                                await objPower.SetExtraAsync(strForcedValue, token).ConfigureAwait(false);
-                                            if (blnSync)
-                                                // ReSharper disable once MethodHasAsyncOverloadWithCancellation
-                                                objPower.Create(xmlPowerData, intRating);
-                                            else
-                                                await objPower.CreateAsync(xmlPowerData, intRating, token: token).ConfigureAwait(false);
-                                            objPower.Notes = xmlHeroLabPower.SelectSingleNodeAndCacheExpression(
-                                                "description", token)?.Value;
-                                            if (blnSync)
-                                                // ReSharper disable once MethodHasAsyncOverloadWithCancellation
-                                                _lstPowers.Add(objPower);
-                                            else
-                                                await _lstPowers.AddAsync(objPower, token).ConfigureAwait(false);
-                                        }
-                                    }
-                                }
-
-                                //Timekeeper.Finish("load_char_powers");
-                            }
-
-                            /* TODO: Spirit/Sprite Importing
-                            Timekeeper.Start("load_char_spirits");
-
-                            // Spirits/Sprites.
-                            foreach (XPathNavigator xmlSpirit in xmlCharacterNavigator.SelectAndCacheExpression("spirits/spirit"))
-                            {
-                                Spirit objSpirit = new Spirit(this);
-                                objSpirit.Load(xmlSpirit);
-                                _lstSpirits.Add(objSpirit);
-                            }
-
-                            Timekeeper.Finish("load_char_spirits");
-                            */
-                            using (Timekeeper.StartSyncron("load_char_complex", op_load))
-                            {
-                                // Complex Forms/Technomancer Programs.
-                                string strComplexFormsLine =
-                                    lstTextStatBlockLines?.Find(x =>
-                                        x.StartsWith(
-                                            "Complex Forms:",
-                                            StringComparison.Ordinal));
-                                if (!string.IsNullOrEmpty(strComplexFormsLine))
-                                {
-                                    XmlDocument xmlComplexFormsDocument = blnSync
-                                        // ReSharper disable once MethodHasAsyncOverload
-                                        ? LoadData("complexforms.xml", token: token)
-                                        : await LoadDataAsync("complexforms.xml", token: token).ConfigureAwait(false);
-
-                                    string[] astrComplexForms =
-                                        strComplexFormsLine.TrimStartOnce("Complex Forms:").Trim()
-                                                           .Split(',', StringSplitOptions.RemoveEmptyEntries);
-                                    foreach (string strComplexFormEntry in astrComplexForms)
-                                    {
-                                        string strComplexFormName = strComplexFormEntry.Trim();
-                                        string strForcedValue = string.Empty;
-                                        switch (strComplexFormName)
-                                        {
-                                            case "Diffusion of Attack":
-                                                strComplexFormName = "Diffusion of [Matrix Attribute]";
-                                                strForcedValue = "Attack";
-                                                break;
-
-                                            case "Diffusion of Sleaze":
-                                                strComplexFormName = "Diffusion of [Matrix Attribute]";
-                                                strForcedValue = "Sleaze";
-                                                break;
-
-                                            case "Diffusion of Data Processing":
-                                                strComplexFormName = "Diffusion of [Matrix Attribute]";
-                                                strForcedValue = "Data Processing";
-                                                break;
-
-                                            case "Diffusion of Firewall":
-                                                strComplexFormName = "Diffusion of [Matrix Attribute]";
-                                                strForcedValue = "Firewall";
-                                                break;
-
-                                            case "Infusion of Attack":
-                                                strComplexFormName = "Infusion of [Matrix Attribute]";
-                                                strForcedValue = "Attack";
-                                                break;
-
-                                            case "Infusion of Sleaze":
-                                                strComplexFormName = "Infusion of [Matrix Attribute]";
-                                                strForcedValue = "Sleaze";
-                                                break;
-
-                                            case "Infusion of Data Processing":
-                                                strComplexFormName = "Infusion of [Matrix Attribute]";
-                                                strForcedValue = "Data Processing";
-                                                break;
-
-                                            case "Infusion of Firewall":
-                                                strComplexFormName = "Infusion of [Matrix Attribute]";
-                                                strForcedValue = "Firewall";
-                                                break;
-                                        }
-
-                                        XmlNode xmlComplexFormData =
-                                            xmlComplexFormsDocument.TryGetNodeByNameOrId(
-                                                "/chummer/complexforms/complexform", strComplexFormName);
-                                        if (xmlComplexFormData == null)
-                                        {
-                                            string[] astrOriginalNameSplit =
-                                                strComplexFormName.Split(':',
-                                                                         StringSplitOptions.RemoveEmptyEntries);
-                                            if (astrOriginalNameSplit.Length > 1)
-                                            {
-                                                string strName = astrOriginalNameSplit[0].Trim();
-                                                xmlComplexFormData =
-                                                    xmlComplexFormsDocument.TryGetNodeByNameOrId(
-                                                        "/chummer/complexforms/complexform", strName);
-                                            }
-
-                                            if (xmlComplexFormData == null)
-                                            {
-                                                astrOriginalNameSplit = strComplexFormName.Split(',',
-                                                    StringSplitOptions.RemoveEmptyEntries);
-                                                if (astrOriginalNameSplit.Length > 1)
-                                                {
-                                                    string strName = astrOriginalNameSplit[0].Trim();
-                                                    xmlComplexFormData =
-                                                        xmlComplexFormsDocument.TryGetNodeByNameOrId(
-                                                            "/chummer/complexforms/complexform", strName);
-                                                }
-                                            }
-                                        }
-
-                                        if (xmlComplexFormData != null)
-                                        {
-                                            ComplexForm objComplexForm = new ComplexForm(this);
-                                            if (blnSync)
-                                            {
-                                                // ReSharper disable once MethodHasAsyncOverloadWithCancellation
-                                                objComplexForm.Create(xmlComplexFormData, strForcedValue);
-                                                // ReSharper disable once MethodHasAsyncOverloadWithCancellation
-                                                _lstComplexForms.Add(objComplexForm);
-                                            }
-                                            else
-                                            {
-                                                await objComplexForm.CreateAsync(xmlComplexFormData, strForcedValue, token).ConfigureAwait(false);
-                                                await _lstComplexForms.AddAsync(objComplexForm, token).ConfigureAwait(false);
-                                            }
-                                        }
-                                    }
-                                }
-
-                                //Timekeeper.Finish("load_char_complex");
-                            }
-
-                            /* TODO: AI Advanced Program Importing
-                            Timekeeper.Start("load_char_aiprogram");
-
-                            // AI Advanced Programs.
-                            objXmlNodeList = objXmlCharacter.SelectNodes("aiprograms/aiprogram");
-                            foreach (XmlNode xmlHeroLabProgram in xmlNodeList)
-                            {
-                                AIProgram objProgram = new AIProgram(this);
-                                objProgram.Load(xmlHeroLabProgram);
-                                _lstAIPrograms.Add(objProgram);
-                            }
-
-                            Timekeeper.Finish("load_char_aiprogram");
-                            */
-                            /* TODO: Martial Arts import, which are saved in TXT and HTML statblocks but not in XML statblock
-                            Timekeeper.Start("load_char_marts");
-
-                            // Martial Arts.
-                            xmlNodeList = objXmlCharacter.SelectNodes("martialarts/martialart");
-                            foreach (XmlNode xmlHeroLabArt in xmlNodeList)
-                            {
-                                MartialArt objMartialArt = new MartialArt(this);
-                                objMartialArt.Load(xmlHeroLabArt);
-                                _lstMartialArts.Add(objMartialArt);
-                            }
-
-                            Timekeeper.Finish("load_char_marts");
-                            */
-                            using (Timekeeper.StartSyncron("load_char_lifestyle", op_load))
-                            {
-                                // Lifestyles.
-                                XmlNode xmlFakeSINDataNode =
-                                    xmlGearDocument.SelectSingleNode("/chummer/gears/gear[name = 'Fake SIN']");
-                                XmlNode xmlFakeLicenseDataNode =
-                                    xmlGearDocument.SelectSingleNode("/chummer/gears/gear[name = 'Fake License']");
-                                xmlNodeList = xmlStatBlockBaseNode.SelectAndCacheExpression("identities/identity", token);
-                                foreach (XPathNavigator xmlHeroLabIdentity in xmlNodeList)
-                                {
-                                    string strIdentityName
-                                        = xmlHeroLabIdentity.SelectSingleNodeAndCacheExpression("@name", token)
-                                        ?.Value ?? string.Empty;
-                                    int intIdentityNameParenthesesStart = strIdentityName.IndexOf('(');
-                                    if (intIdentityNameParenthesesStart != -1)
-                                        strIdentityName =
-                                            strIdentityName.Substring(0, intIdentityNameParenthesesStart);
-                                    XPathNavigator xmlHeroLabFakeSINNode =
-                                        xmlHeroLabIdentity.SelectSingleNodeAndCacheExpression(
-                                            "license[@name = \"Fake SIN\"]", token);
-                                    if (xmlHeroLabFakeSINNode != null)
-                                    {
-                                        Gear objFakeSIN = new Gear(this);
-                                        if (blnSync)
-                                        {
-                                            // ReSharper disable once MethodHasAsyncOverload
-                                            objFakeSIN.Create(xmlFakeSINDataNode,
-                                                xmlHeroLabFakeSINNode
-                                                    .SelectSingleNodeAndCacheExpression(
-                                                        "@rating", token)
-                                                    ?.ValueAsInt
-                                                ?? 1,
-                                                lstWeapons,
-                                                strIdentityName, token: token);
-                                            foreach (XPathNavigator xmlHeroLabFakeLicenseNode in xmlHeroLabIdentity
-                                                         .Select(
-                                                             "license[@name = \"Fake License\"]"))
-                                            {
-                                                Gear objFakeLicense = new Gear(this);
-                                                // ReSharper disable once MethodHasAsyncOverload
-                                                objFakeLicense.Create(xmlFakeLicenseDataNode,
-                                                    xmlHeroLabFakeLicenseNode
-                                                        .SelectSingleNodeAndCacheExpression(
-                                                            "@rating", token)
-                                                        ?.ValueAsInt ??
-                                                    1,
-                                                    lstWeapons,
-                                                    xmlHeroLabFakeLicenseNode
-                                                        .SelectSingleNodeAndCacheExpression(
-                                                            "@for", token)
-                                                        ?.Value ?? string.Empty, token: token);
-                                                objFakeLicense.Parent = objFakeSIN;
-                                                // ReSharper disable once MethodHasAsyncOverloadWithCancellation
-                                                objFakeSIN.Children.Add(objFakeLicense);
-                                            }
-                                            // ReSharper disable once MethodHasAsyncOverloadWithCancellation
-                                            _lstGear.Add(objFakeSIN);
-                                        }
-                                        else
-                                        {
-                                            await objFakeSIN.CreateAsync(xmlFakeSINDataNode,
-                                                xmlHeroLabFakeSINNode
-                                                    .SelectSingleNodeAndCacheExpression(
-                                                        "@rating", token)
-                                                    ?.ValueAsInt
-                                                ?? 1,
-                                                lstWeapons,
-                                                strIdentityName, token: token).ConfigureAwait(false);
-                                            foreach (XPathNavigator xmlHeroLabFakeLicenseNode in xmlHeroLabIdentity
-                                                         .Select(
-                                                             "license[@name = \"Fake License\"]"))
-                                            {
-                                                Gear objFakeLicense = new Gear(this);
-                                                await objFakeLicense.CreateAsync(xmlFakeLicenseDataNode,
-                                                    xmlHeroLabFakeLicenseNode
-                                                        .SelectSingleNodeAndCacheExpression(
-                                                            "@rating", token)
-                                                        ?.ValueAsInt ??
-                                                    1,
-                                                    lstWeapons,
-                                                    xmlHeroLabFakeLicenseNode
-                                                        .SelectSingleNodeAndCacheExpression(
-                                                            "@for", token)
-                                                        ?.Value ?? string.Empty, token: token).ConfigureAwait(false);
-                                                await objFakeLicense.SetParentAsync(objFakeSIN, token)
-                                                    .ConfigureAwait(false);
-                                                await objFakeSIN.Children.AddAsync(objFakeLicense, token)
-                                                    .ConfigureAwait(false);
-                                            }
-                                            await _lstGear.AddAsync(objFakeSIN, token).ConfigureAwait(false);
-                                        }
-                                    }
-
-                                    XPathNavigator xmlHeroLabLifestyleNode = xmlHeroLabIdentity.SelectSingleNodeAndCacheExpression("lifestyle", token);
-                                    if (xmlHeroLabLifestyleNode != null)
-                                    {
-                                        string strLifestyleType
-                                            = xmlHeroLabLifestyleNode.SelectSingleNodeAndCacheExpression(
-                                                    "@name", token)
-                                              ?.Value
-                                              .TrimEndOnce(" Lifestyle") ?? string.Empty;
-
-                                        XmlNode xmlLifestyleDataNode =
-                                            (blnSync
-                                                // ReSharper disable once MethodHasAsyncOverload
-                                                ? LoadData("lifestyles.xml", token: token)
-                                                : await LoadDataAsync("lifestyles.xml", token: token).ConfigureAwait(false))
-                                            .TryGetNodeByNameOrId("/chummer/lifestyles/lifestyle", strLifestyleType);
-
-                                        if (xmlLifestyleDataNode != null)
-                                        {
-                                            Lifestyle objLifestyle = new Lifestyle(this);
-                                            if (blnSync)
-                                                // ReSharper disable once MethodHasAsyncOverloadWithCancellation
-                                                objLifestyle.Create(xmlLifestyleDataNode);
-                                            else
-                                                await objLifestyle.CreateAsync(xmlLifestyleDataNode, token).ConfigureAwait(false);
-                                            if (int.TryParse(
-                                                    xmlHeroLabLifestyleNode.SelectSingleNodeAndCacheExpression(
-                                                            "@months", token)
-                                                    ?.Value,
-                                                    out int intMonths))
-                                            {
-                                                if (blnSync)
-                                                    objLifestyle.Increments = intMonths;
-                                                else
-                                                    await objLifestyle.SetIncrementsAsync(intMonths, token).ConfigureAwait(false);
-                                            }
-
-                                            if (blnSync)
-                                                // ReSharper disable once MethodHasAsyncOverloadWithCancellation
-                                                _lstLifestyles.Add(objLifestyle);
-                                            else
-                                                await _lstLifestyles.AddAsync(objLifestyle, token)
-                                                                    .ConfigureAwait(false);
-                                        }
-                                    }
-                                }
-
-                                //Timekeeper.Finish("load_char_lifestyle");
-                            }
-
-                            using (Timekeeper.StartSyncron("load_char_gear", op_load))
-                            {
-                                // <gears>
-                                foreach (XPathNavigator xmlGearToImport in xmlStatBlockBaseNode.Select(
-                                             "gear/equipment/item[@useradded != \"no\"]"))
-                                {
-                                    Gear objGear = new Gear(this);
-                                    if (blnSync)
-                                    {
-                                        // ReSharper disable once MethodHasAsyncOverload
-                                        if (objGear.ImportHeroLabGear(xmlGearToImport, null, lstWeapons, token))
-                                            // ReSharper disable once MethodHasAsyncOverloadWithCancellation
-                                            _lstGear.Add(objGear);
-                                    }
-                                    else if (await objGear.ImportHeroLabGearAsync(xmlGearToImport, null, lstWeapons, token).ConfigureAwait(false))
-                                    {
-                                        await _lstGear.AddAsync(objGear, token).ConfigureAwait(false);
-                                    }
-                                }
-
-                                if (blnSync)
-                                {
-                                    foreach (XPathNavigator xmlPluginToAdd in xmlStatBlockBaseNode
-                                                 // ReSharper disable once MethodHasAsyncOverload
-                                                 .SelectAndCacheExpression(
-                                                     "gear/equipment/item[@useradded = \"no\"]", token))
-                                    {
-                                        // ReSharper disable once MethodHasAsyncOverload
-                                        string strName = xmlPluginToAdd.SelectSingleNodeAndCacheExpression("@name", token)
-                                                                       ?.Value;
-                                        if (!string.IsNullOrEmpty(strName))
-                                        {
-                                            Gear objPlugin = _lstGear.FirstOrDefault(x =>
-                                                x.IncludedInParent &&
-                                                (x.Name.Contains(strName) || strName.Contains(x.Name)));
-                                            if (objPlugin != null)
-                                            {
-                                                objPlugin.Quantity =
-                                                    Convert.ToDecimal(
-                                                        // ReSharper disable once MethodHasAsyncOverload
-                                                        xmlPluginToAdd.SelectSingleNodeAndCacheExpression("@quantity", token)
-                                                                      ?.Value ?? "1",
-                                                        GlobalSettings.InvariantCultureInfo);
-                                                objPlugin.Notes = xmlPluginToAdd
-                                                                  // ReSharper disable once MethodHasAsyncOverload
-                                                                  .SelectSingleNodeAndCacheExpression("description", token)
-                                                                  ?.Value;
-                                                // ReSharper disable once MethodHasAsyncOverload
-                                                objPlugin.ProcessHeroLabGearPlugins(xmlPluginToAdd, lstWeapons, token);
-                                            }
-                                        }
-                                    }
-                                }
-                                else
-                                {
-                                    foreach (XPathNavigator xmlPluginToAdd in xmlStatBlockBaseNode
-                                                 .SelectAndCacheExpression(
-                                                     "gear/equipment/item[@useradded = \"no\"]", token))
-                                    {
-                                        string strName = (xmlPluginToAdd
-                                                                .SelectSingleNodeAndCacheExpression("@name", token))
-                                            ?.Value;
-                                        if (!string.IsNullOrEmpty(strName))
-                                        {
-                                            Gear objPlugin = await _lstGear.FirstOrDefaultAsync(x =>
-                                                                               x.IncludedInParent &&
-                                                                               (x.Name.Contains(strName)
-                                                                                   || strName.Contains(x.Name)), token)
-                                                                           .ConfigureAwait(false);
-                                            if (objPlugin != null)
-                                            {
-                                                objPlugin.Quantity =
-                                                    Convert.ToDecimal(
-                                                        (xmlPluginToAdd
-                                                               .SelectSingleNodeAndCacheExpression(
-                                                                   "@quantity", token))
-                                                        ?.Value ?? "1",
-                                                        GlobalSettings.InvariantCultureInfo);
-                                                objPlugin.Notes = (xmlPluginToAdd
-                                                                         .SelectSingleNodeAndCacheExpression(
-                                                                             "description", token))
-                                                    ?.Value;
-                                                await objPlugin
-                                                      .ProcessHeroLabGearPluginsAsync(xmlPluginToAdd, lstWeapons, token)
-                                                      .ConfigureAwait(false);
-                                            }
-                                        }
-                                    }
-                                }
-
-                                //Timekeeper.Finish("load_char_gear");
-                            }
-
-                            using (Timekeeper.StartSyncron("load_char_car", op_load))
-                            {
-                                foreach (Vehicle objVehicle in lstVehicles)
-                                {
-                                    if (blnSync)
-                                        // ReSharper disable once MethodHasAsyncOverloadWithCancellation
-                                        _lstVehicles.Add(objVehicle);
-                                    else
-                                        await _lstVehicles.AddAsync(objVehicle, token).ConfigureAwait(false);
-                                }
-
-                                /* TODO: Process HeroLab Vehicles entries, which are present in HTML and TXT statblocks but not in XML
-                                // Vehicles.
-                                xmlNodeList = objXmlCharacter.SelectNodes("vehicles/vehicle");
-                                foreach (XmlNode xmlHeroLabVehicle in xmlNodeList)
-                                {
-                                    Vehicle objVehicle = new Vehicle(this);
-                                    objVehicle.Load(xmlHeroLabVehicle);
-                                    _lstVehicles.Add(objVehicle);
-                                }
-                                */
-                                //Timekeeper.Finish("load_char_car");
-                            }
-
-                            /* TODO: Process HeroLab Initiation/Submersion and related entries
-                            Timekeeper.Start("load_char_mmagic");
-                            // Metamagics/Echoes.
-                            xmlNodeList = objXmlCharacter.SelectNodes("metamagics/metamagic");
-                            foreach (XmlNode xmlHeroLabMetamagic in xmlNodeList)
-                            {
-                                Metamagic objMetamagic = new Metamagic(this);
-                                objMetamagic.Load(xmlHeroLabMetamagic);
-                                _lstMetamagics.Add(objMetamagic);
-                            }
-
-                            Timekeeper.Finish("load_char_mmagic");
-                            Timekeeper.Start("load_char_arts");
-
-                            // Arts
-                            xmlNodeList = objXmlCharacter.SelectNodes("arts/art");
-                            foreach (XmlNode xmlHeroLabArt in xmlNodeList)
-                            {
-                                Art objArt = new Art(this);
-                                objArt.Load(xmlHeroLabArt);
-                                _lstArts.Add(objArt);
-                            }
-
-                            Timekeeper.Finish("load_char_arts");
-                            Timekeeper.Start("load_char_ench");
-
-                            // Enhancements
-                            xmlNodeList = objXmlCharacter.SelectNodes("enhancements/enhancement");
-                            foreach (XmlNode xmlHeroLabEnhancement in objXmlNodeList)
-                            {
-                                Enhancement objEnhancement = new Enhancement(this);
-                                objEnhancement.Load(xmlHeroLabEnhancement);
-                                _lstEnhancements.Add(objEnhancement);
-                            }
-
-                            Timekeeper.Finish("load_char_ench");
-                            Timekeeper.Start("load_char_cpow");
-
-                            // Critter Powers.
-                            xmlNodeList = objXmlCharacter.SelectNodes("critterpowers/critterpower");
-                            foreach (XmlNode xmlHeroLabPower in xmlNodeList)
-                            {
-                                CritterPower objPower = new CritterPower(this);
-                                objPower.Load(xmlHeroLabPower);
-                                _lstCritterPowers.Add(objPower);
-                            }
-
-                            Timekeeper.Finish("load_char_cpow");
-                            Timekeeper.Start("load_char_foci");
-
-                            // Foci.
-                            xmlNodeList = objXmlCharacter.SelectNodes("foci/focus");
-                            foreach (XmlNode xmlHeroLabFocus in xmlNodeList)
-                            {
-                                Focus objFocus = new Focus(this);
-                                objFocus.Load(xmlHeroLabFocus);
-                                _lstFoci.Add(objFocus);
-                            }
-
-                            Timekeeper.Finish("load_char_foci");
-                            Timekeeper.Start("load_char_init");
-
-                            // Initiation Grades.
-                            xmlNodeList = objXmlCharacter.SelectNodes("initiationgrades/initiationgrade");
-                            foreach (XmlNode xmlHeroLabGrade in xmlNodeList)
-                            {
-                                InitiationGrade objGrade = new InitiationGrade(this);
-                                objGrade.Load(xmlHeroLabGrade);
-                                _lstInitiationGrades.Add(objGrade);
-                            }
-
-                            Timekeeper.Finish("load_char_init");
-                            */
-                            /* TODO: Import HeroLab Expense Logs, which are different from Journal entries
-                            Timekeeper.Start("load_char_elog");
-
-                            // Expense Log Entries.
-                            XmlNodeList xmlExpenseList = objXmlCharacter.SelectNodes("expenses/expense");
-                            foreach (XmlNode xmlHeroLabExpense in xmlExpenseList)
-                            {
-                                ExpenseLogEntry objExpenseLogEntry = new ExpenseLogEntry(this);
-                                objExpenseLogEntry.Load(xmlHeroLabExpense);
-                                _lstExpenseLog.Add(objExpenseLogEntry);
-                            }
-
-                            Timekeeper.Finish("load_char_elog");
-                            */
-                            _lstWeapons.AddRange(lstWeapons);
-
-                            using (Timekeeper.StartSyncron("load_char_unarmed", op_load))
-                            {
-                                // Look for the unarmed attack
-                                bool blnFoundUnarmed = false;
-                                foreach (Weapon objWeapon in _lstWeapons)
-                                {
-                                    if (objWeapon.Name == "Unarmed Attack")
-                                    {
-                                        blnFoundUnarmed = true;
-                                        break;
-                                    }
-                                }
-
-                                if (!blnFoundUnarmed)
-                                {
-                                    // Add the Unarmed Attack Weapon to the character.
-                                    XmlDocument objXmlWeaponDoc = blnSync
-                                        // ReSharper disable once MethodHasAsyncOverload
-                                        ? LoadData("weapons.xml", token: token)
-                                        : await LoadDataAsync("weapons.xml", token: token).ConfigureAwait(false);
-                                    XmlNode objXmlWeapon =
-                                        objXmlWeaponDoc.SelectSingleNode(
-                                            "/chummer/weapons/weapon[name = \"Unarmed Attack\"]");
-                                    if (objXmlWeapon != null)
-                                    {
-                                        Weapon objWeapon = new Weapon(this);
-                                        if (blnSync)
-                                            // ReSharper disable once MethodHasAsyncOverload
-                                            objWeapon.Create(objXmlWeapon, _lstWeapons, token: token);
-                                        else
-                                            await objWeapon.CreateAsync(objXmlWeapon, _lstWeapons, token: token).ConfigureAwait(false);
-                                        objWeapon.IncludedInWeapon = true; // Unarmed attack can never be removed
-                                        if (blnSync)
-                                            // ReSharper disable once MethodHasAsyncOverloadWithCancellation
-                                            _lstWeapons.Add(objWeapon);
-                                        else
-                                            await _lstWeapons.AddAsync(objWeapon, token).ConfigureAwait(false);
-                                    }
-                                }
-
-                                //Timekeeper.Finish("load_char_unarmed");
-                            }
-                        }
-                        finally
-                        {
-                            IsLoading = false;
-                        }
-
-                        // Refresh certain improvements
-                        using (Timekeeper.StartSyncron("load_char_improvementrefreshers2", op_load))
-                        {
-                            // Process all events related to improvements
-                            using (new FetchSafelyFromPool<
-                                       Dictionary<INotifyMultiplePropertiesChangedAsync, HashSet<string>>>(
-                                       Utils.DictionaryForMultiplePropertyChangedPool,
-                                       out Dictionary<INotifyMultiplePropertiesChangedAsync, HashSet<string>>
-                                           dicChangedProperties))
-                            {
-                                try
-                                {
-                                    token.ThrowIfCancellationRequested();
-                                    HashSet<string> setAlwaysChangedProperties = Utils.StringHashSetPool.Get();
-                                    dicChangedProperties.Add(this, setAlwaysChangedProperties);
-                                    setAlwaysChangedProperties.Add(nameof(BlackMarketDiscount));
-                                    setAlwaysChangedProperties.Add(nameof(DealerConnectionDiscount));
-                                    setAlwaysChangedProperties.Add(nameof(Essence));
-                                    setAlwaysChangedProperties.Add(nameof(WoundModifier));
-                                    setAlwaysChangedProperties.Add(nameof(SustainingPenalty));
-                                    setAlwaysChangedProperties.Add(nameof(Encumbrance));
-                                    setAlwaysChangedProperties.Add(nameof(ArmorEncumbrance));
-
-                                    foreach (Improvement objImprovement in Improvements)
-                                    {
-                                        if (!objImprovement.Enabled)
-                                            continue;
-                                        foreach ((INotifyMultiplePropertiesChangedAsync objItemToUpdate,
-                                                  string strPropertyToUpdate) in objImprovement
-                                                     .GetRelevantPropertyChangers())
-                                        {
-                                            if (!dicChangedProperties.TryGetValue(
-                                                    objItemToUpdate, out HashSet<string> setChangedProperties))
-                                            {
-                                                setChangedProperties = Utils.StringHashSetPool.Get();
-                                                dicChangedProperties.Add(objItemToUpdate, setChangedProperties);
-                                            }
-
-                                            setChangedProperties.Add(strPropertyToUpdate);
-                                        }
-                                    }
-
-                                    foreach (KeyValuePair<INotifyMultiplePropertiesChangedAsync, HashSet<string>>
-                                                 kvpToProcess in
-                                             dicChangedProperties)
-                                    {
-                                        if (blnSync)
-                                            kvpToProcess.Key.OnMultiplePropertiesChanged(kvpToProcess.Value.ToList());
-                                        else
-                                            await kvpToProcess.Key
-                                                .OnMultiplePropertiesChangedAsync(kvpToProcess.Value.ToList(), token)
-                                                .ConfigureAwait(false);
-                                    }
-                                }
-                                finally
-                                {
-                                    List<HashSet<string>> lstToReturn = dicChangedProperties.Values.ToList();
-                                    for (int i = lstToReturn.Count - 1; i >= 0; --i)
-                                    {
-                                        HashSet<string> setLoop = lstToReturn[i];
-                                        Utils.StringHashSetPool.Return(ref setLoop);
-                                    }
-                                }
-                            }
-
-                            // Curb Mystic Adept power points if the values that were loaded in would be illegal
-                            if (blnSync)
-                            {
-                                if (MysticAdeptPowerPoints > 0)
-                                {
-                                    int intMAGTotalValue = MAG.TotalValue;
-                                    if (MysticAdeptPowerPoints > intMAGTotalValue)
-                                        MysticAdeptPowerPoints = intMAGTotalValue;
-                                }
-                            }
-                            else
-                            {
-                                int intMysticAdeptPowerPoints = await GetMysticAdeptPowerPointsAsync(token).ConfigureAwait(false);
-                                if (intMysticAdeptPowerPoints > 0)
-                                {
-                                    int intMAGTotalValue =
-                                        await (await GetAttributeAsync("MAG", token: token).ConfigureAwait(false))
-                                            .GetTotalValueAsync(token).ConfigureAwait(false);
-                                    if (intMysticAdeptPowerPoints > intMAGTotalValue)
-                                        await SetMysticAdeptPowerPointsAsync(intMAGTotalValue, token).ConfigureAwait(false);
-                                }
-                            }
-
-                            if (blnSync)
-                            {
-                                if (!InitiationEnabled || !AddInitiationsAllowed)
-                                {
-                                    // ReSharper disable once MethodHasAsyncOverload
-                                    ClearInitiations(token);
-                                }
-                            }
-                            else if (!await GetInitiationEnabledAsync(token).ConfigureAwait(false) || !await GetAddInitiationsAllowedAsync(token).ConfigureAwait(false))
-                                await ClearInitiationsAsync(token).ConfigureAwait(false);
-                            //Timekeeper.Finish("load_char_improvementrefreshers");
-                        }
-                    }
-                    catch (Exception e)
-                    {
-                        op_load.SetSuccess(false);
-                        TelemetryClient.TrackException(e);
-                        Log.Error(e);
-                    }
-                }
-
-                return true;
-            }
-            finally
-            {
-                if (blnSync)
-                    // ReSharper disable once MethodHasAsyncOverload
-                    objLocker.Dispose();
-                else
-                    await objLockerAsync.DisposeAsync().ConfigureAwait(false);
-            }
-        }
-
-        #endregion Hero Lab Importing
 
         #region Karma Values
 

@@ -803,7 +803,6 @@ namespace Chummer
             this.mnuHeroLabImporter.Size = new System.Drawing.Size(171, 22);
             this.mnuHeroLabImporter.Tag = "Menu_Main_HeroLabImporter";
             this.mnuHeroLabImporter.Text = "&Hero Lab Importer";
-            this.mnuHeroLabImporter.Click += new System.EventHandler(this.mnuHeroLabImporter_Click);
             // 
             // mnuMasterIndex
             // 
