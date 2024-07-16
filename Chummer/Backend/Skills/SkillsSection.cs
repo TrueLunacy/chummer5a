@@ -1384,7 +1384,7 @@ namespace Chummer.Backend.Skills
                                                                         if (objSkill.SkillId != Guid.Empty)
                                                                         {
                                                                             string strSkillId =
-                                                                                objSkill.SkillId.ToString("D");
+                                                                                objSkill.SkillId.ToString("D", GlobalSettings.InvariantCultureInfo);
                                                                             XmlNode xmlLoadingSkillNode =
                                                                                 xmlSkillNode.SelectSingleNode(
                                                                                     "skills/skill[suid = " +
@@ -2391,7 +2391,7 @@ namespace Chummer.Backend.Skills
                             xmlLoop.InnerText
                                 = map.TryGetValue(xmlLoop.InnerText, out Guid guidLoop)
                                     ? guidLoop.ToString("D", GlobalSettings.InvariantCultureInfo)
-                                    : StringExtensions.EmptyGuid;
+                                    : Utils.GuidEmptyString;
                         }
                     }
                 }
@@ -2459,7 +2459,7 @@ namespace Chummer.Backend.Skills
                             xmlLoop.InnerText
                                 = map.TryGetValue(xmlLoop.InnerText, out Guid guidLoop)
                                     ? guidLoop.ToString("D", GlobalSettings.InvariantCultureInfo)
-                                    : StringExtensions.EmptyGuid;
+                                    : Utils.GuidEmptyString;
                         }
                     }
                 }

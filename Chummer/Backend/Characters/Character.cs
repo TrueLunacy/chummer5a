@@ -2773,7 +2773,7 @@ namespace Chummer
                 }
 
                 // If this is a Shapeshifter, a Metavariant must be selected. Default to Human if None is selected.
-                if (strSelectedMetatypeCategory == "Shapeshifter" && strMetavariantId == Guid.Empty.ToString())
+                if (strSelectedMetatypeCategory == "Shapeshifter" && strMetavariantId.IsEmptyGuid())
                     strMetavariantId =
                         objXmlMetatype.SelectSingleNodeAndCacheExpressionAsNavigator("metavariants/metavariant[name = \"Human\"]/id", token)?.Value ??
                         string.Empty;
@@ -2782,7 +2782,7 @@ namespace Chummer
 
                 // Set Metatype information.
                 XmlNode charNode =
-                    strSelectedMetatypeCategory == "Shapeshifter" || strMetavariantId == Guid.Empty.ToString()
+                    strSelectedMetatypeCategory == "Shapeshifter" || strMetavariantId.IsEmptyGuid()
                         ? objXmlMetatype
                         : objXmlMetavariant ?? objXmlMetatype;
                 AttributeSection.Create(charNode, intForce, token: token);
@@ -3460,7 +3460,7 @@ namespace Chummer
                 }
 
                 // If this is a Shapeshifter, a Metavariant must be selected. Default to Human if None is selected.
-                if (strSelectedMetatypeCategory == "Shapeshifter" && strMetavariantId == Guid.Empty.ToString())
+                if (strSelectedMetatypeCategory == "Shapeshifter" && strMetavariantId.IsEmptyGuid())
                     strMetavariantId =
                         objXmlMetatype
                             .SelectSingleNodeAndCacheExpressionAsNavigator(
@@ -3471,7 +3471,7 @@ namespace Chummer
 
                 // Set Metatype information.
                 XmlNode charNode =
-                    strSelectedMetatypeCategory == "Shapeshifter" || strMetavariantId == Guid.Empty.ToString()
+                    strSelectedMetatypeCategory == "Shapeshifter" || strMetavariantId.IsEmptyGuid()
                         ? objXmlMetatype
                         : objXmlMetavariant ?? objXmlMetatype;
                 await AttributeSection.CreateAsync(charNode, intForce, token: token).ConfigureAwait(false);
@@ -7517,7 +7517,7 @@ namespace Chummer
                                             // Cyberadept in these versions was an echo. It is no longer an echo, and so needs a more complicated reapplication
                                             if (blnSync
                                                     ? Settings.SpecialKarmaCostBasedOnShownValue
-                                                    : await Settings.GetSpecialKarmaCostBasedOnShownValueAsync(token))
+                                                    : await Settings.GetSpecialKarmaCostBasedOnShownValueAsync(token).ConfigureAwait(false))
                                             {
                                                 if (blnSync)
                                                     // ReSharper disable once MethodHasAsyncOverloadWithCancellation
@@ -8255,7 +8255,7 @@ namespace Chummer
                                                 else
                                                 {
                                                     xmlTraditionDataNode =
-                                                        xmlTraditionListDataNode.TryGetNodeByNameOrId("tradition", Tradition.CustomMagicalTraditionGuid);
+                                                        xmlTraditionListDataNode.TryGetNodeByNameOrId("tradition", Tradition.CustomMagicalTraditionGuidString);
                                                     if (xmlTraditionDataNode != null)
                                                     {
                                                         if (blnSync)
@@ -8312,7 +8312,7 @@ namespace Chummer
                                             else
                                             {
                                                 xmlTraditionDataNode =
-                                                    xmlTraditionListDataNode.TryGetNodeByNameOrId("tradition", Tradition.CustomMagicalTraditionGuid);
+                                                    xmlTraditionListDataNode.TryGetNodeByNameOrId("tradition", Tradition.CustomMagicalTraditionGuidString);
                                                 if (xmlTraditionDataNode != null)
                                                 {
                                                     if (blnSync)
@@ -9799,8 +9799,7 @@ namespace Chummer
                                 {
                                     SustainedObject objSustained = new SustainedObject(this);
                                     objSustained.Load(objXmlSustained);
-                                    if (objSustained.InternalId !=
-                                        Guid.Empty.ToString("D", GlobalSettings.InvariantCultureInfo))
+                                    if (!objSustained.InternalId.IsEmptyGuid())
                                     {
                                         if (blnSync)
                                             // ReSharper disable once MethodHasAsyncOverloadWithCancellation
@@ -16303,10 +16302,13 @@ namespace Chummer
                 {
                     token.ThrowIfCancellationRequested();
                     foreach (Cyberware objCyberware in await Cyberware
-                                 .ToListAsync(async x => x.SourceID != Backend.Equipment.Cyberware.EssenceHoleGUID
-                                                         && x.SourceID != Backend.Equipment.Cyberware
-                                                             .EssenceAntiHoleGUID &&
-                                                         await x.GetIsModularCurrentlyEquippedAsync(token).ConfigureAwait(false), token: token).ConfigureAwait(false))
+                                 .ToListAsync(async x =>
+                                 {
+                                     Guid guidSourceId = await x.GetSourceIDAsync(token).ConfigureAwait(false);
+                                     return guidSourceId != Backend.Equipment.Cyberware.EssenceHoleGUID
+                                            && guidSourceId != Backend.Equipment.Cyberware.EssenceAntiHoleGUID
+                                            && await x.GetIsModularCurrentlyEquippedAsync(token).ConfigureAwait(false);
+                                 }, token: token).ConfigureAwait(false))
                     {
                         if (!string.IsNullOrEmpty(objCyberware.PlugsIntoModularMount))
                         {
@@ -22993,7 +22995,7 @@ namespace Chummer
                                 {
                                     XmlNode xmlTraditionDataNode
                                         = xmlTraditionListDataNode.TryGetNodeByNameOrId("tradition",
-                                            Tradition.CustomMagicalTraditionGuid);
+                                            Tradition.CustomMagicalTraditionGuidString);
                                     if (xmlTraditionDataNode != null)
                                     {
                                         if (!MagicTradition.Create(xmlTraditionDataNode))
@@ -24932,7 +24934,7 @@ namespace Chummer
                 token.ThrowIfCancellationRequested();
                 Cyberware objAntiHole
                     = await Cyberware
-                        .FirstOrDefaultAsync(x => x.SourceID == Backend.Equipment.Cyberware.EssenceAntiHoleGUID, token)
+                        .FirstOrDefaultAsync(async x => await x.GetSourceIDAsync(token).ConfigureAwait(false) == Backend.Equipment.Cyberware.EssenceAntiHoleGUID, token)
                         .ConfigureAwait(false);
                 if (objAntiHole != null)
                 {
@@ -24962,7 +24964,7 @@ namespace Chummer
                 {
                     Cyberware objHole
                         = await Cyberware
-                            .FirstOrDefaultAsync(x => x.SourceID == Backend.Equipment.Cyberware.EssenceHoleGUID, token)
+                            .FirstOrDefaultAsync(async x => await x.GetSourceIDAsync(token).ConfigureAwait(false) == Backend.Equipment.Cyberware.EssenceHoleGUID, token)
                             .ConfigureAwait(false);
                     if (objHole == null)
                     {
@@ -25108,7 +25110,7 @@ namespace Chummer
                 token.ThrowIfCancellationRequested();
                 Cyberware objHole
                     = await Cyberware.FirstOrDefaultAsync(
-                        x => x.SourceID == Backend.Equipment.Cyberware.EssenceHoleGUID, token).ConfigureAwait(false);
+                        async x => await x.GetSourceIDAsync(token).ConfigureAwait(false) == Backend.Equipment.Cyberware.EssenceHoleGUID, token).ConfigureAwait(false);
 
                 if (objHole != null)
                 {
@@ -25138,7 +25140,7 @@ namespace Chummer
                 {
                     Cyberware objAntiHole
                         = await Cyberware.FirstOrDefaultAsync(
-                                x => x.SourceID == Backend.Equipment.Cyberware.EssenceAntiHoleGUID, token)
+                                async x => await x.GetSourceIDAsync(token).ConfigureAwait(false) == Backend.Equipment.Cyberware.EssenceAntiHoleGUID, token)
                             .ConfigureAwait(false);
                     if (objAntiHole == null)
                     {

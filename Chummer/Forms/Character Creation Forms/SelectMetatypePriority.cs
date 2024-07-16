@@ -942,7 +942,7 @@ namespace Chummer
                                         XPathNavigator objXmlMetatypePriorityNode
                                             = xmlBaseMetatypePriority.TryGetNodeByNameOrId("metatypes/metatype", strSelectedMetatype);
                                         if (!string.IsNullOrEmpty(strSelectedMetavariant)
-                                            && strSelectedMetavariant != Guid.Empty.ToString("D"))
+                                            && !strSelectedMetavariant.IsEmptyGuid())
                                             objXmlMetatypePriorityNode
                                                 = objXmlMetatypePriorityNode?.TryGetNodeByNameOrId("metavariants/metavariant", strSelectedMetavariant);
                                         if (objXmlMetatypePriorityNode != null && int.TryParse(
@@ -1484,7 +1484,7 @@ namespace Chummer
                     return;
                 }
 
-                strSelectedMetatype = objXmlMetatype["id"]?.InnerText ?? Guid.Empty.ToString("D");
+                strSelectedMetatype = objXmlMetatype["id"]?.InnerText ?? Utils.GuidEmptyString;
 
                 System.IAsyncDisposable objLocker2
                     = await _objCharacter.LockObject.EnterWriteLockAsync(token).ConfigureAwait(false);
@@ -1516,12 +1516,11 @@ namespace Chummer
                             .ConfigureAwait(false);
 
                     // If this is a Shapeshifter, a Metavariant must be selected. Default to Human if None is selected.
-                    if (strSelectedMetatypeCategory == "Shapeshifter" &&
-                        strSelectedMetavariant == Guid.Empty.ToString("D"))
+                    if (strSelectedMetatypeCategory == "Shapeshifter" && strSelectedMetavariant.IsEmptyGuid())
                         strSelectedMetavariant = "Human";
                     XmlNode objXmlMetavariant
                         = objXmlMetatype.TryGetNodeByNameOrId("metavariants/metavariant", strSelectedMetavariant);
-                    strSelectedMetavariant = objXmlMetavariant?["id"]?.InnerText ?? Guid.Empty.ToString();
+                    strSelectedMetavariant = objXmlMetavariant?["id"]?.InnerText ?? Utils.GuidEmptyString;
                     int intForce = await nudForce.DoThreadSafeFuncAsync(x => x.Visible ? x.ValueAsInt : 0, token)
                         .ConfigureAwait(false);
 
@@ -1652,7 +1651,7 @@ namespace Chummer
 
                     XmlNode charNode =
                         strSelectedMetatypeCategory == "Shapeshifter"
-                        || strSelectedMetavariant == Guid.Empty.ToString("D")
+                        || strSelectedMetavariant.IsEmptyGuid()
                             ? objXmlMetatype
                             : objXmlMetavariant ?? objXmlMetatype;
 
@@ -1925,7 +1924,7 @@ namespace Chummer
                                       "metatypes/metatype", strSelectedMetatype)
                                   ?? xmlBaseMetatypePriority.TryGetNodeByNameOrId(
                                       "metatypes/metatype", await _objCharacter.GetMetatypeAsync(token).ConfigureAwait(false));
-                            if (strSelectedMetavariant != Guid.Empty.ToString("D"))
+                            if (!strSelectedMetavariant.IsEmptyGuid())
                                 objXmlMetatypePriorityNode
                                     = objXmlMetatypePriorityNode?.TryGetNodeByNameOrId(
                                           "metavariants/metavariant", strSelectedMetavariant)
@@ -2452,7 +2451,7 @@ namespace Chummer
                 XPathNavigator objXmlMetatype
                     = _xmlBaseMetatypeDataNode.TryGetNodeByNameOrId("metatypes/metatype", strSelectedMetatype);
                 XPathNavigator objXmlMetavariant
-                    = string.IsNullOrEmpty(strSelectedMetavariant) || strSelectedMetavariant == Guid.Empty.ToString("D")
+                    = string.IsNullOrEmpty(strSelectedMetavariant) || strSelectedMetavariant.IsEmptyGuid()
                         ? null
                         : objXmlMetatype?.TryGetNodeByNameOrId("metavariants/metavariant", strSelectedMetavariant);
                 XPathNavigator objXmlMetatypePriorityNode = null;
@@ -3169,7 +3168,7 @@ namespace Chummer
                                                                        out List<ListItem> lstMetavariants))
                         {
                             lstMetavariants.Add(new ListItem(
-                                                    Guid.Empty.ToString("D"),
+                                Utils.GuidEmptyString,
                                                     await LanguageManager.GetStringAsync("String_None", token: token)
                                                                          .ConfigureAwait(false)));
                             // Retrieve the list of Metavariants for the selected Metatype.
@@ -3211,7 +3210,7 @@ namespace Chummer
 
                             string strOldSelectedValue
                                 = await cboMetavariant.DoThreadSafeFuncAsync(x => x.SelectedValue?.ToString(), token)
-                                    .ConfigureAwait(false) ?? (await _objCharacter.GetMetavariantGuidAsync(token).ConfigureAwait(false)).ToString("D");
+                                    .ConfigureAwait(false) ?? (await _objCharacter.GetMetavariantGuidAsync(token).ConfigureAwait(false)).ToString("D", GlobalSettings.InvariantCultureInfo);
                             Interlocked.Increment(ref _intLoading);
                             try
                             {
@@ -3289,7 +3288,7 @@ namespace Chummer
                         await cboMetavariant
                               .PopulateWithListItemsAsync(
                                   new ListItem(
-                                      Guid.Empty.ToString("D"),
+                                      Utils.GuidEmptyString,
                                       await LanguageManager.GetStringAsync("String_None", token: token)
                                                            .ConfigureAwait(false)).Yield(), token).ConfigureAwait(false);
                         await cboMetavariant.DoThreadSafeAsync(x => x.Enabled = false, token).ConfigureAwait(false);
@@ -3304,7 +3303,7 @@ namespace Chummer
                     await cboMetavariant
                           .PopulateWithListItemsAsync(
                               new ListItem(
-                                      Guid.Empty.ToString("D"),
+                                      Utils.GuidEmptyString,
                                       await LanguageManager.GetStringAsync("String_None", token: token)
                                                            .ConfigureAwait(false))
                                   .Yield(), token).ConfigureAwait(false);

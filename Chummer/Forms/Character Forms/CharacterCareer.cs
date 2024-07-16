@@ -3227,17 +3227,21 @@ namespace Chummer
 
                     foreach (Cyberware objCyberware in await CharacterObject.Cyberware.DeepWhereAsync(
                                      x => x.Children, async x =>
-                                         x.SourceType == Improvement.ImprovementSource.Bioware
-                                         && x.SourceID != Cyberware.EssenceHoleGUID
-                                         && x.SourceID != Cyberware.EssenceAntiHoleGUID
-                                         && await x.GetIsModularCurrentlyEquippedAsync(token)
-                                             .ConfigureAwait(false)
-                                         && (!string.IsNullOrEmpty(x.PlugsIntoModularMount)
-                                             || await x.GetCanRemoveThroughImprovementsAsync(token)
-                                                 .ConfigureAwait(false)), token)
+                                     {
+                                         if (x.SourceType != Improvement.ImprovementSource.Bioware)
+                                             return false;
+                                         Guid guidSourceId = await x.GetSourceIDAsync(token).ConfigureAwait(false);
+                                         return guidSourceId != Cyberware.EssenceHoleGUID
+                                                && guidSourceId != Cyberware.EssenceAntiHoleGUID
+                                                && await x.GetIsModularCurrentlyEquippedAsync(token)
+                                                    .ConfigureAwait(false)
+                                                && (!string.IsNullOrEmpty(await x.GetPlugsIntoModularMountAsync(token).ConfigureAwait(false))
+                                                    || await x.GetCanRemoveThroughImprovementsAsync(token)
+                                                        .ConfigureAwait(false));
+                                     }, token)
                                  .ConfigureAwait(false))
                     {
-                        if (!string.IsNullOrEmpty(objCyberware.PlugsIntoModularMount))
+                        if (!string.IsNullOrEmpty(await objCyberware.GetPlugsIntoModularMountAsync(token).ConfigureAwait(false)))
                         {
                             if (!await objCyberware.GetCanRemoveThroughImprovementsAsync(token)
                                     .ConfigureAwait(false))
@@ -3295,16 +3299,21 @@ namespace Chummer
 
                     foreach (Cyberware objCyberware in await CharacterObject.Cyberware.DeepWhereAsync(
                                      x => x.Children, async x =>
-                                         x.SourceType == Improvement.ImprovementSource.Cyberware
-                                         && x.SourceID != Cyberware.EssenceHoleGUID
-                                         && x.SourceID != Cyberware.EssenceAntiHoleGUID
-                                         && await x.GetIsModularCurrentlyEquippedAsync(token).ConfigureAwait(false)
-                                         && (!string.IsNullOrEmpty(x.PlugsIntoModularMount)
-                                             || await x.GetCanRemoveThroughImprovementsAsync(token)
-                                                 .ConfigureAwait(false)), token)
+                                     {
+                                         if (x.SourceType != Improvement.ImprovementSource.Cyberware)
+                                             return false;
+                                         Guid guidSourceId = await x.GetSourceIDAsync(token).ConfigureAwait(false);
+                                         return guidSourceId != Cyberware.EssenceHoleGUID
+                                                && guidSourceId != Cyberware.EssenceAntiHoleGUID
+                                                && await x.GetIsModularCurrentlyEquippedAsync(token)
+                                                    .ConfigureAwait(false)
+                                                && (!string.IsNullOrEmpty(await x.GetPlugsIntoModularMountAsync(token).ConfigureAwait(false))
+                                                    || await x.GetCanRemoveThroughImprovementsAsync(token)
+                                                        .ConfigureAwait(false));
+                                     }, token)
                                  .ConfigureAwait(false))
                     {
-                        if (!string.IsNullOrEmpty(objCyberware.PlugsIntoModularMount))
+                        if (!string.IsNullOrEmpty(await objCyberware.GetPlugsIntoModularMountAsync(token).ConfigureAwait(false)))
                         {
                             if (!await objCyberware.GetCanRemoveThroughImprovementsAsync(token)
                                     .ConfigureAwait(false))
@@ -3358,14 +3367,17 @@ namespace Chummer
 
                     foreach (Cyberware objCyberware in await CharacterObject.Cyberware.DeepWhereAsync(
                                      x => x.Children, async x =>
-                                         x.SourceID != Cyberware.EssenceHoleGUID
-                                         && x.SourceID != Cyberware.EssenceAntiHoleGUID
-                                         && (await x.GetGradeAsync(token).ConfigureAwait(false)).Name != "None"
-                                         && await x.GetIsModularCurrentlyEquippedAsync(token)
-                                             .ConfigureAwait(false)
-                                         && (!string.IsNullOrEmpty(x.PlugsIntoModularMount)
-                                             || await x.GetCanRemoveThroughImprovementsAsync(token)
-                                                 .ConfigureAwait(false)), token)
+                                     {
+                                         Guid guidSourceId = await x.GetSourceIDAsync(token).ConfigureAwait(false);
+                                         return guidSourceId != Cyberware.EssenceHoleGUID
+                                                && guidSourceId != Cyberware.EssenceAntiHoleGUID
+                                                && (await x.GetGradeAsync(token).ConfigureAwait(false)).Name != "None"
+                                                && await x.GetIsModularCurrentlyEquippedAsync(token)
+                                                    .ConfigureAwait(false)
+                                                && (!string.IsNullOrEmpty(x.PlugsIntoModularMount)
+                                                    || await x.GetCanRemoveThroughImprovementsAsync(token)
+                                                        .ConfigureAwait(false));
+                                     }, token)
                                  .ConfigureAwait(false))
                     {
                         char chrAvail = (await objCyberware.TotalAvailTupleAsync(false, token)
@@ -4145,7 +4157,7 @@ namespace Chummer
 
                     // Permanently reduce the CharacterAttribute's value.
                     await (await CharacterObject.GetAttributeAsync(frmPickAttribute.MyForm.SelectedAttribute, token: GenericToken)
-                                                .ConfigureAwait(false)).Degrade(1, GenericToken).ConfigureAwait(false);
+                                                .ConfigureAwait(false)).Degrade(token: GenericToken).ConfigureAwait(false);
                 }
 
                 await MakeDirtyWithCharacterUpdate(GenericToken).ConfigureAwait(false);
@@ -5009,10 +5021,11 @@ namespace Chummer
                                             }
                                         }
 
-                                        TreeNode objWareNode = objCyberware.SourceID == Cyberware.EssenceHoleGUID
-                                                               || objCyberware.SourceID == Cyberware.EssenceAntiHoleGUID
+                                        Guid guidSourceId = await objCyberware.GetSourceIDAsync(token).ConfigureAwait(false);
+                                        TreeNode objWareNode = guidSourceId == Cyberware.EssenceHoleGUID
+                                                               || guidSourceId == Cyberware.EssenceAntiHoleGUID
                                             ? await treCyberware.DoThreadSafeFuncAsync(
-                                                                    x => x.FindNode(objCyberware.SourceIDString), token)
+                                                                    x => x.FindNode(guidSourceId.ToString("D", GlobalSettings.InvariantCultureInfo)), token)
                                                                 .ConfigureAwait(false)
                                             : await treCyberware.DoThreadSafeFuncAsync(
                                                 x => x.FindNode(objCyberware.InternalId), token).ConfigureAwait(false);
@@ -5092,8 +5105,8 @@ namespace Chummer
                                             if (!string.IsNullOrEmpty(ImprovementManager.SelectedValue)
                                                 && string.IsNullOrEmpty(objCyberware.Extra))
                                                 objCyberware.Extra = ImprovementManager.SelectedValue;
-                                            TreeNode objNode = objLoopCyberware.SourceID == Cyberware.EssenceHoleGUID
-                                                               || objCyberware.SourceID == Cyberware.EssenceAntiHoleGUID
+                                            TreeNode objNode = await objLoopCyberware.GetSourceIDAsync(token).ConfigureAwait(false) == Cyberware.EssenceHoleGUID
+                                                               || await objCyberware.GetSourceIDAsync(token).ConfigureAwait(false) == Cyberware.EssenceAntiHoleGUID
                                                 ? await treCyberware.DoThreadSafeFuncAsync(
                                                                         x => x.FindNode(objCyberware.SourceIDString),
                                                                         token)
@@ -12838,7 +12851,7 @@ namespace Chummer
                     case KarmaExpenseType.ImproveAttribute:
                     {
                         await (await CharacterObject.GetAttributeAsync(strUndoId, token: GenericToken)
-                                                    .ConfigureAwait(false)).Degrade(1, GenericToken)
+                                                    .ConfigureAwait(false)).Degrade(token: GenericToken)
                                                                            .ConfigureAwait(false);
                         break;
                     }
@@ -18568,7 +18581,7 @@ namespace Chummer
                     await cboTradition.DoThreadSafeAsync(x => x.SelectedValue = strSourceIDString, GenericToken)
                         .ConfigureAwait(false);
                 }
-                else if (strSelectedId == Tradition.CustomMagicalTraditionGuid)
+                else if (strSelectedId == Tradition.CustomMagicalTraditionGuidString)
                 {
                     if (await objTradition.CreateAsync(xmlTradition, token: GenericToken).ConfigureAwait(false))
                     {

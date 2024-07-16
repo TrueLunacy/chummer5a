@@ -1786,6 +1786,36 @@ namespace Chummer.Backend.Skills
         }
 
         /// <summary>
+        /// Does this skill's pool have a non-trivial value.
+        /// </summary>
+        public bool NonTrivialPool
+        {
+            get
+            {
+                using (LockObject.EnterReadLock())
+                    return !IsNativeLanguage && Enabled && AttributeModifiers > 0;
+            }
+        }
+
+        /// <summary>
+        /// Does this skill's pool have a non-trivial value.
+        /// </summary>
+        public async Task<bool> GetNonTrivialPoolAsync(CancellationToken token = default)
+        {
+            token.ThrowIfCancellationRequested();
+            IAsyncDisposable objLocker = await LockObject.EnterReadLockAsync(token).ConfigureAwait(false);
+            try
+            {
+                token.ThrowIfCancellationRequested();
+                return !await GetIsLanguageAsync(token).ConfigureAwait(false) && await GetEnabledAsync(token).ConfigureAwait(false) && await GetAttributeModifiers(token).ConfigureAwait(false) > 0;
+            }
+            finally
+            {
+                await objLocker.DisposeAsync().ConfigureAwait(false);
+            }
+        }
+
+        /// <summary>
         /// The total, general purpose dice pool for this skill, using another
         /// value for the attribute part of the test. This allows calculation of dice pools
         /// while using cyberlimbs or while rigging
@@ -1798,16 +1828,15 @@ namespace Chummer.Backend.Skills
         {
             using (LockObject.EnterReadLock())
             {
-                bool blnIsNativeLanguage = IsNativeLanguage;
-                if (!Enabled && !blnIsNativeLanguage)
+                if (IsNativeLanguage)
+                    return int.MaxValue;
+                if (!Enabled)
                     return 0;
                 int intValue = intAttributeOverrideValue > int.MinValue
                     ? intAttributeOverrideValue
                     : CharacterObject.AttributeSection.GetAttributeByName(strAttribute).TotalValue;
                 if (intValue <= 0)
                     return 0;
-                if (blnIsNativeLanguage)
-                    return int.MaxValue;
                 int intRating = Rating;
                 if (intRating > 0)
                     return Math.Max(0,
@@ -1838,8 +1867,9 @@ namespace Chummer.Backend.Skills
             try
             {
                 token.ThrowIfCancellationRequested();
-                bool blnIsNativeLanguage = await GetIsNativeLanguageAsync(token).ConfigureAwait(false);
-                if (!await GetEnabledAsync(token).ConfigureAwait(false) && !blnIsNativeLanguage)
+                if (await GetIsNativeLanguageAsync(token).ConfigureAwait(false))
+                    return int.MaxValue;
+                if (!await GetEnabledAsync(token).ConfigureAwait(false))
                     return 0;
                 int intValue = intAttributeOverrideValue > int.MinValue
                     ? intAttributeOverrideValue
@@ -1847,8 +1877,6 @@ namespace Chummer.Backend.Skills
                         .ConfigureAwait(false)).GetTotalValueAsync(token).ConfigureAwait(false);
                 if (intValue <= 0)
                     return 0;
-                if (blnIsNativeLanguage)
-                    return int.MaxValue;
                 int intRating = await GetRatingAsync(token).ConfigureAwait(false);
                 if (intRating > 0)
                     return Math.Max(0,
@@ -1870,7 +1898,7 @@ namespace Chummer.Backend.Skills
             }
         }
 
-        private static readonly Guid s_GuiReflexRecorderId = new Guid("17a6ba49-c21c-461b-9830-3beae8a237fc");
+        private static Guid ReflexRecorderGUID { get; } = new Guid("17a6ba49-c21c-461b-9830-3beae8a237fc");
 
         public int DefaultModifier
         {
@@ -1882,7 +1910,7 @@ namespace Chummer.Backend.Skills
                             Improvement.ImprovementType.ReflexRecorderOptimization).Count > 0)
                     {
                         List<Cyberware> lstReflexRecorders = CharacterObject.Cyberware
-                            .Where(x => x.SourceID == s_GuiReflexRecorderId)
+                            .Where(x => x.SourceID == ReflexRecorderGUID)
                             .ToList();
                         if (lstReflexRecorders.Count > 0)
                         {
@@ -1920,7 +1948,7 @@ namespace Chummer.Backend.Skills
                     .Count > 0)
                 {
                     List<Cyberware> lstReflexRecorders = await CharacterObject.Cyberware
-                        .ToListAsync(x => x.SourceID == s_GuiReflexRecorderId, token: token).ConfigureAwait(false);
+                        .ToListAsync(async x => await x.GetSourceIDAsync(token).ConfigureAwait(false) == ReflexRecorderGUID, token: token).ConfigureAwait(false);
                     if (lstReflexRecorders.Count > 0)
                     {
                         using (new FetchSafelyFromPool<HashSet<string>>(
@@ -4291,10 +4319,14 @@ namespace Chummer.Backend.Skills
         {
             using (LockObject.EnterReadLock())
             {
-                bool blnIsNativeLanguage = IsNativeLanguage;
-                if (!Default && !Leveled && !blnIsNativeLanguage)
+                if (IsNativeLanguage)
                 {
-                    return strExtraStart + LanguageManager.GetString("Tip_Skill_Cannot_Default");
+                    return strExtraStart + LanguageManager.GetString("Tip_Skill_NativeLanguage");
+                }
+
+                if (!Enabled)
+                {
+                    return strExtraStart + LanguageManager.GetString("Label_SkillGroup_Disabled");
                 }
 
                 bool blnShowSwapSkillAttribute = false;
@@ -4313,9 +4345,9 @@ namespace Chummer.Backend.Skills
                         att.DisplayNameShort(GlobalSettings.Language));
                 }
 
-                if (blnIsNativeLanguage)
+                if (!Default && !Leveled)
                 {
-                    return strExtraStart + LanguageManager.GetString("Tip_Skill_NativeLanguage");
+                    return strExtraStart + LanguageManager.GetString("Tip_Skill_Cannot_Default");
                 }
 
                 string strSpace = LanguageManager.GetString("String_Space");
@@ -4620,13 +4652,15 @@ namespace Chummer.Backend.Skills
             try
             {
                 token.ThrowIfCancellationRequested();
-                bool blnIsNativeLanguage = await GetIsNativeLanguageAsync(token).ConfigureAwait(false);
-                if (!await GetDefaultAsync(token).ConfigureAwait(false)
-                    && !await GetLeveledAsync(token).ConfigureAwait(false)
-                    && !blnIsNativeLanguage)
+                if (await GetIsNativeLanguageAsync(token).ConfigureAwait(false))
                 {
                     return strExtraStart + await LanguageManager
-                        .GetStringAsync("Tip_Skill_Cannot_Default", token: token).ConfigureAwait(false);
+                        .GetStringAsync("Tip_Skill_NativeLanguage", token: token).ConfigureAwait(false);
+                }
+
+                if (!await GetEnabledAsync(token).ConfigureAwait(false))
+                {
+                    return strExtraStart + await LanguageManager.GetStringAsync("Label_SkillGroup_Disabled", token: token).ConfigureAwait(false);
                 }
 
                 bool blnShowSwapSkillAttribute = false;
@@ -4647,10 +4681,11 @@ namespace Chummer.Backend.Skills
                         await att.DisplayNameShortAsync(GlobalSettings.Language, token).ConfigureAwait(false));
                 }
 
-                if (blnIsNativeLanguage)
+                if (!await GetDefaultAsync(token).ConfigureAwait(false)
+                    && !await GetLeveledAsync(token).ConfigureAwait(false))
                 {
                     return strExtraStart + await LanguageManager
-                        .GetStringAsync("Tip_Skill_NativeLanguage", token: token).ConfigureAwait(false);
+                        .GetStringAsync("Tip_Skill_Cannot_Default", token: token).ConfigureAwait(false);
                 }
 
                 string strSpace = await LanguageManager.GetStringAsync("String_Space", token: token)
@@ -5315,6 +5350,21 @@ namespace Chummer.Backend.Skills
             }
         }
 
+        public async Task<int> GetAttributeModifiers(CancellationToken token = default)
+        {
+            token.ThrowIfCancellationRequested();
+            IAsyncDisposable objLocker = await LockObject.EnterReadLockAsync(token).ConfigureAwait(false);
+            try
+            {
+                token.ThrowIfCancellationRequested();
+                return await AttributeObject.GetTotalValueAsync(token).ConfigureAwait(false);
+            }
+            finally
+            {
+                await objLocker.DisposeAsync().ConfigureAwait(false);
+            }
+        }
+
         public string DisplayName(string strLanguage)
         {
             using (LockObject.EnterReadLock())
@@ -5844,57 +5894,85 @@ namespace Chummer.Backend.Skills
         //This tree keeps track of dependencies
         private static readonly PropertyDependencyGraph<Skill> s_SkillDependencyGraph =
             new PropertyDependencyGraph<Skill>(
-                new DependencyGraphNode<string, Skill>(nameof(PoolToolTip),
-                    new DependencyGraphNode<string, Skill>(nameof(IsNativeLanguage)),
-                    new DependencyGraphNode<string, Skill>(nameof(AttributeModifiers),
-                        new DependencyGraphNode<string, Skill>(nameof(AttributeObject),
-                            new DependencyGraphNode<string, Skill>(nameof(RelevantImprovements)))),
-                    new DependencyGraphNode<string, Skill>(nameof(DisplayPool),
-                        new DependencyGraphNode<string, Skill>(nameof(IsNativeLanguage)),
-                        new DependencyGraphNode<string, Skill>(nameof(Attribute), x => !x.IsNativeLanguage, async (x, t) => !await x.GetIsNativeLanguageAsync(t).ConfigureAwait(false)),
-                        new DependencyGraphNode<string, Skill>(nameof(DisplayOtherAttribute), x => !x.IsNativeLanguage, async (x, t) => !await x.GetIsNativeLanguageAsync(t).ConfigureAwait(false),
-                            new DependencyGraphNode<string, Skill>(nameof(PoolOtherAttribute),
-                                new DependencyGraphNode<string, Skill>(nameof(Enabled)),
-                                new DependencyGraphNode<string, Skill>(nameof(IsNativeLanguage)),
-                                new DependencyGraphNode<string, Skill>(nameof(Rating)),
-                                new DependencyGraphNode<string, Skill>(nameof(GetSpecializationBonus),
-                                    new DependencyGraphNode<string, Skill>(nameof(IsExoticSkill)),
-                                    new DependencyGraphNode<string, Skill>(nameof(Specializations),
-                                        new DependencyGraphNode<string, Skill>(nameof(CanHaveSpecs), x => !x.IsExoticSkill) // Not strictly dependent like this, but fetched every time specializations are
-                                    ),
-                                    new DependencyGraphNode<string, Skill>(nameof(TotalBaseRating)),
-                                    new DependencyGraphNode<string, Skill>(nameof(GetSpecialization),
-                                        new DependencyGraphNode<string, Skill>(nameof(IsExoticSkill)),
-                                        new DependencyGraphNode<string, Skill>(nameof(Specializations)),
-                                        new DependencyGraphNode<string, Skill>(nameof(HasSpecialization),
-                                            new DependencyGraphNode<string, Skill>(nameof(IsExoticSkill)),
-                                            new DependencyGraphNode<string, Skill>(nameof(Specializations))
-                                        )
-                                    )
-                                ),
-                                new DependencyGraphNode<string, Skill>(nameof(PoolModifiers),
-                                    new DependencyGraphNode<string, Skill>(nameof(Bonus),
-                                        new DependencyGraphNode<string, Skill>(nameof(RelevantImprovements))
-                                    )
-                                ),
-                                new DependencyGraphNode<string, Skill>(nameof(Default),
-                                    new DependencyGraphNode<string, Skill>(nameof(RelevantImprovements))
-                                ),
-                                new DependencyGraphNode<string, Skill>(nameof(DefaultModifier),
-                                    new DependencyGraphNode<string, Skill>(nameof(DictionaryKey))
-                                )
+                new DependencyGraphNode<string, Skill>(nameof(Pool),
+                    new DependencyGraphNode<string, Skill>(nameof(NonTrivialPool),
+                        new DependencyGraphNode<string, Skill>(nameof(AttributeModifiers),
+                            new DependencyGraphNode<string, Skill>(nameof(AttributeObject),
+                                new DependencyGraphNode<string, Skill>(nameof(Attribute)),
+                                new DependencyGraphNode<string, Skill>(nameof(RelevantImprovements))
+                            )
+                        ),
+                        new DependencyGraphNode<string, Skill>(nameof(Enabled)),
+                        new DependencyGraphNode<string, Skill>(nameof(IsNativeLanguage))
+                    ),
+                    new DependencyGraphNode<string, Skill>(nameof(PoolOtherAttribute), x => x.NonTrivialPool, (x, t) => x.GetNonTrivialPoolAsync(t),
+                        new DependencyGraphNode<string, Skill>(nameof(NonTrivialPool)),
+                        new DependencyGraphNode<string, Skill>(nameof(Rating),
+                            new DependencyGraphNode<string, Skill>(nameof(CyberwareRating),
+                                new DependencyGraphNode<string, Skill>(nameof(DictionaryKey))
                             ),
+                            new DependencyGraphNode<string, Skill>(nameof(TotalBaseRating),
+                                new DependencyGraphNode<string, Skill>(nameof(RatingModifiers),
+                                    new DependencyGraphNode<string, Skill>(nameof(Bonus))
+                                ),
+                                new DependencyGraphNode<string, Skill>(nameof(LearnedRating),
+                                    new DependencyGraphNode<string, Skill>(nameof(Karma),
+                                        new DependencyGraphNode<string, Skill>(nameof(FreeKarma),
+                                            new DependencyGraphNode<string, Skill>(nameof(DictionaryKey))
+                                        ),
+                                        new DependencyGraphNode<string, Skill>(nameof(RatingMaximum),
+                                            new DependencyGraphNode<string, Skill>(nameof(RelevantImprovements))
+                                        ),
+                                        new DependencyGraphNode<string, Skill>(nameof(KarmaPoints))
+                                    ),
+                                    new DependencyGraphNode<string, Skill>(nameof(Base),
+                                        new DependencyGraphNode<string, Skill>(nameof(FreeBase),
+                                            new DependencyGraphNode<string, Skill>(nameof(DictionaryKey))
+                                        ),
+                                        new DependencyGraphNode<string, Skill>(nameof(RatingMaximum)),
+                                        new DependencyGraphNode<string, Skill>(nameof(BasePoints))
+                                    )
+                                )
+                            )
+                        ),
+                        new DependencyGraphNode<string, Skill>(nameof(GetSpecializationBonus),
+                            new DependencyGraphNode<string, Skill>(nameof(IsExoticSkill)),
+                            new DependencyGraphNode<string, Skill>(nameof(Specializations),
+                                new DependencyGraphNode<string, Skill>(nameof(CanHaveSpecs), x => !x.IsExoticSkill) // Not strictly dependent like this, but fetched every time specializations are
+                            ),
+                            new DependencyGraphNode<string, Skill>(nameof(TotalBaseRating)),
+                            new DependencyGraphNode<string, Skill>(nameof(GetSpecialization),
+                                new DependencyGraphNode<string, Skill>(nameof(IsExoticSkill)),
+                                new DependencyGraphNode<string, Skill>(nameof(Specializations)),
+                                new DependencyGraphNode<string, Skill>(nameof(HasSpecialization),
+                                    new DependencyGraphNode<string, Skill>(nameof(IsExoticSkill)),
+                                    new DependencyGraphNode<string, Skill>(nameof(Specializations))
+                                )
+                            )
+                        ),
+                        new DependencyGraphNode<string, Skill>(nameof(PoolModifiers),
+                            new DependencyGraphNode<string, Skill>(nameof(Bonus),
+                                new DependencyGraphNode<string, Skill>(nameof(RelevantImprovements))
+                            )
+                        ),
+                        new DependencyGraphNode<string, Skill>(nameof(Default),
+                            new DependencyGraphNode<string, Skill>(nameof(RelevantImprovements))
+                        ),
+                        new DependencyGraphNode<string, Skill>(nameof(DefaultModifier),
+                            new DependencyGraphNode<string, Skill>(nameof(DictionaryKey))
+                        )
+                    )
+                ),
+                new DependencyGraphNode<string, Skill>(nameof(PoolToolTip),
+                    new DependencyGraphNode<string, Skill>(nameof(DisplayPool),
+                        new DependencyGraphNode<string, Skill>(nameof(NonTrivialPool)),
+                        new DependencyGraphNode<string, Skill>(nameof(DisplayOtherAttribute), x => x.NonTrivialPool, (x, t) => x.GetNonTrivialPoolAsync(t),
+                            new DependencyGraphNode<string, Skill>(nameof(NonTrivialPool)),
+                            new DependencyGraphNode<string, Skill>(nameof(PoolOtherAttribute), x => x.NonTrivialPool, (x, t) => x.GetNonTrivialPoolAsync(t)),
                             new DependencyGraphNode<string, Skill>(nameof(DictionaryKey)),
                             new DependencyGraphNode<string, Skill>(nameof(IsExoticSkill)),
                             new DependencyGraphNode<string, Skill>(nameof(Specializations)),
                             new DependencyGraphNode<string, Skill>(nameof(GetSpecializationBonus))
-                        ),
-                        new DependencyGraphNode<string, Skill>(nameof(Pool),
-                            new DependencyGraphNode<string, Skill>(nameof(AttributeModifiers),
-                                new DependencyGraphNode<string, Skill>(nameof(AttributeObject))
-                            ),
-                            new DependencyGraphNode<string, Skill>(nameof(PoolOtherAttribute)),
-                            new DependencyGraphNode<string, Skill>(nameof(Attribute))
                         )
                     )
                 ),
@@ -5906,36 +5984,9 @@ namespace Chummer.Backend.Skills
                     new DependencyGraphNode<string, Skill>(nameof(Enabled)),
                     new DependencyGraphNode<string, Skill>(nameof(IsExoticSkill)),
                     new DependencyGraphNode<string, Skill>(nameof(KarmaUnlocked)),
-                    new DependencyGraphNode<string, Skill>(nameof(TotalBaseRating),
-                        new DependencyGraphNode<string, Skill>(nameof(RatingModifiers),
-                            new DependencyGraphNode<string, Skill>(nameof(Bonus))
-                        ),
-                        new DependencyGraphNode<string, Skill>(nameof(LearnedRating),
-                            new DependencyGraphNode<string, Skill>(nameof(Karma),
-                                new DependencyGraphNode<string, Skill>(nameof(FreeKarma),
-                                    new DependencyGraphNode<string, Skill>(nameof(DictionaryKey))
-                                ),
-                                new DependencyGraphNode<string, Skill>(nameof(RatingMaximum),
-                                    new DependencyGraphNode<string, Skill>(nameof(RelevantImprovements))
-                                ),
-                                new DependencyGraphNode<string, Skill>(nameof(KarmaPoints))
-                            ),
-                            new DependencyGraphNode<string, Skill>(nameof(Base),
-                                new DependencyGraphNode<string, Skill>(nameof(FreeBase),
-                                    new DependencyGraphNode<string, Skill>(nameof(DictionaryKey))
-                                ),
-                                new DependencyGraphNode<string, Skill>(nameof(RatingMaximum)),
-                                new DependencyGraphNode<string, Skill>(nameof(BasePoints))
-                            )
-                        )
-                    ),
+                    new DependencyGraphNode<string, Skill>(nameof(TotalBaseRating)),
                     new DependencyGraphNode<string, Skill>(nameof(Leveled),
-                        new DependencyGraphNode<string, Skill>(nameof(Rating),
-                            new DependencyGraphNode<string, Skill>(nameof(CyberwareRating),
-                                new DependencyGraphNode<string, Skill>(nameof(DictionaryKey))
-                            ),
-                            new DependencyGraphNode<string, Skill>(nameof(TotalBaseRating))
-                        )
+                        new DependencyGraphNode<string, Skill>(nameof(Rating))
                     )
                 ),
                 new DependencyGraphNode<string, Skill>(nameof(UpgradeToolTip),
@@ -6041,15 +6092,15 @@ namespace Chummer.Backend.Skills
                     new DependencyGraphNode<string, Skill>(nameof(CanHaveSpecs)),
                     new DependencyGraphNode<string, Skill>(nameof(TotalBaseRating))
                 ),
-                new DependencyGraphNode<string, Skill>(nameof(AllowDelete), x => x.IsKnowledgeSkill || x.IsExoticSkill,
+                new DependencyGraphNode<string, Skill>(nameof(AllowDelete),
                     new DependencyGraphNode<string, Skill>(nameof(IsKnowledgeSkill)),
                     new DependencyGraphNode<string, Skill>(nameof(IsExoticSkill)),
                     new DependencyGraphNode<string, Skill>(nameof(KnowledgeSkill.ForcedName), x => x.IsKnowledgeSkill,
                         new DependencyGraphNode<string, Skill>(nameof(IsKnowledgeSkill))
                     ),
-                    new DependencyGraphNode<string, Skill>(nameof(FreeBase)),
-                    new DependencyGraphNode<string, Skill>(nameof(FreeKarma)),
-                    new DependencyGraphNode<string, Skill>(nameof(RatingModifiers)),
+                    new DependencyGraphNode<string, Skill>(nameof(FreeBase), x => x.IsKnowledgeSkill || x.IsExoticSkill),
+                    new DependencyGraphNode<string, Skill>(nameof(FreeKarma), x => x.IsKnowledgeSkill || x.IsExoticSkill),
+                    new DependencyGraphNode<string, Skill>(nameof(RatingModifiers), x => x.IsKnowledgeSkill || x.IsExoticSkill),
                     new DependencyGraphNode<string, Skill>(nameof(IsNativeLanguage), x => x.IsKnowledgeSkill,
                         new DependencyGraphNode<string, Skill>(nameof(IsKnowledgeSkill))
                     )
@@ -6059,23 +6110,23 @@ namespace Chummer.Backend.Skills
                     new DependencyGraphNode<string, Skill>(nameof(IsExoticSkill)),
                     new DependencyGraphNode<string, Skill>(nameof(ExoticSkill.Specific), x => x.IsExoticSkill)
                 ),
-                new DependencyGraphNode<string, Skill>(nameof(IsLanguage), x => x.IsKnowledgeSkill,
-                    new DependencyGraphNode<string, Skill>(nameof(KnowledgeSkill.Type)),
-                    new DependencyGraphNode<string, Skill>(nameof(IsKnowledgeSkill))
+                new DependencyGraphNode<string, Skill>(nameof(IsLanguage),
+                    new DependencyGraphNode<string, Skill>(nameof(IsKnowledgeSkill)),
+                    new DependencyGraphNode<string, Skill>(nameof(KnowledgeSkill.Type), x => x.IsKnowledgeSkill)
                 ),
-                new DependencyGraphNode<string, Skill>(nameof(AllowNameChange), x => x.IsKnowledgeSkill,
-                    new DependencyGraphNode<string, Skill>(nameof(KnowledgeSkill.ForcedName)),
-                    new DependencyGraphNode<string, Skill>(nameof(KnowledgeSkill.AllowUpgrade)),
-                    new DependencyGraphNode<string, Skill>(nameof(Karma)),
-                    new DependencyGraphNode<string, Skill>(nameof(Base)),
-                    new DependencyGraphNode<string, Skill>(nameof(IsNativeLanguage)),
-                    new DependencyGraphNode<string, Skill>(nameof(IsKnowledgeSkill))
+                new DependencyGraphNode<string, Skill>(nameof(AllowNameChange),
+                    new DependencyGraphNode<string, Skill>(nameof(IsKnowledgeSkill)),
+                    new DependencyGraphNode<string, Skill>(nameof(KnowledgeSkill.ForcedName), x => x.IsKnowledgeSkill),
+                    new DependencyGraphNode<string, Skill>(nameof(KnowledgeSkill.AllowUpgrade), x => x.IsKnowledgeSkill),
+                    new DependencyGraphNode<string, Skill>(nameof(Karma), x => x.IsKnowledgeSkill),
+                    new DependencyGraphNode<string, Skill>(nameof(Base), x => x.IsKnowledgeSkill),
+                    new DependencyGraphNode<string, Skill>(nameof(IsNativeLanguage), x => x.IsKnowledgeSkill)
                 ),
-                new DependencyGraphNode<string, Skill>(nameof(AllowTypeChange), x => x.IsKnowledgeSkill,
-                    new DependencyGraphNode<string, Skill>(nameof(AllowNameChange)),
-                    new DependencyGraphNode<string, Skill>(nameof(KnowledgeSkill.Type)),
-                    new DependencyGraphNode<string, Skill>(nameof(IsNativeLanguage)),
-                    new DependencyGraphNode<string, Skill>(nameof(IsKnowledgeSkill))
+                new DependencyGraphNode<string, Skill>(nameof(AllowTypeChange),
+                    new DependencyGraphNode<string, Skill>(nameof(IsKnowledgeSkill)),
+                    new DependencyGraphNode<string, Skill>(nameof(AllowNameChange), x => x.IsKnowledgeSkill),
+                    new DependencyGraphNode<string, Skill>(nameof(KnowledgeSkill.Type), x => x.IsKnowledgeSkill),
+                    new DependencyGraphNode<string, Skill>(nameof(IsNativeLanguage), x => x.IsKnowledgeSkill)
                 )
             );
 
