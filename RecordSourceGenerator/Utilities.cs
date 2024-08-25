@@ -7,6 +7,12 @@ namespace RecordSourceGenerator
 {
     internal static class Utilities
     {
+        public static string Csharpify(this string str)
+        {
+            // todo: this
+            return str;
+        }
+
         public static bool IsPartial(this INamedTypeSymbol namedType) => namedType.DeclaringSyntaxReferences
             .Any(s => s.GetSyntax() is BaseTypeDeclarationSyntax bt && bt.Modifiers.Any(m => m.IsKind(SyntaxKind.PartialKeyword)));
 

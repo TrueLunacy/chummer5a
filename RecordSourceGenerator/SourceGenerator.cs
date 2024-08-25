@@ -16,17 +16,20 @@ namespace RecordSourceGenerator
     // todo: create partial method code fix
     // todo: if you have an inner element with the same end as the outer, the code fucking explodes
     // todo: attr-based type converters
+    // todo: option to explode if unidentified field is found
+    // todo: attrs on child elements?
+    // todo: ensure an element name is never handled multiple times
     [Generator]
     public class SourceGenerator : IIncrementalGenerator
     {
         private const string AttrNs = "RecordSourceGenerator.Generated";
         public const string RecordAttr = "XmlRecordAttribute";
+        public const string SpecialHandlingAttr = "XmlSpecialHandlingAttribute";
         public const string ConstructorAttr = "XmlRecordConstructorAttribute";
         public const string ElementAttr = "XmlAsElementAttribute";
         public const string AttributeAttr = "XmlAsAttributeAttribute";
         public const string PresenceAttr = "XmlAsPresenceAttribute";
-
-        public const string ConverterAttr = "XmlConverterAttribute";
+        public const string NoParseAttr = "XmlNoParseAttribute";
 
         public const string ElementNameProp = "ElementName";
         public const string AttrNameProp = "AttributeName";
@@ -47,12 +50,23 @@ namespace RecordSourceGenerator
             namespace {{AttrNs}};
              
             [System.AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct, Inherited = false, AllowMultiple = false)]
+            internal sealed class {{SpecialHandlingAttr}} : Attribute
+            {
+                public {{SpecialHandlingAttr}}(string {{ElementNameProp}})
+                {
+                    this.{{ElementNameProp}} = {{ElementNameProp}};
+                }
+
+                public readonly string {{ElementNameProp}};
+            }
+
+            [System.AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct, Inherited = false, AllowMultiple = false)]
             internal sealed class {{RecordAttr}} : Attribute
             {
                 public {{RecordAttr}}()
                 {
                 }
-
+            
                 public string? {{ElementNameProp}} { get; set; }
             }
 
@@ -64,7 +78,7 @@ namespace RecordSourceGenerator
                 }
             }
 
-            [System.AttributeUsage(AttributeTargets.Property, Inherited = false, AllowMultiple = false)]
+            [System.AttributeUsage(AttributeTargets.Parameter, Inherited = false, AllowMultiple = false)]
             internal sealed class {{ElementAttr}} : Attribute
             {
                 public {{ElementAttr}}()
@@ -75,7 +89,7 @@ namespace RecordSourceGenerator
                 public string? {{ArrayProp}} { get; set; }
             }
 
-            [System.AttributeUsage(AttributeTargets.Property, Inherited = false, AllowMultiple = false)]
+            [System.AttributeUsage(AttributeTargets.Parameter, Inherited = false, AllowMultiple = false)]
             internal sealed class {{PresenceAttr}} : Attribute
             {
                 public {{PresenceAttr}}()
@@ -85,7 +99,7 @@ namespace RecordSourceGenerator
                 public string? {{ElementNameProp}} { get; set; }
             }
 
-            [System.AttributeUsage(AttributeTargets.Property, Inherited = false, AllowMultiple = false)]
+            [System.AttributeUsage(AttributeTargets.Parameter, Inherited = false, AllowMultiple = false)]
             internal sealed class {{AttributeAttr}} : Attribute
             {
                 public {{AttributeAttr}}()
@@ -95,10 +109,10 @@ namespace RecordSourceGenerator
                 public string? {{AttrNameProp}} { get; set; }
             }
 
-            [System.AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct, Inherited = false, AllowMultiple = false)]
-            internal sealed class {{ConverterAttr}}<T> : Attribute
+            [System.AttributeUsage(AttributeTargets.Parameter, Inherited = false, AllowMultiple = false)]
+            internal sealed class {{NoParseAttr}} : Attribute
             {
-                public {{ConverterAttr}}()
+                public {{NoParseAttr}}()
                 {
                 }
             }
@@ -154,7 +168,7 @@ namespace RecordSourceGenerator
                     foreach (var str in partialmethods)
                         isb.WriteLine(str);
                 }
-                ctx.AddSource($"{model.ClassIdentifier}.g.cs", SourceText.From(isb.ToString(), Encoding.UTF8));
+                ctx.AddSource($"{model.Namespace}.{model.ClassIdentifier}.g.cs", SourceText.From(isb.ToString(), Encoding.UTF8));
             });
 
         }
@@ -164,6 +178,7 @@ namespace RecordSourceGenerator
             isb.WriteLine($"public void Write(XmlWriter writer, string elementName = \"{model.XmlElementName}\")");
             using var methodbrace = isb.Brace();
             isb.WriteLine($"writer.WriteStartElement(elementName);");
+            bool hasTotalOverride = false;
             foreach (var attr in model.Params.Where(p => p.Position == XmlPosition.Attribute))
             {
                 Debug.Assert(!attr.ImmutableArrayOf);
@@ -181,6 +196,8 @@ namespace RecordSourceGenerator
             }
             foreach (var prop in model.Params.Where(p => p.Position != XmlPosition.Attribute))
             {
+                if (prop.HasPartialMethod)
+                    partialmethods.Add(prop.GetWritePartialMethod());
                 if (prop.Position == XmlPosition.Presence)
                 {
                     isb.WriteLine($$"""
@@ -192,6 +209,11 @@ namespace RecordSourceGenerator
                     """);
                     continue; // early break from this
                 }
+                if (prop.TotalOverrideType)
+                {
+                    hasTotalOverride = true;
+                    continue;
+                }
                 IDisposable? brace = null;
                 // this isn't the usual IDisposable, but it's fine
                 // if we exception, there's no harm in letting the dispose go free
@@ -200,8 +222,6 @@ namespace RecordSourceGenerator
                     isb.WriteLine($"if ({prop.ParameterName} is not null)");
                     brace = isb.Brace();
                 }
-                if (prop.HasPartialMethod)
-                    partialmethods.Add(prop.GetWritePartialMethod());
                 if (prop.ImmutableArrayOf)
                 {
                     isb.WriteLine($"if (!{prop.ParameterName}.IsDefaultOrEmpty)");
@@ -250,6 +270,10 @@ namespace RecordSourceGenerator
                     }
                 }
                 brace?.Dispose();
+            }
+            if (hasTotalOverride)
+            {
+                isb.WriteLine(Parameter.WriteUnknownValuesCall("writer"));
             }
             isb.WriteLine("writer.WriteEndElement();");
         }
@@ -300,6 +324,7 @@ namespace RecordSourceGenerator
                         isb.WriteLine($"case \"{param.XmlName}\":");
                         using (var casebrace = isb.Brace())
                         {
+                            Debug.Assert(!param.TotalOverrideType);
                             Debug.Assert(!param.ImmutableArrayOf);
                             if (param.HasPartialMethod)
                                 partialmethods.Add(param.GetParsePartialMethod());
@@ -337,12 +362,12 @@ namespace RecordSourceGenerator
                             }
                         }
                         isb.WriteLine("break;");
-                        isb.WriteLine("""
-                        default:
-                            reader.Read();
-                            break;
-                        """);
                     }
+                    isb.WriteLine("""
+                    default:
+                        reader.Read();
+                        break;
+                    """);
                 }
                 isb.WriteLine("reader.MoveToElement();");
             }
@@ -351,10 +376,25 @@ namespace RecordSourceGenerator
             isb.WriteLine("while (true)");
             using (var whilebrace = isb.Brace())
             {
+                isb.WriteLine($$"""
+                if (reader.Name == elementName)
+                {
+                    if (reader.IsEmptyElement)
+                    {
+                        reader.Read();
+                        break;
+                    }
+                    if (reader.NodeType == XmlNodeType.EndElement)
+                    {
+                        break;
+                    }
+                }
+                else if (reader.NodeType == XmlNodeType.None)
+                    break;
+                """);
                 isb.WriteLine("if (reader.NodeType == XmlNodeType.Element)");
                 using (var ifbrace = isb.Brace())
                 {
-
                     isb.WriteLine("switch (reader.Name)");
                     using var switchbrace = isb.Brace(); // disposed at end of block
                     foreach (var param in model.Params.Where(p => p.Position != XmlPosition.Attribute))
@@ -368,9 +408,26 @@ namespace RecordSourceGenerator
                                 isb.WriteLine("while (true)");
                                 using (var innerreadbrace = isb.Brace())
                                 {
+                                    isb.WriteLine($$"""
+                                    if (reader.Name == "{{param.XmlName}}")
+                                    {
+                                        if (reader.IsEmptyElement)
+                                        {
+                                            reader.Read();
+                                            break;
+                                        }
+                                        if (reader.NodeType == XmlNodeType.EndElement)
+                                        {
+                                            break;
+                                        }
+                                    }
+                                    else if (reader.NodeType == XmlNodeType.None)
+                                        throw new InvalidOperationException("Unexpected end of XML");
+                                    """);
                                     isb.WriteLine($"if (reader.NodeType == XmlNodeType.Element && reader.Name == \"{param.XmlChildName}\")");
                                     using (var innerifbrace = isb.Brace())
                                     {
+                                        Debug.Assert(!param.TotalOverrideType);
                                         if (param.HasPartialMethod)
                                             partialmethods.Add(param.GetParsePartialMethod());
                                         if (param.StringType)
@@ -400,10 +457,6 @@ namespace RecordSourceGenerator
                                     }
                                     isb.WriteLine($$"""
                                     else reader.Read();
-                                    if (reader.NodeType == XmlNodeType.EndElement && reader.Name == "{{param.XmlName}}")
-                                        break;
-                                    else if (reader.NodeType == XmlNodeType.None)
-                                        throw new InvalidOperationException("Unexpected end of XML");
                                     """);
                                 }
                                 isb.WriteLine($$"""
@@ -417,7 +470,11 @@ namespace RecordSourceGenerator
                             {
                                 if (param.HasPartialMethod)
                                     partialmethods.Add(param.GetParsePartialMethod());
-                                if (param.Position == XmlPosition.Presence)
+                                if (param.TotalOverrideType)
+                                {
+                                    isb.WriteLine(param.GetTotalOverrideStatement("reader", "returnObject"));
+                                }
+                                else if (param.Position == XmlPosition.Presence)
                                 {
                                     isb.WriteLine($$"""
                                     MethodInfo field = typeof({{model.ClassIdentifier}})
@@ -464,14 +521,13 @@ namespace RecordSourceGenerator
                         }
                         isb.WriteLine("break;");
                     }
+                    isb.WriteLine("""
+                    default:
+                        reader.Read();
+                        break;
+                    """);
                 }
-                isb.WriteLine($$"""
-                else reader.Read();
-                if (reader.NodeType == XmlNodeType.EndElement && reader.Name == elementName)
-                    break;
-                else if (reader.NodeType == XmlNodeType.None)
-                    break;
-                """);
+                isb.WriteLine("else reader.Read();");
             }
             isb.WriteLine("return returnObject;");
         }

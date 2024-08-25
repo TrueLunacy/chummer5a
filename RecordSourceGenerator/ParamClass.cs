@@ -7,6 +7,7 @@ namespace RecordSourceGenerator
         EnumType,
         KnownXmlRecordType,
         KnownConverterType,
+        TotalOverride,
         UnknownType
     }
 }

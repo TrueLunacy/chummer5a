@@ -54,32 +54,33 @@ namespace RecordSourceGenerator
             }
 
             var paramz = constructor.Parameters
+                .Where(t => !t.GetAttributes().Any(t => t.AttributeClass?.Name == SourceGenerator.NoParseAttr))
                 .Select(p =>
                 {
-                    ITypeSymbol type;
+                    ITypeSymbol innertype;
                     bool immutableArrayOf = false;
                     if (p.Type.Name == "ImmutableArray")
                     {
                         immutableArrayOf = true;
-                        type = ((INamedTypeSymbol)p.Type).TypeArguments[0];
+                        innertype = ((INamedTypeSymbol)p.Type).TypeArguments[0];
                     }
                     else
                     {
-                        type = p.Type;
+                        innertype = p.Type;
                     }
                     string name = p.Name;
-                    string fulltype = type.ToString();
+                    string fulltype = innertype.ToString();
                     ParamClass klass;
-                    if (type.AllInterfaces.Any(i => i.Name == "IParsable" || i.MetadataName == "ISpanParsable"))
+                    if (innertype.AllInterfaces.Any(i => i.Name == "IParsable" || i.MetadataName == "ISpanParsable"))
                     {
                         // it would be very unusual if it implemented IParsable/ISpanParsable for a different type
                         klass = ParamClass.ParsableType;
                     }
-                    else if (type.BaseType?.MetadataName == "Enum")
+                    else if (innertype.BaseType?.MetadataName == "Enum")
                     {
                         klass = ParamClass.EnumType;
                     }
-                    else if (type.GetAttributes().Any(a => a.AttributeClass?.MetadataName == SourceGenerator.RecordAttr))
+                    else if (innertype.GetAttributes().Any(a => a.AttributeClass?.MetadataName == SourceGenerator.RecordAttr))
                     {
                         klass = ParamClass.KnownXmlRecordType;
                     }
@@ -88,10 +89,10 @@ namespace RecordSourceGenerator
                         klass = ParamClass.UnknownType;
                     }
 
-                    var proptype = p.ContainingType.GetMembers()
-                        .Single(m => m.Name == p.Name);
+                    //var proptype = p.ContainingType.GetMembers()
+                    //    .Single(m => m.Name == p.Name);
 
-                    var propattr = proptype.GetAttributes().SingleOrDefault(a => a.AttributeClass?.Name
+                    var propattr = p.GetAttributes().SingleOrDefault(a => a.AttributeClass?.Name
                         is SourceGenerator.ElementAttr or SourceGenerator.AttributeAttr or SourceGenerator.PresenceAttr);
 
                     string xmlName;
@@ -127,7 +128,7 @@ namespace RecordSourceGenerator
                             }
                             else
                             {
-                                xmlChildName = type.Name;
+                                xmlChildName = innertype.Name;
                             }
                         }
                         else
@@ -138,7 +139,7 @@ namespace RecordSourceGenerator
                     else
                     {
                         xmlName = p.Name;
-                        xmlChildName = immutableArrayOf ? type.Name : null;
+                        xmlChildName = immutableArrayOf ? innertype.Name : null;
                         pos = XmlPosition.Element;
                     }
 
@@ -146,19 +147,37 @@ namespace RecordSourceGenerator
                         ParameterName: p.Name,
                         XmlName: xmlName,
                         XmlChildName: xmlChildName,
-                        Position: pos,
                         FullyQualifiedType: fulltype,
-                        TypeIsValueType: type.IsValueType,
+                        TypeIsValueType: innertype.IsValueType,
+                        ContainingType: type.Name,
+                        Position: pos,
                         Class: klass);
-                })
-                .ToImmutableArray();
+                });
+
+            paramz = paramz.Concat(type.GetAttributes()
+                .Where(a => a.AttributeClass?.Name == SourceGenerator.SpecialHandlingAttr)
+                .Select(a =>
+                {
+                    var elementname = a.ConstructorArguments.Single().Value?.ToString();
+                    Debug.Assert(elementname is not null);
+                    return new Parameter(
+                        ParameterName: null,
+                        XmlName: elementname!,
+                        XmlChildName: null,
+                        FullyQualifiedType: null,
+                        TypeIsValueType: false,
+                        ContainingType: type.Name,
+                        Position: XmlPosition.Element,
+                        Class: ParamClass.TotalOverride
+                    );
+                }));
 
             return new Model(
                 Namespace: ns,
                 ClassIdentifier: classid,
                 XmlElementName: elementName,
                 IsStruct: type.IsValueType,
-                Params: paramz);
+                Params: paramz.ToImmutableArray());
 
         }
     }

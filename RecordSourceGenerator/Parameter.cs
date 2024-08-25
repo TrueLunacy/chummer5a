@@ -1,15 +1,20 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace RecordSourceGenerator
 {
-    public sealed record Parameter(string ParameterName,
+    public sealed record Parameter(string? ParameterName,
         string XmlName,
         string? XmlChildName,
-        string FullyQualifiedType,
+        string? FullyQualifiedType,
         bool TypeIsValueType,
+        string ContainingType,
         XmlPosition Position,
         ParamClass Class)
     {
+        [MemberNotNullWhen(false, nameof(FullyQualifiedType))]
+        [MemberNotNullWhen(false, nameof(ParameterName))]
+        public bool TotalOverrideType => Class == ParamClass.TotalOverride;
         public bool StringType => FullyQualifiedType is "string" or "string?";
         private bool BoolType => FullyQualifiedType is "bool" or "bool?";
         public bool ImmutableArrayOf => XmlChildName is not null;
@@ -43,19 +48,32 @@ namespace RecordSourceGenerator
             };
         }
 
-        public bool HasPartialMethod => Class is ParamClass.UnknownType;
+        public bool HasPartialMethod => Class is ParamClass.UnknownType or ParamClass.TotalOverride;
         public string GetParsePartialMethod()
         {
-            if (Class is not ParamClass.UnknownType)
-                throw new InvalidOperationException();
-            return $"private static partial {FullyQualifiedType} Parse{ParameterName}(XmlReader reader, {FullyQualifiedType} defaultValue);";
+            return Class switch
+            {
+                ParamClass.UnknownType => $"private static partial {FullyQualifiedType} Parse{ParameterName}(XmlReader reader, {FullyQualifiedType} defaultValue);",
+                ParamClass.TotalOverride => $"private static partial void Parse{XmlName.Csharpify()}(XmlReader reader, {ContainingType} obj);",
+                _ => throw new InvalidOperationException()
+            };
         }
 
         public string GetWritePartialMethod()
         {
-            if (Class is not ParamClass.UnknownType)
+            return Class switch
+            {
+                ParamClass.UnknownType => $"private static partial void Write{ParameterName}({FullyQualifiedType} value, XmlWriter writer, string elementName);",
+                ParamClass.TotalOverride => $"private partial void WriteUnknownValues(XmlWriter writer);",
+                _ => throw new InvalidOperationException()
+            };
+        }
+
+        public string GetTotalOverrideStatement(string reader, string obj)
+        {
+            if (Class != ParamClass.TotalOverride)
                 throw new InvalidOperationException();
-            return $"private static partial void Write{ParameterName}({FullyQualifiedType} value, XmlWriter writer, string elementName);";
+            return $"Parse{XmlName.Csharpify()}({reader}, {obj});";
         }
 
         public string GetValueAssignment(string param, string reader, string defaultvalue)
@@ -80,5 +98,7 @@ namespace RecordSourceGenerator
                 _ => throw new InvalidOperationException()
             };
         }
+
+        public static string WriteUnknownValuesCall(string writer) => $"WriteUnknownValues({writer});";
     }
 }
